@@ -13,7 +13,9 @@ cd LearningPlatform
 
 ```
 # OSX/Linux
-python3 -m venv .
+mkdir learngingenv
+cd learningenv
+python3.6 -m venv .
 
 ## Windows
 python -m venv .
