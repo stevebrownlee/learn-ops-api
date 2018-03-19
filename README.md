@@ -22,7 +22,7 @@ python -m venv .
 3. Activate virtual environment
 
 ## Mac
-`source bin/activate`
+`source learningenv/bin/activate`
 
 ## Windows
 `/Scripts/activate.bat`
