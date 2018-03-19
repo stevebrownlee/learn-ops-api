@@ -1,0 +1,17 @@
+.DS_Store
+*.pyc
+*.db
+*.db-journal
+*.sqlite3
+.Python
+[Bb]in
+[Ii]nclude
+[Ll]ib
+[Ll]ib64
+[Ll]ocal
+[Ss]cripts
+pyvenv.cfg
+.venv
+pip-selfcheck.json
+.vscode
+learningenv
