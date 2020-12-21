@@ -6,3 +6,4 @@ class ChapterNote(models.Model):
     markdown_text = models.TextField()
     chapter = models.ForeignKey("BookChapter", on_delete=models.CASCADE)
     public = models.BooleanField()
+    date = models.DateField(auto_now=False, auto_now_add=False)

@@ -13,4 +13,8 @@ from .studentproject import StudentProject
 from .chapternotes import ChapterNote
 from .tag import Tag
 from .objectivetags import ObjectiveTag
+from .projecttags import ProjectTag
 from .lightningtags import LightningTag
+from .favorite_notes import FavoriteNote
+from .assessment import Assessment
+from .assessment_objective import AssessmentObjective
