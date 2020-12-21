@@ -21,7 +21,7 @@ from LearningAPI import views
 
 router = routers.DefaultRouter()
 router.register(r'nssusers', views.NssUserViewSet)
-router.register(r'proposals', views.ProposalViewSet)
+router.register(r'capstones', views.CapstoneViewSet)
 router.register(r'proposalstatus', views.ProposalStatusViewSet)
 router.register(r'cohorts', views.CohortViewSet)
 router.register(r'nssusercohorts', views.NssUserCohortViewSet)

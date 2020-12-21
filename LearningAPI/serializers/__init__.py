@@ -1,6 +1,6 @@
 from .user_serializer import UserSerializer
 from .cohort_serializer import CohortSerializer
 from .nssuser_serializer import NssUserSerializer
-from .proposal_serializer import ProposalSerializer
+from .capstone_serializer import CapstoneSerializer
 from .proposal_status_serializer import ProposalStatusSerializer
 from .nssuser_cohort_serializer import NssUserCohortSerializer
