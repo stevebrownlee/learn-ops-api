@@ -19,7 +19,7 @@ from django.urls import path
 from rest_framework import routers
 from LearningAPI import views
 
-router = routers.DefaultRouter()
+router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'nssusers', views.NssUserViewSet)
 router.register(r'capstones', views.CapstoneViewSet)
 router.register(r'proposalstatus', views.ProposalStatusViewSet)
@@ -28,7 +28,9 @@ router.register(r'nssusercohorts', views.NssUserCohortViewSet)
 
 
 urlpatterns = [
+    path('', include(router.urls)),
     path('admin/', admin.site.urls),
-    url(r'^', include(router.urls)),
+    path('register', views.register_user),
+    path('login', views.login_user),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]

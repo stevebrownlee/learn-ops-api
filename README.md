@@ -9,40 +9,21 @@ git clone git@github.com:nashville-software-school/LearningPlatform.git
 cd LearningPlatform
 ```
 
-### Enable virtual environment
+### Set Up Environment
 
 ```sh
-# OSX/Linux
-mkdir learngingenv
-cd learningenv
-python3.6 -m venv .
-
-## Windows
-python -m venv .
+pipenv shell
+pipenv install
 ```
 
-### Activate virtual environment
+## Create and Seed the Database
+
+1. Go to [Postgresapp](https://postgresapp.com/) to download and run the Postgres app for your platform.
+1. Once installed, open pgAdmin and create a new database named `learnops` on the server that was automatically created during installation.
+1. In the `LearningPlatform` directory there is a bash script that you can run to create the tables and seed some data. You can run it with the command below.
 
 ```sh
-## Mac
-source learningenv/bin/activate
-
-## Windows
-/Scripts/activate.bat
-```
-
-### Install required packages
-
-```sh
-pip install -r requirements.txt
-```
-
-## Initializing Database
-
-In the `LearningPlatform` directory, run the following command to apply the initial migration.
-
-```sh
-python manage.py migrate
+./seed.sh
 ```
 
 ## Testing the Installation
