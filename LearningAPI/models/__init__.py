@@ -7,6 +7,7 @@ from .book import Book
 from .chapter import Chapter
 from .lightningexercise import LightningExercise
 from .learningobjective import LearningObjective
+from .chapter_objective import ChapterObjective
 from .proposal_status import ProposalStatus
 from .capstone import Capstone
 from .capstone_timeline import CapstoneTimeline

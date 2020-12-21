@@ -4,8 +4,8 @@ rm -rf ./LearningAPI/migrations
 python manage.py migrate
 python manage.py makemigrations LearningAPI
 python manage.py migrate LearningAPI
-# python manage.py loaddata users
-# python manage.py loaddata tokens
-# python manage.py loaddata gamers
+python manage.py loaddata users
+python manage.py loaddata tokens
+python manage.py loaddata nss_users
 # python manage.py loaddata gametypes
 
