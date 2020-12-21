@@ -6,4 +6,4 @@ class NssUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     slack_handle = models.CharField(max_length=55)
     github_handle = models.CharField(max_length=55)
-    mentor = models.ForeignKey("NssUser", on_delete=models.DO_NOTHING, blank=True, null=True)
+    capstone_mentor = models.ForeignKey("NssUser", on_delete=models.DO_NOTHING, blank=True, null=True)
