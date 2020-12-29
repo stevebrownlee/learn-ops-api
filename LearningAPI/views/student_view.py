@@ -86,8 +86,8 @@ class StudentViewSet(ViewSet):
             Response -- 200, 404, or 500 status code
         """
         try:
-            event = NssUser.objects.get(pk=pk)
-            event.delete()
+            student = NssUser.objects.get(pk=pk)
+            student.delete()
 
             return Response(None, status=status.HTTP_204_NO_CONTENT)
 
