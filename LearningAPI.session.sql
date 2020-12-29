@@ -13,10 +13,13 @@ FROM public."LearningAPI_nssusercohort";
 INSERT INTO public."LearningAPI_nssusercohort" (cohort_id, nss_user_id)
 VALUES (1, 6);
 
+
 DELETE from public."LearningAPI_nssusercohort"
 where id = 2;
 
 
+INSERT INTO public."LearningAPI_course" (name)
+VALUES ('JavaScript and React');
 
 
 

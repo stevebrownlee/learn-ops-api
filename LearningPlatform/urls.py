@@ -23,6 +23,7 @@ router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'capstones', views.CapstoneViewSet, 'capstone')
 router.register(r'cohorts', views.CohortViewSet, 'cohort')
 router.register(r'students', views.StudentViewSet, 'student')
+router.register(r'courses', views.CourseViewSet, 'course')
 
 
 urlpatterns = [
