@@ -4,7 +4,7 @@ from rest_framework import serializers, status
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
-from LearningAPI.models import ChapterNote, Chapter, Book, Project
+from LearningAPI.models import ChapterNote, Chapter, NssUser
 
 
 class ChapterNoteViewSet(ViewSet):
@@ -18,21 +18,17 @@ class ChapterNoteViewSet(ViewSet):
         Returns:
             Response -- JSON serialized instance
         """
-        chapter = Chapter()
-        chapter.name = request.data["name"]
+        note = ChapterNote()
+        note.user = NssUser.objects.get(user=request.auth.user)
+        note.markdown_text = request.data["markdown_text"]
 
-        bid = int(request.data["book_id"])
-        book = Book.objects.get(pk=bid)
-        chapter.book = book
-
-        pid = int(request.data["project_id"])
-        project = Project.objects.get(pk=pid)
-        chapter.project = project
+        chapter = Chapter.objects.get(pk=int(request.data["chapter_id"]))
+        note.chapter = chapter
 
         try:
-            chapter.save()
-            serializer = ChapterSerializer(
-                chapter, context={'request': request})
+            note.save()
+            serializer = ChapterNoteSerializer(
+                note, context={'request': request})
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         except Exception as ex:
             return Response({"reason": ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
@@ -44,10 +40,10 @@ class ChapterNoteViewSet(ViewSet):
             Response -- JSON serialized instance
         """
         try:
-            chapter = Chapter.objects.get(pk=pk)
+            note = ChapterNote.objects.get(pk=pk)
 
-            serializer = ChapterSerializer(
-                chapter, context={'request': request})
+            serializer = ChapterNoteSerializer(
+                note, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
@@ -59,16 +55,13 @@ class ChapterNoteViewSet(ViewSet):
             Response -- Empty body with 204 status code
         """
         try:
-            chapter = Chapter.objects.get(pk=pk)
-            chapter.name = request.data["name"]
+            note = ChapterNote.objects.get(pk=pk)
+            note.markdown_text = request.data["markdown_text"]
 
-            book = Book.objects.get(pk=request.data["book_id"])
-            chapter.book = book
+            chapter = Chapter.objects.get(pk=int(request.data["chapter_id"]))
+            note.chapter = chapter
 
-            project = Project.objects.get(pk=request.data["project_id"])
-            chapter.project = project
-
-            chapter.save()
+            note.save()
         except Chapter.DoesNotExist:
             return Response(None, status=status.HTTP_404_NOT_FOUND)
 
@@ -84,8 +77,8 @@ class ChapterNoteViewSet(ViewSet):
             Response -- 200, 404, or 500 status code
         """
         try:
-            chapter = Chapter.objects.get(pk=pk)
-            chapter.delete()
+            note = ChapterNote.objects.get(pk=pk)
+            note.delete()
 
             return Response(None, status=status.HTTP_204_NO_CONTENT)
 
@@ -102,18 +95,18 @@ class ChapterNoteViewSet(ViewSet):
             Response -- JSON serialized array
         """
         try:
-            chapters = Chapter.objects.all().order_by('pk')
+            notes = ChapterNote.objects.all().order_by('pk')
 
-            serializer = ChapterSerializer(
-                chapters, many=True, context={'request': request})
+            serializer = ChapterNoteSerializer(
+                notes, many=True, context={'request': request})
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as ex:
             return HttpResponseServerError(ex)
 
 
-class ChapterSerializer(serializers.ModelSerializer):
+class ChapterNoteSerializer(serializers.ModelSerializer):
     """JSON serializer"""
 
     class Meta:
-        model = Chapter
-        fields = ('id', 'name', 'book', 'project', )
+        model = ChapterNote
+        fields = ( 'id', 'markdown_text', 'public', 'date', )

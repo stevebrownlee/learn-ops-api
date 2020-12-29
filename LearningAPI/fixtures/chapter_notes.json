@@ -1,0 +1,13 @@
+[
+{
+    "model": "LearningAPI.chapternote",
+    "pk": 1,
+    "fields": {
+        "user": 1,
+        "markdown_text": "# Objectives\n\n* POST methods\n* React Form State\n* INSERT INTO statements",
+        "chapter": 10,
+        "public": false,
+        "date": "2020-12-29"
+    }
+}
+]

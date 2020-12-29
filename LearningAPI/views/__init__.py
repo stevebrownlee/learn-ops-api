@@ -7,3 +7,4 @@ from .course_view import CourseViewSet
 from .book_view import BookViewSet
 from .project_view import ProjectViewSet
 from .chapter_view import ChapterViewSet
+from .chapter_note_view import ChapterNoteViewSet
