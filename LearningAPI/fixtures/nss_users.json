@@ -1,20 +1,20 @@
 [
-{
-    "model": "LearningAPI.nssuser",
-    "pk": 1,
-    "fields": {
-        "user": 1,
-        "slack_handle": "coach",
-        "github_handle": "stevebrownlee"
+    {
+        "model": "LearningAPI.nssuser",
+        "pk": 1,
+        "fields": {
+            "user": 1,
+            "slack_handle": "coach",
+            "github_handle": "stevebrownlee"
+        }
+    },
+    {
+        "model": "LearningAPI.nssuser",
+        "pk": 2,
+        "fields": {
+            "user": 2,
+            "slack_handle": "gibjeffries",
+            "github_handle": null
+        }
     }
-},
-{
-    "model": "LearningAPI.nssuser",
-    "pk": 2,
-    "fields": {
-        "user": 2,
-        "slack_handle": "gibjeffries",
-        "github_handle": null
-    }
-}
 ]

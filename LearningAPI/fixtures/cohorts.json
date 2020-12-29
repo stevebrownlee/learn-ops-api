@@ -1,38 +1,38 @@
 [
-{
-    "model": "LearningAPI.cohort",
-    "pk": 1,
-    "fields": {
-        "name": "Cohort 42",
-        "slack_channel": "day-cohort-42",
-        "start_date": "2020-07-06",
-        "end_date": "2021-01-12",
-        "break_start_date": "2020-09-28",
-        "break_end_date": "2020-10-02"
+    {
+        "model": "LearningAPI.cohort",
+        "pk": 1,
+        "fields": {
+            "name": "Cohort 42",
+            "slack_channel": "day-cohort-42",
+            "start_date": "2020-07-06",
+            "end_date": "2021-01-12",
+            "break_start_date": "2020-09-28",
+            "break_end_date": "2020-10-02"
+        }
+    },
+    {
+        "model": "LearningAPI.cohort",
+        "pk": 2,
+        "fields": {
+            "name": "Cohort 41",
+            "slack_channel": "day-cohort-41",
+            "start_date": "2020-05-18",
+            "end_date": "2020-11-06",
+            "break_start_date": "2020-08-10",
+            "break_end_date": "2020-08-14"
+        }
+    },
+    {
+        "model": "LearningAPI.cohort",
+        "pk": 3,
+        "fields": {
+            "name": "Cohort 40",
+            "slack_channel": "day-cohort-40",
+            "start_date": "2020-04-06",
+            "end_date": "2020-09-25",
+            "break_start_date": "2020-06-29",
+            "break_end_date": "2020-07-03"
+        }
     }
-},
-{
-    "model": "LearningAPI.cohort",
-    "pk": 2,
-    "fields": {
-        "name": "Cohort 41",
-        "slack_channel": "day-cohort-41",
-        "start_date": "2020-05-18",
-        "end_date": "2020-11-06",
-        "break_start_date": "2020-08-10",
-        "break_end_date": "2020-08-14"
-    }
-},
-{
-    "model": "LearningAPI.cohort",
-    "pk": 3,
-    "fields": {
-        "name": "Cohort 40",
-        "slack_channel": "day-cohort-40",
-        "start_date": "2020-04-06",
-        "end_date": "2020-09-25",
-        "break_start_date": "2020-06-29",
-        "break_end_date": "2020-07-03"
-    }
-}
 ]
