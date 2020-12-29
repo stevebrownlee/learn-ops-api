@@ -75,7 +75,17 @@ class CohortViewSet(ViewSet):
         Returns:
             Response -- JSON serialized array
         """
-        return Response({}, status=status.HTTP_200_OK)
+        try:
+            cohorts = Cohort.objects.annotate(students=Count(
+                'members', filter=Q(members__nss_user__user__is_staff=False)),
+                instructors=Count(
+                'members', filter=Q(members__nss_user__user__is_staff=True))
+            ).all()
+
+            serializer = CohortSerializer(cohorts, many=True, context={'request': request})
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as ex:
+            return HttpResponseServerError(ex)
 
 
 class CohortSerializer(serializers.ModelSerializer):
