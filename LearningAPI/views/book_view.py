@@ -4,11 +4,13 @@ from rest_framework import serializers, status
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
-from LearningAPI.models import Course, Book
+from LearningAPI.models import Book
+from LearningAPI.models import Course
+from LearningAPI.models import Chapter
 
 
-class CourseViewSet(ViewSet):
-    """Course view set"""
+class BookViewSet(ViewSet):
+    """Book view set"""
 
     permission_classes = (IsAdminUser,)
 
@@ -18,12 +20,15 @@ class CourseViewSet(ViewSet):
         Returns:
             Response -- JSON serialized instance
         """
-        course = Course()
-        course.name = request.data["name"]
+        book = Book()
+        book.name = request.data["name"]
+
+        course = Course.objects.get(pk=int(request.data["course_id"]))
+        book.course = course
 
         try:
-            course.save()
-            serializer = CourseSerializer(course, context={'request': request})
+            book.save()
+            serializer = BookSerializer(book, context={'request': request})
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         except Exception as ex:
             return Response({"reason": ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
@@ -35,12 +40,9 @@ class CourseViewSet(ViewSet):
             Response -- JSON serialized instance
         """
         try:
-            course = Course.objects.annotate(
+            book = Book.objects.get(pk=pk)
 
-                chapters=Count('books__chapters')
-            ).get(pk=pk)
-
-            serializer = CourseSerializer(course, context={'request': request})
+            serializer = BookSerializer(book, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
@@ -52,11 +54,14 @@ class CourseViewSet(ViewSet):
             Response -- Empty body with 204 status code
         """
         try:
-            course = Course.objects.get(pk=pk)
-            course.name = request.data["name"]
+            book = Book.objects.get(pk=pk)
+            book.name = request.data["name"]
 
-            course.save()
-        except Course.DoesNotExist:
+            course = Course.objects.get(pk=int(request.data["course_id"]))
+            book.course = course
+
+            book.save()
+        except Book.DoesNotExist:
             return Response(None, status=status.HTTP_404_NOT_FOUND)
 
         except Exception as ex:
@@ -71,12 +76,12 @@ class CourseViewSet(ViewSet):
             Response -- 200, 404, or 500 status code
         """
         try:
-            course = Course.objects.get(pk=pk)
-            course.delete()
+            book = Book.objects.get(pk=pk)
+            book.delete()
 
             return Response(None, status=status.HTTP_204_NO_CONTENT)
 
-        except Course.DoesNotExist as ex:
+        except Book.DoesNotExist as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
         except Exception as ex:
@@ -89,27 +94,26 @@ class CourseViewSet(ViewSet):
             Response -- JSON serialized array
         """
         try:
-            courses = Course.objects.all().order_by('pk')
+            books = Book.objects.all().order_by('pk')
 
-            serializer = CourseSerializer(
-                courses, many=True, context={'request': request})
+            serializer = BookSerializer(
+                books, many=True, context={'request': request})
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as ex:
             return HttpResponseServerError(ex)
 
 
+class ChapterSerializer(serializers.ModelSerializer):
+    """JSON serializer"""
+
+    class Meta:
+        model = Chapter
+        fields = ('id', 'name',)
+
 class BookSerializer(serializers.ModelSerializer):
     """JSON serializer"""
+    chapters = ChapterSerializer(many=True)
 
     class Meta:
         model = Book
-        fields = ('id', 'name',)
-
-class CourseSerializer(serializers.ModelSerializer):
-    """JSON serializer"""
-    books = BookSerializer(many=True)
-    # books = serializers.SlugRelatedField(many=True, slug_field='name', queryset=Book.objects.all())
-
-    class Meta:
-        model = Course
-        fields = ('id', 'name', 'books', 'chapters')
+        fields = ('id', 'name', 'chapters',)
