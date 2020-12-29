@@ -1,12 +1,12 @@
 import json
-from django.contrib.auth.models import Group
 from django.http import HttpResponse
 from django.contrib.auth import authenticate
+from django.contrib.auth.models import Group
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
 from rest_framework.authtoken.models import Token
-from LearningAPI.models import NssUser, nssuser
+from LearningAPI.models import NssUser
 
 
 @csrf_exempt
@@ -46,8 +46,6 @@ def register_user(request):
     Method arguments:
       request -- The full HTTP request object
     '''
-    student_group = Group.objects.get_or_create(name='Student')
-
     # Load the JSON string of the request body into a dict
     req_body = json.loads(request.body.decode())
 
@@ -70,7 +68,7 @@ def register_user(request):
     # Commit the user to the database by saving it
     nss_user.save()
 
-    nss_user.user.groups.add(Group.objects.get(name='Student'))
+    nss_user.user.groups.add(Group.objects.get(name='Students'))
 
     # Use the REST Framework's token generator on the new user account
     token = Token.objects.create(user=new_user)
