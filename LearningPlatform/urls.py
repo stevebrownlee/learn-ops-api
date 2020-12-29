@@ -20,11 +20,9 @@ from rest_framework import routers
 from LearningAPI import views
 
 router = routers.DefaultRouter(trailing_slash=False)
-router.register(r'nssusers', views.NssUserViewSet)
-router.register(r'capstones', views.CapstoneViewSet)
-router.register(r'proposalstatus', views.ProposalStatusViewSet)
-router.register(r'cohorts', views.CohortViewSet)
-router.register(r'nssusercohorts', views.NssUserCohortViewSet)
+router.register(r'capstones', views.CapstoneViewSet, 'capstone')
+router.register(r'cohorts', views.CohortViewSet, 'cohort')
+router.register(r'students', views.StudentViewSet, 'student')
 
 
 urlpatterns = [

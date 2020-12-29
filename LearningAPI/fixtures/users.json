@@ -5,12 +5,12 @@
     "fields": {
         "password": "pbkdf2_sha256$216000$8kocabeSNCVg$4OxRR+RIjetS/k4peDeWYUDKAMOPrNIEG8CNIWE+32A=",
         "last_login": null,
-        "is_superuser": false,
+        "is_superuser": true,
         "username": "steve@stevebrownlee.com",
         "first_name": "Steve",
         "last_name": "Brownlee",
         "email": "steve@stevebrownlee.com",
-        "is_staff": false,
+        "is_staff": true,
         "is_active": true,
         "date_joined": "2020-12-21T02:33:32.825Z",
         "groups": [
@@ -33,26 +33,6 @@
         "is_staff": false,
         "is_active": true,
         "date_joined": "2020-12-21T02:34:44.276Z",
-        "groups": [
-            1
-        ],
-        "user_permissions": []
-    }
-},
-{
-    "model": "auth.user",
-    "pk": 3,
-    "fields": {
-        "password": "pbkdf2_sha256$216000$9tbrEZ0bv7gG$OUkwmD3sWFglgoPh2WbC0RyEtvPBgptcEigEe62SQNk=",
-        "last_login": null,
-        "is_superuser": false,
-        "username": "meg@ducharme.com",
-        "first_name": "Meg",
-        "last_name": "Ducharme",
-        "email": "meg@ducharme.com",
-        "is_staff": false,
-        "is_active": true,
-        "date_joined": "2020-12-29T04:43:51.530Z",
         "groups": [
             1
         ],
