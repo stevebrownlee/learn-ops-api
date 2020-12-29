@@ -1,0 +1,82 @@
+[
+{
+    "model": "LearningAPI.book",
+    "pk": 1,
+    "fields": {
+        "name": "Martins Aquarium",
+        "course": 3
+    }
+},
+{
+    "model": "LearningAPI.book",
+    "pk": 2,
+    "fields": {
+        "name": "Glassdale PD",
+        "course": 3
+    }
+},
+{
+    "model": "LearningAPI.book",
+    "pk": 3,
+    "fields": {
+        "name": "Nashville Kennels",
+        "course": 3
+    }
+},
+{
+    "model": "LearningAPI.book",
+    "pk": 4,
+    "fields": {
+        "name": "Nashville Kennels",
+        "course": 1
+    }
+},
+{
+    "model": "LearningAPI.book",
+    "pk": 5,
+    "fields": {
+        "name": "Level Up",
+        "course": 1
+    }
+},
+{
+    "model": "LearningAPI.book",
+    "pk": 6,
+    "fields": {
+        "name": "Bangazon",
+        "course": 1
+    }
+},
+{
+    "model": "LearningAPI.book",
+    "pk": 7,
+    "fields": {
+        "name": "Orientation",
+        "course": 2
+    }
+},
+{
+    "model": "LearningAPI.book",
+    "pk": 8,
+    "fields": {
+        "name": "MVC",
+        "course": 2
+    }
+},
+{
+    "model": "LearningAPI.book",
+    "pk": 9,
+    "fields": {
+        "name": "Web API",
+        "course": 2
+    }
+},
+{
+    "model": "LearningAPI.book",
+    "pk": 11,
+    "fields": {
+        "name": "Capstones",
+        "course": 2
+    }
+}
+]

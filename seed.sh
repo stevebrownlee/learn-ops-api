@@ -10,3 +10,8 @@ python manage.py loaddata tokens
 python manage.py loaddata nss_users
 python manage.py loaddata cohorts
 python manage.py loaddata user_cohorts
+python manage.py loaddata courses
+python manage.py loaddata books
+python manage.py loaddata projects
+python manage.py loaddata chapters
+

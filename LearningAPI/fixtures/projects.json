@@ -1,0 +1,26 @@
+[
+{
+    "model": "LearningAPI.project",
+    "pk": 1,
+    "fields": {
+        "name": "Level Up API",
+        "implementation_url": "https://github.com/stevebrownlee/level-server"
+    }
+},
+{
+    "model": "LearningAPI.project",
+    "pk": 2,
+    "fields": {
+        "name": "Level Up Client",
+        "implementation_url": "https://github.com/stevebrownlee/level-client"
+    }
+},
+{
+    "model": "LearningAPI.project",
+    "pk": 4,
+    "fields": {
+        "name": "Python Kennel API",
+        "implementation_url": "https://github.com/stevebrownlee/python-kennels"
+    }
+}
+]

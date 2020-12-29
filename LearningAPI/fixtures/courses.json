@@ -1,0 +1,23 @@
+[
+{
+    "model": "LearningAPI.course",
+    "pk": 1,
+    "fields": {
+        "name": "Python, Django and SQL"
+    }
+},
+{
+    "model": "LearningAPI.course",
+    "pk": 2,
+    "fields": {
+        "name": "C# and .NET"
+    }
+},
+{
+    "model": "LearningAPI.course",
+    "pk": 3,
+    "fields": {
+        "name": "JavaScript and React"
+    }
+}
+]
