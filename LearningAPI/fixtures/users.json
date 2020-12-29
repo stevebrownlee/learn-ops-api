@@ -38,5 +38,85 @@
         ],
         "user_permissions": []
     }
+},
+{
+    "model": "auth.user",
+    "pk": 3,
+    "fields": {
+        "password": "pbkdf2_sha256$216000$0q5Dsq4jz4lB$rQWaJSQDnqBEMUHo9DdJ8BiTcL2nG07NvfkdfYXTcns=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "jenna@solis.com",
+        "first_name": "Jenna",
+        "last_name": "Solis",
+        "email": "jenna@solis.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2020-12-29T16:37:07.509Z",
+        "groups": [
+            1
+        ],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 4,
+    "fields": {
+        "password": "pbkdf2_sha256$216000$EMnvlJ7C21Rl$l1R9jxG/oQ04KYv/+cN71CYy3OWHLUMpuXTZ1ZVO/lg=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "rebecca@parker.com",
+        "first_name": "Rebecca",
+        "last_name": "Parker",
+        "email": "rebecca@parker.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2020-12-29T17:12:30.300Z",
+        "groups": [
+            1
+        ],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 5,
+    "fields": {
+        "password": "pbkdf2_sha256$216000$We1eHeK6XcOe$7m+2HAY48WpQrNa8dcuNRG5WiEBrajdyBd7coK/yeBM=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "samantha@maas.com",
+        "first_name": "Samantha",
+        "last_name": "Maas",
+        "email": "samantha@maas.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2020-12-29T17:12:54.626Z",
+        "groups": [
+            1
+        ],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 6,
+    "fields": {
+        "password": "pbkdf2_sha256$216000$MpnlbY1Orixf$Fo4HmNtUAgfxZFAv3BPP9S8q8m4mrS1nNQ7WMTuBMrE=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "chris@johnson.com",
+        "first_name": "Chris",
+        "last_name": "Johnson",
+        "email": "chris@johnson.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2020-12-29T17:13:16.551Z",
+        "groups": [
+            1
+        ],
+        "user_permissions": []
+    }
 }
 ]

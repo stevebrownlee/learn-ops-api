@@ -9,4 +9,4 @@ python manage.py loaddata users
 python manage.py loaddata tokens
 python manage.py loaddata nss_users
 python manage.py loaddata cohorts
-
+python manage.py loaddata user_cohorts

@@ -1,3 +1,6 @@
+from LearningAPI.models.nssuser_cohort import NssUserCohort
+from LearningAPI.models.cohort import Cohort
+from django.contrib.auth import get_user_model
 from rest_framework import permissions
 from django.http import HttpResponseServerError
 from rest_framework import serializers
@@ -106,10 +109,32 @@ class StudentViewSet(ViewSet):
             students, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+class StudentUserSerializer(serializers.ModelSerializer):
+    """JSON serializer for event organizer's related Django user"""
+    class Meta:
+        model = get_user_model()
+        fields = ['first_name', 'last_name', 'email']
+
+class StudentCohortSerializer(serializers.ModelSerializer):
+    """JSON serializer for event organizer's related Django user"""
+    class Meta:
+        model = Cohort
+        fields = ['name', 'id']
+
+class StudentCohortsSerializer(serializers.ModelSerializer):
+    """JSON serializer for event organizer's related Django user"""
+    cohort = StudentCohortSerializer(many=False)
+
+    class Meta:
+        model = NssUserCohort
+        fields = ['cohort']
 
 class StudentSerializer(serializers.ModelSerializer):
     """JSON serializer"""
+    user = StudentUserSerializer(many=False)
+    cohorts = StudentCohortsSerializer(many=True)
 
     class Meta:
         model = NssUser
-        fields = '__all__'
+        fields = ( 'slack_handle', 'github_handle', 'user', 'cohorts' )
+        depth = 2

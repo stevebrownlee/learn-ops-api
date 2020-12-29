@@ -4,10 +4,15 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.permissions import IsAdminUser
 from LearningAPI.models import Cohort, NssUser
 from rest_framework.response import Response
+from django.db.models import Count
+from django.db.models import Q
+from django.http import HttpResponseServerError
 
 
 class CohortViewSet(ViewSet):
     """Cohort view set"""
+
+    permission_classes = (IsAdminUser,)
 
     def create(self, request):
         """Handle POST operations
@@ -15,9 +20,20 @@ class CohortViewSet(ViewSet):
         Returns:
             Response -- JSON serialized instance
         """
-        student = NssUser.objects.get(user=request.auth.user)
+        cohort = Cohort()
+        cohort.name = request.data["name"]
+        cohort.slack_channel = request.data["slack_channel"]
+        cohort.start_date = request.data["start_date"]
+        cohort.end_date = request.data["end_date"]
+        cohort.break_start_date = request.data["break_start_date"]
+        cohort.break_end_date = request.data["break_end_date"]
 
-        return Response({}, status=status.HTTP_200_OK)
+        try:
+            cohort.save()
+            serializer = CohortSerializer(cohort, context={'request': request})
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except Exception as ex:
+            return Response({"reason": ex.message}, status=status.HTTP_400_BAD_REQUEST)
 
     def retrieve(self, request, pk=None):
         """Handle GET requests for single item
@@ -25,7 +41,17 @@ class CohortViewSet(ViewSet):
         Returns:
             Response -- JSON serialized instance
         """
-        return Response({}, status=status.HTTP_200_OK)
+        try:
+            cohort = Cohort.objects.annotate(students=Count(
+                'members', filter=Q(members__nss_user__user__is_staff=False)),
+                instructors=Count(
+                'members', filter=Q(members__nss_user__user__is_staff=True))
+            ).get(pk=pk)
+
+            serializer = CohortSerializer(cohort, context={'request': request})
+            return Response(serializer.data)
+        except Exception as ex:
+            return HttpResponseServerError(ex)
 
     def update(self, request, pk=None):
         """Handle PUT requests
@@ -57,4 +83,5 @@ class CohortSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cohort
-        fields = '__all__'
+        fields = ('name', 'slack_channel', 'start_date', 'end_date',
+                  'break_start_date', 'break_end_date', 'students', 'instructors')
