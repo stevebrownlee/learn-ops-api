@@ -149,6 +149,29 @@ class CohortViewSet(ViewSet):
 
             return Response({'message': 'User assigned to cohort'}, status=status.HTTP_201_CREATED)
 
+        elif request.method == "DELETE":
+            try:
+                cohort = Cohort.objects.get(pk=pk)
+                member = NssUser.objects.get(pk=int(request.data["user_id"]))
+                rel = NssUserCohort.objects.get(cohort=cohort, nss_user=member)
+                rel.delete()
+
+                return Response(None, status=status.HTTP_204_NO_CONTENT)
+
+            except Cohort.DoesNotExist as ex:
+                return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+
+            except NssUser.DoesNotExist as ex:
+                return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+
+            except NssUserCohort.DoesNotExist as ex:
+                return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+
+            except Exception as ex:
+                return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        return Response({'message': 'Unsupported HTTP method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
 
 class CohortSerializer(serializers.ModelSerializer):
     """JSON serializer"""
