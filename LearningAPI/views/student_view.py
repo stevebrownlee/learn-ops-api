@@ -7,6 +7,7 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from LearningAPI.models import NssUser
 
+
 class StudentPermission(permissions.BasePermission):
 
     def has_permission(self, request, view):
@@ -25,7 +26,6 @@ class StudentViewSet(ViewSet):
 
     permission_classes = (StudentPermission,)
 
-
     def create(self, request):
         """Handle POST operations"""
         return Response(None, status=status.HTTP_405_METHOD_NOT_ALLOWED)
@@ -39,7 +39,8 @@ class StudentViewSet(ViewSet):
         try:
             student = NssUser.objects.get(pk=pk)
             if request.auth.user == student.user or request.auth.user.is_staff:
-                serializer = StudentSerializer(student, context={'request': request})
+                serializer = StudentSerializer(
+                    student, context={'request': request})
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:
                 return Response(None, status=status.HTTP_401_UNAUTHORIZED)
@@ -56,7 +57,24 @@ class StudentViewSet(ViewSet):
         Returns:
             Response -- Empty body with 204 status code
         """
-        return Response({}, status=status.HTTP_200_OK)
+        try:
+            student = NssUser.objects.get(pk=pk)
+
+            if request.auth.user == student.user or request.auth.user.is_staff:
+                student.slack_handle = request.data["slack_handle"]
+                student.gitub_handle = request.data["gitub_handle"]
+
+                student.save()
+
+                return Response(None, status=status.HTTP_204_NO_CONTENT)
+            else:
+                return Response(None, status=status.HTTP_401_UNAUTHORIZED)
+
+        except NssUser.DoesNotExist as ex:
+            return Response(None, status=status.HTTP_404_NOT_FOUND)
+
+        except Exception as ex:
+            return HttpResponseServerError(ex)
 
     def destroy(self, request, pk=None):
         """Handle DELETE requests for a single item
@@ -95,4 +113,3 @@ class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = NssUser
         fields = '__all__'
-
