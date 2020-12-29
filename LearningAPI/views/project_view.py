@@ -99,9 +99,26 @@ class ProjectViewSet(ViewSet):
             return HttpResponseServerError(ex)
 
 
-class ProjectSerializer(serializers.ModelSerializer):
+class BookSerializer(serializers.ModelSerializer):
     """JSON serializer"""
 
     class Meta:
+        model = Book
+        fields = ('id', 'name',)
+
+
+class ChapterSerializer(serializers.ModelSerializer):
+    """JSON serializer"""
+    book = BookSerializer()
+
+    class Meta:
+        model = Chapter
+        fields = ('id', 'name', 'book' )
+
+class ProjectSerializer(serializers.ModelSerializer):
+    """JSON serializer"""
+    chapters = ChapterSerializer(many=True)
+
+    class Meta:
         model = Project
-        fields = ('id', 'name', 'implementation_url',)
+        fields = ('id', 'name', 'implementation_url', 'chapters', )

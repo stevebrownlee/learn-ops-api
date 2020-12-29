@@ -21,15 +21,18 @@ class ChapterViewSet(ViewSet):
         chapter = Chapter()
         chapter.name = request.data["name"]
 
-        book = Book.objects.get(pk=int(request.data["course_id"]))
+        bid = int(request.data["book_id"])
+        book = Book.objects.get(pk=bid)
         chapter.book = book
 
-        project = Project.objects.get(pk=int(request.data["project_id"]))
+        pid = int(request.data["project_id"])
+        project = Project.objects.get(pk=pid)
         chapter.project = project
 
         try:
             chapter.save()
-            serializer = ChapterSerializer(Chapter, context={'request': request})
+            serializer = ChapterSerializer(
+                chapter, context={'request': request})
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         except Exception as ex:
             return Response({"reason": ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
@@ -41,9 +44,10 @@ class ChapterViewSet(ViewSet):
             Response -- JSON serialized instance
         """
         try:
-            Chapter = Chapter.objects.get(pk=pk)
+            chapter = Chapter.objects.get(pk=pk)
 
-            serializer = ChapterSerializer(Chapter, context={'request': request})
+            serializer = ChapterSerializer(
+                chapter, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
@@ -55,13 +59,16 @@ class ChapterViewSet(ViewSet):
             Response -- Empty body with 204 status code
         """
         try:
-            Chapter = Chapter.objects.get(pk=pk)
-            Chapter.name = request.data["name"]
+            chapter = Chapter.objects.get(pk=pk)
+            chapter.name = request.data["name"]
 
-            course = Course.objects.get(pk=int(request.data["course_id"]))
-            Chapter.course = course
+            book = Book.objects.get(pk=request.data["book_id"])
+            chapter.book = book
 
-            Chapter.save()
+            project = Project.objects.get(pk=request.data["project_id"])
+            chapter.project = project
+
+            chapter.save()
         except Chapter.DoesNotExist:
             return Response(None, status=status.HTTP_404_NOT_FOUND)
 
@@ -77,8 +84,8 @@ class ChapterViewSet(ViewSet):
             Response -- 200, 404, or 500 status code
         """
         try:
-            Chapter = Chapter.objects.get(pk=pk)
-            Chapter.delete()
+            chapter = Chapter.objects.get(pk=pk)
+            chapter.delete()
 
             return Response(None, status=status.HTTP_204_NO_CONTENT)
 
@@ -95,10 +102,10 @@ class ChapterViewSet(ViewSet):
             Response -- JSON serialized array
         """
         try:
-            Chapters = Chapter.objects.all().order_by('pk')
+            chapters = Chapter.objects.all().order_by('pk')
 
             serializer = ChapterSerializer(
-                Chapters, many=True, context={'request': request})
+                chapters, many=True, context={'request': request})
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as ex:
             return HttpResponseServerError(ex)
@@ -109,12 +116,4 @@ class ChapterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Chapter
-        fields = ('id', 'name',)
-
-class ChapterSerializer(serializers.ModelSerializer):
-    """JSON serializer"""
-    chapters = ChapterSerializer(many=True)
-
-    class Meta:
-        model = Chapter
-        fields = ('id', 'name', 'chapters',)
+        fields = ('id', 'name', 'book', 'project', )

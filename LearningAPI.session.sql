@@ -21,6 +21,9 @@ where id = 2;
 INSERT INTO public."LearningAPI_course" (name)
 VALUES ('JavaScript and React');
 
+INSERT INTO public."LearningAPI_book" (name, course_id)
+VALUES ('Bangazon', 1);
+
 
 
 

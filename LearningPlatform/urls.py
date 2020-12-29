@@ -26,6 +26,7 @@ router.register(r'students', views.StudentViewSet, 'student')
 router.register(r'courses', views.CourseViewSet, 'course')
 router.register(r'books', views.BookViewSet, 'book')
 router.register(r'projects', views.ProjectViewSet, 'project')
+router.register(r'chapters', views.ChapterViewSet, 'chapter')
 
 
 urlpatterns = [

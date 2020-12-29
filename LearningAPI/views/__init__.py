@@ -6,3 +6,4 @@ from .auth import login_user
 from .course_view import CourseViewSet
 from .book_view import BookViewSet
 from .project_view import ProjectViewSet
+from .chapter_view import ChapterViewSet
