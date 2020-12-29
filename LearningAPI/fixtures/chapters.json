@@ -1,0 +1,128 @@
+[
+{
+    "model": "LearningAPI.chapter",
+    "pk": 1,
+    "fields": {
+        "name": "Animal Package and Data",
+        "book": 4,
+        "project": 4
+    }
+},
+{
+    "model": "LearningAPI.chapter",
+    "pk": 9,
+    "fields": {
+        "name": "Animal Response",
+        "book": 4,
+        "project": 4
+    }
+},
+{
+    "model": "LearningAPI.chapter",
+    "pk": 10,
+    "fields": {
+        "name": "Adding Animals",
+        "book": 4,
+        "project": 4
+    }
+},
+{
+    "model": "LearningAPI.chapter",
+    "pk": 11,
+    "fields": {
+        "name": "Discharging Animals",
+        "book": 4,
+        "project": 4
+    }
+},
+{
+    "model": "LearningAPI.chapter",
+    "pk": 12,
+    "fields": {
+        "name": "Animal Status",
+        "book": 4,
+        "project": 4
+    }
+},
+{
+    "model": "LearningAPI.chapter",
+    "pk": 13,
+    "fields": {
+        "name": "Animal Class",
+        "book": 4,
+        "project": 4
+    }
+},
+{
+    "model": "LearningAPI.chapter",
+    "pk": 14,
+    "fields": {
+        "name": "Kennel Database",
+        "book": 4,
+        "project": 4
+    }
+},
+{
+    "model": "LearningAPI.chapter",
+    "pk": 15,
+    "fields": {
+        "name": "Animal Queries",
+        "book": 4,
+        "project": 4
+    }
+},
+{
+    "model": "LearningAPI.chapter",
+    "pk": 16,
+    "fields": {
+        "name": "Customers by Email",
+        "book": 4,
+        "project": 4
+    }
+},
+{
+    "model": "LearningAPI.chapter",
+    "pk": 17,
+    "fields": {
+        "name": "Deleting Animal Records",
+        "book": 4,
+        "project": 4
+    }
+},
+{
+    "model": "LearningAPI.chapter",
+    "pk": 18,
+    "fields": {
+        "name": "Using React Kennels Client Again",
+        "book": 4,
+        "project": 4
+    }
+},
+{
+    "model": "LearningAPI.chapter",
+    "pk": 19,
+    "fields": {
+        "name": "Updating Animal Records",
+        "book": 4,
+        "project": 4
+    }
+},
+{
+    "model": "LearningAPI.chapter",
+    "pk": 20,
+    "fields": {
+        "name": "Animals with Location Report",
+        "book": 4,
+        "project": 4
+    }
+},
+{
+    "model": "LearningAPI.chapter",
+    "pk": 21,
+    "fields": {
+        "name": "Admitting Animals",
+        "book": 4,
+        "project": 4
+    }
+}
+]

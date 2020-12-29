@@ -27,7 +27,7 @@
     "model": "LearningAPI.book",
     "pk": 4,
     "fields": {
-        "name": "Nashville Kennels",
+        "name": "Nashville Kennels API",
         "course": 1
     }
 },
