@@ -9,5 +9,16 @@
         "public": false,
         "date": "2020-12-29"
     }
+},
+{
+    "model": "LearningAPI.chapternote",
+    "pk": 3,
+    "fields": {
+        "user": 1,
+        "markdown_text": "# Objectives\n\n* DELETE method\n* Iteration in Python\n* enumerate() Python function\n* Python list pop() method",
+        "chapter": 11,
+        "public": false,
+        "date": "2020-12-30"
+    }
 }
 ]

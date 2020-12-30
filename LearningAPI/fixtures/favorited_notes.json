@@ -1,0 +1,10 @@
+[
+{
+    "model": "LearningAPI.favoritenote",
+    "pk": 2,
+    "fields": {
+        "user": 1,
+        "note": 3
+    }
+}
+]

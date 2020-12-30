@@ -1,4 +1,5 @@
-from django.db.models import Count
+from LearningAPI.models.favorite_notes import FavoriteNote
+from rest_framework.decorators import action
 from django.http import HttpResponseServerError
 from rest_framework import serializers, status
 from rest_framework.permissions import IsAdminUser
@@ -103,10 +104,68 @@ class ChapterNoteViewSet(ViewSet):
         except Exception as ex:
             return HttpResponseServerError(ex)
 
+    @action(methods=['post', 'delete'], detail=True)
+    def favorite(self, request, pk):
+        """Favorite a chapter note"""
+
+        if request.method == "POST":
+            note = None
+            member = None
+
+            try:
+                note = ChapterNote.objects.get(pk=pk)
+                member = NssUser.objects.get(user=request.auth.user)
+                FavoriteNote.objects.get(note=note, user=member)
+
+                return Response(
+                    {'message': 'You already favorited this note'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            except FavoriteNote.DoesNotExist as ex:
+                relationship = FavoriteNote()
+                relationship.user = member
+                relationship.note = note
+
+                relationship.save()
+            except ChapterNote.DoesNotExist as ex:
+                return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+
+            except NssUser.DoesNotExist as ex:
+                return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+
+            except Exception as ex:
+                return HttpResponseServerError(ex)
+
+            return Response({'message': 'Note favorited'}, status=status.HTTP_201_CREATED)
+
+        elif request.method == "DELETE":
+            try:
+                note = ChapterNote.objects.get(pk=pk)
+                member = NssUser.objects.get(user=request.auth.user)
+                fave = FavoriteNote.objects.get(note=note, user=member)
+                fave.delete()
+
+                return Response(None, status=status.HTTP_204_NO_CONTENT)
+
+            except ChapterNote.DoesNotExist as ex:
+                return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+
+            except NssUser.DoesNotExist as ex:
+                return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+
+            except FavoriteNote.DoesNotExist as ex:
+                return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+
+            except Exception as ex:
+                return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        return Response({'message': 'Unsupported HTTP method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
 
 class ChapterNoteSerializer(serializers.ModelSerializer):
     """JSON serializer"""
 
     class Meta:
         model = ChapterNote
-        fields = ( 'id', 'markdown_text', 'public', 'date', )
+        fields = ( 'id', 'markdown_text', 'public', 'date', 'chapter')
