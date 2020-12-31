@@ -7,6 +7,7 @@ from .course import Course
 from .book import Book
 from .chapter import Chapter
 from .lightning_exercise import LightningExercise
+from .taxonomy_level import TaxonomyLevel
 from .learning_objective import LearningObjective
 from .chapter_objective import ChapterObjective
 from .proposal_status import ProposalStatus

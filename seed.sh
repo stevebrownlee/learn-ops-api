@@ -16,4 +16,5 @@ python manage.py loaddata projects
 python manage.py loaddata chapters
 python manage.py loaddata chapter_notes
 python manage.py loaddata favorited_notes
+python manage.py loaddata taxonomy_levels
 
