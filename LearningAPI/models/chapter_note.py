@@ -9,9 +9,9 @@ class ChapterNote(models.Model):
     date = models.DateField(auto_now=True, auto_now_add=False)
 
     @property
-    def favorite_count(self):
-        return self.__favorite_count
+    def votes(self):
+        return self.__votes
 
-    @favorite_count.setter
-    def favorite_count(self, value):
-        self.__favorite_count = value
+    @votes.setter
+    def votes(self, value):
+        self.__votes = value

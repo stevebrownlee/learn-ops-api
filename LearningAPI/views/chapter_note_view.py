@@ -98,7 +98,7 @@ class ChapterNoteViewSet(ViewSet):
         """
         try:
             notes = ChapterNote.objects.annotate(
-                favorite_count=Count('favorite_notes')
+                votes=Count('voters')
             ).all().order_by('pk')
 
             serializer = ChapterNoteSerializer(
@@ -171,4 +171,4 @@ class ChapterNoteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ChapterNote
-        fields = ( 'id', 'markdown_text', 'public', 'date', 'chapter', 'favorite_count', )
+        fields = ( 'id', 'markdown_text', 'public', 'date', 'chapter', 'votes', )
