@@ -1,10 +1,11 @@
-from LearningAPI.models.favorite_notes import FavoriteNote
+from django.db.models import Count, Q
 from rest_framework.decorators import action
 from django.http import HttpResponseServerError
 from rest_framework import serializers, status
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
+from LearningAPI.models import FavoriteNote
 from LearningAPI.models import ChapterNote, Chapter, NssUser
 
 
@@ -96,7 +97,9 @@ class ChapterNoteViewSet(ViewSet):
             Response -- JSON serialized array
         """
         try:
-            notes = ChapterNote.objects.all().order_by('pk')
+            notes = ChapterNote.objects.annotate(
+                favorite_count=Count('favorite_notes')
+            ).all().order_by('pk')
 
             serializer = ChapterNoteSerializer(
                 notes, many=True, context={'request': request})
@@ -168,4 +171,4 @@ class ChapterNoteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ChapterNote
-        fields = ( 'id', 'markdown_text', 'public', 'date', 'chapter')
+        fields = ( 'id', 'markdown_text', 'public', 'date', 'chapter', 'favorite_count', )
