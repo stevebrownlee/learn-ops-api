@@ -48,6 +48,7 @@ class CohortViewSet(ViewSet):
                 'members', filter=Q(members__nss_user__user__is_staff=True))
             ).get(pk=pk)
 
+
             serializer = CohortSerializer(cohort, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
