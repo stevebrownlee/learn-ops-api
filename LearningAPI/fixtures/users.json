@@ -50,7 +50,7 @@
         "first_name": "Jenna",
         "last_name": "Solis",
         "email": "jenna@solis.com",
-        "is_staff": false,
+        "is_staff": true,
         "is_active": true,
         "date_joined": "2020-12-29T16:37:07.509Z",
         "groups": [

@@ -87,3 +87,4 @@ FROM "LearningAPI_cohort"
         "LearningAPI_nssuser"."user_id" = "auth_user"."id"
     )
 GROUP BY "LearningAPI_cohort"."id"
+;

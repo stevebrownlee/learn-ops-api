@@ -6,5 +6,13 @@
         "user": 1,
         "note": 3
     }
+},
+{
+    "model": "LearningAPI.favoritenote",
+    "pk": 3,
+    "fields": {
+        "user": 3,
+        "note": 3
+    }
 }
 ]
