@@ -1,20 +1,18 @@
-from LearningAPI.models.nssuser_cohort import NssUserCohort
-from LearningAPI.models.cohort import Cohort
-from django.contrib.auth import get_user_model
-from rest_framework import permissions
 from django.http import HttpResponseServerError
-from rest_framework import serializers
-from rest_framework import status
 from django.db.models import Q
+from rest_framework import permissions
+from rest_framework.decorators import action
+from rest_framework import serializers
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
-from LearningAPI.models import NssUser, OneOnOneNote
+from rest_framework import status
+from LearningAPI.models import NssUser, OneOnOneNote, Cohort, NssUserCohort
 
 
 class StudentPermission(permissions.BasePermission):
 
     def has_permission(self, request, view):
-        if view.action in ['list', 'destroy']:
+        if view.action in ['list', 'destroy', 'status']:
             return request.auth.user.is_staff
         elif view.action == 'create':
             return True
@@ -118,6 +116,29 @@ class StudentViewSet(ViewSet):
             students, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @action(methods=['post'], detail=True)
+    def status(self, request, pk):
+        """Add feedback from 1:1 session"""
+
+        if request.method == "POST":
+            try:
+                note = OneOnOneNote()
+                note.coach = NssUser.objects.get(user=request.auth.user)
+                note.student = NssUser.objects.get(pk=pk)
+                note.notes = request.data["notes"]
+
+                note.save()
+
+            except NssUser.DoesNotExist as ex:
+                return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+
+            except Exception as ex:
+                return HttpResponseServerError(ex)
+
+            return Response({'message': 'Student note created'}, status=status.HTTP_201_CREATED)
+
+        return Response({'message': 'Unsupported HTTP method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
 
 class StudentCohortsSerializer(serializers.ModelSerializer):
     """JSON serializer for event organizer's related Django user"""
@@ -141,7 +162,7 @@ class StudentNoteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OneOnOneNote
-        fields = ['notes', 'session_date', 'author']
+        fields = ['id', 'notes', 'session_date', 'author']
 
 
 class StudentSerializer(serializers.ModelSerializer):
