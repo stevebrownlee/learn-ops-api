@@ -23,3 +23,4 @@ from .lightning_tag import LightningTag
 from .favorite_notes import FavoriteNote
 from .assessment import Assessment
 from .assessment_objective import AssessmentObjective
+from .one_on_one_note import OneOnOneNote

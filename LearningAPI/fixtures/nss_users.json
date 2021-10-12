@@ -22,7 +22,7 @@
     "pk": 3,
     "fields": {
         "user": 3,
-        "slack_handle": null,
+        "slack_handle": "jennasolis",
         "github_handle": null
     }
 },
@@ -31,7 +31,7 @@
     "pk": 4,
     "fields": {
         "user": 4,
-        "slack_handle": null,
+        "slack_handle": "rebecca.parker",
         "github_handle": null
     }
 },
@@ -40,7 +40,7 @@
     "pk": 5,
     "fields": {
         "user": 5,
-        "slack_handle": null,
+        "slack_handle": "sammaas",
         "github_handle": null
     }
 },
@@ -49,7 +49,7 @@
     "pk": 6,
     "fields": {
         "user": 6,
-        "slack_handle": null,
+        "slack_handle": "chrisjohnson",
         "github_handle": null
     }
 }

@@ -8,7 +8,7 @@ from rest_framework import status
 from django.db.models import Q
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
-from LearningAPI.models import NssUser
+from LearningAPI.models import NssUser, OneOnOneNote
 
 
 class StudentPermission(permissions.BasePermission):
@@ -40,16 +40,25 @@ class StudentViewSet(ViewSet):
             Response -- JSON serialized instance
         """
         try:
-            student = NssUser.objects.get(pk=pk)
+            try:
+                student = NssUser.objects.get(pk=pk)
+
+            except ValueError as ex:
+                student = NssUser.objects.get(slack_handle=pk)
+
             if request.auth.user == student.user or request.auth.user.is_staff:
                 serializer = StudentSerializer(
                     student, context={'request': request})
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:
-                return Response(None, status=status.HTTP_401_UNAUTHORIZED)
+                return Response(
+                    {"message": "You are not authorized to view this student profile."},
+                    status=status.HTTP_401_UNAUTHORIZED)
 
         except NssUser.DoesNotExist as ex:
-            return Response(None, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"message": "That student does not exist."},
+                status=status.HTTP_404_NOT_FOUND)
 
         except Exception as ex:
             return HttpResponseServerError(ex)
@@ -109,32 +118,47 @@ class StudentViewSet(ViewSet):
             students, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-class StudentUserSerializer(serializers.ModelSerializer):
-    """JSON serializer for event organizer's related Django user"""
-    class Meta:
-        model = get_user_model()
-        fields = ['first_name', 'last_name', 'email']
-
-class StudentCohortSerializer(serializers.ModelSerializer):
-    """JSON serializer for event organizer's related Django user"""
-    class Meta:
-        model = Cohort
-        fields = ['name', 'id']
 
 class StudentCohortsSerializer(serializers.ModelSerializer):
     """JSON serializer for event organizer's related Django user"""
-    cohort = StudentCohortSerializer(many=False)
+    # cohort = StudentCohortSerializer(many=False)
+    name = serializers.SerializerMethodField()
+    id = serializers.SerializerMethodField()
+
+    def get_name(self, obj):
+        return obj.cohort.name
+
+    def get_id(self, obj):
+        return obj.cohort.id
 
     class Meta:
         model = NssUserCohort
-        fields = ['cohort']
+        fields = ['name', 'id']
+
+
+class StudentNoteSerializer(serializers.ModelSerializer):
+    """JSON serializer for event organizer's related Django user"""
+
+    class Meta:
+        model = OneOnOneNote
+        fields = ['notes', 'session_date', 'author']
+
 
 class StudentSerializer(serializers.ModelSerializer):
     """JSON serializer"""
-    user = StudentUserSerializer(many=False)
     cohorts = StudentCohortsSerializer(many=True)
+    feedback = StudentNoteSerializer(many=True)
+    name = serializers.SerializerMethodField()
+    email = serializers.SerializerMethodField()
+
+    def get_name(self, obj):
+        return f'{obj.user.first_name} {obj.user.last_name}'
+
+    def get_email(self, obj):
+        return obj.user.email
 
     class Meta:
         model = NssUser
-        fields = ( 'slack_handle', 'github_handle', 'user', 'cohorts' )
+        fields = ('id', 'name', 'email', 'slack_handle', 'github_handle',
+                  'cohorts', 'feedback')
         depth = 2

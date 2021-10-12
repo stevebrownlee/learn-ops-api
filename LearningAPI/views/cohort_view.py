@@ -179,5 +179,5 @@ class CohortSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cohort
-        fields = ('name', 'slack_channel', 'start_date', 'end_date',
+        fields = ('id', 'name', 'slack_channel', 'start_date', 'end_date',
                   'break_start_date', 'break_end_date', 'students', 'instructors')
