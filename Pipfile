@@ -13,6 +13,7 @@ pylint = "*"
 djangorestframework = "*"
 django-cors-headers = "*"
 pylint-django = "*"
+uritemplate = "*"
 
 [requires]
 python_version = "3.8"

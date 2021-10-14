@@ -30,5 +30,13 @@
         "nss_user": 6,
         "cohort": 1
     }
+},
+{
+    "model": "LearningAPI.nssusercohort",
+    "pk": 6,
+    "fields": {
+        "nss_user": 7,
+        "cohort": 2
+    }
 }
 ]

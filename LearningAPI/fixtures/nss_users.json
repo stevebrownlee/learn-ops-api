@@ -52,5 +52,14 @@
         "slack_handle": "chrisjohnson",
         "github_handle": null
     }
+},
+{
+    "model": "LearningAPI.nssuser",
+    "pk": 7,
+    "fields": {
+        "user": 7,
+        "slack_handle": "sorceress",
+        "github_handle": null
+    }
 }
 ]

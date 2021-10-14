@@ -2,8 +2,8 @@ from django.db import models
 
 
 class Cohort(models.Model):
-    name = models.CharField(max_length=55)
-    slack_channel = models.CharField(max_length=55)
+    name = models.CharField(max_length=55, unique=True)
+    slack_channel = models.CharField(max_length=55, unique=True)
     start_date = models.DateField(auto_now=False, auto_now_add=False)
     end_date = models.DateField(auto_now=False, auto_now_add=False)
     break_start_date = models.DateField(auto_now=False, auto_now_add=False)
@@ -16,7 +16,10 @@ class Cohort(models.Model):
         Returns:
             int: Number of students per cohort
         """
-        return self.__students
+        try:
+            return self.__students
+        except AttributeError as ex:
+            return 0
 
     @students.setter
     def students(self, value):
@@ -29,7 +32,11 @@ class Cohort(models.Model):
         Returns:
             int: Number of instructors per cohort
         """
-        return self.__instructors
+        try:
+            return self.__instructors
+        except AttributeError as ex:
+            return 0
+
 
     @instructors.setter
     def instructors(self, value):

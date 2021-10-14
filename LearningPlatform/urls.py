@@ -18,6 +18,8 @@ from django.contrib import admin
 from django.urls import path
 from rest_framework import routers
 from rest_framework.authtoken import views as rest_views
+from rest_framework.schemas import get_schema_view
+from rest_framework.renderers import JSONOpenAPIRenderer
 from LearningAPI import views
 
 router = routers.DefaultRouter(trailing_slash=False)
@@ -34,9 +36,14 @@ router.register(r'objectives', views.LearningObjectiveViewSet, 'learningobjectiv
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('schema', get_schema_view(renderer_classes=[JSONOpenAPIRenderer])),
     path('accounts', views.register_user),
     path('accounts/verify', rest_views.obtain_auth_token, name='api-token-auth'),
     path('admin', admin.site.urls),
     path('api-auth', include('rest_framework.urls', namespace='rest_framework'))
+
+]
+
+default = [
 
 ]

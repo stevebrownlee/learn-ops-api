@@ -72,6 +72,7 @@ REST_FRAMEWORK = {
 }
 
 ROOT_URLCONF = 'LearningPlatform.urls'
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 TEMPLATES = [
     {

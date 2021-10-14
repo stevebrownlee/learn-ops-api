@@ -111,9 +111,23 @@ class StudentViewSet(ViewSet):
             Response -- JSON serialized array
         """
         students = NssUser.objects.filter(user__is_staff=False)
-
         serializer = StudentSerializer(
             students, many=True, context={'request': request})
+
+        cohort = self.request.query_params.get('cohort', None)
+        feedback = self.request.query_params.get('feedback', None)
+
+        if cohort is not None:
+            cohort_filter = Cohort.objects.get(pk=cohort)
+            students = students.filter(cohorts__cohort=cohort_filter)
+
+            if feedback is not None and feedback == 'true':
+                serializer = NoCohortStudentSerializer(
+                    students, many=True, context={'request': request})
+            else:
+                serializer = MiniStudentSerializer(
+                    students, many=True, context={'request': request})
+
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(methods=['post'], detail=True)
@@ -142,7 +156,6 @@ class StudentViewSet(ViewSet):
 
 class StudentCohortsSerializer(serializers.ModelSerializer):
     """JSON serializer for event organizer's related Django user"""
-    # cohort = StudentCohortSerializer(many=False)
     name = serializers.SerializerMethodField()
     id = serializers.SerializerMethodField()
 
@@ -182,4 +195,37 @@ class StudentSerializer(serializers.ModelSerializer):
         model = NssUser
         fields = ('id', 'name', 'email', 'slack_handle', 'github_handle',
                   'cohorts', 'feedback')
-        depth = 2
+
+
+class NoCohortStudentSerializer(serializers.ModelSerializer):
+    """JSON serializer"""
+    feedback = StudentNoteSerializer(many=True)
+    name = serializers.SerializerMethodField()
+    email = serializers.SerializerMethodField()
+
+    def get_name(self, obj):
+        return f'{obj.user.first_name} {obj.user.last_name}'
+
+    def get_email(self, obj):
+        return obj.user.email
+
+    class Meta:
+        model = NssUser
+        fields = ('id', 'name', 'email', 'slack_handle', 'github_handle',
+                  'feedback')
+
+
+class MiniStudentSerializer(serializers.ModelSerializer):
+    """JSON serializer"""
+    name = serializers.SerializerMethodField()
+    email = serializers.SerializerMethodField()
+
+    def get_name(self, obj):
+        return f'{obj.user.first_name} {obj.user.last_name}'
+
+    def get_email(self, obj):
+        return obj.user.email
+
+    class Meta:
+        model = NssUser
+        fields = ('id', 'name', 'email', 'slack_handle', 'github_handle',)

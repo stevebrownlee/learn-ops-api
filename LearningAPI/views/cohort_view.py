@@ -1,4 +1,5 @@
 from django.db.models import Count, Q
+from django.db import IntegrityError
 from django.http import HttpResponseServerError
 from rest_framework import serializers, status
 from rest_framework.decorators import action
@@ -32,6 +33,13 @@ class CohortViewSet(ViewSet):
             cohort.save()
             serializer = CohortSerializer(cohort, context={'request': request})
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        except IntegrityError as ex:
+            if "cohort_name_key" in ex.args[0]:
+                return Response({"reason": "Duplicate cohort name."}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response({"reason": "Duplicate cohort Slack channel."}, status=status.HTTP_400_BAD_REQUEST)
+
         except Exception as ex:
             return Response({"reason": ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -47,7 +55,6 @@ class CohortViewSet(ViewSet):
                 instructors=Count(
                 'members', filter=Q(members__nss_user__user__is_staff=True))
             ).get(pk=pk)
-
 
             serializer = CohortSerializer(cohort, context={'request': request})
             return Response(serializer.data)
@@ -107,7 +114,7 @@ class CohortViewSet(ViewSet):
                 'members', filter=Q(members__nss_user__user__is_staff=False)),
                 instructors=Count(
                 'members', filter=Q(members__nss_user__user__is_staff=True))
-            ).all()
+            ).all().order_by('pk')
 
             serializer = CohortSerializer(
                 cohorts, many=True, context={'request': request})
@@ -125,7 +132,8 @@ class CohortViewSet(ViewSet):
 
             try:
                 cohort = Cohort.objects.get(pk=pk)
-                member = NssUser.objects.get(pk=int(request.data["user_id"]))
+                member = NssUser.objects.get(
+                    pk=int(request.data["student_id"]))
                 NssUserCohort.objects.get(cohort=cohort, nss_user=member)
 
                 return Response(
@@ -153,7 +161,8 @@ class CohortViewSet(ViewSet):
         elif request.method == "DELETE":
             try:
                 cohort = Cohort.objects.get(pk=pk)
-                member = NssUser.objects.get(pk=int(request.data["user_id"]))
+                member = NssUser.objects.get(
+                    pk=int(request.data["student_id"]))
                 rel = NssUserCohort.objects.get(cohort=cohort, nss_user=member)
                 rel.delete()
 
