@@ -10,3 +10,4 @@ from .chapter_view import ChapterViewSet
 from .chapter_note_view import ChapterNoteViewSet
 from .learning_objective_view import LearningObjectiveViewSet
 from .opportunity_view import OpportunityViewSet
+from .learning_weight_view import LearningWeightViewSet

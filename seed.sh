@@ -19,4 +19,5 @@ python manage.py loaddata favorited_notes
 python manage.py loaddata taxonomy_levels
 python manage.py loaddata one_on_one_notes
 python manage.py loaddata opportunities
+python manage.py loaddata learning_weights
 
