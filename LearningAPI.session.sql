@@ -2,6 +2,9 @@ SELECT *
 FROM public."LearningAPI_cohort";
 
 SELECT *
+FROM public."LearningAPI_opportunity";
+
+SELECT *
 FROM public."LearningAPI_nssuser";
 
 SELECT *

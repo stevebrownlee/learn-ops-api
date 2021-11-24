@@ -23,6 +23,7 @@ from rest_framework.renderers import JSONOpenAPIRenderer
 from LearningAPI import views
 
 router = routers.DefaultRouter(trailing_slash=False)
+router.register(r'opportunities', views.OpportunityViewSet, 'opportunity')
 router.register(r'capstones', views.CapstoneViewSet, 'capstone')
 router.register(r'cohorts', views.CohortViewSet, 'cohort')
 router.register(r'students', views.StudentViewSet, 'student')
