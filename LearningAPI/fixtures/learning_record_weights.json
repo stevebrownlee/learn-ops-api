@@ -1,0 +1,42 @@
+[
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 1,
+        "fields": {
+            "record": 1,
+            "weight": 2
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 2,
+        "fields": {
+            "record": 2,
+            "weight": 15
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 3,
+        "fields": {
+            "record": 3,
+            "weight": 11
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 4,
+        "fields": {
+            "record": 4,
+            "weight": 10
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 5,
+        "fields": {
+            "record": 5,
+            "weight": 16
+        }
+    }
+]

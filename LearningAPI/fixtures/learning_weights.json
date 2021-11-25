@@ -118,5 +118,21 @@
             "label": "Vocabulary (ideal)",
             "weight": 6
         }
+    },
+    {
+        "model": "LearningAPI.learningweight",
+        "pk": 16,
+        "fields": {
+            "label": "Explorer and Pioneer chapters started",
+            "weight": 3
+        }
+    },
+    {
+        "model": "LearningAPI.learningweight",
+        "pk": 17,
+        "fields": {
+            "label": "Explorer and Pioneer chapters completed",
+            "weight": 5
+        }
     }
     ]
