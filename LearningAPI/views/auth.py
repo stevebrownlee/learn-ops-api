@@ -49,6 +49,8 @@ def register_user(request):
     # Load the JSON string of the request body into a dict
     req_body = json.loads(request.body.decode())
 
+    is_new_instructor = req_body['level'] and req_body['level'] == 'instructor'
+
     # Create a new user by invoking the `create_user` helper method
     # on Django's built-in User model
     new_user = User.objects.create_user(
@@ -56,7 +58,8 @@ def register_user(request):
         email=req_body['email'],
         password=req_body['password'],
         first_name=req_body['first_name'],
-        last_name=req_body['last_name']
+        last_name=req_body['last_name'],
+        is_staff=is_new_instructor
     )
 
     nss_user = NssUser.objects.create(
@@ -68,7 +71,10 @@ def register_user(request):
     # Commit the user to the database by saving it
     nss_user.save()
 
-    nss_user.user.groups.add(Group.objects.get(name='Students'))
+    if is_new_instructor:
+        nss_user.user.groups.add(Group.objects.get(name='Instructors'))
+    else:
+        nss_user.user.groups.add(Group.objects.get(name='Students'))
 
     # Use the REST Framework's token generator on the new user account
     token = Token.objects.create(user=new_user)
