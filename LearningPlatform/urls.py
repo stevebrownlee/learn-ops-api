@@ -39,6 +39,7 @@ router.register(r'objectives', views.LearningObjectiveViewSet, 'learningobjectiv
 
 
 urlpatterns = [
+    path('records/entries/<int:entryId>', views.LearningRecordViewSet.as_view({'delete': 'entries'}), name="entries"),
     path('', include(router.urls)),
     path('schema', get_schema_view(renderer_classes=[JSONOpenAPIRenderer])),
     path('accounts', views.register_user),

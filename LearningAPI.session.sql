@@ -8,6 +8,12 @@ SELECT *
 FROM public."LearningAPI_nssuser";
 
 SELECT *
+FROM public."LearningAPI_learningrecord";
+
+SELECT *
+FROM public."LearningAPI_learningrecordweight";
+
+SELECT *
 FROM public."auth_user";
 
 SELECT *

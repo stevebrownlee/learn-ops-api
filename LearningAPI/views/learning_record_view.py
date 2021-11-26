@@ -1,8 +1,10 @@
+from django.http.response import HttpResponseServerError
 from rest_framework import serializers, status
+from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ViewSet
 from LearningAPI.models import LearningRecord
 from LearningAPI.models import LearningRecordWeight
 from LearningAPI.models.learning_weight import LearningWeight
@@ -55,7 +57,7 @@ class LargeResultsSetPagination(PageNumberPagination):
     max_page_size = 100
 
 
-class LearningRecordViewSet(ModelViewSet):
+class LearningRecordViewSet(ViewSet):
     """
     A simple ViewSet for viewing and editing learning records.
     """
@@ -63,6 +65,21 @@ class LearningRecordViewSet(ModelViewSet):
     serializer_class = LearningRecordSerializer
     permission_classes = [IsAdminUser]
     pagination_class = LargeResultsSetPagination
+
+    def list(self, request):
+        """Handle GET requests for all items
+
+        Returns:
+            Response -- JSON serialized array
+        """
+        try:
+            records = LearningRecord.objects.all().order_by('pk')
+
+            serializer = LearningRecordSerializer(
+                records, many=True, context={'request': request})
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as ex:
+            return HttpResponseServerError(ex)
 
     def create(self, request):
         """Handle POST operations
@@ -90,3 +107,27 @@ class LearningRecordViewSet(ModelViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         except Exception as ex:
             return Response({"reason": ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(methods=['delete'], detail=False)
+    def entries(self, request, entryId=None):
+        """
+        Delete learning record entries
+        """
+
+        if request.method == "DELETE":
+
+            try:
+                entry = LearningRecordWeight.objects.get(pk=entryId)
+                record_id = entry.record_id
+                entry.delete()
+
+                record_entries = LearningRecordWeight.objects.filter(record_id=record_id)
+                any_left = len(record_entries)
+                if not any_left:
+                    record = LearningRecord.objects.get(pk=record_id)
+                    record.delete()
+
+            except LearningRecordWeight.DoesNotExist:
+                return Response(None, status=status.HTTP_404_NOT_FOUND)
+
+            return Response(None, status=status.HTTP_204_NO_CONTENT)
