@@ -134,5 +134,13 @@
             "label": "Explorer and Pioneer chapters completed",
             "weight": 5
         }
+    },
+    {
+        "model": "LearningAPI.learningweight",
+        "pk": 18,
+        "fields": {
+            "label": "General note",
+            "weight": 0
+        }
     }
     ]

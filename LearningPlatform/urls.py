@@ -24,6 +24,7 @@ from LearningAPI import views
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'profile', views.Profile, 'profile')
+router.register(r'records', views.LearningRecordViewSet, 'record')
 router.register(r'weights', views.LearningWeightViewSet, 'weight')
 router.register(r'opportunities', views.OpportunityViewSet, 'opportunity')
 router.register(r'capstones', views.CapstoneViewSet, 'capstone')

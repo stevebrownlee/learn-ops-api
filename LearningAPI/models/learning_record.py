@@ -1,4 +1,8 @@
 from django.db import models
+from django.db.models.fields import DateField
+from django.utils import timezone
+
+"""Model for instructor records per student task"""
 
 
 class LearningRecord(models.Model):
@@ -8,10 +12,12 @@ class LearningRecord(models.Model):
         ("CLASS", 'Github Classroom'),
     )
 
-    student = models.ForeignKey("NssUser", on_delete=models.CASCADE)
+    student = models.ForeignKey(
+        "NssUser", on_delete=models.CASCADE, related_name='records')
     description = models.CharField(max_length=55)
     obtained_from = models.CharField(
         max_length=5,
         choices=RECORD_SOURCE,
         default="ONEON",
     )
+    created_on = models.DateField(null=False, blank=True, default=timezone.now, editable=False)

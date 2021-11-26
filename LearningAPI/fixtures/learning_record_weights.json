@@ -4,7 +4,9 @@
         "pk": 1,
         "fields": {
             "record": 1,
-            "weight": 2
+            "weight": 2,
+            "note": "Necessitatibus omnis praesentium deserunt voluptate voluptatum at dolor aut ipsam.",
+            "instructor": 1
         }
     },
     {
@@ -12,7 +14,9 @@
         "pk": 2,
         "fields": {
             "record": 2,
-            "weight": 15
+            "weight": 15,
+            "note": "Quis ut iure quisquam.",
+            "instructor": 1
         }
     },
     {
@@ -20,7 +24,9 @@
         "pk": 3,
         "fields": {
             "record": 3,
-            "weight": 11
+            "weight": 11,
+            "note": "Rem et beatae non mollitia omnis ut ducimus sed commodi.",
+            "instructor": 1
         }
     },
     {
@@ -28,7 +34,9 @@
         "pk": 4,
         "fields": {
             "record": 4,
-            "weight": 10
+            "weight": 10,
+            "note": "Placeat sapiente aut accusamus nobis iure qui ipsum illum.",
+            "instructor": 1
         }
     },
     {
@@ -36,7 +44,9 @@
         "pk": 5,
         "fields": {
             "record": 5,
-            "weight": 16
+            "weight": 16,
+            "note": "Corrupti dolor veniam iusto molestiae sequi quia sint qui.",
+            "instructor": 1
         }
     }
 ]
