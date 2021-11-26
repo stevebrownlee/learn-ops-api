@@ -75,7 +75,8 @@ class LearningRecordViewSet(ViewSet):
         try:
             learningrecord = LearningRecord.objects.get(pk=pk)
 
-            serializer = LearningRecordSerializer(learningrecord, context={'request': request})
+            serializer = LearningRecordSerializer(
+                learningrecord, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
@@ -113,11 +114,13 @@ class LearningRecordViewSet(ViewSet):
             record_weight = LearningRecordWeight()
             record_weight.record = record
             record_weight.weight = weight
-            record_weight.instructor = NssUser.objects.get(user=request.auth.user)
+            record_weight.instructor = NssUser.objects.get(
+                user=request.auth.user)
             record_weight.note = request.data["note"]
             record_weight.save()
 
-            serializer = LearningRecordSerializer( record, context={'request': request})
+            serializer = LearningRecordSerializer(
+                record, context={'request': request})
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         except Exception as ex:
             return Response({"reason": ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
@@ -146,11 +149,13 @@ class LearningRecordViewSet(ViewSet):
                 record_weight = LearningRecordWeight()
                 record_weight.record = record
                 record_weight.weight = weight
-                record_weight.instructor = NssUser.objects.get(user=request.auth.user)
+                record_weight.instructor = NssUser.objects.get(
+                    user=request.auth.user)
                 record_weight.note = request.data["note"]
                 record_weight.save()
 
-                serializer = LearningRecordSerializer( record, context={'request': request})
+                serializer = LearningRecordSerializer(
+                    record, context={'request': request})
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             except Exception as ex:
                 return Response({"reason": ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
@@ -162,7 +167,8 @@ class LearningRecordViewSet(ViewSet):
                 record_id = entry.record_id
                 entry.delete()
 
-                record_entries = LearningRecordWeight.objects.filter(record_id=record_id)
+                record_entries = LearningRecordWeight.objects.filter(
+                    record_id=record_id)
                 any_left = len(record_entries)
                 if not any_left:
                     record = LearningRecord.objects.get(pk=record_id)

@@ -114,6 +114,19 @@ class StudentViewSet(ViewSet):
         serializer = StudentSerializer(
             students, many=True, context={'request': request})
 
+        search_terms = self.request.query_params.get('q', None)
+
+        if search_terms != None:
+            for letter in list(search_terms):
+                students = students.filter(
+                    Q(user__first_name__icontains=letter)
+                    | Q(user__last_name__icontains=letter)
+                )
+
+            serializer = MiniStudentSerializer(
+                    students, many=True, context={'request': request})
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
         cohort = self.request.query_params.get('cohort', None)
         feedback = self.request.query_params.get('feedback', None)
 
