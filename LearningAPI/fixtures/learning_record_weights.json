@@ -48,5 +48,15 @@
             "note": "Corrupti dolor veniam iusto molestiae sequi quia sint qui.",
             "instructor": 1
         }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 6,
+        "fields": {
+            "record": 5,
+            "weight": 17,
+            "note": "Iusto earum aliquid. Laudantium non ut voluptatem enim dolores numquam quam. Repellendus reiciendis voluptatum autem.",
+            "instructor": 1
+        }
     }
 ]

@@ -1,9 +1,11 @@
-from rest_framework import serializers
+from rest_framework import serializers, status
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAdminUser
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from LearningAPI.models import LearningRecord
 from LearningAPI.models import LearningRecordWeight
+from LearningAPI.models.learning_weight import LearningWeight
 from LearningAPI.models.nssuser import NssUser
 
 
@@ -44,7 +46,7 @@ class LearningRecordSerializer(serializers.ModelSerializer):
     class Meta:
         model = LearningRecord
         fields = ('student', 'description', 'obtained_from',
-                  'weights', 'created_on',)
+                  'weights', 'created_on', 'id', )
 
 
 class LargeResultsSetPagination(PageNumberPagination):
@@ -61,3 +63,30 @@ class LearningRecordViewSet(ModelViewSet):
     serializer_class = LearningRecordSerializer
     permission_classes = [IsAdminUser]
     pagination_class = LargeResultsSetPagination
+
+    def create(self, request):
+        """Handle POST operations
+
+        Returns:
+            Response -- JSON serialized instance
+        """
+        record = LearningRecord()
+        record.student = NssUser.objects.get(pk=request.data["student"])
+        record.description = request.data["description"]
+        record.obtained_from = request.data["obtained_from"]
+
+        weight = LearningWeight.objects.get(pk=request.data["weight"])
+
+        try:
+            record.save()
+            record_weight = LearningRecordWeight()
+            record_weight.record = record
+            record_weight.weight = weight
+            record_weight.instructor = NssUser.objects.get(user=request.auth.user)
+            record_weight.note = request.data["note"]
+            record_weight.save()
+
+            serializer = LearningRecordSerializer( record, context={'request': request})
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except Exception as ex:
+            return Response({"reason": ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)

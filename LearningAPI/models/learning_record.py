@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models.fields import DateField
-from django.utils import timezone
+import datetime
+
 
 """Model for instructor records per student task"""
 
@@ -20,4 +21,4 @@ class LearningRecord(models.Model):
         choices=RECORD_SOURCE,
         default="ONEON",
     )
-    created_on = models.DateField(null=False, blank=True, default=timezone.now, editable=False)
+    created_on = models.DateField(null=False, blank=True, default=datetime.date.today, editable=False)
