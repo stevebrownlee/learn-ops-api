@@ -66,6 +66,20 @@ class LearningRecordViewSet(ViewSet):
     permission_classes = [IsAdminUser]
     pagination_class = LargeResultsSetPagination
 
+    def retrieve(self, request, pk=None):
+        """Handle GET requests for single item
+
+        Returns:
+            Response -- JSON serialized instance
+        """
+        try:
+            learningrecord = LearningRecord.objects.get(pk=pk)
+
+            serializer = LearningRecordSerializer(learningrecord, context={'request': request})
+            return Response(serializer.data)
+        except Exception as ex:
+            return HttpResponseServerError(ex)
+
     def list(self, request):
         """Handle GET requests for all items
 
@@ -108,11 +122,38 @@ class LearningRecordViewSet(ViewSet):
         except Exception as ex:
             return Response({"reason": ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
 
-    @action(methods=['delete'], detail=False)
+    @action(methods=['delete', 'post'], detail=False)
     def entries(self, request, entryId=None):
         """
         Delete learning record entries
         """
+
+        if request.method == "POST":
+            """Handle POST operations
+
+            Returns:
+                Response -- JSON serialized instance
+            """
+            try:
+                record = LearningRecord.objects.get(pk=request.data["record"])
+                weight = LearningWeight.objects.get(pk=request.data["weight"])
+            except LearningRecord.DoesNotExist:
+                return Response({"reason": "Learning record not found"}, status=status.HTTP_404_NOT_FOUND)
+            except LearningWeight.DoesNotExist:
+                return Response({"reason": "Learning weight not found"}, status=status.HTTP_404_NOT_FOUND)
+
+            try:
+                record_weight = LearningRecordWeight()
+                record_weight.record = record
+                record_weight.weight = weight
+                record_weight.instructor = NssUser.objects.get(user=request.auth.user)
+                record_weight.note = request.data["note"]
+                record_weight.save()
+
+                serializer = LearningRecordSerializer( record, context={'request': request})
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            except Exception as ex:
+                return Response({"reason": ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
 
         if request.method == "DELETE":
 
