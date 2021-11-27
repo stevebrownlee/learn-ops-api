@@ -7,6 +7,7 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import status
 from LearningAPI.models import NssUser, OneOnOneNote, Cohort, NssUserCohort
+from LearningAPI.views.learning_record_view import LearningRecordSerializer
 
 
 class StudentPermission(permissions.BasePermission):
@@ -39,6 +40,7 @@ class StudentViewSet(ViewSet):
         """
         try:
             try:
+
                 student = NssUser.objects.get(pk=pk)
 
             except ValueError as ex:
@@ -87,7 +89,7 @@ class StudentViewSet(ViewSet):
             return HttpResponseServerError(ex)
 
     def destroy(self, request, pk=None):
-        """Handle DELETE requests for a single item
+        """Handle DELETE requests for a single student
 
         Returns:
             Response -- 200, 404, or 500 status code
@@ -105,7 +107,7 @@ class StudentViewSet(ViewSet):
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def list(self, request):
-        """Handle GET requests for all items
+        """Handle GET requests for all students
 
         Returns:
             Response -- JSON serialized array
@@ -115,7 +117,6 @@ class StudentViewSet(ViewSet):
             students, many=True, context={'request': request})
 
         search_terms = self.request.query_params.get('q', None)
-
         if search_terms != None:
             for letter in list(search_terms):
                 students = students.filter(
@@ -124,7 +125,7 @@ class StudentViewSet(ViewSet):
                 )
 
             serializer = MiniStudentSerializer(
-                    students, many=True, context={'request': request})
+                students, many=True, context={'request': request})
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         cohort = self.request.query_params.get('cohort', None)
@@ -184,7 +185,7 @@ class StudentCohortsSerializer(serializers.ModelSerializer):
 
 
 class StudentNoteSerializer(serializers.ModelSerializer):
-    """JSON serializer for event organizer's related Django user"""
+    """JSON serializer for student notes"""
 
     class Meta:
         model = OneOnOneNote
@@ -197,6 +198,7 @@ class StudentSerializer(serializers.ModelSerializer):
     feedback = StudentNoteSerializer(many=True)
     name = serializers.SerializerMethodField()
     email = serializers.SerializerMethodField()
+    records = LearningRecordSerializer(many=True)
 
     def get_name(self, obj):
         return f'{obj.user.first_name} {obj.user.last_name}'
@@ -207,7 +209,7 @@ class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = NssUser
         fields = ('id', 'name', 'email', 'slack_handle', 'github_handle',
-                  'cohorts', 'feedback')
+                  'cohorts', 'feedback', 'records')
 
 
 class NoCohortStudentSerializer(serializers.ModelSerializer):
