@@ -1,0 +1,28 @@
+alerts:
+- rule: DEPLOYMENT_FAILED
+- rule: DOMAIN_FAILED
+databases:
+- engine: PG
+  name: learnops
+  num_nodes: 1
+  size: db-s-dev-database
+  version: "12"
+name: learn-ops-api
+region: nyc
+services:
+- environment_slug: python
+  envs:
+  - key: DATABASE_URL
+    scope: RUN_TIME
+    value: ${learnops.DATABASE_URL}
+  github:
+    branch: main
+    deploy_on_push: true
+    repo: stevebrownlee/learn-ops-api
+  http_port: 8080
+  instance_count: 1
+  instance_size_slug: basic-xxs
+  name: learn-ops-api
+  routes:
+  - path: /
+  source_dir: /
