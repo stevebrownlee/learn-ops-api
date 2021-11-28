@@ -13,7 +13,7 @@ from LearningAPI.models.nssuser_cohort import NssUserCohort
 class CohortPermission(permissions.BasePermission):
 
     def has_permission(self, request, view):
-        if view.action in ['create', 'update', 'destroy']:
+        if view.action in ['create', 'update', 'destroy', 'assign']:
             return request.auth.user.is_staff
         elif view.action in ['retrieve', 'list']:
             return True
@@ -143,7 +143,7 @@ class CohortViewSet(ViewSet):
             try:
                 cohort = Cohort.objects.get(pk=pk)
                 member = NssUser.objects.get(
-                    pk=int(request.data["student_id"]))
+                    pk=int(request.data["person_id"]))
                 NssUserCohort.objects.get(cohort=cohort, nss_user=member)
 
                 return Response(
