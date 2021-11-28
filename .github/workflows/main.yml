@@ -9,6 +9,10 @@
 #     type `groups` to make sure you are in the docker group
 #     sudo ./svc.sh stop
 #     sudo ./svc.sh start
+#
+#     In Pipenv file, make sure Python version is '*' instead of a specific version, otherwise
+#          the self-hosted action will fail to find a specific version. Just use whatever version
+#          it thinks is on the droplet
 
 
 # This is a basic workflow to help you get started with Actions
