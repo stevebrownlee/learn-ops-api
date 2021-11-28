@@ -1,0 +1,63 @@
+# Setting up server after action is installed and started:
+#
+#     Install homebrew
+#     brew install pyenv
+#     pyenv install {python version, e.g. 3.8.9}
+#     Follow directions at https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository
+#     sudo usermod -a -G docker {your username}
+#     exit from ssh session and log back in
+#     type `groups` to make sure you are in the docker group
+#     sudo ./svc.sh stop
+#     sudo ./svc.sh start
+
+
+# This is a basic workflow to help you get started with Actions
+
+name: Digital Ocean Build and Deploy
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: self-hosted
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Install dependecies
+        uses: VaultVulp/action-pipenv@v2.0.1
+        with:
+          # command: install
+          command: install
+
+  deploy:
+    name: Deploy to Digital Ocean
+    # The type of runner that the job will run on
+    runs-on: self-hosted
+    needs: build
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - uses: actions/checkout@v2
+      - name: Deployed successfully
+        run: |
+          echo Deployed!!
