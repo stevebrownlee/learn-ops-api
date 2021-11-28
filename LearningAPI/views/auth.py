@@ -1,12 +1,15 @@
 import json
 from django.http import HttpResponse
+from django.http import HttpResponseServerError
 from django.contrib.auth import authenticate
-from django.contrib.auth.models import Group, Permission
+from django.contrib.auth.models import Group
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
 from rest_framework.authtoken.models import Token
+from rest_framework.response import Response
 from LearningAPI.models import NssUser
+from LearningAPI.models import Cohort, NssUserCohort
 
 
 @csrf_exempt
@@ -49,7 +52,7 @@ def register_user(request):
     # Load the JSON string of the request body into a dict
     req_body = json.loads(request.body.decode())
 
-    is_new_instructor = req_body['level'] and req_body['level'] == 'instructor'
+    is_new_instructor = 'level' in req_body and req_body['level'] == 'instructor'
 
     # Create a new user by invoking the `create_user` helper method
     # on Django's built-in User model
@@ -63,8 +66,8 @@ def register_user(request):
     )
 
     nss_user = NssUser.objects.create(
-        slack_handle=req_body['slack_handle'] if 'slack_handle' in req_body else None,
-        github_handle=req_body['github_handle'] if 'github_handle' in req_body else None,
+        slack_handle=req_body['slackHandle'] if 'slackHandle' in req_body else None,
+        github_handle=req_body['githubHandle'] if 'githubHandle' in req_body else None,
         user=new_user
     )
 
@@ -74,6 +77,28 @@ def register_user(request):
     if is_new_instructor:
         nss_user.user.groups.add(Group.objects.get(name='Instructors'))
     else:
+
+        try:
+            cohort = Cohort.objects.get(pk=req_body['cohort'])
+            NssUserCohort.objects.get(cohort=cohort, nss_user=nss_user)
+
+            return Response(
+                {'message': 'Person is already assigned to cohort'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        except NssUserCohort.DoesNotExist as ex:
+            relationship = NssUserCohort()
+            relationship.cohort = cohort
+            relationship.nss_user = nss_user
+
+            relationship.save()
+        except Cohort.DoesNotExist as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+
+        except Exception as ex:
+            return HttpResponseServerError(ex)
+
         nss_user.user.groups.add(Group.objects.get(name='Students'))
 
     # Use the REST Framework's token generator on the new user account

@@ -2,6 +2,7 @@ from django.db.models import Count, Q
 from django.db import IntegrityError
 from django.http import HttpResponseServerError
 from rest_framework import serializers, status
+from rest_framework import permissions
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
@@ -9,11 +10,20 @@ from rest_framework.viewsets import ViewSet
 from LearningAPI.models import Cohort, NssUser
 from LearningAPI.models.nssuser_cohort import NssUserCohort
 
+class CohortPermission(permissions.BasePermission):
+
+    def has_permission(self, request, view):
+        if view.action in ['create', 'update', 'destroy']:
+            return request.auth.user.is_staff
+        elif view.action in ['retrieve', 'list']:
+            return True
+        else:
+            return False
 
 class CohortViewSet(ViewSet):
     """Cohort view set"""
 
-    permission_classes = (IsAdminUser,)
+    permission_classes = (CohortPermission,)
 
     def create(self, request):
         """Handle POST operations

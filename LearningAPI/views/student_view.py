@@ -51,9 +51,9 @@ class StudentViewSet(ViewSet):
                     student, context={'request': request})
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:
-                return Response(
-                    {"message": "You are not authorized to view this student profile."},
-                    status=status.HTTP_401_UNAUTHORIZED)
+                    return Response(
+                        {"message": "You are not authorized to view this student profile."},
+                        status=status.HTTP_401_UNAUTHORIZED)
 
         except NssUser.DoesNotExist as ex:
             return Response(
