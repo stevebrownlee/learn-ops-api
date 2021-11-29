@@ -145,7 +145,7 @@ class CohortViewSet(ViewSet):
 
     @action(methods=['post', 'delete'], detail=True)
     def assign(self, request, pk):
-        """Assign student or instructor to a cohort"""
+        """Assign student or instructor to an existing cohort"""
 
         if request.method == "POST":
             cohort = None
