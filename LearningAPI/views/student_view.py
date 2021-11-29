@@ -6,8 +6,8 @@ from rest_framework import serializers
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import status
-from LearningAPI.models import NssUser, OneOnOneNote, Cohort, NssUserCohort
-from LearningAPI.views.learning_record_view import LearningRecordSerializer
+from LearningAPI.models import NssUser, OneOnOneNote, Cohort, NssUserCohort, LearningRecord
+from LearningAPI.views.learning_record_view import RecordWeightSerializer
 
 
 class StudentPermission(permissions.BasePermission):
@@ -139,7 +139,7 @@ class StudentViewSet(ViewSet):
                 serializer = NoCohortStudentSerializer(
                     students, many=True, context={'request': request})
             else:
-                serializer = MiniStudentSerializer(
+                serializer = NoCohortStudentSerializer(
                     students, many=True, context={'request': request})
 
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -191,6 +191,13 @@ class StudentNoteSerializer(serializers.ModelSerializer):
         model = OneOnOneNote
         fields = ['id', 'notes', 'session_date', 'author']
 
+class LearningRecordSerializer(serializers.ModelSerializer):
+    """JSON serializer"""
+    weights = RecordWeightSerializer(many=True)
+
+    class Meta:
+        model = LearningRecord
+        fields = ('description', 'obtained_from', 'weights', 'created_on', 'id', )
 
 class StudentSerializer(serializers.ModelSerializer):
     """JSON serializer"""
@@ -217,6 +224,7 @@ class NoCohortStudentSerializer(serializers.ModelSerializer):
     feedback = StudentNoteSerializer(many=True)
     name = serializers.SerializerMethodField()
     email = serializers.SerializerMethodField()
+    records = LearningRecordSerializer(many=True)
 
     def get_name(self, obj):
         return f'{obj.user.first_name} {obj.user.last_name}'
@@ -227,7 +235,7 @@ class NoCohortStudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = NssUser
         fields = ('id', 'name', 'email', 'slack_handle', 'github_handle',
-                  'feedback')
+                  'feedback', 'records')
 
 
 class MiniStudentSerializer(serializers.ModelSerializer):

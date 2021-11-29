@@ -120,10 +120,21 @@ class CohortViewSet(ViewSet):
             Response -- JSON serialized array
         """
         try:
-            cohorts = Cohort.objects.annotate(students=Count(
-                'members', filter=Q(members__nss_user__user__is_staff=False)),
-                instructors=Count(
-                'members', filter=Q(members__nss_user__user__is_staff=True))
+            cohorts = Cohort.objects.all()
+
+            # Fuzzy search on `q` param present
+            search_terms = self.request.query_params.get('q', None)
+            if search_terms != None:
+                for letter in list(search_terms):
+                    cohorts = cohorts.filter(name__icontains=letter)
+
+                serializer = MiniCohortSerializer(cohorts, many=True, context={'request': request})
+                return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+            cohorts = cohorts.annotate(
+                students=Count('members', filter=Q(members__nss_user__user__is_staff=False)),
+                instructors=Count('members', filter=Q(members__nss_user__user__is_staff=True))
             ).all().order_by('pk')
 
             serializer = CohortSerializer(
@@ -192,6 +203,14 @@ class CohortViewSet(ViewSet):
 
         return Response({'message': 'Unsupported HTTP method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
+
+
+class MiniCohortSerializer(serializers.ModelSerializer):
+    """JSON serializer"""
+
+    class Meta:
+        model = Cohort
+        fields = ('id', 'name')
 
 class CohortSerializer(serializers.ModelSerializer):
     """JSON serializer"""
