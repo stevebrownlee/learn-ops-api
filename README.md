@@ -74,7 +74,7 @@ The API will then respond with an authorization key.
 
 ```json
 {
-    "key": "627d52a940b6c6dfd3214ecff442deeadb024547"
+    "key": "seriesofrandomnumbersandletters"
 }
 ```
 
@@ -84,7 +84,7 @@ Finally, the client can use that key to get the user information. All requests d
 fetch("http://localhost:8000/auth/user/", {
     method: "GET",
     headers: {
-        "Authorization": "Token 627d52a940b6c6dfd3214ecff442deeadb024547",
+        "Authorization": "Token seriesofrandomnumbersandletters",
         "Accept": "application/json"
     }
 }
