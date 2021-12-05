@@ -18,6 +18,7 @@ gunicorn = "*"
 dj-database-url = "*"
 psycopg2-binary = "*"
 dj-rest-auth = "*"
+django-allauth = "*"
 
 [requires]
 python_version = "*"

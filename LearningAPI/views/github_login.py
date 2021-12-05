@@ -1,3 +1,4 @@
+import os
 import urllib.parse
 from allauth.socialaccount.providers.github.views import GitHubOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
@@ -17,5 +18,6 @@ class GithubLogin(SocialLoginView):
 
 
 def github_callback(request):
+    CALLBACK = os.getenv("LEARNING_GITHUB_CALLBACK")
     params = urllib.parse.urlencode(request.GET)
-    return redirect(f'http://localhost:3000/auth/github?{params}')
+    return redirect(f'{CALLBACK}?{params}')
