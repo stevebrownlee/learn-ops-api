@@ -42,14 +42,15 @@ router.register(r'objectives', views.LearningObjectiveViewSet, 'learningobjectiv
 urlpatterns = [
     path('', include(router.urls)),
     path('records/entries/<int:entryId>', views.LearningRecordViewSet.as_view({'delete': 'entries'}), name="entries"),
-    path('schema', get_schema_view(renderer_classes=[JSONOpenAPIRenderer])),
+
     path('accounts', views.register_user),
     path('accounts/verify', rest_views.obtain_auth_token, name='api-token-auth'),
-    path('admin', admin.site.urls),
+
     path('auth/', include('dj_rest_auth.urls')),
     path('auth/github', views.GithubLogin.as_view(), name='github_login'),
     path('auth/github/callback', views.github_login.github_callback, name='github_callback'),
     path('auth/github/url', github_views.oauth2_login),
-    path('api-auth', include('rest_framework.urls', namespace='rest_framework'))
 
+    path('api-auth', include('rest_framework.urls', namespace='rest_framework')),
+    path('admin', admin.site.urls),
 ]
