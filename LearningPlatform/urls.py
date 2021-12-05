@@ -48,7 +48,7 @@ urlpatterns = [
     path('admin', admin.site.urls),
     path('auth', include('dj_rest_auth.urls')),
     path('auth/github', views.GithubLogin.as_view(), name='github_login'),
-    path('auth/github', views.github_login.github_callback, name='github_callback'),
+    path('auth/github/callback', views.github_login.github_callback, name='github_callback'),
     path('auth/github/url', github_views.oauth2_login),
     path('api-auth', include('rest_framework.urls', namespace='rest_framework'))
 
