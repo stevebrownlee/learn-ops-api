@@ -47,6 +47,8 @@ INSTALLED_APPS = [
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:3000',
     'http://127.0.0.1:3000',
+    'http://localhost:5002',
+    'http://127.0.0.1:5002',
     'https://learning.nss.team',
 )
 
