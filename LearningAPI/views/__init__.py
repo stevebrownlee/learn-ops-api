@@ -13,3 +13,4 @@ from .opportunity_view import OpportunityViewSet
 from .learning_weight_view import LearningWeightViewSet
 from .learning_record_view import LearningRecordViewSet
 from .profile import Profile
+from .github_login import GithubLogin

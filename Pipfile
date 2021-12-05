@@ -17,6 +17,7 @@ uritemplate = "*"
 gunicorn = "*"
 dj-database-url = "*"
 psycopg2-binary = "*"
+dj-rest-auth = "*"
 
 [requires]
 python_version = "*"

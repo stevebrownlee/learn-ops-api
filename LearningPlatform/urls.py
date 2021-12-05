@@ -20,6 +20,7 @@ from rest_framework import routers
 from rest_framework.authtoken import views as rest_views
 from rest_framework.schemas import get_schema_view
 from rest_framework.renderers import JSONOpenAPIRenderer
+from allauth.socialaccount.providers.github import views as github_views
 from LearningAPI import views
 
 router = routers.DefaultRouter(trailing_slash=False)
@@ -45,6 +46,10 @@ urlpatterns = [
     path('accounts', views.register_user),
     path('accounts/verify', rest_views.obtain_auth_token, name='api-token-auth'),
     path('admin', admin.site.urls),
+    path('auth', include('dj_rest_auth.urls')),
+    path('auth/github', views.GithubLogin.as_view(), name='github_login'),
+    path('auth/github', views.github_login.github_callback, name='github_callback'),
+    path('auth/github/url', github_views.oauth2_login),
     path('api-auth', include('rest_framework.urls', namespace='rest_framework'))
 
 ]
