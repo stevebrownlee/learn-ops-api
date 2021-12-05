@@ -14,7 +14,12 @@ SELECT *
 FROM public."LearningAPI_learningrecordweight";
 
 SELECT *
+FROM public."socialaccount_socialaccount";
+
+SELECT *
 FROM public."auth_user";
+
+select * from pg_catalog.pg_tables;
 
 SELECT *
 FROM public."LearningAPI_nssusercohort";
