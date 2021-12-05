@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from LearningAPI.models import NssUser, OneOnOneNote, Cohort, NssUserCohort, LearningRecord
 from LearningAPI.views.learning_record_view import RecordWeightSerializer
-
+from allauth.socialaccount.models import SocialAccount
 
 class StudentPermission(permissions.BasePermission):
 
@@ -40,7 +40,6 @@ class StudentViewSet(ViewSet):
         """
         try:
             try:
-
                 student = NssUser.objects.get(pk=pk)
 
             except ValueError as ex:
@@ -51,9 +50,9 @@ class StudentViewSet(ViewSet):
                     student, context={'request': request})
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:
-                    return Response(
-                        {"message": "You are not authorized to view this student profile."},
-                        status=status.HTTP_401_UNAUTHORIZED)
+                return Response(
+                    {"message": "You are not authorized to view this student profile."},
+                    status=status.HTTP_401_UNAUTHORIZED)
 
         except NssUser.DoesNotExist as ex:
             return Response(
@@ -205,7 +204,12 @@ class StudentSerializer(serializers.ModelSerializer):
     feedback = StudentNoteSerializer(many=True)
     name = serializers.SerializerMethodField()
     email = serializers.SerializerMethodField()
+    github = serializers.SerializerMethodField()
     records = LearningRecordSerializer(many=True)
+
+    def get_github(self, obj):
+        github = obj.user.socialaccount_set.get(user=obj.user)
+        return github.extra_data["login"]
 
     def get_name(self, obj):
         return f'{obj.user.first_name} {obj.user.last_name}'
@@ -215,7 +219,7 @@ class StudentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = NssUser
-        fields = ('id', 'name', 'email', 'slack_handle', 'github_handle',
+        fields = ('id', 'name', 'email', 'github',
                   'cohorts', 'feedback', 'records')
 
 

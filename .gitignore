@@ -13,5 +13,5 @@
 pyvenv.cfg
 .venv
 pip-selfcheck.json
-.vscode
+.vscode/settings.json
 learningenv
