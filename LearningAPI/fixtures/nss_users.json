@@ -1,65 +1,29 @@
 [
-{
-    "model": "LearningAPI.nssuser",
-    "pk": 1,
-    "fields": {
-        "user": 1,
-        "slack_handle": "coach",
-        "github_handle": "stevebrownlee"
+    {
+        "model": "LearningAPI.nssuser",
+        "pk": 1,
+        "fields": {
+            "user": 1,
+            "slack_handle": "coach",
+            "github_handle": "stevebrownlee"
+        }
+    },
+    {
+        "model": "LearningAPI.nssuser",
+        "pk": 8,
+        "fields": {
+            "user": 9,
+            "slack_handle": null,
+            "github_handle": "mbrownlee"
+        }
+    },
+    {
+        "model": "LearningAPI.nssuser",
+        "pk": 9,
+        "fields": {
+            "user": 8,
+            "slack_handle": null,
+            "github_handle": "stevebrownlee"
+        }
     }
-},
-{
-    "model": "LearningAPI.nssuser",
-    "pk": 2,
-    "fields": {
-        "user": 2,
-        "slack_handle": "gibjeffries",
-        "github_handle": null
-    }
-},
-{
-    "model": "LearningAPI.nssuser",
-    "pk": 3,
-    "fields": {
-        "user": 3,
-        "slack_handle": "jennasolis",
-        "github_handle": null
-    }
-},
-{
-    "model": "LearningAPI.nssuser",
-    "pk": 4,
-    "fields": {
-        "user": 4,
-        "slack_handle": "rebecca.parker",
-        "github_handle": null
-    }
-},
-{
-    "model": "LearningAPI.nssuser",
-    "pk": 5,
-    "fields": {
-        "user": 5,
-        "slack_handle": "sammaas",
-        "github_handle": null
-    }
-},
-{
-    "model": "LearningAPI.nssuser",
-    "pk": 6,
-    "fields": {
-        "user": 6,
-        "slack_handle": "chrisjohnson",
-        "github_handle": null
-    }
-},
-{
-    "model": "LearningAPI.nssuser",
-    "pk": 7,
-    "fields": {
-        "user": 7,
-        "slack_handle": "sorceress",
-        "github_handle": null
-    }
-}
 ]

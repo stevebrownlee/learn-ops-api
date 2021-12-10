@@ -1,142 +1,62 @@
 [
-{
-    "model": "auth.user",
-    "pk": 1,
-    "fields": {
-        "password": "pbkdf2_sha256$216000$8kocabeSNCVg$4OxRR+RIjetS/k4peDeWYUDKAMOPrNIEG8CNIWE+32A=",
-        "last_login": null,
-        "is_superuser": true,
-        "username": "steve@stevebrownlee.com",
-        "first_name": "Steve",
-        "last_name": "Brownlee",
-        "email": "steve@stevebrownlee.com",
-        "is_staff": true,
-        "is_active": true,
-        "date_joined": "2020-12-21T02:33:32.825Z",
-        "groups": [
-            2
-        ],
-        "user_permissions": []
+    {
+        "model": "auth.user",
+        "pk": 1,
+        "fields": {
+            "password": "pbkdf2_sha256$260000$bgeUjotSCdWb8dTjrLjTWh$tm3oUEwyWgCyAQudcEktWKN6QeMNZMiWcKa+UIWXjtc=",
+            "last_login": "2021-12-05T03:17:37.628Z",
+            "is_superuser": true,
+            "username": "steve@stevebrownlee.com",
+            "first_name": "Steve",
+            "last_name": "Brownlee",
+            "email": "steve@stevebrownlee.com",
+            "is_staff": true,
+            "is_active": true,
+            "date_joined": "2020-12-21T02:33:32.825Z",
+            "groups": [
+                2
+            ],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 8,
+        "fields": {
+            "password": "!6PqVJhtolEQrZSo8sBwaxiC9yfHyTe0BcFUoKyi7",
+            "last_login": "2021-12-05T15:52:22.315Z",
+            "is_superuser": false,
+            "username": "stevebrownlee",
+            "first_name": "Steve",
+            "last_name": "Brownlee",
+            "email": "",
+            "is_staff": true,
+            "is_active": true,
+            "date_joined": "2021-12-05T03:30:23Z",
+            "groups": [
+                2
+            ],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 9,
+        "fields": {
+            "password": "!Zma3up9UGVy7C8s4D5fgiVUZwhZxjPoWVMDPSvKz",
+            "last_login": "2021-12-05T15:38:48.567Z",
+            "is_superuser": false,
+            "username": "mbrownlee",
+            "first_name": "Michelle",
+            "last_name": "",
+            "email": "",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2021-12-05T15:31:01.126Z",
+            "groups": [
+                1
+            ],
+            "user_permissions": []
+        }
     }
-},
-{
-    "model": "auth.user",
-    "pk": 2,
-    "fields": {
-        "password": "pbkdf2_sha256$216000$vPOvxKyRA5XZ$ig+DTMi0YR1s6Xci9DbXfcpi7YL/IAY6iXbglfGdA0w=",
-        "last_login": null,
-        "is_superuser": false,
-        "username": "gib@jeffries.com",
-        "first_name": "Gib",
-        "last_name": "Jeffries",
-        "email": "gib@jeffries.com",
-        "is_staff": false,
-        "is_active": true,
-        "date_joined": "2020-12-21T02:34:44.276Z",
-        "groups": [
-            1
-        ],
-        "user_permissions": []
-    }
-},
-{
-    "model": "auth.user",
-    "pk": 3,
-    "fields": {
-        "password": "pbkdf2_sha256$216000$0q5Dsq4jz4lB$rQWaJSQDnqBEMUHo9DdJ8BiTcL2nG07NvfkdfYXTcns=",
-        "last_login": null,
-        "is_superuser": false,
-        "username": "jenna@solis.com",
-        "first_name": "Jenna",
-        "last_name": "Solis",
-        "email": "jenna@solis.com",
-        "is_staff": true,
-        "is_active": true,
-        "date_joined": "2020-12-29T16:37:07.509Z",
-        "groups": [
-            1
-        ],
-        "user_permissions": []
-    }
-},
-{
-    "model": "auth.user",
-    "pk": 4,
-    "fields": {
-        "password": "pbkdf2_sha256$216000$EMnvlJ7C21Rl$l1R9jxG/oQ04KYv/+cN71CYy3OWHLUMpuXTZ1ZVO/lg=",
-        "last_login": null,
-        "is_superuser": false,
-        "username": "rebecca@parker.com",
-        "first_name": "Rebecca",
-        "last_name": "Parker",
-        "email": "rebecca@parker.com",
-        "is_staff": false,
-        "is_active": true,
-        "date_joined": "2020-12-29T17:12:30.300Z",
-        "groups": [
-            1
-        ],
-        "user_permissions": []
-    }
-},
-{
-    "model": "auth.user",
-    "pk": 5,
-    "fields": {
-        "password": "pbkdf2_sha256$216000$We1eHeK6XcOe$7m+2HAY48WpQrNa8dcuNRG5WiEBrajdyBd7coK/yeBM=",
-        "last_login": null,
-        "is_superuser": false,
-        "username": "samantha@maas.com",
-        "first_name": "Samantha",
-        "last_name": "Maas",
-        "email": "samantha@maas.com",
-        "is_staff": false,
-        "is_active": true,
-        "date_joined": "2020-12-29T17:12:54.626Z",
-        "groups": [
-            1
-        ],
-        "user_permissions": []
-    }
-},
-{
-    "model": "auth.user",
-    "pk": 6,
-    "fields": {
-        "password": "pbkdf2_sha256$216000$MpnlbY1Orixf$Fo4HmNtUAgfxZFAv3BPP9S8q8m4mrS1nNQ7WMTuBMrE=",
-        "last_login": null,
-        "is_superuser": false,
-        "username": "chris@johnson.com",
-        "first_name": "Chris",
-        "last_name": "Johnson",
-        "email": "chris@johnson.com",
-        "is_staff": false,
-        "is_active": true,
-        "date_joined": "2020-12-29T17:13:16.551Z",
-        "groups": [
-            1
-        ],
-        "user_permissions": []
-    }
-},
-{
-    "model": "auth.user",
-    "pk": 7,
-    "fields": {
-        "password": "pbkdf2_sha256$216000$MpnlbY1Orixf$Fo4HmNtUAgfxZFAv3BPP9S8q8m4mrS1nNQ7WMTuBMrE=",
-        "last_login": null,
-        "is_superuser": false,
-        "username": "monica@provence.com",
-        "first_name": "Monica",
-        "last_name": "Provence",
-        "email": "monica@provence.com",
-        "is_staff": false,
-        "is_active": true,
-        "date_joined": "2020-12-29T17:13:16.551Z",
-        "groups": [
-            1
-        ],
-        "user_permissions": []
-    }
-}
 ]

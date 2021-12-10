@@ -1,18 +1,18 @@
 [
-{
-    "model": "LearningAPI.favoritenote",
-    "pk": 2,
-    "fields": {
-        "user": 1,
-        "note": 3
+    {
+        "model": "LearningAPI.favoritenote",
+        "pk": 2,
+        "fields": {
+            "user": 9,
+            "note": 1
+        }
+    },
+    {
+        "model": "LearningAPI.favoritenote",
+        "pk": 3,
+        "fields": {
+            "user": 8,
+            "note": 2
+        }
     }
-},
-{
-    "model": "LearningAPI.favoritenote",
-    "pk": 3,
-    "fields": {
-        "user": 3,
-        "note": 3
-    }
-}
 ]

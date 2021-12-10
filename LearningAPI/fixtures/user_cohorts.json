@@ -1,41 +1,10 @@
 [
+
 {
     "model": "LearningAPI.nssusercohort",
     "pk": 1,
     "fields": {
-        "nss_user": 2,
-        "cohort": 1
-    }
-},
-{
-    "model": "LearningAPI.nssusercohort",
-    "pk": 2,
-    "fields": {
-        "nss_user": 4,
-        "cohort": 2
-    }
-},
-{
-    "model": "LearningAPI.nssusercohort",
-    "pk": 3,
-    "fields": {
-        "nss_user": 5,
-        "cohort": 3
-    }
-},
-{
-    "model": "LearningAPI.nssusercohort",
-    "pk": 5,
-    "fields": {
-        "nss_user": 6,
-        "cohort": 1
-    }
-},
-{
-    "model": "LearningAPI.nssusercohort",
-    "pk": 6,
-    "fields": {
-        "nss_user": 7,
+        "nss_user": 8,
         "cohort": 2
     }
 }

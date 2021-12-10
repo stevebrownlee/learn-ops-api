@@ -17,9 +17,9 @@ python manage.py loaddata chapters
 python manage.py loaddata chapter_notes
 python manage.py loaddata favorited_notes
 python manage.py loaddata taxonomy_levels
-python manage.py loaddata one_on_one_notes
 python manage.py loaddata opportunities
 python manage.py loaddata learning_weights
 python manage.py loaddata learning_records
 python manage.py loaddata learning_record_weights
+python manage.py loaddata socialaccount
 

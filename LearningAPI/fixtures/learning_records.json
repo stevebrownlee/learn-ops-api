@@ -4,7 +4,7 @@
         "pk": 1,
         "fields": {
             "description": "Book 2 self-assessment",
-            "student": 4,
+            "student": 8,
             "obtained_from": "ONEON"
         }
     },
@@ -13,7 +13,7 @@
         "pk": 2,
         "fields": {
             "description": "Book 2 vocabulary",
-            "student": 2,
+            "student": 8,
             "obtained_from": "ONEON"
         }
     },
@@ -22,7 +22,7 @@
         "pk": 3,
         "fields": {
             "description": "Book 2: Daily notes project",
-            "student": 5,
+            "student": 8,
             "obtained_from": "ONEON"
         }
     },
@@ -31,7 +31,7 @@
         "pk": 4,
         "fields": {
             "description": "Book 2: Guided tour project",
-            "student": 6,
+            "student": 8,
             "obtained_from": "ONEON"
         }
     },
@@ -40,7 +40,7 @@
         "pk": 5,
         "fields": {
             "description": "Book 2: Explorer chapters",
-            "student": 7,
+            "student": 8,
             "obtained_from": "ONEON"
         }
     }
