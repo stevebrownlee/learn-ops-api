@@ -50,18 +50,8 @@ jobs:
       - name: Install dependecies
         uses: VaultVulp/action-pipenv@v2.0.1
         with:
-          # command: install
           command: install
 
-  deploy:
-    name: Deploy to Digital Ocean
-    # The type of runner that the job will run on
-    runs-on: self-hosted
-    needs: build
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      - uses: actions/checkout@v2
       - name: Deployed successfully
         run: |
           echo Deployed!!
