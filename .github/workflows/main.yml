@@ -52,6 +52,10 @@ jobs:
         with:
           command: install
 
+      - name: Collect admin static files
+        run: |
+          python3 manage.py collectstatic
+
       - name: Deployed successfully
         run: |
           echo Deployed!!
