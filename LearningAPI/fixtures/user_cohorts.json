@@ -1,11 +1,10 @@
 [
-
-{
-    "model": "LearningAPI.nssusercohort",
-    "pk": 1,
-    "fields": {
-        "nss_user": 8,
-        "cohort": 2
+    {
+        "model": "LearningAPI.nssusercohort",
+        "pk": 1,
+        "fields": {
+            "nss_user": 8,
+            "cohort": 2
+        }
     }
-}
 ]

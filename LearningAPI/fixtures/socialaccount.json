@@ -5,8 +5,8 @@
         "fields": {
             "provider": "github",
             "name": "Github",
-            "client_id": "38761e4424d0ecc42b5c",
-            "secret": "4a1024f433db09a7a3092f8e842686f40498e426",
+            "client_id": "",
+            "secret": "",
             "key": "",
             "sites": [
                 1
@@ -16,18 +16,6 @@
     {
         "model": "socialaccount.socialaccount",
         "pk": 1,
-        "fields": {
-            "user": 8,
-            "provider": "github",
-            "uid": "218592",
-            "last_login": "2021-12-05T15:52:22.270Z",
-            "date_joined": "2021-12-05T03:30:23.548Z",
-            "extra_data": "{\"login\": \"stevebrownlee\", \"id\": 218592, \"node_id\": \"MDQ6VXNlcjIxODU5Mg==\", \"avatar_url\": \"https://avatars.githubusercontent.com/u/218592?v=4\", \"gravatar_id\": \"\", \"url\": \"https://api.github.com/users/stevebrownlee\", \"html_url\": \"https://github.com/stevebrownlee\", \"followers_url\": \"https://api.github.com/users/stevebrownlee/followers\", \"following_url\": \"https://api.github.com/users/stevebrownlee/following{/other_user}\", \"gists_url\": \"https://api.github.com/users/stevebrownlee/gists{/gist_id}\", \"starred_url\": \"https://api.github.com/users/stevebrownlee/starred{/owner}{/repo}\", \"subscriptions_url\": \"https://api.github.com/users/stevebrownlee/subscriptions\", \"organizations_url\": \"https://api.github.com/users/stevebrownlee/orgs\", \"repos_url\": \"https://api.github.com/users/stevebrownlee/repos\", \"events_url\": \"https://api.github.com/users/stevebrownlee/events{/privacy}\", \"received_events_url\": \"https://api.github.com/users/stevebrownlee/received_events\", \"type\": \"User\", \"site_admin\": false, \"name\": \"Steve Brownlee\", \"company\": \"@nashville-software-school \", \"blog\": \"http://www.stevebrownlee.com\", \"location\": \"Nashville, TN\", \"email\": null, \"hireable\": true, \"bio\": \"Head Coach @nashville-software-school\", \"twitter_username\": null, \"public_repos\": 103, \"public_gists\": 17, \"followers\": 320, \"following\": 4, \"created_at\": \"2010-03-08T20:39:55Z\", \"updated_at\": \"2021-09-30T15:13:12Z\"}"
-        }
-    },
-    {
-        "model": "socialaccount.socialaccount",
-        "pk": 2,
         "fields": {
             "user": 9,
             "provider": "github",
@@ -39,21 +27,10 @@
     },
     {
         "model": "socialaccount.socialtoken",
-        "pk": 1,
-        "fields": {
-            "app": 1,
-            "account": 1,
-            "token": "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",
-            "token_secret": "",
-            "expires_at": null
-        }
-    },
-    {
-        "model": "socialaccount.socialtoken",
         "pk": 2,
         "fields": {
             "app": 1,
-            "account": 2,
+            "account": 1,
             "token": "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",
             "token_secret": "",
             "expires_at": null

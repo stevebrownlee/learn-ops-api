@@ -3,7 +3,7 @@
         "model": "LearningAPI.favoritenote",
         "pk": 2,
         "fields": {
-            "user": 9,
+            "user": 8,
             "note": 1
         }
     },

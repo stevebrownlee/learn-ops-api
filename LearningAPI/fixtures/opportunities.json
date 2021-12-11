@@ -5,7 +5,7 @@
         "fields": {
             "portion": "CLI",
             "start_date": "2021-11-14",
-            "senior_instructor": 8,
+            "senior_instructor": 1,
             "cohort": 1,
             "message": "Test 1"
         }
@@ -16,7 +16,7 @@
         "fields": {
             "portion": "SER",
             "start_date": "2021-11-14",
-            "senior_instructor": 8,
+            "senior_instructor": 1,
             "cohort": 2,
             "message": "Test 2"
         }

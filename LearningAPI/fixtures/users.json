@@ -21,26 +21,6 @@
     },
     {
         "model": "auth.user",
-        "pk": 8,
-        "fields": {
-            "password": "!6PqVJhtolEQrZSo8sBwaxiC9yfHyTe0BcFUoKyi7",
-            "last_login": "2021-12-05T15:52:22.315Z",
-            "is_superuser": false,
-            "username": "stevebrownlee",
-            "first_name": "Steve",
-            "last_name": "Brownlee",
-            "email": "",
-            "is_staff": true,
-            "is_active": true,
-            "date_joined": "2021-12-05T03:30:23Z",
-            "groups": [
-                2
-            ],
-            "user_permissions": []
-        }
-    },
-    {
-        "model": "auth.user",
         "pk": 9,
         "fields": {
             "password": "!Zma3up9UGVy7C8s4D5fgiVUZwhZxjPoWVMDPSvKz",

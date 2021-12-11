@@ -16,14 +16,5 @@
             "slack_handle": null,
             "github_handle": "mbrownlee"
         }
-    },
-    {
-        "model": "LearningAPI.nssuser",
-        "pk": 9,
-        "fields": {
-            "user": 8,
-            "slack_handle": null,
-            "github_handle": "stevebrownlee"
-        }
     }
 ]
