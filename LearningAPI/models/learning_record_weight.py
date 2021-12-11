@@ -12,3 +12,4 @@ class LearningRecordWeight(models.Model):
         null=False, blank=True, default=datetime.date.today, editable=False)
     instructor = models.ForeignKey(
         "NssUser", on_delete=models.CASCADE, related_name='student_records')
+

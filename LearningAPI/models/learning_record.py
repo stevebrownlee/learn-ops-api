@@ -22,3 +22,7 @@ class LearningRecord(models.Model):
         default="ONEON",
     )
     created_on = models.DateField(null=False, blank=True, default=datetime.date.today, editable=False)
+
+
+    def __str__(self) -> str:
+        return f'{self.student.user.first_name} {self.student.user.last_name} {self.description}'
