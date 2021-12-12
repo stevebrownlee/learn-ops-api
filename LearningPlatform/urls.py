@@ -13,15 +13,11 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.conf import settings
-from django.conf.urls.static import static
 from django.conf.urls import include
 from django.contrib import admin
 from django.urls import path
 from rest_framework import routers
 from rest_framework.authtoken import views as rest_views
-from rest_framework.schemas import get_schema_view
-from rest_framework.renderers import JSONOpenAPIRenderer
 from allauth.socialaccount.providers.github import views as github_views
 from LearningAPI import views
 
@@ -55,4 +51,4 @@ urlpatterns = [
 
     path('api-auth', include('rest_framework.urls', namespace='rest_framework')),
     path('admin', admin.site.urls),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+]
