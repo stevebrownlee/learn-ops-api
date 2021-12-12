@@ -31,10 +31,9 @@ jobs:
       - name: Install dependecies
         uses: VaultVulp/action-pipenv@v2.0.1
         with:
-          command: |
-            install
-            run collect
+          command: install
 
-      - name: Collect admin static files
-        run: |
-          python3 manage.py collectstatic  --noinput
+      - name: Collect static
+        uses: VaultVulp/action-pipenv@v2.0.1
+        with:
+          command: run collect
