@@ -1,4 +1,4 @@
-name: Collect Django static files
+name: Run fixtures for data
 
 # Controls when the workflow will run
 on:
