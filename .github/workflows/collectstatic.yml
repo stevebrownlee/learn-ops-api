@@ -31,7 +31,9 @@ jobs:
       - name: Install dependecies
         uses: VaultVulp/action-pipenv@v2.0.1
         with:
-          command: run collect
+          command: |
+            install
+            run collect
 
       - name: Collect admin static files
         run: |
