@@ -24,4 +24,5 @@ django-allauth = "*"
 python_version = "*"
 
 [scripts]
-tests = "bash ./seed.sh"
+seed = "bash ./seed.sh"
+collect = "bash ./collect.sh"
