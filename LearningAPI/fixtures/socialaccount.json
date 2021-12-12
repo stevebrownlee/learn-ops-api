@@ -5,8 +5,13 @@
         "fields": {
             "provider": "github",
             "name": "Github",
+<<<<<<< HEAD
             "client_id": "0492d42045b4fc676533",
             "secret": "bfb5e5d70fcf7588c393a076f06188e18351ae9e",
+=======
+            "client_id": "",
+            "secret": "",
+>>>>>>> new_seed_data
             "key": "",
             "sites": [
                 1

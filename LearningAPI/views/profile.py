@@ -22,7 +22,10 @@ class Profile(ViewSet):
         #  Discovered how to access social account info at following URL
         #     https://github.com/pennersr/django-allauth/blob/master/allauth/socialaccount/models.py
         #
-        person = SocialAccount.objects.get(user=request.auth.user)
+        try:
+            person = SocialAccount.objects.get(user=request.auth.user)
+        except SocialAccount.DoesNotExist as ex:
+            raise ex
 
         try:
             NssUser.objects.get(user=request.auth.user)

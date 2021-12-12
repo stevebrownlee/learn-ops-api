@@ -7,3 +7,9 @@ class NssUser(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     slack_handle = models.CharField(max_length=55, null=True, blank=True)
     github_handle = models.CharField(max_length=55, null=True, blank=True)
+
+    def __repr__(self) -> str:
+        return f'{self.user.first_name} {self.user.last_name}'
+
+    def __str__(self) -> str:
+        return f'{self.user.first_name} {self.user.last_name}'

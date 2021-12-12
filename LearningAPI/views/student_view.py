@@ -205,7 +205,11 @@ class StudentSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
     email = serializers.SerializerMethodField()
     github = serializers.SerializerMethodField()
-    records = LearningRecordSerializer(many=True)
+    records = serializers.SerializerMethodField()
+
+    def get_records(self, obj):
+        records = LearningRecord.objects.all().order_by("-id")
+        return LearningRecordSerializer(records, many=True).data
 
     def get_github(self, obj):
         github = obj.user.socialaccount_set.get(user=obj.user)
