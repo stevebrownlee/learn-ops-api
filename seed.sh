@@ -1,5 +1,6 @@
 #!/bin/bash
-psql -U postgres learnops -t -c "select 'drop table \"' || tablename || '\" cascade;' from pg_tables where schemaname = 'public'"  | psql -U postgres learnops
+# psql -U postgres learnops -t -c "select 'drop table \"' || tablename || '\" cascade;' from pg_tables where schemaname = 'public'"  | psql -U postgres learnops
+psql postgresql://postgres:web571f8@127.0.0.1:5432/learnops -t -c "select 'drop table \"' || tablename || '\" cascade;' from pg_tables where schemaname = 'public'"  | psql -U postgres learnops
 rm -rf ./LearningAPI/migrations
 python manage.py migrate
 python manage.py makemigrations LearningAPI

@@ -22,3 +22,6 @@ django-allauth = "*"
 
 [requires]
 python_version = "*"
+
+[scripts]
+tests = "bash ./seed.sh"

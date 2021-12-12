@@ -55,7 +55,7 @@ jobs:
       - name: Collect admin static files
         run: |
           pipenv shell
-          python3 manage.py collectstatic  --no-input
+          python3 manage.py collectstatic  --noinput
 
       - name: Deployed successfully
         run: |
