@@ -88,7 +88,7 @@ class LearningRecordViewSet(ViewSet):
             Response -- JSON serialized array
         """
         try:
-            records = LearningRecord.objects.all().order_by('pk')
+            records = LearningRecord.objects.all().order_by('-created_on')
 
             serializer = LearningRecordSerializer(
                 records, many=True, context={'request': request})

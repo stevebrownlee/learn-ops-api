@@ -208,7 +208,7 @@ class StudentSerializer(serializers.ModelSerializer):
     records = serializers.SerializerMethodField()
 
     def get_records(self, obj):
-        records = LearningRecord.objects.all().order_by("-id")
+        records = LearningRecord.objects.filter(student=obj).order_by("-id")
         return LearningRecordSerializer(records, many=True).data
 
     def get_github(self, obj):
