@@ -171,6 +171,8 @@ class StudentCohortsSerializer(serializers.ModelSerializer):
     """JSON serializer for event organizer's related Django user"""
     name = serializers.SerializerMethodField()
     id = serializers.SerializerMethodField()
+    start_date = serializers.SerializerMethodField()
+    end_date = serializers.SerializerMethodField()
 
     def get_name(self, obj):
         return obj.cohort.name
@@ -178,9 +180,15 @@ class StudentCohortsSerializer(serializers.ModelSerializer):
     def get_id(self, obj):
         return obj.cohort.id
 
+    def get_start_date(self, obj):
+        return obj.cohort.start_date
+
+    def get_end_date(self, obj):
+        return obj.cohort.end_date
+
     class Meta:
         model = NssUserCohort
-        fields = ['name', 'id']
+        fields = ['name', 'id', 'start_date', 'end_date']
 
 
 class StudentNoteSerializer(serializers.ModelSerializer):
@@ -248,8 +256,20 @@ class NoCohortStudentSerializer(serializers.ModelSerializer):
 
 class MiniStudentSerializer(serializers.ModelSerializer):
     """JSON serializer"""
+    cohorts = StudentCohortsSerializer(many=True)
+    feedback = StudentNoteSerializer(many=True)
     name = serializers.SerializerMethodField()
     email = serializers.SerializerMethodField()
+    github = serializers.SerializerMethodField()
+    repos = serializers.SerializerMethodField()
+
+    def get_github(self, obj):
+        github = obj.user.socialaccount_set.get(user=obj.user)
+        return github.extra_data["login"]
+
+    def get_repos(self, obj):
+        github = obj.user.socialaccount_set.get(user=obj.user)
+        return github.extra_data["repos_url"]
 
     def get_name(self, obj):
         return f'{obj.user.first_name} {obj.user.last_name}'
@@ -259,4 +279,5 @@ class MiniStudentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = NssUser
-        fields = ('id', 'name', 'email', 'slack_handle', 'github_handle',)
+        fields = ('id', 'name', 'email', 'github',
+                  'cohorts', 'feedback', 'repos')
