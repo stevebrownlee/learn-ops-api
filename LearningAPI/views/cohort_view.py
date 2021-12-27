@@ -33,11 +33,11 @@ class CohortViewSet(ViewSet):
         """
         cohort = Cohort()
         cohort.name = request.data["name"]
-        cohort.slack_channel = request.data["slack_channel"]
-        cohort.start_date = request.data["start_date"]
-        cohort.end_date = request.data["end_date"]
-        cohort.break_start_date = request.data["break_start_date"]
-        cohort.break_end_date = request.data["break_end_date"]
+        cohort.slack_channel = request.data["slackChannel"]
+        cohort.start_date = request.data["startDate"]
+        cohort.end_date = request.data["endDate"]
+        cohort.break_start_date = request.data["breakStartDate"]
+        cohort.break_end_date = request.data["breakEndDate"]
 
         try:
             cohort.save()

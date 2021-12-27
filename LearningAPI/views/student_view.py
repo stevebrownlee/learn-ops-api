@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from LearningAPI.models import NssUser, OneOnOneNote, Cohort, NssUserCohort, LearningRecord
 from LearningAPI.views.learning_record_view import RecordWeightSerializer
-from allauth.socialaccount.models import SocialAccount
+from django.forms.models import model_to_dict
 
 class StudentPermission(permissions.BasePermission):
 
@@ -167,30 +167,6 @@ class StudentViewSet(ViewSet):
         return Response({'message': 'Unsupported HTTP method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
-class StudentCohortsSerializer(serializers.ModelSerializer):
-    """JSON serializer for event organizer's related Django user"""
-    name = serializers.SerializerMethodField()
-    id = serializers.SerializerMethodField()
-    start_date = serializers.SerializerMethodField()
-    end_date = serializers.SerializerMethodField()
-
-    def get_name(self, obj):
-        return obj.cohort.name
-
-    def get_id(self, obj):
-        return obj.cohort.id
-
-    def get_start_date(self, obj):
-        return obj.cohort.start_date
-
-    def get_end_date(self, obj):
-        return obj.cohort.end_date
-
-    class Meta:
-        model = NssUserCohort
-        fields = ['name', 'id', 'start_date', 'end_date']
-
-
 class StudentNoteSerializer(serializers.ModelSerializer):
     """JSON serializer for student notes"""
 
@@ -208,12 +184,19 @@ class LearningRecordSerializer(serializers.ModelSerializer):
 
 class StudentSerializer(serializers.ModelSerializer):
     """JSON serializer"""
-    cohorts = StudentCohortsSerializer(many=True)
     feedback = StudentNoteSerializer(many=True)
     name = serializers.SerializerMethodField()
     email = serializers.SerializerMethodField()
     github = serializers.SerializerMethodField()
     records = serializers.SerializerMethodField()
+    cohorts = serializers.SerializerMethodField()
+
+    def get_cohorts(self, obj):
+        assignments = NssUserCohort.objects.filter(nss_user=obj).order_by("-id")
+        cohorts = []
+        for assignment in assignments:
+            cohorts.append(model_to_dict(assignment.cohort))
+        return cohorts
 
     def get_records(self, obj):
         records = LearningRecord.objects.filter(student=obj).order_by("-id")
@@ -256,12 +239,19 @@ class NoCohortStudentSerializer(serializers.ModelSerializer):
 
 class MiniStudentSerializer(serializers.ModelSerializer):
     """JSON serializer"""
-    cohorts = StudentCohortsSerializer(many=True)
     feedback = StudentNoteSerializer(many=True)
     name = serializers.SerializerMethodField()
     email = serializers.SerializerMethodField()
     github = serializers.SerializerMethodField()
     repos = serializers.SerializerMethodField()
+    cohorts = serializers.SerializerMethodField()
+
+    def get_cohorts(self, obj):
+        assignments = NssUserCohort.objects.filter(nss_user=obj).order_by("-id")
+        cohorts = []
+        for assignment in assignments:
+            cohorts.append(model_to_dict(assignment.cohort))
+        return cohorts
 
     def get_github(self, obj):
         github = obj.user.socialaccount_set.get(user=obj.user)
