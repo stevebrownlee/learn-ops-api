@@ -52,6 +52,9 @@ jobs:
         with:
           command: install
 
+      - name: Restart Django
+        run: sudo service learning restart
+
       - name: Deployed successfully
         run: |
           echo Deployed!!
