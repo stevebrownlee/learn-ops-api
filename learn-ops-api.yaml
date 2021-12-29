@@ -1,3 +1,6 @@
+#
+# Digital Ocean droplet configuration
+#
 alerts:
 - rule: DEPLOYMENT_FAILED
 - rule: DOMAIN_FAILED

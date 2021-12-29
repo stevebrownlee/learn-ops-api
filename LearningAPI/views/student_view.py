@@ -245,12 +245,14 @@ class MiniStudentSerializer(serializers.ModelSerializer):
     github = serializers.SerializerMethodField()
     repos = serializers.SerializerMethodField()
     cohorts = serializers.SerializerMethodField()
+    staff = serializers.SerializerMethodField()
+
+    def get_staff(self, obj):
+        return False
 
     def get_cohorts(self, obj):
         assignments = NssUserCohort.objects.filter(nss_user=obj).order_by("-id")
-        cohorts = []
-        for assignment in assignments:
-            cohorts.append(model_to_dict(assignment.cohort))
+        cohorts = list(map(lambda assignment: model_to_dict(assignment.cohort), assignments))
         return cohorts
 
     def get_github(self, obj):
@@ -269,5 +271,5 @@ class MiniStudentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = NssUser
-        fields = ('id', 'name', 'email', 'github',
+        fields = ('id', 'name', 'email', 'github', 'staff',
                   'cohorts', 'feedback', 'repos')
