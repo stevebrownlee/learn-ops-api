@@ -4,9 +4,14 @@ from django.contrib import admin
 from .models import (
     NssUser,
     LearningRecordWeight,
-    LearningRecord
+    LearningRecord,
+    LearningWeight
 )
 
+
+@admin.register(LearningWeight)
+class LearningWeightAdmin(admin.ModelAdmin):
+    list_display = ['label', 'weight',]
 
 @admin.register(LearningRecord)
 class LearningRecordAdmin(admin.ModelAdmin):
