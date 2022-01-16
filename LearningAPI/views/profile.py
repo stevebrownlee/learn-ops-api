@@ -1,13 +1,12 @@
 """View module for handling requests about park areas"""
-from django.contrib.auth.models import User
-from django.db.models.fields import BooleanField
 from rest_framework import status
-from rest_framework.decorators import action
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from allauth.socialaccount.models import SocialAccount
 from LearningAPI.models import NssUser
-from LearningAPI.views.student_view import MiniStudentSerializer, StudentSerializer
+from LearningAPI.models.cohort import Cohort
+from LearningAPI.models.nssuser_cohort import NssUserCohort
+from LearningAPI.views.student_view import MiniStudentSerializer
 
 class Profile(ViewSet):
     """Person can see profile information"""
@@ -18,6 +17,8 @@ class Profile(ViewSet):
         Returns:
             Response -- JSON representation of user info
         """
+
+        cohort = self.request.query_params.get('cohort', None)
 
         #
         #  Discovered how to access social account info at following URL
@@ -37,6 +38,13 @@ class Profile(ViewSet):
                 user=request.auth.user
             )
             nss_user.save()
+
+            if cohort is not None:
+                coh = Cohort.objects.get(name=cohort)
+                usercohort = NssUserCohort()
+                usercohort.cohort = coh
+                usercohort.nss_user = nss_user
+                usercohort.save()
 
         if request.auth.user.is_staff == False:
             serializer = MiniStudentSerializer(nss_user, context={'request': request})

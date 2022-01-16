@@ -9,6 +9,7 @@ python manage.py loaddata groups
 python manage.py loaddata users
 python manage.py loaddata tokens
 python manage.py loaddata nss_users
+python manage.py loaddata socialaccount
 python manage.py loaddata cohorts
 python manage.py loaddata user_cohorts
 python manage.py loaddata courses
@@ -22,5 +23,4 @@ python manage.py loaddata opportunities
 python manage.py loaddata learning_weights
 python manage.py loaddata learning_records
 python manage.py loaddata learning_record_weights
-python manage.py loaddata socialaccount
 

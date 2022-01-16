@@ -6,5 +6,269 @@
             "nss_user": 8,
             "cohort": 2
         }
+    },
+    {
+        "model": "LearningAPI.nssusercohort",
+        "pk": 2,
+        "fields": {
+            "nss_user": 12,
+            "cohort": 1
+        }
+    },
+    {
+        "model": "LearningAPI.nssusercohort",
+        "pk": 3,
+        "fields": {
+            "nss_user": 14,
+            "cohort": 3
+        }
+    },
+    {
+        "model": "LearningAPI.nssusercohort",
+        "pk": 4,
+        "fields": {
+            "nss_user": 15,
+            "cohort": 3
+        }
+    },
+    {
+        "model": "LearningAPI.nssusercohort",
+        "pk": 5,
+        "fields": {
+            "nss_user": 16,
+            "cohort": 3
+        }
+    },
+    {
+        "model": "LearningAPI.nssusercohort",
+        "pk": 6,
+        "fields": {
+            "nss_user": 17,
+            "cohort": 3
+        }
+    },
+    {
+        "model": "LearningAPI.nssusercohort",
+        "pk": 7,
+        "fields": {
+            "nss_user": 18,
+            "cohort": 3
+        }
+    },
+    {
+        "model": "LearningAPI.nssusercohort",
+        "pk": 8,
+        "fields": {
+            "nss_user": 20,
+            "cohort": 3
+        }
+    },
+    {
+        "model": "LearningAPI.nssusercohort",
+        "pk": 9,
+        "fields": {
+            "nss_user": 19,
+            "cohort": 3
+        }
+    },
+    {
+        "model": "LearningAPI.nssusercohort",
+        "pk": 10,
+        "fields": {
+            "nss_user": 22,
+            "cohort": 3
+        }
+    },
+    {
+        "model": "LearningAPI.nssusercohort",
+        "pk": 11,
+        "fields": {
+            "nss_user": 23,
+            "cohort": 3
+        }
+    },
+    {
+        "model": "LearningAPI.nssusercohort",
+        "pk": 12,
+        "fields": {
+            "nss_user": 21,
+            "cohort": 3
+        }
+    },
+    {
+        "model": "LearningAPI.nssusercohort",
+        "pk": 13,
+        "fields": {
+            "nss_user": 24,
+            "cohort": 3
+        }
+    },
+    {
+        "model": "LearningAPI.nssusercohort",
+        "pk": 14,
+        "fields": {
+            "nss_user": 25,
+            "cohort": 3
+        }
+    },
+    {
+        "model": "LearningAPI.nssusercohort",
+        "pk": 15,
+        "fields": {
+            "nss_user": 27,
+            "cohort": 3
+        }
+    },
+    {
+        "model": "LearningAPI.nssusercohort",
+        "pk": 16,
+        "fields": {
+            "nss_user": 26,
+            "cohort": 3
+        }
+    },
+    {
+        "model": "LearningAPI.nssusercohort",
+        "pk": 17,
+        "fields": {
+            "nss_user": 28,
+            "cohort": 3
+        }
+    },
+    {
+        "model": "LearningAPI.nssusercohort",
+        "pk": 18,
+        "fields": {
+            "nss_user": 30,
+            "cohort": 3
+        }
+    },
+    {
+        "model": "LearningAPI.nssusercohort",
+        "pk": 19,
+        "fields": {
+            "nss_user": 29,
+            "cohort": 3
+        }
+    },
+    {
+        "model": "LearningAPI.nssusercohort",
+        "pk": 20,
+        "fields": {
+            "nss_user": 31,
+            "cohort": 3
+        }
+    },
+    {
+        "model": "LearningAPI.nssusercohort",
+        "pk": 21,
+        "fields": {
+            "nss_user": 32,
+            "cohort": 3
+        }
+    },
+    {
+        "model": "LearningAPI.nssusercohort",
+        "pk": 22,
+        "fields": {
+            "nss_user": 34,
+            "cohort": 3
+        }
+    },
+    {
+        "model": "LearningAPI.nssusercohort",
+        "pk": 23,
+        "fields": {
+            "nss_user": 33,
+            "cohort": 3
+        }
+    },
+    {
+        "model": "LearningAPI.nssusercohort",
+        "pk": 24,
+        "fields": {
+            "nss_user": 35,
+            "cohort": 3
+        }
+    },
+    {
+        "model": "LearningAPI.nssusercohort",
+        "pk": 25,
+        "fields": {
+            "nss_user": 37,
+            "cohort": 3
+        }
+    },
+    {
+        "model": "LearningAPI.nssusercohort",
+        "pk": 26,
+        "fields": {
+            "nss_user": 36,
+            "cohort": 3
+        }
+    },
+    {
+        "model": "LearningAPI.nssusercohort",
+        "pk": 27,
+        "fields": {
+            "nss_user": 38,
+            "cohort": 3
+        }
+    },
+    {
+        "model": "LearningAPI.nssusercohort",
+        "pk": 28,
+        "fields": {
+            "nss_user": 39,
+            "cohort": 3
+        }
+    },
+    {
+        "model": "LearningAPI.nssusercohort",
+        "pk": 29,
+        "fields": {
+            "nss_user": 40,
+            "cohort": 3
+        }
+    },
+    {
+        "model": "LearningAPI.nssusercohort",
+        "pk": 30,
+        "fields": {
+            "nss_user": 42,
+            "cohort": 3
+        }
+    },
+    {
+        "model": "LearningAPI.nssusercohort",
+        "pk": 31,
+        "fields": {
+            "nss_user": 41,
+            "cohort": 3
+        }
+    },
+    {
+        "model": "LearningAPI.nssusercohort",
+        "pk": 32,
+        "fields": {
+            "nss_user": 43,
+            "cohort": 3
+        }
+    },
+    {
+        "model": "LearningAPI.nssusercohort",
+        "pk": 33,
+        "fields": {
+            "nss_user": 44,
+            "cohort": 3
+        }
+    },
+    {
+        "model": "LearningAPI.nssusercohort",
+        "pk": 34,
+        "fields": {
+            "nss_user": 45,
+            "cohort": 3
+        }
     }
 ]

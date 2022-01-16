@@ -4,8 +4,6 @@ FROM public."LearningAPI_cohort";
 SELECT *
 FROM public."LearningAPI_opportunity";
 
-SELECT *
-FROM public."LearningAPI_nssuser";
 
 SELECT *
 FROM public."LearningAPI_learningrecord";
@@ -18,6 +16,12 @@ FROM public."socialaccount_socialaccount";
 
 SELECT *
 FROM public."auth_user";
+
+SELECT *
+FROM public."LearningAPI_nssuser";
+
+SELECT *
+FROM public."authtoken_token";
 
 select * from pg_catalog.pg_tables;
 

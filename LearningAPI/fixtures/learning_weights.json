@@ -1,14 +1,6 @@
 [
     {
         "model": "LearningAPI.learningweight",
-        "pk": 1,
-        "fields": {
-            "label": "Code assessment started (standard)",
-            "weight": 1
-        }
-    },
-    {
-        "model": "LearningAPI.learningweight",
         "pk": 2,
         "fields": {
             "label": "Code assessment completed (standard)",
@@ -19,32 +11,8 @@
         "model": "LearningAPI.learningweight",
         "pk": 3,
         "fields": {
-            "label": "Code assessment reviewed (standard)",
-            "weight": 5
-        }
-    },
-    {
-        "model": "LearningAPI.learningweight",
-        "pk": 4,
-        "fields": {
-            "label": "Code assessment started (advanced)",
-            "weight": 3
-        }
-    },
-    {
-        "model": "LearningAPI.learningweight",
-        "pk": 5,
-        "fields": {
-            "label": "Code assessment completed (advanced)",
-            "weight": 8
-        }
-    },
-    {
-        "model": "LearningAPI.learningweight",
-        "pk": 6,
-        "fields": {
-            "label": "Code assessment reviewed (advanced)",
-            "weight": 11
+            "label": "Code assessment reviewed (weak vocabulary)",
+            "weight": 4
         }
     },
     {
@@ -84,15 +52,15 @@
         "pk": 11,
         "fields": {
             "label": "Core course project completed",
-            "weight": 4
+            "weight": 2
         }
     },
     {
         "model": "LearningAPI.learningweight",
         "pk": 12,
         "fields": {
-            "label": "Supplemental project started",
-            "weight": 1
+            "label": "Supplemental project solid progress",
+            "weight": 3
         }
     },
     {
@@ -100,22 +68,6 @@
         "pk": 13,
         "fields": {
             "label": "Supplemental project completed",
-            "weight": 3
-        }
-    },
-    {
-        "model": "LearningAPI.learningweight",
-        "pk": 14,
-        "fields": {
-            "label": "Vocabulary (adequate)",
-            "weight": 3
-        }
-    },
-    {
-        "model": "LearningAPI.learningweight",
-        "pk": 15,
-        "fields": {
-            "label": "Vocabulary (ideal)",
             "weight": 6
         }
     },
@@ -142,5 +94,21 @@
             "label": "General note",
             "weight": 0
         }
+    },
+    {
+        "model": "LearningAPI.learningweight",
+        "pk": 19,
+        "fields": {
+            "label": "Met weekly learning goal",
+            "weight": 4
+        }
+    },
+    {
+        "model": "LearningAPI.learningweight",
+        "pk": 20,
+        "fields": {
+            "label": "Code assessment reviewed (ideal vocabulary)",
+            "weight": 6
+        }
     }
-    ]
+]

@@ -6,16 +6,7 @@
             "record": 1,
             "weight": 2,
             "note": "Necessitatibus omnis praesentium deserunt voluptate voluptatum at dolor aut ipsam.",
-            "instructor": 1
-        }
-    },
-    {
-        "model": "LearningAPI.learningrecordweight",
-        "pk": 2,
-        "fields": {
-            "record": 2,
-            "weight": 15,
-            "note": "Quis ut iure quisquam.",
+            "recorded_on": "2021-12-11",
             "instructor": 1
         }
     },
@@ -26,6 +17,7 @@
             "record": 3,
             "weight": 11,
             "note": "Rem et beatae non mollitia omnis ut ducimus sed commodi.",
+            "recorded_on": "2021-12-11",
             "instructor": 1
         }
     },
@@ -36,6 +28,7 @@
             "record": 4,
             "weight": 10,
             "note": "Placeat sapiente aut accusamus nobis iure qui ipsum illum.",
+            "recorded_on": "2021-12-11",
             "instructor": 1
         }
     },
@@ -46,6 +39,7 @@
             "record": 5,
             "weight": 16,
             "note": "Corrupti dolor veniam iusto molestiae sequi quia sint qui.",
+            "recorded_on": "2021-12-11",
             "instructor": 1
         }
     },
@@ -56,7 +50,2780 @@
             "record": 5,
             "weight": 17,
             "note": "Iusto earum aliquid. Laudantium non ut voluptatem enim dolores numquam quam. Repellendus reiciendis voluptatum autem.",
+            "recorded_on": "2021-12-11",
             "instructor": 1
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 8,
+        "fields": {
+            "record": 7,
+            "weight": 7,
+            "note": "",
+            "recorded_on": "2022-01-06",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 9,
+        "fields": {
+            "record": 8,
+            "weight": 8,
+            "note": "",
+            "recorded_on": "2022-01-06",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 11,
+        "fields": {
+            "record": 10,
+            "weight": 8,
+            "note": "",
+            "recorded_on": "2022-01-06",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 12,
+        "fields": {
+            "record": 11,
+            "weight": 8,
+            "note": "",
+            "recorded_on": "2022-01-06",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 13,
+        "fields": {
+            "record": 12,
+            "weight": 8,
+            "note": "",
+            "recorded_on": "2022-01-06",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 14,
+        "fields": {
+            "record": 13,
+            "weight": 8,
+            "note": "",
+            "recorded_on": "2022-01-06",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 15,
+        "fields": {
+            "record": 14,
+            "weight": 8,
+            "note": "",
+            "recorded_on": "2022-01-06",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 16,
+        "fields": {
+            "record": 15,
+            "weight": 8,
+            "note": "",
+            "recorded_on": "2022-01-06",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 17,
+        "fields": {
+            "record": 16,
+            "weight": 8,
+            "note": "",
+            "recorded_on": "2022-01-06",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 18,
+        "fields": {
+            "record": 17,
+            "weight": 8,
+            "note": "",
+            "recorded_on": "2022-01-06",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 19,
+        "fields": {
+            "record": 18,
+            "weight": 8,
+            "note": "",
+            "recorded_on": "2022-01-06",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 20,
+        "fields": {
+            "record": 19,
+            "weight": 8,
+            "note": "",
+            "recorded_on": "2022-01-06",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 21,
+        "fields": {
+            "record": 20,
+            "weight": 8,
+            "note": "",
+            "recorded_on": "2022-01-06",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 22,
+        "fields": {
+            "record": 21,
+            "weight": 8,
+            "note": "",
+            "recorded_on": "2022-01-06",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 23,
+        "fields": {
+            "record": 22,
+            "weight": 8,
+            "note": "",
+            "recorded_on": "2022-01-06",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 24,
+        "fields": {
+            "record": 23,
+            "weight": 8,
+            "note": "",
+            "recorded_on": "2022-01-06",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 25,
+        "fields": {
+            "record": 24,
+            "weight": 8,
+            "note": "",
+            "recorded_on": "2022-01-06",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 26,
+        "fields": {
+            "record": 25,
+            "weight": 8,
+            "note": "",
+            "recorded_on": "2022-01-06",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 27,
+        "fields": {
+            "record": 26,
+            "weight": 8,
+            "note": "",
+            "recorded_on": "2022-01-06",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 28,
+        "fields": {
+            "record": 27,
+            "weight": 8,
+            "note": "",
+            "recorded_on": "2022-01-06",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 29,
+        "fields": {
+            "record": 28,
+            "weight": 8,
+            "note": "",
+            "recorded_on": "2022-01-06",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 30,
+        "fields": {
+            "record": 29,
+            "weight": 8,
+            "note": "",
+            "recorded_on": "2022-01-06",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 31,
+        "fields": {
+            "record": 30,
+            "weight": 7,
+            "note": "",
+            "recorded_on": "2022-01-06",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 32,
+        "fields": {
+            "record": 31,
+            "weight": 7,
+            "note": "",
+            "recorded_on": "2022-01-06",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 33,
+        "fields": {
+            "record": 32,
+            "weight": 7,
+            "note": "",
+            "recorded_on": "2022-01-06",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 34,
+        "fields": {
+            "record": 33,
+            "weight": 7,
+            "note": "",
+            "recorded_on": "2022-01-06",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 35,
+        "fields": {
+            "record": 34,
+            "weight": 7,
+            "note": "",
+            "recorded_on": "2022-01-06",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 36,
+        "fields": {
+            "record": 35,
+            "weight": 7,
+            "note": "",
+            "recorded_on": "2022-01-06",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 37,
+        "fields": {
+            "record": 36,
+            "weight": 8,
+            "note": "",
+            "recorded_on": "2022-01-06",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 38,
+        "fields": {
+            "record": 37,
+            "weight": 7,
+            "note": "",
+            "recorded_on": "2022-01-06",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 40,
+        "fields": {
+            "record": 39,
+            "weight": 9,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 41,
+        "fields": {
+            "record": 40,
+            "weight": 9,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 42,
+        "fields": {
+            "record": 41,
+            "weight": 9,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 44,
+        "fields": {
+            "record": 43,
+            "weight": 7,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 46
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 45,
+        "fields": {
+            "record": 44,
+            "weight": 9,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 46,
+        "fields": {
+            "record": 45,
+            "weight": 9,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 46
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 47,
+        "fields": {
+            "record": 46,
+            "weight": 9,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 48,
+        "fields": {
+            "record": 47,
+            "weight": 9,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 46
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 49,
+        "fields": {
+            "record": 48,
+            "weight": 8,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 46
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 50,
+        "fields": {
+            "record": 49,
+            "weight": 8,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 51,
+        "fields": {
+            "record": 50,
+            "weight": 7,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 52,
+        "fields": {
+            "record": 51,
+            "weight": 9,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 46
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 53,
+        "fields": {
+            "record": 52,
+            "weight": 9,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 54,
+        "fields": {
+            "record": 53,
+            "weight": 9,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 55,
+        "fields": {
+            "record": 54,
+            "weight": 9,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 56,
+        "fields": {
+            "record": 55,
+            "weight": 9,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 57,
+        "fields": {
+            "record": 56,
+            "weight": 9,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 58,
+        "fields": {
+            "record": 57,
+            "weight": 9,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 46
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 59,
+        "fields": {
+            "record": 58,
+            "weight": 9,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 60,
+        "fields": {
+            "record": 59,
+            "weight": 9,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 46
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 61,
+        "fields": {
+            "record": 60,
+            "weight": 8,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 62,
+        "fields": {
+            "record": 61,
+            "weight": 9,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 63,
+        "fields": {
+            "record": 62,
+            "weight": 9,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 64,
+        "fields": {
+            "record": 63,
+            "weight": 9,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 46
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 65,
+        "fields": {
+            "record": 64,
+            "weight": 9,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 66,
+        "fields": {
+            "record": 65,
+            "weight": 8,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 46
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 67,
+        "fields": {
+            "record": 66,
+            "weight": 9,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 68,
+        "fields": {
+            "record": 67,
+            "weight": 9,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 46
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 69,
+        "fields": {
+            "record": 68,
+            "weight": 8,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 70,
+        "fields": {
+            "record": 69,
+            "weight": 9,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 71,
+        "fields": {
+            "record": 70,
+            "weight": 7,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 72,
+        "fields": {
+            "record": 71,
+            "weight": 7,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 46
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 73,
+        "fields": {
+            "record": 72,
+            "weight": 7,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 74,
+        "fields": {
+            "record": 73,
+            "weight": 9,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 46
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 75,
+        "fields": {
+            "record": 74,
+            "weight": 9,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 76,
+        "fields": {
+            "record": 75,
+            "weight": 8,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 46
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 77,
+        "fields": {
+            "record": 76,
+            "weight": 9,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 78,
+        "fields": {
+            "record": 77,
+            "weight": 8,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 46
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 79,
+        "fields": {
+            "record": 78,
+            "weight": 7,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 80,
+        "fields": {
+            "record": 79,
+            "weight": 8,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 46
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 81,
+        "fields": {
+            "record": 80,
+            "weight": 9,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 82,
+        "fields": {
+            "record": 81,
+            "weight": 8,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 46
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 83,
+        "fields": {
+            "record": 82,
+            "weight": 7,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 46
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 84,
+        "fields": {
+            "record": 83,
+            "weight": 8,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 46
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 85,
+        "fields": {
+            "record": 84,
+            "weight": 8,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 46
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 86,
+        "fields": {
+            "record": 85,
+            "weight": 7,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 46
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 87,
+        "fields": {
+            "record": 86,
+            "weight": 9,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 88,
+        "fields": {
+            "record": 87,
+            "weight": 9,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 89,
+        "fields": {
+            "record": 88,
+            "weight": 9,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 90,
+        "fields": {
+            "record": 89,
+            "weight": 9,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 91,
+        "fields": {
+            "record": 90,
+            "weight": 9,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 92,
+        "fields": {
+            "record": 91,
+            "weight": 8,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 93,
+        "fields": {
+            "record": 92,
+            "weight": 8,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 94,
+        "fields": {
+            "record": 93,
+            "weight": 9,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 95,
+        "fields": {
+            "record": 94,
+            "weight": 8,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 96,
+        "fields": {
+            "record": 95,
+            "weight": 9,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 97,
+        "fields": {
+            "record": 96,
+            "weight": 7,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 98,
+        "fields": {
+            "record": 97,
+            "weight": 9,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 99,
+        "fields": {
+            "record": 98,
+            "weight": 9,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 100,
+        "fields": {
+            "record": 99,
+            "weight": 9,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 101,
+        "fields": {
+            "record": 100,
+            "weight": 9,
+            "note": "",
+            "recorded_on": "2022-01-11",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 103,
+        "fields": {
+            "record": 102,
+            "weight": 3,
+            "note": "I coached Henry on how to talk about his code. He was talking about passing the variable name. Corrected his vocabulary to always talk about the value of the variable.",
+            "recorded_on": "2022-01-11",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 104,
+        "fields": {
+            "record": 103,
+            "weight": 3,
+            "note": "Did a great job. he actually had the old assessment that asked student to add new, unique primary key. He iterated the entire array, so I gave him the challenge of doing it without iterating, and using the max index instead.",
+            "recorded_on": "2022-01-11",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 105,
+        "fields": {
+            "record": 104,
+            "weight": 3,
+            "note": "Moving on to start with Book 3 (functions)",
+            "recorded_on": "2022-01-11",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 106,
+        "fields": {
+            "record": 105,
+            "weight": 3,
+            "note": "Great vocabulary. Just a couple minor corrections.",
+            "recorded_on": "2022-01-12",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 107,
+        "fields": {
+            "record": 106,
+            "weight": 16,
+            "note": "Working on automating Martin's fish",
+            "recorded_on": "2022-01-12",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 110,
+        "fields": {
+            "record": 109,
+            "weight": 3,
+            "note": "",
+            "recorded_on": "2022-01-12",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 111,
+        "fields": {
+            "record": 110,
+            "weight": 10,
+            "note": "",
+            "recorded_on": "2022-01-12",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 112,
+        "fields": {
+            "record": 111,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-12",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 114,
+        "fields": {
+            "record": 113,
+            "weight": 3,
+            "note": "",
+            "recorded_on": "2022-01-12",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 115,
+        "fields": {
+            "record": 114,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-12",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 116,
+        "fields": {
+            "record": 115,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-12",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 119,
+        "fields": {
+            "record": 118,
+            "weight": 16,
+            "note": "Did anonymous functions and now trying others",
+            "recorded_on": "2022-01-12",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 121,
+        "fields": {
+            "record": 120,
+            "weight": 3,
+            "note": "",
+            "recorded_on": "2022-01-12",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 122,
+        "fields": {
+            "record": 121,
+            "weight": 16,
+            "note": "",
+            "recorded_on": "2022-01-12",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 131,
+        "fields": {
+            "record": 130,
+            "weight": 10,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 132,
+        "fields": {
+            "record": 131,
+            "weight": 10,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 133,
+        "fields": {
+            "record": 132,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 134,
+        "fields": {
+            "record": 133,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 136,
+        "fields": {
+            "record": 135,
+            "weight": 10,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 137,
+        "fields": {
+            "record": 136,
+            "weight": 17,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 138,
+        "fields": {
+            "record": 137,
+            "weight": 10,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 139,
+        "fields": {
+            "record": 138,
+            "weight": 17,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 140,
+        "fields": {
+            "record": 139,
+            "weight": 10,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 141,
+        "fields": {
+            "record": 140,
+            "weight": 17,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 142,
+        "fields": {
+            "record": 141,
+            "weight": 10,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 143,
+        "fields": {
+            "record": 142,
+            "weight": 17,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 144,
+        "fields": {
+            "record": 143,
+            "weight": 10,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 145,
+        "fields": {
+            "record": 144,
+            "weight": 10,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 146,
+        "fields": {
+            "record": 145,
+            "weight": 17,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 147,
+        "fields": {
+            "record": 146,
+            "weight": 10,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 148,
+        "fields": {
+            "record": 147,
+            "weight": 17,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 149,
+        "fields": {
+            "record": 148,
+            "weight": 10,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 150,
+        "fields": {
+            "record": 149,
+            "weight": 10,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 151,
+        "fields": {
+            "record": 150,
+            "weight": 16,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 152,
+        "fields": {
+            "record": 151,
+            "weight": 10,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 153,
+        "fields": {
+            "record": 152,
+            "weight": 16,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 154,
+        "fields": {
+            "record": 153,
+            "weight": 10,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 155,
+        "fields": {
+            "record": 154,
+            "weight": 17,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 156,
+        "fields": {
+            "record": 155,
+            "weight": 10,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 157,
+        "fields": {
+            "record": 156,
+            "weight": 10,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 158,
+        "fields": {
+            "record": 157,
+            "weight": 10,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 159,
+        "fields": {
+            "record": 158,
+            "weight": 10,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 160,
+        "fields": {
+            "record": 159,
+            "weight": 10,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 161,
+        "fields": {
+            "record": 160,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 162,
+        "fields": {
+            "record": 161,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 163,
+        "fields": {
+            "record": 162,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 164,
+        "fields": {
+            "record": 163,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 165,
+        "fields": {
+            "record": 164,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 166,
+        "fields": {
+            "record": 165,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 167,
+        "fields": {
+            "record": 166,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 168,
+        "fields": {
+            "record": 167,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 169,
+        "fields": {
+            "record": 168,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 170,
+        "fields": {
+            "record": 169,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 171,
+        "fields": {
+            "record": 170,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 172,
+        "fields": {
+            "record": 171,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 173,
+        "fields": {
+            "record": 172,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 174,
+        "fields": {
+            "record": 173,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 175,
+        "fields": {
+            "record": 174,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 176,
+        "fields": {
+            "record": 175,
+            "weight": 10,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 177,
+        "fields": {
+            "record": 176,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 178,
+        "fields": {
+            "record": 177,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 179,
+        "fields": {
+            "record": 178,
+            "weight": 17,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 180,
+        "fields": {
+            "record": 179,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 181,
+        "fields": {
+            "record": 180,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 182,
+        "fields": {
+            "record": 181,
+            "weight": 10,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 183,
+        "fields": {
+            "record": 182,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 184,
+        "fields": {
+            "record": 183,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 185,
+        "fields": {
+            "record": 184,
+            "weight": 2,
+            "note": "Did not ask for a review",
+            "recorded_on": "2022-01-13",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 186,
+        "fields": {
+            "record": 185,
+            "weight": 10,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 188,
+        "fields": {
+            "record": 187,
+            "weight": 3,
+            "note": "Iffy on vocabulary for object properties and for..of loops",
+            "recorded_on": "2022-01-13",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 189,
+        "fields": {
+            "record": 188,
+            "weight": 3,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 190,
+        "fields": {
+            "record": 189,
+            "weight": 10,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 191,
+        "fields": {
+            "record": 190,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 192,
+        "fields": {
+            "record": 191,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 193,
+        "fields": {
+            "record": 192,
+            "weight": 16,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 194,
+        "fields": {
+            "record": 193,
+            "weight": 3,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 195,
+        "fields": {
+            "record": 194,
+            "weight": 10,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 196,
+        "fields": {
+            "record": 195,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 197,
+        "fields": {
+            "record": 196,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 198,
+        "fields": {
+            "record": 197,
+            "weight": 3,
+            "note": "He had the general algorithm correct, but was missing the step of putting the workflow in a for..of loop to evaluate for all applicants",
+            "recorded_on": "2022-01-13",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 199,
+        "fields": {
+            "record": 198,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 200,
+        "fields": {
+            "record": 199,
+            "weight": 3,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 201,
+        "fields": {
+            "record": 200,
+            "weight": 3,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 202,
+        "fields": {
+            "record": 201,
+            "weight": 20,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 203,
+        "fields": {
+            "record": 202,
+            "weight": 3,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 204,
+        "fields": {
+            "record": 203,
+            "weight": 2,
+            "note": "No review requested",
+            "recorded_on": "2022-01-13",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 205,
+        "fields": {
+            "record": 204,
+            "weight": 20,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 206,
+        "fields": {
+            "record": 205,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 207,
+        "fields": {
+            "record": 206,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 208,
+        "fields": {
+            "record": 207,
+            "weight": 20,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 209,
+        "fields": {
+            "record": 208,
+            "weight": 3,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 210,
+        "fields": {
+            "record": 209,
+            "weight": 20,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 211,
+        "fields": {
+            "record": 210,
+            "weight": 20,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 212,
+        "fields": {
+            "record": 211,
+            "weight": 20,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 213,
+        "fields": {
+            "record": 212,
+            "weight": 20,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 214,
+        "fields": {
+            "record": 213,
+            "weight": 20,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 215,
+        "fields": {
+            "record": 214,
+            "weight": 20,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 216,
+        "fields": {
+            "record": 215,
+            "weight": 3,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 217,
+        "fields": {
+            "record": 216,
+            "weight": 20,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 218,
+        "fields": {
+            "record": 217,
+            "weight": 20,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 219,
+        "fields": {
+            "record": 218,
+            "weight": 20,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 220,
+        "fields": {
+            "record": 219,
+            "weight": 20,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 221,
+        "fields": {
+            "record": 220,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-13",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 222,
+        "fields": {
+            "record": 221,
+            "weight": 20,
+            "note": "",
+            "recorded_on": "2022-01-14",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 223,
+        "fields": {
+            "record": 222,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-14",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 224,
+        "fields": {
+            "record": 223,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-14",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 225,
+        "fields": {
+            "record": 224,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-14",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 226,
+        "fields": {
+            "record": 225,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-14",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 227,
+        "fields": {
+            "record": 226,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-14",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 228,
+        "fields": {
+            "record": 227,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-14",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 229,
+        "fields": {
+            "record": 228,
+            "weight": 13,
+            "note": "",
+            "recorded_on": "2022-01-14",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 230,
+        "fields": {
+            "record": 229,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-14",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 231,
+        "fields": {
+            "record": 230,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-14",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 232,
+        "fields": {
+            "record": 231,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-14",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 233,
+        "fields": {
+            "record": 232,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-14",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 234,
+        "fields": {
+            "record": 233,
+            "weight": 16,
+            "note": "",
+            "recorded_on": "2022-01-14",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 235,
+        "fields": {
+            "record": 234,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-14",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 236,
+        "fields": {
+            "record": 235,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-14",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 237,
+        "fields": {
+            "record": 236,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-14",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 238,
+        "fields": {
+            "record": 237,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-14",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 239,
+        "fields": {
+            "record": 238,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-14",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 240,
+        "fields": {
+            "record": 239,
+            "weight": 11,
+            "note": "Sent him the link for the assessment",
+            "recorded_on": "2022-01-14",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 241,
+        "fields": {
+            "record": 240,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-14",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 242,
+        "fields": {
+            "record": 241,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-14",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 243,
+        "fields": {
+            "record": 242,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-14",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 244,
+        "fields": {
+            "record": 243,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-14",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 245,
+        "fields": {
+            "record": 243,
+            "weight": 18,
+            "note": "Sent her the link to the assessment yesterday afternoon",
+            "recorded_on": "2022-01-14",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 246,
+        "fields": {
+            "record": 244,
+            "weight": 2,
+            "note": "",
+            "recorded_on": "2022-01-14",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 247,
+        "fields": {
+            "record": 245,
+            "weight": 2,
+            "note": "",
+            "recorded_on": "2022-01-14",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 248,
+        "fields": {
+            "record": 246,
+            "weight": 20,
+            "note": "",
+            "recorded_on": "2022-01-14",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 249,
+        "fields": {
+            "record": 247,
+            "weight": 20,
+            "note": "Wonderfully developed algorithm. Vocabulary very solid.",
+            "recorded_on": "2022-01-14",
+            "instructor": 9
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 250,
+        "fields": {
+            "record": 248,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-14",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 251,
+        "fields": {
+            "record": 249,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-14",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 252,
+        "fields": {
+            "record": 250,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-14",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 253,
+        "fields": {
+            "record": 251,
+            "weight": 10,
+            "note": "",
+            "recorded_on": "2022-01-14",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 254,
+        "fields": {
+            "record": 252,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-14",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 255,
+        "fields": {
+            "record": 253,
+            "weight": 16,
+            "note": "",
+            "recorded_on": "2022-01-14",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 256,
+        "fields": {
+            "record": 254,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-14",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 257,
+        "fields": {
+            "record": 255,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-14",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 260,
+        "fields": {
+            "record": 258,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-14",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 261,
+        "fields": {
+            "record": 259,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-14",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 262,
+        "fields": {
+            "record": 260,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-14",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 263,
+        "fields": {
+            "record": 261,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-14",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 264,
+        "fields": {
+            "record": 262,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-14",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 265,
+        "fields": {
+            "record": 263,
+            "weight": 11,
+            "note": "",
+            "recorded_on": "2022-01-14",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 266,
+        "fields": {
+            "record": 264,
+            "weight": 19,
+            "note": "Still feels a bit nervous about github and feels slow going through the book. Feels much better on iteration as a whole. Feels good he felt comfortable writing a ticket in the sad column",
+            "recorded_on": "2022-01-14",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 267,
+        "fields": {
+            "record": 265,
+            "weight": 19,
+            "note": "Feels like hes still grasping the inner working of functions and second guessing during the assessment. Felt really good after the first assessment and feels much better about arrays, iterations, and objects.",
+            "recorded_on": "2022-01-14",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 268,
+        "fields": {
+            "record": 266,
+            "weight": 19,
+            "note": "Still feels a bit nervous about github. Feels much better on functions and iteration. Feels like she doesnt fully feel good on functions but feels much better.",
+            "recorded_on": "2022-01-14",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 269,
+        "fields": {
+            "record": 267,
+            "weight": 19,
+            "note": "Feels scared of breaking github. Feels much better on her js knowledge and iteration. Feels much better on functions as she has gone through book 3.",
+            "recorded_on": "2022-01-14",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 270,
+        "fields": {
+            "record": 268,
+            "weight": 11,
+            "note": "Felt he kept making simple mistakes and felt more worse off in book 3 than he thought he would. Felt much better on iteration and turned out to be easier than he thought it would.",
+            "recorded_on": "2022-01-14",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 271,
+        "fields": {
+            "record": 269,
+            "weight": 19,
+            "note": "terminology needs work but feels better. Feels like he got over freaking out about functions and got further with them than he thought. Feels like he knows functions so much better than the beginning of the week.",
+            "recorded_on": "2022-01-14",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 272,
+        "fields": {
+            "record": 270,
+            "weight": 19,
+            "note": "Feels really frustrated about functions. Got much better with js knowledge and syntax. Starting to get very frustrated.",
+            "recorded_on": "2022-01-14",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 273,
+        "fields": {
+            "record": 271,
+            "weight": 19,
+            "note": "Feels like he hit a wall with the assessment and his understanding of functions. Was happy he was going so fast until he hit a snag on the assessment",
+            "recorded_on": "2022-01-14",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 274,
+        "fields": {
+            "record": 272,
+            "weight": 11,
+            "note": "Wants to better understand deconstruction of functions. Felt like her vocab has gotten much better and feels good getting so far and get familiar with functions",
+            "recorded_on": "2022-01-14",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 275,
+        "fields": {
+            "record": 273,
+            "weight": 19,
+            "note": "Needs to break down her code better into basic english. Felt good completing book 3 assessment and felt much better about confidence and had a confidence boost.",
+            "recorded_on": "2022-01-14",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 276,
+        "fields": {
+            "record": 274,
+            "weight": 19,
+            "note": "Feels shaky on github still. Feels much better at deconstructing functions and writing them as a whole. And writing different functions.",
+            "recorded_on": "2022-01-14",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 277,
+        "fields": {
+            "record": 275,
+            "weight": 11,
+            "note": "Realized he should have made his goals functions and wishes he had spent more time on them in general. Felt like he would need to work harder on data types and feels like he feels really good about where he is.",
+            "recorded_on": "2022-01-14",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 278,
+        "fields": {
+            "record": 276,
+            "weight": 19,
+            "note": "Cant understand generator functions. Feels like he has filled the gaps in his knowledge of functions.",
+            "recorded_on": "2022-01-14",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 279,
+        "fields": {
+            "record": 277,
+            "weight": 19,
+            "note": "Also humbled by functions and needs to ask for help more. Feels like he knows functions much better he seems a little down though.",
+            "recorded_on": "2022-01-14",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 280,
+        "fields": {
+            "record": 278,
+            "weight": 19,
+            "note": "Feels like functions has been a humbling experience wished she focused on them more. Worked through book 2 faster than she thought and feels much better about data types variables and parameters. And feels good focusing on functions.",
+            "recorded_on": "2022-01-14",
+            "instructor": 13
+        }
+    },
+    {
+        "model": "LearningAPI.learningrecordweight",
+        "pk": 281,
+        "fields": {
+            "record": 279,
+            "weight": 19,
+            "note": "Wasted a lot of Wednesday on the wrong book and wished he asked for help. Feels much better on js and functions overall.",
+            "recorded_on": "2022-01-14",
+            "instructor": 13
         }
     }
 ]
