@@ -79,7 +79,7 @@
         "fields": {
             "app": 1,
             "account": 1,
-            "token": "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",
+            "token": "",
             "token_secret": "",
             "expires_at": null
         }
@@ -90,7 +90,7 @@
         "fields": {
             "app": 1,
             "account": 2,
-            "token": "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",
+            "token": "",
             "token_secret": "",
             "expires_at": null
         }
@@ -101,7 +101,7 @@
         "fields": {
             "app": 1,
             "account": 3,
-            "token": "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",
+            "token": "",
             "token_secret": "",
             "expires_at": null
         }
@@ -112,7 +112,7 @@
         "fields": {
             "app": 1,
             "account": 4,
-            "token": "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",
+            "token": "",
             "token_secret": "",
             "expires_at": null
         }
@@ -123,7 +123,7 @@
         "fields": {
             "app": 1,
             "account": 5,
-            "token": "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",
+            "token": "",
             "token_secret": "",
             "expires_at": null
         }
