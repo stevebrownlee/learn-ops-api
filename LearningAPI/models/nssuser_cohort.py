@@ -1,7 +1,13 @@
 from django.db import models
-from . import NssUser, Cohort
 
 
 class NssUserCohort(models.Model):
-    nss_user = models.ForeignKey(NssUser, on_delete=models.DO_NOTHING, related_name="cohorts")
-    cohort = models.ForeignKey(Cohort, on_delete=models.DO_NOTHING, related_name="members")
+    nss_user = models.ForeignKey("NssUser", on_delete=models.DO_NOTHING, related_name="assigned_cohorts")
+    cohort = models.ForeignKey("Cohort", on_delete=models.DO_NOTHING, related_name="members")
+
+    def __str__(self) -> str:
+        return self.cohort.name
+
+    def __repr__(self) -> str:
+        return self.cohort.name
+

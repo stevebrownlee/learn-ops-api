@@ -1,5 +1,7 @@
 from django.db import models
 from django.conf import settings
+from django.forms.models import model_to_dict
+from LearningAPI.models.nssuser_cohort import NssUserCohort
 
 
 class NssUser(models.Model):
@@ -13,3 +15,14 @@ class NssUser(models.Model):
 
     def __str__(self) -> str:
         return f'{self.user.first_name} {self.user.last_name}'
+
+    @property
+    def cohorts(self):
+        assignments = self.assigned_cohorts.all().order_by("-id")
+        cohort_list = []
+        for assignment in assignments:
+            cohort_list.append({
+                "id": assignment.cohort.id,
+                "name": assignment.cohort.name
+            })
+        return cohort_list

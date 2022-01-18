@@ -65,10 +65,41 @@ pipenv install
     1. Social application tokens
     1. Learning records
     1. Learning record weights
-1. If all the data is there, open Postman.
+
+### Get Student Profile
+
+1. Open Postman.
 1. Look in the Tokens data and find a token for a student.
-1. Open the "Get Single Student" request in Postman.
-1. Copy pasta the student token
+1. Open the **Users/Profile** request in Postman.
+1. Copy pasta the student token into the Authorization header of the request. Make sure it is preceded by `Token `.
+1. Send the request and verify that you get a response like the following.
+    ```json
+    {
+        "id": 3002,
+        "name": "John Student",
+        "email": "",
+        "github": "student",
+        "staff": false,
+        "cohorts": [
+            {
+                "id": 3,
+                "name": "Day Cohort 54",
+                "slack_channel": "day-cohort-54",
+                "start_date": "2022-01-03",
+                "end_date": "2022-06-24",
+                "break_start_date": "2020-06-29",
+                "break_end_date": "2020-07-03"
+            }
+        ],
+        "feedback": [],
+        "repos": "https://api.github.com/users/student/repos"
+    }
+    ```
+
+### Get Instructor Data for Student
+
+1. Open the **Users/Get Single Student** request.
+1. Verify that you get a student object back with a `records` key containing many Learning Records.
 
 ## Github Auth URL
 

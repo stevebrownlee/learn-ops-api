@@ -36,7 +36,6 @@ class CourseViewSet(ViewSet):
         """
         try:
             course = Course.objects.annotate(
-
                 chapters=Count('books__chapters')
             ).get(pk=pk)
 

@@ -9,6 +9,9 @@ class Cohort(models.Model):
     break_start_date = models.DateField(auto_now=False, auto_now_add=False)
     break_end_date = models.DateField(auto_now=False, auto_now_add=False)
 
+    def __repr__(self) -> str:
+        return self.name
+
     @property
     def students(self):
         """students property, which will be calculated per cohort

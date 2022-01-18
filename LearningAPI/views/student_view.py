@@ -1,14 +1,16 @@
 from django.http import HttpResponseServerError
 from django.db.models import Q
-from rest_framework import permissions
+from django.db.models import Count
+from rest_framework import permissions, serializers, status
 from rest_framework.decorators import action
-from rest_framework import serializers
-from rest_framework.viewsets import ViewSet
+from rest_framework.viewsets import ViewSet, ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
 from LearningAPI.models import NssUser, OneOnOneNote, Cohort, NssUserCohort, LearningRecord
 from LearningAPI.views.learning_record_view import RecordWeightSerializer
 from django.forms.models import model_to_dict
+from rest_framework.pagination import PageNumberPagination
+
 
 class StudentPermission(permissions.BasePermission):
 
@@ -22,11 +24,16 @@ class StudentPermission(permissions.BasePermission):
         else:
             return False
 
+class StudentPagination(PageNumberPagination):
+    page_size = 40
+    page_size_query_param = 'page_size'
+    max_page_size = 80
 
-class StudentViewSet(ViewSet):
+class StudentViewSet(ModelViewSet):
     """Student view set"""
 
     permission_classes = (StudentPermission,)
+    pagination_class = StudentPagination
 
     def create(self, request):
         """Handle POST operations"""
@@ -111,9 +118,19 @@ class StudentViewSet(ViewSet):
         Returns:
             Response -- JSON serialized array
         """
-        students = NssUser.objects.filter(user__is_staff=False)
-        serializer = StudentSerializer(
+        student_status = self.request.query_params.get('status', None)
+
+        if student_status == "unassigned":
+            students = NssUser.objects.\
+                annotate(cohort_count=Count('assigned_cohorts')).\
+                filter(user__is_staff=False, cohort_count=0)
+        else:
+            students = NssUser.objects.filter(user__is_staff=False)
+
+        serializer = MiniStudentSerializer(
             students, many=True, context={'request': request})
+
+
 
         search_terms = self.request.query_params.get('q', None)
         if search_terms != None:
@@ -132,7 +149,7 @@ class StudentViewSet(ViewSet):
 
         if cohort is not None:
             cohort_filter = Cohort.objects.get(pk=cohort)
-            students = students.filter(cohorts__cohort=cohort_filter)
+            students = students.filter(assigned_cohorts__cohort=cohort_filter)
 
             if feedback is not None and feedback == 'true':
                 serializer = NoCohortStudentSerializer(
@@ -141,7 +158,8 @@ class StudentViewSet(ViewSet):
                 serializer = NoCohortStudentSerializer(
                     students, many=True, context={'request': request})
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        page = self.paginate_queryset(serializer.data)
+        return self.get_paginated_response(page)
 
     @action(methods=['post'], detail=True)
     def status(self, request, pk):
@@ -189,14 +207,6 @@ class StudentSerializer(serializers.ModelSerializer):
     email = serializers.SerializerMethodField()
     github = serializers.SerializerMethodField()
     records = serializers.SerializerMethodField()
-    cohorts = serializers.SerializerMethodField()
-
-    def get_cohorts(self, obj):
-        assignments = NssUserCohort.objects.filter(nss_user=obj).order_by("-id")
-        cohorts = []
-        for assignment in assignments:
-            cohorts.append(model_to_dict(assignment.cohort))
-        return cohorts
 
     def get_records(self, obj):
         records = LearningRecord.objects.filter(student=obj).order_by("-id")
@@ -244,16 +254,10 @@ class MiniStudentSerializer(serializers.ModelSerializer):
     email = serializers.SerializerMethodField()
     github = serializers.SerializerMethodField()
     repos = serializers.SerializerMethodField()
-    cohorts = serializers.SerializerMethodField()
     staff = serializers.SerializerMethodField()
 
     def get_staff(self, obj):
         return False
-
-    def get_cohorts(self, obj):
-        assignments = NssUserCohort.objects.filter(nss_user=obj).order_by("-id")
-        cohorts = list(map(lambda assignment: model_to_dict(assignment.cohort), assignments))
-        return cohorts
 
     def get_github(self, obj):
         github = obj.user.socialaccount_set.get(user=obj.user)
