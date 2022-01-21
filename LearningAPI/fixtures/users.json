@@ -21,7 +21,7 @@
     },
     {
         "model": "auth.user",
-        "pk": 8,
+        "pk": 2,
         "fields": {
             "password": "!6PqVJhtolEQrZSo8sBwaxiC9yfHyTe0BcFUoKyi7",
             "last_login": "2022-01-14T19:14:55.913Z",
@@ -36,104 +36,6 @@
             "groups": [
                 2
             ],
-            "user_permissions": []
-        }
-    },
-    {
-        "model": "auth.user",
-        "pk": 9,
-        "fields": {
-            "password": "!Zma3up9UGVy7C8s4D5fgiVUZwhZxjPoWVMDPSvKz",
-            "last_login": "2021-12-31T05:08:01.449Z",
-            "is_superuser": false,
-            "username": "mbrownlee",
-            "first_name": "Michelle",
-            "last_name": "",
-            "email": "",
-            "is_staff": false,
-            "is_active": true,
-            "date_joined": "2021-12-05T15:31:01.126Z",
-            "groups": [
-                1
-            ],
-            "user_permissions": []
-        }
-    },
-    {
-        "model": "auth.user",
-        "pk": 10,
-        "fields": {
-            "password": "!s0makCLcbVBr17F0OPPmlgDVw8F7ERjHUJr3Djrx",
-            "last_login": "2021-12-11T19:04:03Z",
-            "is_superuser": false,
-            "username": "JoeShep",
-            "first_name": "Joe",
-            "last_name": "Shepherd",
-            "email": "",
-            "is_staff": true,
-            "is_active": true,
-            "date_joined": "2021-12-11T16:15:10Z",
-            "groups": [
-                2
-            ],
-            "user_permissions": []
-        }
-    },
-    {
-        "model": "auth.user",
-        "pk": 11,
-        "fields": {
-            "password": "!dT4Dchrp9uQPGtHjRKNogkgcJhizSmg2DqzQ7ZXf",
-            "last_login": "2021-12-11T19:28:29Z",
-            "is_superuser": false,
-            "username": "christinaashworth",
-            "first_name": "Christina",
-            "last_name": "Ashworth",
-            "email": "",
-            "is_staff": true,
-            "is_active": true,
-            "date_joined": "2021-12-11T16:15:57Z",
-            "groups": [
-                2
-            ],
-            "user_permissions": []
-        }
-    },
-    {
-        "model": "auth.user",
-        "pk": 12,
-        "fields": {
-            "password": "!PZpIF63gVfBtiYTr4R3RXQOS66l0BPAWGoLq3JLf",
-            "last_login": "2021-12-11T19:28:35.197Z",
-            "is_superuser": false,
-            "username": "ajawashington",
-            "first_name": "Aja",
-            "last_name": "Washington",
-            "email": "",
-            "is_staff": false,
-            "is_active": true,
-            "date_joined": "2021-12-11T16:16:36.042Z",
-            "groups": [
-                1
-            ],
-            "user_permissions": []
-        }
-    },
-    {
-        "model": "auth.user",
-        "pk": 13,
-        "fields": {
-            "password": "!lYFH9wiEKAq8Z7uOvSDPnzX3SYRRBWustuns03GL",
-            "last_login": "2022-01-14T22:21:52.013Z",
-            "is_superuser": false,
-            "username": "tylerghilliard94",
-            "first_name": "Tyler",
-            "last_name": "Hilliard",
-            "email": "",
-            "is_staff": true,
-            "is_active": true,
-            "date_joined": "2022-01-02T01:00:23Z",
-            "groups": [],
             "user_permissions": []
         }
     },
@@ -709,24 +611,6 @@
             "is_staff": false,
             "is_active": true,
             "date_joined": "2022-01-06T15:08:45.712Z",
-            "groups": [],
-            "user_permissions": []
-        }
-    },
-    {
-        "model": "auth.user",
-        "pk": 46,
-        "fields": {
-            "password": "!R4TPxUtX17KNy0zzMOjl7G1W4athfTM9m2KhCrHI",
-            "last_login": "2022-01-11T16:44:42.273Z",
-            "is_superuser": false,
-            "username": "dalamcd",
-            "first_name": "Devin",
-            "last_name": "Kent",
-            "email": "",
-            "is_staff": true,
-            "is_active": true,
-            "date_joined": "2022-01-11T15:27:38Z",
             "groups": [],
             "user_permissions": []
         }

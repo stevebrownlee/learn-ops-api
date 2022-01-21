@@ -26,5 +26,5 @@ from .assessment_objective import AssessmentObjective
 from .one_on_one_note import OneOnOneNote
 from .opportunities import Opportunity
 from .learning_record import LearningRecord
-from .learning_record_weight import LearningRecordWeight
+from .learning_record_entry import LearningRecordEntry
 from .learning_weight import LearningWeight

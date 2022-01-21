@@ -3,7 +3,7 @@
         "model": "LearningAPI.favoritenote",
         "pk": 2,
         "fields": {
-            "user": 8,
+            "user": 2,
             "note": 1
         }
     },
@@ -11,7 +11,7 @@
         "model": "LearningAPI.favoritenote",
         "pk": 3,
         "fields": {
-            "user": 8,
+            "user": 2,
             "note": 2
         }
     }

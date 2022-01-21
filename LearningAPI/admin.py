@@ -3,7 +3,7 @@ from django.contrib import admin
 # Register your models here.
 from .models import (
     NssUser,
-    LearningRecordWeight,
+    LearningRecordEntry,
     LearningRecord,
     LearningWeight
 )
@@ -15,11 +15,11 @@ class LearningWeightAdmin(admin.ModelAdmin):
 
 @admin.register(LearningRecord)
 class LearningRecordAdmin(admin.ModelAdmin):
-    list_display = ['student', 'description', 'obtained_from']
+    list_display = ['student', 'weight',]
 
-@admin.register(LearningRecordWeight)
-class LearningRecordWeightAdmin(admin.ModelAdmin):
-    list_display = ['record', 'weight', 'note']
+@admin.register(LearningRecordEntry)
+class LearningRecordEntryAdmin(admin.ModelAdmin):
+    list_display = ['record', 'instructor', 'note']
 
 @admin.register(NssUser)
 class NssUserAdmin(admin.ModelAdmin):

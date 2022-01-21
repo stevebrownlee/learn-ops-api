@@ -22,5 +22,5 @@ python manage.py loaddata taxonomy_levels
 python manage.py loaddata opportunities
 python manage.py loaddata learning_weights
 python manage.py loaddata learning_records
-python manage.py loaddata learning_record_weights
+python manage.py loaddata learning_record_entries
 

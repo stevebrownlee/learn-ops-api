@@ -6,8 +6,7 @@ from rest_framework.decorators import action
 from rest_framework.viewsets import ViewSet, ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
-from LearningAPI.models import NssUser, OneOnOneNote, Cohort, NssUserCohort, LearningRecord
-from LearningAPI.views.learning_record_view import RecordWeightSerializer
+from LearningAPI.models import NssUser, OneOnOneNote, Cohort, LearningRecordEntry, LearningRecord
 from django.forms.models import model_to_dict
 from rest_framework.pagination import PageNumberPagination
 
@@ -192,13 +191,29 @@ class StudentNoteSerializer(serializers.ModelSerializer):
         model = OneOnOneNote
         fields = ['id', 'notes', 'session_date', 'author']
 
+class LearningRecordEntrySerializer(serializers.ModelSerializer):
+    """JSON serializer"""
+    instructor = serializers.SerializerMethodField()
+
+    def get_instructor(self, obj):
+        return f'{obj.instructor.user.first_name} {obj.instructor.user.last_name}'
+
+    class Meta:
+        model = LearningRecordEntry
+        fields = ('id', 'note', 'recorded_on', 'instructor')
+
+
 class LearningRecordSerializer(serializers.ModelSerializer):
     """JSON serializer"""
-    weights = RecordWeightSerializer(many=True)
+    entries = LearningRecordEntrySerializer(many=True)
+    objective = serializers.SerializerMethodField()
+
+    def get_objective(self, obj):
+        return obj.weight.label
 
     class Meta:
         model = LearningRecord
-        fields = ('description', 'obtained_from', 'weights', 'created_on', 'id', )
+        fields = ('id', 'objective', 'achieved', 'entries', )
 
 class StudentSerializer(serializers.ModelSerializer):
     """JSON serializer"""

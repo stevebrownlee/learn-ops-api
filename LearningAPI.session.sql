@@ -9,7 +9,7 @@ SELECT *
 FROM public."LearningAPI_learningrecord";
 
 SELECT *
-FROM public."LearningAPI_learningrecordweight";
+FROM public."LearningAPI_LearningRecordEntry";
 
 SELECT *
 FROM public."socialaccount_socialaccount";

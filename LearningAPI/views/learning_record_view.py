@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 from LearningAPI.models import LearningRecord
-from LearningAPI.models import LearningRecordWeight
+from LearningAPI.models import LearningRecordEntry
 from LearningAPI.models.learning_weight import LearningWeight
 from LearningAPI.models.nssuser import NssUser
 
@@ -36,7 +36,7 @@ class RecordWeightSerializer(serializers.ModelSerializer):
         return obj.weight.label
 
     class Meta:
-        model = LearningRecordWeight
+        model = LearningRecordEntry
         fields = ('id', 'score', 'note', 'recorded_on', 'instructor', 'label')
 
 
@@ -111,7 +111,7 @@ class LearningRecordViewSet(ViewSet):
 
         try:
             record.save()
-            record_weight = LearningRecordWeight()
+            record_weight = LearningRecordEntry()
             record_weight.record = record
             record_weight.weight = weight
             record_weight.instructor = NssUser.objects.get(
@@ -146,7 +146,7 @@ class LearningRecordViewSet(ViewSet):
                 return Response({"reason": "Learning weight not found"}, status=status.HTTP_404_NOT_FOUND)
 
             try:
-                record_weight = LearningRecordWeight()
+                record_weight = LearningRecordEntry()
                 record_weight.record = record
                 record_weight.weight = weight
                 record_weight.instructor = NssUser.objects.get(
@@ -163,18 +163,18 @@ class LearningRecordViewSet(ViewSet):
         if request.method == "DELETE":
 
             try:
-                entry = LearningRecordWeight.objects.get(pk=entryId)
+                entry = LearningRecordEntry.objects.get(pk=entryId)
                 record_id = entry.record_id
                 entry.delete()
 
-                record_entries = LearningRecordWeight.objects.filter(
+                record_entries = LearningRecordEntry.objects.filter(
                     record_id=record_id)
                 any_left = len(record_entries)
                 if not any_left:
                     record = LearningRecord.objects.get(pk=record_id)
                     record.delete()
 
-            except LearningRecordWeight.DoesNotExist:
+            except LearningRecordEntry.DoesNotExist:
                 return Response(None, status=status.HTTP_404_NOT_FOUND)
 
             return Response(None, status=status.HTTP_204_NO_CONTENT)

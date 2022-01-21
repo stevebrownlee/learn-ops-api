@@ -1,0 +1,212 @@
+[
+    {
+        "model": "LearningAPI.LearningRecordEntry",
+        "pk": 1,
+        "fields": {
+            "record": 1,
+            "note": "Necessitatibus omnis praesentium deserunt voluptate voluptatum at dolor aut ipsam.",
+            "recorded_on": "2021-12-11",
+            "instructor": 1
+        }
+    },
+    {
+        "model": "LearningAPI.LearningRecordEntry",
+        "pk": 2,
+        "fields": {
+            "record": 1,
+            "note": "Voluptatum doloremque sit odio accusantium et.",
+            "recorded_on": "2021-12-11",
+            "instructor": 1
+        }
+    },
+    {
+        "model": "LearningAPI.LearningRecordEntry",
+        "pk": 3,
+        "fields": {
+            "record": 2,
+            "note": "Rem et beatae non mollitia omnis ut ducimus sed commodi.",
+            "recorded_on": "2021-12-11",
+            "instructor": 1
+        }
+    },
+    {
+        "model": "LearningAPI.LearningRecordEntry",
+        "pk": 4,
+        "fields": {
+            "record": 2,
+            "note": "Placeat sapiente aut accusamus nobis iure qui ipsum illum.",
+            "recorded_on": "2021-12-11",
+            "instructor": 1
+        }
+    },
+    {
+        "model": "LearningAPI.LearningRecordEntry",
+        "pk": 5,
+        "fields": {
+            "record": 2,
+            "note": "Corrupti dolor veniam iusto molestiae sequi quia sint qui.",
+            "recorded_on": "2021-12-11",
+            "instructor": 1
+        }
+    },
+    {
+        "model": "LearningAPI.LearningRecordEntry",
+        "pk": 6,
+        "fields": {
+            "record": 3,
+            "note": "Iusto earum aliquid. Laudantium non ut voluptatem enim dolores numquam quam. Repellendus reiciendis voluptatum autem.",
+            "recorded_on": "2021-12-11",
+            "instructor": 1
+        }
+    },
+    {
+        "model": "LearningAPI.LearningRecordEntry",
+        "pk": 8,
+        "fields": {
+            "record": 3,
+            "note": "Quia ea reprehenderit saepe. Corrupti sequi quae sit aliquam. Occaecati fugiat quia ad sed saepe ad repellat dicta eum. Eligendi non quia sed dolorum placeat. Eos est in qui rerum saepe ad. Quibusdam consequatur hic.",
+            "recorded_on": "2022-01-06",
+            "instructor": 1
+        }
+    },
+    {
+        "model": "LearningAPI.LearningRecordEntry",
+        "pk": 9,
+        "fields": {
+            "record": 4,
+            "note": "Possimus omnis minima. Necessitatibus beatae ullam asperiores qui quia. Nulla alias velit. In et omnis consequatur voluptas. Perspiciatis quae magnam in aperiam. Quae nihil non inventore facilis tenetur.",
+            "recorded_on": "2022-01-06",
+            "instructor": 1
+        }
+    },
+    {
+        "model": "LearningAPI.LearningRecordEntry",
+        "pk": 11,
+        "fields": {
+            "record": 4,
+            "note": "Dolor officiis voluptas. Vero temporibus velit.",
+            "recorded_on": "2022-01-06",
+            "instructor": 1
+        }
+    },
+    {
+        "model": "LearningAPI.LearningRecordEntry",
+        "pk": 12,
+        "fields": {
+            "record": 5,
+            "note": "Eligendi in ipsum dolorem est voluptatibus unde aliquam delectus eligendi. Veniam a aut ut voluptatem pariatur.",
+            "recorded_on": "2022-01-06",
+            "instructor": 1
+        }
+    },
+    {
+        "model": "LearningAPI.LearningRecordEntry",
+        "pk": 13,
+        "fields": {
+            "record": 6,
+            "note": "Distinctio ipsum laboriosam. Blanditiis animi at id. Quia impedit perferendis harum eum labore vel vel eius voluptas. Expedita consequatur facilis omnis enim.",
+            "recorded_on": "2022-01-06",
+            "instructor": 1
+        }
+    },
+    {
+        "model": "LearningAPI.LearningRecordEntry",
+        "pk": 14,
+        "fields": {
+            "record": 6,
+            "note": "Consequuntur et sit necessitatibus voluptatem hic reiciendis tenetur. Ipsum laborum excepturi perferendis sit dolor laboriosam error odit. Quia possimus eum distinctio.",
+            "recorded_on": "2022-01-06",
+            "instructor": 1
+        }
+    },
+    {
+        "model": "LearningAPI.LearningRecordEntry",
+        "pk": 15,
+        "fields": {
+            "record": 6,
+            "note": "Quia id quisquam qui cumque quos eligendi. Repellat tempore dolorem incidunt nam delectus laudantium aut consequuntur quia. Maiores molestiae nemo. Harum exercitationem vel vero veritatis tempora in perspiciatis maiores porro. Dolores quis libero illum vel veniam et corrupti.",
+            "recorded_on": "2022-01-06",
+            "instructor": 1
+        }
+    },
+    {
+        "model": "LearningAPI.LearningRecordEntry",
+        "pk": 16,
+        "fields": {
+            "record": 7,
+            "note": "Odio unde tempore asperiores odit et dolorum.",
+            "recorded_on": "2022-01-06",
+            "instructor": 1
+        }
+    },
+    {
+        "model": "LearningAPI.LearningRecordEntry",
+        "pk": 17,
+        "fields": {
+            "record": 8,
+            "note": "Magnam atque sit recusandae aut voluptate. Eum rerum minus aut. Autem repudiandae quo culpa similique voluptas laboriosam in molestias quod. Totam id accusamus blanditiis tenetur ex nam ipsa iure nihil. A illum minus ipsa qui.",
+            "recorded_on": "2022-01-06",
+            "instructor": 1
+        }
+    },
+    {
+        "model": "LearningAPI.LearningRecordEntry",
+        "pk": 18,
+        "fields": {
+            "record": 10,
+            "note": "Adipisci voluptatem nihil numquam iure. Optio consequatur debitis voluptatem. Nihil officia minima quia id. Maxime tempora quia iusto cum aut molestiae excepturi et nisi.",
+            "recorded_on": "2022-01-06",
+            "instructor": 1
+        }
+    },
+    {
+        "model": "LearningAPI.LearningRecordEntry",
+        "pk": 19,
+        "fields": {
+            "record": 10,
+            "note": "Ex ipsam voluptatem totam ipsa laudantium molestiae.",
+            "recorded_on": "2022-01-06",
+            "instructor": 1
+        }
+    },
+    {
+        "model": "LearningAPI.LearningRecordEntry",
+        "pk": 20,
+        "fields": {
+            "record": 10,
+            "note": "Autem magnam sit modi odio rerum quia. A maiores placeat est fugit hic. Qui eum dolor tempore provident id. Consequatur rerum corporis. Doloribus numquam cupiditate ut error quisquam quae voluptas quo et.",
+            "recorded_on": "2022-01-06",
+            "instructor": 1
+        }
+    },
+    {
+        "model": "LearningAPI.LearningRecordEntry",
+        "pk": 21,
+        "fields": {
+            "record": 11,
+            "note": "Et officiis tempora a sapiente dolores.",
+            "recorded_on": "2022-01-06",
+            "instructor": 1
+        }
+    },
+    {
+        "model": "LearningAPI.LearningRecordEntry",
+        "pk": 22,
+        "fields": {
+            "record": 11,
+            "note": "Inventore harum rerum voluptas dignissimos maxime voluptas molestias cumque sed.",
+            "recorded_on": "2022-01-06",
+            "instructor": 1
+        }
+    },
+    {
+        "model": "LearningAPI.LearningRecordEntry",
+        "pk": 23,
+        "fields": {
+            "record": 12,
+            "note": "Et totam aut aliquam nulla libero magni animi molestias quam.",
+            "recorded_on": "2022-01-06",
+            "instructor": 1
+        }
+    }
+]

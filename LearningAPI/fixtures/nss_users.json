@@ -10,56 +10,11 @@
     },
     {
         "model": "LearningAPI.nssuser",
-        "pk": 8,
+        "pk": 2,
         "fields": {
-            "user": 9,
-            "slack_handle": null,
-            "github_handle": "mbrownlee"
-        }
-    },
-    {
-        "model": "LearningAPI.nssuser",
-        "pk": 9,
-        "fields": {
-            "user": 8,
+            "user": 2,
             "slack_handle": null,
             "github_handle": "stevebrownlee"
-        }
-    },
-    {
-        "model": "LearningAPI.nssuser",
-        "pk": 10,
-        "fields": {
-            "user": 10,
-            "slack_handle": null,
-            "github_handle": "JoeShep"
-        }
-    },
-    {
-        "model": "LearningAPI.nssuser",
-        "pk": 11,
-        "fields": {
-            "user": 11,
-            "slack_handle": null,
-            "github_handle": "christinaashworth"
-        }
-    },
-    {
-        "model": "LearningAPI.nssuser",
-        "pk": 12,
-        "fields": {
-            "user": 12,
-            "slack_handle": null,
-            "github_handle": "ajawashington"
-        }
-    },
-    {
-        "model": "LearningAPI.nssuser",
-        "pk": 13,
-        "fields": {
-            "user": 13,
-            "slack_handle": null,
-            "github_handle": "tylerghilliard94"
         }
     },
     {
@@ -348,15 +303,6 @@
             "user": 45,
             "slack_handle": null,
             "github_handle": "kristencarroll"
-        }
-    },
-    {
-        "model": "LearningAPI.nssuser",
-        "pk": 46,
-        "fields": {
-            "user": 46,
-            "slack_handle": null,
-            "github_handle": "dalamcd"
         }
     }
 ]

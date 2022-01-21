@@ -1,95 +1,103 @@
 [
     {
         "model": "LearningAPI.learningweight",
+        "pk": 1,
+        "fields": {
+            "label": "JavaScript data types",
+            "weight": 6
+        }
+    },
+    {
+        "model": "LearningAPI.learningweight",
         "pk": 2,
         "fields": {
-            "label": "Code assessment completed (standard)",
-            "weight": 3
+            "label": "Array iteration",
+            "weight": 6
         }
     },
     {
         "model": "LearningAPI.learningweight",
         "pk": 3,
         "fields": {
-            "label": "Code assessment reviewed (weak vocabulary)",
-            "weight": 4
+            "label": "Git workflow",
+            "weight": 6
+        }
+    },
+    {
+        "model": "LearningAPI.learningweight",
+        "pk": 4,
+        "fields": {
+            "label": "Functions (arguments, parameters, return)",
+            "weight": 10
+        }
+    },
+    {
+        "model": "LearningAPI.learningweight",
+        "pk": 5,
+        "fields": {
+            "label": "Debugger",
+            "weight": 10
+        }
+    },
+    {
+        "model": "LearningAPI.learningweight",
+        "pk": 6,
+        "fields": {
+            "label": "Algorithm development",
+            "weight": 6
         }
     },
     {
         "model": "LearningAPI.learningweight",
         "pk": 7,
         "fields": {
-            "label": "Google Form assessment (< 60%)",
-            "weight": 1
+            "label": "ERD and data relationships",
+            "weight": 6
         }
     },
     {
         "model": "LearningAPI.learningweight",
         "pk": 8,
         "fields": {
-            "label": "Google Form assessment (< 80%)",
-            "weight": 3
+            "label": "State",
+            "weight": 6
         }
     },
     {
         "model": "LearningAPI.learningweight",
         "pk": 9,
         "fields": {
-            "label": "Google Form assessment (> 80%)",
-            "weight": 5
+            "label": "Array methods",
+            "weight": 6
         }
     },
     {
         "model": "LearningAPI.learningweight",
         "pk": 10,
         "fields": {
-            "label": "Guided Tour project completed",
-            "weight": 1
+            "label": "Module code (import/export, SRP)",
+            "weight": 6
         }
     },
     {
         "model": "LearningAPI.learningweight",
         "pk": 11,
         "fields": {
-            "label": "Core course project completed",
-            "weight": 2
+            "label": "Handling events (click, change, etc.)",
+            "weight": 6
         }
     },
     {
         "model": "LearningAPI.learningweight",
         "pk": 12,
         "fields": {
-            "label": "Supplemental project solid progress",
-            "weight": 3
-        }
-    },
-    {
-        "model": "LearningAPI.learningweight",
-        "pk": 13,
-        "fields": {
-            "label": "Supplemental project completed",
+            "label": "Asynchronous code",
             "weight": 6
         }
     },
     {
         "model": "LearningAPI.learningweight",
-        "pk": 16,
-        "fields": {
-            "label": "Explorer and Pioneer chapters started",
-            "weight": 3
-        }
-    },
-    {
-        "model": "LearningAPI.learningweight",
-        "pk": 17,
-        "fields": {
-            "label": "Explorer and Pioneer chapters completed",
-            "weight": 5
-        }
-    },
-    {
-        "model": "LearningAPI.learningweight",
-        "pk": 18,
+        "pk": 13,
         "fields": {
             "label": "General note",
             "weight": 0
@@ -97,17 +105,33 @@
     },
     {
         "model": "LearningAPI.learningweight",
-        "pk": 19,
+        "pk": 14,
         "fields": {
-            "label": "Met weekly learning goal",
-            "weight": 4
+            "label": "React - Basic hooks",
+            "weight": 6
         }
     },
     {
         "model": "LearningAPI.learningweight",
-        "pk": 20,
+        "pk": 15,
         "fields": {
-            "label": "Code assessment reviewed (ideal vocabulary)",
+            "label": "React - Routing",
+            "weight": 6
+        }
+    },
+    {
+        "model": "LearningAPI.learningweight",
+        "pk": 16,
+        "fields": {
+            "label": "React - Passing properties",
+            "weight": 6
+        }
+    },
+    {
+        "model": "LearningAPI.learningweight",
+        "pk": 17,
+        "fields": {
+            "label": "React - Dev Tools",
             "weight": 6
         }
     }
