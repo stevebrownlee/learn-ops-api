@@ -22,10 +22,12 @@ class StudentPermission(permissions.BasePermission):
         else:
             return False
 
+
 class StudentPagination(PageNumberPagination):
     page_size = 40
     page_size_query_param = 'page_size'
     max_page_size = 80
+
 
 class StudentViewSet(ModelViewSet):
     """Student view set"""
@@ -125,10 +127,8 @@ class StudentViewSet(ModelViewSet):
         else:
             students = NssUser.objects.filter(user__is_staff=False)
 
-        serializer = MiniStudentSerializer(
+        serializer = SingleStudent(
             students, many=True, context={'request': request})
-
-
 
         search_terms = self.request.query_params.get('q', None)
         if search_terms != None:
@@ -138,7 +138,7 @@ class StudentViewSet(ModelViewSet):
                     | Q(user__last_name__icontains=letter)
                 )
 
-            serializer = MiniStudentSerializer(
+            serializer = SingleStudent(
                 students, many=True, context={'request': request})
             return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -150,10 +150,10 @@ class StudentViewSet(ModelViewSet):
             students = students.filter(assigned_cohorts__cohort=cohort_filter)
 
             if feedback is not None and feedback == 'true':
-                serializer = NoCohortStudentSerializer(
+                serializer = MicroStudents(
                     students, many=True, context={'request': request})
             else:
-                serializer = NoCohortStudentSerializer(
+                serializer = MicroStudents(
                     students, many=True, context={'request': request})
 
         page = self.paginate_queryset(serializer.data)
@@ -183,12 +183,25 @@ class StudentViewSet(ModelViewSet):
         return Response({'message': 'Unsupported HTTP method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
+def student_score(self, obj):
+    total = 0
+    scores = LearningRecord.objects.\
+        filter(student=obj, achieved=True).\
+        order_by("-id")
+
+    for score in scores:
+        total += score.weight.weight
+
+    return total
+
+
 class StudentNoteSerializer(serializers.ModelSerializer):
     """JSON serializer for student notes"""
 
     class Meta:
         model = OneOnOneNote
         fields = ['id', 'notes', 'session_date', 'author']
+
 
 class LearningRecordEntrySerializer(serializers.ModelSerializer):
     """JSON serializer"""
@@ -214,6 +227,7 @@ class LearningRecordSerializer(serializers.ModelSerializer):
         model = LearningRecord
         fields = ('id', 'objective', 'achieved', 'entries', )
 
+
 class StudentSerializer(serializers.ModelSerializer):
     """JSON serializer"""
     feedback = StudentNoteSerializer(many=True)
@@ -224,15 +238,7 @@ class StudentSerializer(serializers.ModelSerializer):
     score = serializers.SerializerMethodField()
 
     def get_score(self, obj):
-        total = 0
-        scores = LearningRecord.objects.\
-            filter(student=obj, achieved=True).\
-            order_by("-id")
-
-        for score in scores:
-            total += score.weight.weight
-
-        return total
+        return student_score(self, obj)
 
     def get_records(self, obj):
         records = LearningRecord.objects.filter(student=obj).order_by("-id")
@@ -254,26 +260,23 @@ class StudentSerializer(serializers.ModelSerializer):
                   'cohorts', 'feedback', 'records')
 
 
-class NoCohortStudentSerializer(serializers.ModelSerializer):
+class MicroStudents(serializers.ModelSerializer):
     """JSON serializer"""
-    feedback = StudentNoteSerializer(many=True)
     name = serializers.SerializerMethodField()
-    email = serializers.SerializerMethodField()
-    records = LearningRecordSerializer(many=True)
+    score = serializers.SerializerMethodField()
+
+    def get_score(self, obj):
+        return student_score(self, obj)
 
     def get_name(self, obj):
         return f'{obj.user.first_name} {obj.user.last_name}'
 
-    def get_email(self, obj):
-        return obj.user.email
-
     class Meta:
         model = NssUser
-        fields = ('id', 'name', 'email', 'slack_handle', 'github_handle',
-                  'feedback', 'records')
+        fields = ('id', 'name', 'score')
 
 
-class MiniStudentSerializer(serializers.ModelSerializer):
+class SingleStudent(serializers.ModelSerializer):
     """JSON serializer"""
     feedback = StudentNoteSerializer(many=True)
     name = serializers.SerializerMethodField()
@@ -281,6 +284,10 @@ class MiniStudentSerializer(serializers.ModelSerializer):
     github = serializers.SerializerMethodField()
     repos = serializers.SerializerMethodField()
     staff = serializers.SerializerMethodField()
+    score = serializers.SerializerMethodField()
+
+    def get_score(self, obj):
+        return student_score(self, obj)
 
     def get_staff(self, obj):
         return False
@@ -302,4 +309,4 @@ class MiniStudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = NssUser
         fields = ('id', 'name', 'email', 'github', 'staff',
-                  'cohorts', 'feedback', 'repos')
+                  'cohorts', 'feedback', 'repos', 'score',)

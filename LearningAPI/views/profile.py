@@ -6,7 +6,10 @@ from allauth.socialaccount.models import SocialAccount
 from LearningAPI.models import NssUser
 from LearningAPI.models.cohort import Cohort
 from LearningAPI.models.nssuser_cohort import NssUserCohort
-from LearningAPI.views.student_view import MiniStudentSerializer
+from LearningAPI.views.student_view import SingleStudent
+
+
+
 
 class Profile(ViewSet):
     """Person can see profile information"""
