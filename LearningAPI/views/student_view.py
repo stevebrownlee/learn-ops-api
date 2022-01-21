@@ -1,6 +1,5 @@
 from django.http import HttpResponseServerError
-from django.db.models import Q
-from django.db.models import Count
+from django.db.models import Count, Q, Sum
 from rest_framework import permissions, serializers, status
 from rest_framework.decorators import action
 from rest_framework.viewsets import ViewSet, ModelViewSet
@@ -222,6 +221,18 @@ class StudentSerializer(serializers.ModelSerializer):
     email = serializers.SerializerMethodField()
     github = serializers.SerializerMethodField()
     records = serializers.SerializerMethodField()
+    score = serializers.SerializerMethodField()
+
+    def get_score(self, obj):
+        total = 0
+        scores = LearningRecord.objects.\
+            filter(student=obj, achieved=True).\
+            order_by("-id")
+
+        for score in scores:
+            total += score.weight.weight
+
+        return total
 
     def get_records(self, obj):
         records = LearningRecord.objects.filter(student=obj).order_by("-id")
@@ -239,7 +250,7 @@ class StudentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = NssUser
-        fields = ('id', 'name', 'email', 'github',
+        fields = ('id', 'name', 'email', 'github', 'score',
                   'cohorts', 'feedback', 'records')
 
 
