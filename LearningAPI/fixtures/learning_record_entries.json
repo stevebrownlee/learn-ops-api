@@ -208,5 +208,25 @@
             "recorded_on": "2022-01-06",
             "instructor": 1
         }
+    },
+    {
+        "model": "LearningAPI.LearningRecordEntry",
+        "pk": 24,
+        "fields": {
+            "record": 13,
+            "note": "Et totam aut aliquam nulla libero magni animi molestias quam.",
+            "recorded_on": "2022-01-06",
+            "instructor": 1
+        }
+    },
+    {
+        "model": "LearningAPI.LearningRecordEntry",
+        "pk": 25,
+        "fields": {
+            "record": 13,
+            "note": "Assumenda totam ad ut et. Quas laboriosam voluptatum aperiam ea eum tempora occaecati tenetur. Sequi magni expedita. In id nobis sed autem aut. Quia sed eum quod ea non. Et eveniet officiis rerum quam quo commodi.",
+            "recorded_on": "2022-01-06",
+            "instructor": 1
+        }
     }
 ]
