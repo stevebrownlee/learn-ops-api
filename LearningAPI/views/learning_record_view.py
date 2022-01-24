@@ -102,20 +102,16 @@ class LearningRecordViewSet(ModelViewSet):
         """
         record = LearningRecord()
         record.student = NssUser.objects.get(pk=request.data["student"])
-        record.description = request.data["description"]
-        record.obtained_from = request.data["obtained_from"]
-
-        weight = LearningWeight.objects.get(pk=request.data["weight"])
+        record.weight = LearningWeight.objects.get(pk=request.data["weight"])
+        record.achieved = request.data["achieved"]
 
         try:
             record.save()
-            record_weight = LearningRecordEntry()
-            record_weight.record = record
-            record_weight.weight = weight
-            record_weight.instructor = NssUser.objects.get(
-                user=request.auth.user)
-            record_weight.note = request.data["note"]
-            record_weight.save()
+            entry = LearningRecordEntry()
+            entry.record = record
+            entry.instructor = NssUser.objects.get(user=request.auth.user)
+            entry.note = request.data["note"]
+            entry.save()
 
             serializer = LearningRecordSerializer(
                 record, context={'request': request})
@@ -167,13 +163,13 @@ class LearningRecordViewSet(ModelViewSet):
                 return Response({"reason": "Learning weight not found"}, status=status.HTTP_404_NOT_FOUND)
 
             try:
-                record_weight = LearningRecordEntry()
-                record_weight.record = record
-                record_weight.weight = weight
-                record_weight.instructor = NssUser.objects.get(
+                entry = LearningRecordEntry()
+                entry.record = record
+                entry.weight = weight
+                entry.instructor = NssUser.objects.get(
                     user=request.auth.user)
-                record_weight.note = request.data["note"]
-                record_weight.save()
+                entry.note = request.data["note"]
+                entry.save()
 
                 serializer = LearningRecordSerializer(
                     record, context={'request': request})
