@@ -4,7 +4,7 @@ from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
-from rest_framework.viewsets import ViewSet
+from rest_framework.viewsets import ViewSet, ModelViewSet
 from LearningAPI.models import LearningRecord
 from LearningAPI.models import LearningRecordEntry
 from LearningAPI.models.learning_weight import LearningWeight
@@ -42,13 +42,11 @@ class RecordWeightSerializer(serializers.ModelSerializer):
 
 class LearningRecordSerializer(serializers.ModelSerializer):
     """JSON serializer"""
-    weights = RecordWeightSerializer(many=True)
     student = NssUserSerializer()
 
     class Meta:
         model = LearningRecord
-        fields = ('student', 'description', 'obtained_from',
-                  'weights', 'created_on', 'id', )
+        fields = ( 'id', 'student', 'weight', 'achieved', 'created_on', )
 
 
 class LargeResultsSetPagination(PageNumberPagination):
@@ -57,7 +55,7 @@ class LargeResultsSetPagination(PageNumberPagination):
     max_page_size = 100
 
 
-class LearningRecordViewSet(ViewSet):
+class LearningRecordViewSet(ModelViewSet):
     """
     A simple ViewSet for viewing and editing learning records.
     """
@@ -124,6 +122,29 @@ class LearningRecordViewSet(ViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         except Exception as ex:
             return Response({"reason": ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
+
+    def update(self, request, pk=None):
+        """Handle PUT requests
+
+        Returns:
+            Response -- Empty body with 204 status code
+        """
+        try:
+            record = LearningRecord.objects.get(pk=pk)
+
+            if request.auth.user.is_staff:
+                record.achieved = request.data["achieved"]
+                record.save()
+
+                return Response(None, status=status.HTTP_204_NO_CONTENT)
+            else:
+                return Response(None, status=status.HTTP_401_UNAUTHORIZED)
+
+        except LearningRecord.DoesNotExist as ex:
+            return Response(None, status=status.HTTP_404_NOT_FOUND)
+
+        except Exception as ex:
+            return HttpResponseServerError(ex)
 
     @action(methods=['delete', 'post'], detail=False)
     def entries(self, request, entryId=None):
