@@ -241,7 +241,7 @@ class StudentSerializer(serializers.ModelSerializer):
         return student_score(self, obj)
 
     def get_records(self, obj):
-        records = LearningRecord.objects.filter(student=obj).order_by("-id")
+        records = LearningRecord.objects.filter(student=obj).order_by("achieved")
         return LearningRecordSerializer(records, many=True).data
 
     def get_github(self, obj):

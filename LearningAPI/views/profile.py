@@ -50,7 +50,7 @@ class Profile(ViewSet):
                 usercohort.save()
 
         if request.auth.user.is_staff == False:
-            serializer = MiniStudentSerializer(nss_user, context={'request': request})
+            serializer = SingleStudent(nss_user, context={'request': request})
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             profile = {}
