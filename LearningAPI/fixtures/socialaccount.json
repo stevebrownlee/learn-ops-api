@@ -5,8 +5,8 @@
         "fields": {
             "provider": "github",
             "name": "Github",
-            "client_id": "0492d42045b4fc676533",
-            "secret": "bfb5e5d70fcf7588c393a076f06188e18351ae9e",
+            "client_id": "askforthisvalue",
+            "secret": "askforthisvalue",
             "key": "",
             "sites": [
                 1

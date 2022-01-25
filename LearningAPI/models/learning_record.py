@@ -1,6 +1,5 @@
 import datetime
 from django.db import models
-from django.db.models.fields import DateField
 from LearningAPI.models import LearningWeight, NssUser
 
 

@@ -4,7 +4,8 @@
         "pk": 1,
         "fields": {
             "label": "JavaScript data types",
-            "weight": 6
+            "weight": 6,
+            "tier": 1
         }
     },
     {
@@ -12,7 +13,8 @@
         "pk": 2,
         "fields": {
             "label": "Array iteration",
-            "weight": 6
+            "weight": 6,
+            "tier": 1
         }
     },
     {
@@ -20,7 +22,8 @@
         "pk": 3,
         "fields": {
             "label": "Git workflow",
-            "weight": 6
+            "weight": 6,
+            "tier": 1
         }
     },
     {
@@ -28,7 +31,8 @@
         "pk": 4,
         "fields": {
             "label": "Functions (arguments, parameters, return)",
-            "weight": 10
+            "weight": 10,
+            "tier": 1
         }
     },
     {
@@ -36,7 +40,8 @@
         "pk": 5,
         "fields": {
             "label": "Debugger",
-            "weight": 10
+            "weight": 10,
+            "tier": 1
         }
     },
     {
@@ -44,7 +49,8 @@
         "pk": 6,
         "fields": {
             "label": "Algorithm development",
-            "weight": 6
+            "weight": 6,
+            "tier": 1
         }
     },
     {
@@ -52,7 +58,8 @@
         "pk": 7,
         "fields": {
             "label": "ERD and data relationships",
-            "weight": 6
+            "weight": 6,
+            "tier": 2
         }
     },
     {
@@ -60,7 +67,8 @@
         "pk": 8,
         "fields": {
             "label": "State",
-            "weight": 6
+            "weight": 6,
+            "tier": 2
         }
     },
     {
@@ -68,7 +76,8 @@
         "pk": 9,
         "fields": {
             "label": "Array methods",
-            "weight": 6
+            "weight": 6,
+            "tier": 2
         }
     },
     {
@@ -76,7 +85,8 @@
         "pk": 10,
         "fields": {
             "label": "Module code (import/export, SRP)",
-            "weight": 6
+            "weight": 6,
+            "tier": 2
         }
     },
     {
@@ -84,7 +94,8 @@
         "pk": 11,
         "fields": {
             "label": "Handling events (click, change, etc.)",
-            "weight": 6
+            "weight": 6,
+            "tier": 2
         }
     },
     {
@@ -92,15 +103,8 @@
         "pk": 12,
         "fields": {
             "label": "Asynchronous code",
-            "weight": 6
-        }
-    },
-    {
-        "model": "LearningAPI.learningweight",
-        "pk": 13,
-        "fields": {
-            "label": "General note",
-            "weight": 0
+            "weight": 6,
+            "tier": 3
         }
     },
     {
@@ -108,7 +112,8 @@
         "pk": 14,
         "fields": {
             "label": "React - Basic hooks",
-            "weight": 6
+            "weight": 6,
+            "tier": 3
         }
     },
     {
@@ -116,7 +121,8 @@
         "pk": 15,
         "fields": {
             "label": "React - Routing",
-            "weight": 6
+            "weight": 6,
+            "tier": 3
         }
     },
     {
@@ -124,7 +130,8 @@
         "pk": 16,
         "fields": {
             "label": "React - Passing properties",
-            "weight": 6
+            "weight": 6,
+            "tier": 3
         }
     },
     {
@@ -132,7 +139,8 @@
         "pk": 17,
         "fields": {
             "label": "React - Dev Tools",
-            "weight": 6
+            "weight": 6,
+            "tier": 3
         }
     }
 ]

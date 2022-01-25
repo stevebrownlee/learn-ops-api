@@ -20,7 +20,7 @@ class LearningWeightViewSet(ModelViewSet):
     """
     A simple ViewSet for viewing and editing learning weights.
     """
-    queryset = LearningWeight.objects.all()
+    queryset = LearningWeight.objects.all().order_by("tier")
     serializer_class = LearningWeightSerializer
     permission_classes = [IsAdminUser]
     pagination_class = LargeResultsSetPagination
