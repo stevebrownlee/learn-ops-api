@@ -106,3 +106,27 @@ FROM "LearningAPI_cohort"
     )
 GROUP BY "LearningAPI_cohort"."id"
 ;
+
+
+
+
+
+
+
+select * from public."LearningAPI_learningrecord";
+
+
+select w.id,
+    w.label,
+    w.weight,
+    w.tier,
+    r.achieved,
+    r.student_id
+from public."LearningAPI_learningweight" w
+left outer join public."LearningAPI_learningrecord" r
+    on r.weight_id = w.id
+        and
+        r.student_id = 19
+where r.achieved is NULL
+    or r.achieved is FALSE
+order by w.tier;
