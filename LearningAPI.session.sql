@@ -128,5 +128,4 @@ left outer join public."LearningAPI_learningrecord" r
         and
         r.student_id = 19
 where r.achieved is NULL
-    or r.achieved is FALSE
 order by w.tier;

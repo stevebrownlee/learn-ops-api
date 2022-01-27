@@ -57,7 +57,6 @@ class LearningWeightViewSet(ModelViewSet):
                                 and
                                 r.student_id = %s
                         where r.achieved is NULL
-                            or r.achieved is FALSE
                         order by w.tier
                     """,
                     [student])
