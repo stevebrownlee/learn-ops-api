@@ -27,7 +27,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 DEBUG = os.getenv("DEBUG", "False")
 DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False")
 ALLOWED_HOSTS = os.getenv(
-    "DJANGO_ALLOWED_HOSTS", "learning.nss.team,learningapi.nss.team,127.0.0.1,localhost").split(",")
+    "DJANGO_ALLOWED_HOSTS", "104.131.93.110,learning.nss.team,learningapi.nss.team,127.0.0.1,localhost").split(",")
 APPEND_SLASH = False
 
 # Application definition
@@ -53,6 +53,8 @@ INSTALLED_APPS = [
 ]
 
 SOCIALACCOUNT_LOGIN_ON_GET = True
+SOCIALACCOUNT_ADAPTER = 'LearningAPI.adapters.custom_adapter.SocialAccountAdapter'
+
 
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:3000',

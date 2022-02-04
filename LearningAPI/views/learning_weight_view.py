@@ -43,28 +43,29 @@ class LearningWeightViewSet(ModelViewSet):
 
         try:
             if student is not None:
+                # Using the raw SQL is insanely easier than
+                # trying to get the ORM to do a LEFT OUTER JOIN
                 weights = LearningWeight.objects\
                     .raw("""
-                        select w.id,
+                        SELECT w.id,
                             w.label,
                             w.weight,
                             w.tier,
                             r.achieved,
                             r.student_id
-                        from public."LearningAPI_learningweight" w
-                        left outer join public."LearningAPI_learningrecord" r
-                            on r.weight_id = w.id
-                                and
-                                r.student_id = %s
-                        where r.achieved is NULL
-                        order by w.tier
+                        FROM public."LearningAPI_learningweight" w
+                        LEFT OUTER JOIN public."LearningAPI_learningrecord" r
+                            ON r.weight_id = w.id
+                                AND r.student_id = %s
+                        WHERE r.achieved IS NULL
+                        ORDER BY w.tier
                     """,
                     [student])
             else:
                 weights = LearningWeight.objects.all().order_by('tier')
 
-            serializer = LearningWeightSerializer(
-                weights, many=True, context={'request': request})
+            serializer = LearningWeightSerializer(weights, many=True, context={'request': request})
             return Response(serializer.data, status=status.HTTP_200_OK)
+
         except Exception as ex:
             return HttpResponseServerError(ex)

@@ -119,42 +119,28 @@ class StudentViewSet(ModelViewSet):
             Response -- JSON serialized array
         """
         student_status = self.request.query_params.get('status', None)
-
-        if student_status == "unassigned":
-            students = NssUser.objects.\
-                annotate(cohort_count=Count('assigned_cohorts')).\
-                filter(user__is_staff=False, cohort_count=0)
-        else:
-            students = NssUser.objects.filter(user__is_staff=False)
-
-        serializer = SingleStudent(
-            students, many=True, context={'request': request})
-
         search_terms = self.request.query_params.get('q', None)
-        if search_terms != None:
+        cohort = self.request.query_params.get('cohort', None)
+
+        students = NssUser.objects.filter(user__is_staff=False)
+
+        if cohort is not None:
+            cohort_filter = Cohort.objects.get(pk=cohort)
+            students = students.filter(assigned_cohorts__cohort=cohort_filter)
+            serializer = MicroStudents(students, many=True, context={'request': request})
+        elif student_status == "unassigned":
+            students = students.\
+                annotate(cohort_count=Count('assigned_cohorts')).\
+                filter(cohort_count=0)
+            serializer = StudentSerializer(students, many=True, context={'request': request})
+        elif search_terms is not None:
             for letter in list(search_terms):
                 students = students.filter(
                     Q(user__first_name__icontains=letter)
                     | Q(user__last_name__icontains=letter)
                 )
+            serializer = MicroStudents(students, many=True, context={'request': request})
 
-            serializer = SingleStudent(
-                students, many=True, context={'request': request})
-            return Response(serializer.data, status=status.HTTP_200_OK)
-
-        cohort = self.request.query_params.get('cohort', None)
-        feedback = self.request.query_params.get('feedback', None)
-
-        if cohort is not None:
-            cohort_filter = Cohort.objects.get(pk=cohort)
-            students = students.filter(assigned_cohorts__cohort=cohort_filter)
-
-            if feedback is not None and feedback == 'true':
-                serializer = MicroStudents(
-                    students, many=True, context={'request': request})
-            else:
-                serializer = MicroStudents(
-                    students, many=True, context={'request': request})
 
         page = self.paginate_queryset(serializer.data)
         return self.get_paginated_response(page)
@@ -183,7 +169,7 @@ class StudentViewSet(ModelViewSet):
         return Response({'message': 'Unsupported HTTP method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
-def student_score(self, obj):
+def student_score(obj):
     total = 0
     scores = LearningRecord.objects.\
         filter(student=obj, achieved=True).\
@@ -238,7 +224,7 @@ class StudentSerializer(serializers.ModelSerializer):
     score = serializers.SerializerMethodField()
 
     def get_score(self, obj):
-        return student_score(self, obj)
+        return student_score(obj)
 
     def get_records(self, obj):
         records = LearningRecord.objects.filter(student=obj).order_by("achieved")
@@ -266,14 +252,14 @@ class MicroStudents(serializers.ModelSerializer):
     score = serializers.SerializerMethodField()
 
     def get_score(self, obj):
-        return student_score(self, obj)
+        return student_score(obj)
 
     def get_name(self, obj):
         return f'{obj.user.first_name} {obj.user.last_name}'
 
     class Meta:
         model = NssUser
-        fields = ('id', 'name', 'score')
+        fields = ('id', 'name', 'score', )
 
 
 class SingleStudent(serializers.ModelSerializer):
@@ -287,7 +273,7 @@ class SingleStudent(serializers.ModelSerializer):
     score = serializers.SerializerMethodField()
 
     def get_score(self, obj):
-        return student_score(self, obj)
+        return student_score(obj)
 
     def get_staff(self, obj):
         return False

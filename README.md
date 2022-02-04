@@ -156,3 +156,29 @@ pipenv install
         "last_name":"Mustard"
     }
     ```
+
+## Deploy Settings
+
+* Replace `appuser` with the Linux account used to set up the Github Action service.
+* Replace `entersecretkeyhere` with your random Django secret key.
+* Update the path for the `ExecStart` setting with the path to the VM that `pipenv` created for the app.
+
+```ini
+[Unit]
+Description=learnops gunicorn daemon
+After=network.target
+
+[Service]
+Environment="DJANGO_SECRET_KEY=entersecretkeyhere"
+Environment="DEBUG=True"
+Environment="DEVELOPMENT_MODE=False"
+Environment="LEARNING_GITHUB_CALLBACK=https://your.domain.name/auth/github"
+User=appuser
+Group=www-data
+WorkingDirectory=/home/appuser/api-actions-runner/_work/learn-ops-api/learn-ops-api
+ExecStart=/home/appuser/.local/share/virtualenvs/learn-ops-api-2zWu7TSl/bin/gunicorn -w 3 --bind 127.0.0.1:8000 LearningPlatform.wsgi
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
+```
