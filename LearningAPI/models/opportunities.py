@@ -2,6 +2,7 @@ from django.db import models
 
 
 class Opportunity(models.Model):
+    """Model for recording students interested in joining the team"""
     COHORT_PORTIONS = (
         ("CLI", 'Client side'),
         ("SER", 'Server side'),

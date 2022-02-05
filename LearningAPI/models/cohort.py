@@ -2,6 +2,7 @@ from django.db import models
 
 
 class Cohort(models.Model):
+    """Model for student cohorts"""
     name = models.CharField(max_length=55, unique=True)
     slack_channel = models.CharField(max_length=55, unique=True)
     start_date = models.DateField(auto_now=False, auto_now_add=False)

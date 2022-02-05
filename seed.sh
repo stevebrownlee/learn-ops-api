@@ -14,6 +14,8 @@ python manage.py loaddata cohorts
 python manage.py loaddata user_cohorts
 python manage.py loaddata courses
 python manage.py loaddata books
+python manage.py loaddata assessments
+python manage.py loaddata student_assessments
 python manage.py loaddata projects
 python manage.py loaddata chapters
 python manage.py loaddata chapter_notes

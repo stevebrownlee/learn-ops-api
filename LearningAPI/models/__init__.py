@@ -28,3 +28,4 @@ from .opportunities import Opportunity
 from .learning_weight import LearningWeight
 from .learning_record import LearningRecord
 from .learning_record_entry import LearningRecordEntry
+from .student_assessment import StudentAssessment

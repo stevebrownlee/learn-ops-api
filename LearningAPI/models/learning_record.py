@@ -4,7 +4,7 @@ from LearningAPI.models import LearningWeight, NssUser
 
 
 class LearningRecord(models.Model):
-    """Model for instructor records per student task"""
+    """Model for tracking learning objectives per student"""
     student = models.ForeignKey(
         NssUser, on_delete=models.CASCADE, related_name='records')
     weight = models.ForeignKey(

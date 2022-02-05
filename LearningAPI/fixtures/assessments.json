@@ -1,0 +1,92 @@
+[
+{
+    "model": "LearningAPI.assessment",
+    "pk": 1,
+    "fields": {
+        "name": "Functions book self-assessment",
+        "source_url": "https://github.com/Nashville-Software-School-Assessments/functions-book-assessment",
+        "type": "SELF"
+    }
+},
+{
+    "model": "LearningAPI.assessment",
+    "pk": 2,
+    "fields": {
+        "name": "DOM and event listeners self-assessment",
+        "source_url": "https://github.com/Nashville-Software-School-Assessments/kids-dreams-assessment",
+        "type": "SELF"
+    }
+},
+{
+    "model": "LearningAPI.assessment",
+    "pk": 4,
+    "fields": {
+        "name": "Asynchronous code self-assessment",
+        "source_url": "https://github.com/Nashville-Software-School-Assessments/pen-pal-society-assessment",
+        "type": "SELF"
+    }
+},
+{
+    "model": "LearningAPI.assessment",
+    "pk": 3,
+    "fields": {
+        "name": "State self-assessment",
+        "source_url": "https://github.com/Nashville-Software-School-Assessments/house-of-hummus-assessment",
+        "type": "SELF"
+    }
+},
+{
+    "model": "LearningAPI.assessment",
+    "pk": 5,
+    "fields": {
+        "name": "Foundations course self-assessment",
+        "source_url": "https://github.com/Nashville-Software-School-Assessments/foundations-course-assessment",
+        "type": "SELF"
+    }
+},
+{
+    "model": "LearningAPI.assessment",
+    "pk": 6,
+    "fields": {
+        "name": "Location Extraction - JavaScript fundamentals assessment",
+        "source_url": "https://github.com/Nashville-Software-School-Assessments/interview-location-extraction",
+        "type": "ASSIGNED"
+    }
+},
+{
+    "model": "LearningAPI.assessment",
+    "pk": 7,
+    "fields": {
+        "name": "Shopping Cart - Debugging assessment",
+        "source_url": "https://github.com/Nashville-Software-School-Assessments/interview-shopping-cart",
+        "type": "ASSIGNED"
+    }
+},
+{
+    "model": "LearningAPI.assessment",
+    "pk": 8,
+    "fields": {
+        "name": "Glassdale Criminals - Fetch and data assessment",
+        "source_url": "https://github.com/Nashville-Software-School-Assessments/interview-request-response",
+        "type": "ASSIGNED"
+    }
+},
+{
+    "model": "LearningAPI.assessment",
+    "pk": 9,
+    "fields": {
+        "name": "Customer Names - JavaScript fundamentals assessment",
+        "source_url": "https://github.com/Nashville-Software-School-Assessments/interview-full-names",
+        "type": "ASSIGNED"
+    }
+},
+{
+    "model": "LearningAPI.assessment",
+    "pk": 11,
+    "fields": {
+        "name": "Hairy Potter - Debugging assessment",
+        "source_url": "https://github.com/Nashville-Software-School-Assessments/interview-hairy-potter",
+        "type": "ASSIGNED"
+    }
+}
+]

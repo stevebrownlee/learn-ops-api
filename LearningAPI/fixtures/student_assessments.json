@@ -1,0 +1,37 @@
+[
+    {
+        "model": "LearningAPI.studentassessment",
+        "pk": 1,
+        "fields": {
+            "student": 17,
+            "assessment": 1,
+            "complete": true,
+            "reviewed": true,
+            "instructor": 2,
+            "url": "https://localhost:8080"
+        }
+    },
+    {
+        "model": "LearningAPI.studentassessment",
+        "pk": 2,
+        "fields": {
+            "student": 17,
+            "assessment": 2,
+            "complete": true,
+            "reviewed": false,
+            "instructor": 2,
+            "url": "https://localhost:8080"
+        }
+    },
+    {
+        "model": "LearningAPI.studentassessment",
+        "pk": 3,
+        "fields": {
+            "student": 17,
+            "assessment": 3,
+            "complete": false,
+            "reviewed": false,
+            "url": ""
+        }
+    }
+]

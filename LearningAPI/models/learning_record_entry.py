@@ -3,6 +3,7 @@ from django.db import models
 
 
 class LearningRecordEntry(models.Model):
+    """Model for tracking individual notes on learning objectives per student"""
     record = models.ForeignKey(
         "LearningRecord", on_delete=models.CASCADE, related_name="entries")
     note = models.TextField()
