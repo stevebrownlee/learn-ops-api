@@ -5,8 +5,7 @@
         "fields": {
             "student": 17,
             "assessment": 1,
-            "complete": true,
-            "reviewed": true,
+            "status": 4,
             "instructor": 2,
             "url": "https://localhost:8080"
         }
@@ -17,8 +16,7 @@
         "fields": {
             "student": 17,
             "assessment": 2,
-            "complete": true,
-            "reviewed": false,
+            "status": 2,
             "instructor": 2,
             "url": "https://localhost:8080"
         }
@@ -29,8 +27,7 @@
         "fields": {
             "student": 17,
             "assessment": 3,
-            "complete": false,
-            "reviewed": false,
+            "status": 1,
             "url": ""
         }
     }

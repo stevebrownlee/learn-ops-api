@@ -1,6 +1,5 @@
 """Model for assessments used by instruction team"""
 from django.db import models
-from . import Book
 
 
 class Assessment(models.Model):

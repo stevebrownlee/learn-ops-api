@@ -1,0 +1,30 @@
+[
+    {
+        "model": "LearningAPI.studentassessmentstatus",
+        "pk": 1,
+        "fields": {
+            "status": "In Progress"
+        }
+    },
+    {
+        "model": "LearningAPI.studentassessmentstatus",
+        "pk": 2,
+        "fields": {
+            "status": "Ready for Review"
+        }
+    },
+    {
+        "model": "LearningAPI.studentassessmentstatus",
+        "pk": 3,
+        "fields": {
+            "status": "Reviewed and Incomplete"
+        }
+    },
+    {
+        "model": "LearningAPI.studentassessmentstatus",
+        "pk": 4,
+        "fields": {
+            "status": "Reviewed and Complete"
+        }
+    }
+]

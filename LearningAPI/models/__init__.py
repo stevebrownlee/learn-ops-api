@@ -21,11 +21,12 @@ from .objective_tag import ObjectiveTag
 from .project_tag import ProjectTag
 from .lightning_tag import LightningTag
 from .favorite_notes import FavoriteNote
-from .assessment import Assessment
 from .assessment_objective import AssessmentObjective
 from .one_on_one_note import OneOnOneNote
 from .opportunities import Opportunity
 from .learning_weight import LearningWeight
 from .learning_record import LearningRecord
 from .learning_record_entry import LearningRecordEntry
+from .assessment import Assessment
+from .student_assessment_status import StudentAssessmentStatus
 from .student_assessment import StudentAssessment

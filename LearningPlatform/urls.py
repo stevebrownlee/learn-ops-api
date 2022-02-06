@@ -34,6 +34,7 @@ router.register(r'books', views.BookViewSet, 'book')
 router.register(r'projects', views.ProjectViewSet, 'project')
 router.register(r'chapters', views.ChapterViewSet, 'chapter')
 router.register(r'notes', views.ChapterNoteViewSet, 'note')
+router.register(r'assessments', views.StudentAssessmentView, 'assessment')
 router.register(r'objectives', views.LearningObjectiveViewSet, 'learningobjective')
 
 
