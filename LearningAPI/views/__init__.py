@@ -15,3 +15,4 @@ from .learning_record_view import LearningRecordViewSet
 from .profile import Profile
 from .github_login import GithubLogin
 from .assessment import StudentAssessmentView
+from .assessment_status import AssessmentStatusView

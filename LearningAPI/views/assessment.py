@@ -1,15 +1,9 @@
 from django.http import HttpResponseServerError
-from django.db.models import Count, Q, Sum
 from rest_framework import permissions, serializers, status
-from rest_framework.decorators import action
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
-from rest_framework import status
 from LearningAPI.models import NssUser, StudentAssessment, StudentAssessmentStatus, Assessment
-from django.forms.models import model_to_dict
 from rest_framework.pagination import PageNumberPagination
-
-from LearningAPI.models.assessment import Assessment
 
 
 class StudentAssessmentPermission(permissions.BasePermission):
@@ -42,23 +36,45 @@ class StudentAssessmentView(ViewSet):
         Returns:
             Response -- JSON serialized instance
         """
-        student_assessment = StudentAssessment()
-        student_assessment.student = NssUser.objects.get(user=request.auth.user)
-        student_assessment.assessment = Assessment.objects.get(pk=request.data["assessmentId"])
-        student_assessment.status = StudentAssessmentStatus.objects.get(status="In Progress")
+        if "sourceURL" in request.data:
+            assmt = Assessment()
+            assmt.name = request.data["name"]
+            assmt.source_url = request.data["sourceURL"]
+            assmt.type = request.data["type"]
 
-        try:
-            student_assessment.save()
-            serializer = StudentAssessmentSerializer(student_assessment, context={'request': request})
+            assmt.save()
+            serializer = AssessmentSerializer(assmt, context={'request': request})
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        except Exception as ex:
-            return Response({"reason": ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
+
+        else:
+            student_assessment = StudentAssessment()
+            student_assessment.student = NssUser.objects.get(user=request.auth.user)
+            student_assessment.assessment = Assessment.objects.get(pk=request.data["assessmentId"])
+            student_assessment.status = StudentAssessmentStatus.objects.get(status="In Progress")
+
+            try:
+                student_assessment.save()
+                serializer = StudentAssessmentSerializer(student_assessment, context={'request': request})
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            except Exception as ex:
+                return Response({"reason": ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
 
     def list(self, request):
-        """Listing all assessments not allowed."""
-        assessments = Assessment.objects.all()
-        serializer = AssessmentSerializer(assessments, many=True, context={'request': request})
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        """Listing all assessments"""
+        if "studentId" in request.query_params:
+            student = NssUser.objects.get(pk=request.query_params["studentId"])
+            student_assessments = StudentAssessment.objects.filter(student=student)
+
+            try:
+                serializer = StudentAssessmentSerializer(student_assessments, many=True, context={'request': request})
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            except Exception as ex:
+                return Response({"reason": ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
+
+        else:
+            assessments = Assessment.objects.all()
+            serializer = AssessmentSerializer(assessments, many=True, context={'request': request})
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
     def retrieve(self, request, pk=None):
         """Handle GET requests for single item
@@ -95,18 +111,22 @@ class StudentAssessmentView(ViewSet):
             assessment = StudentAssessment.objects.get(pk=pk)
             assessment_status = StudentAssessmentStatus.objects.get(pk=request.data["status"])
 
+            # Only allow student owner of assessment or an instructor to modify
             if request.auth.user == assessment.student.user or request.auth.user.is_staff:
 
+                # Return 400 if no status change
                 if assessment.status == assessment_status:
                     return Response({ "message": "No change in status"}, status=status.HTTP_400_BAD_REQUEST)
 
-
+                # Student cannot change status to reviewed
                 if request.auth.user == assessment.student.user and assessment_status.status not in ("In Progress", "Ready for Review", ):
                     return Response(None, status=status.HTTP_401_UNAUTHORIZED)
 
+                # If an instructor changed the status, record the instructor
                 if request.auth.user.is_staff:
                     assessment.instructor = NssUser.objects.get(user=request.auth.user)
 
+                # Set new status and save
                 assessment.status = assessment_status
                 assessment.save()
 
@@ -144,7 +164,7 @@ class AssessmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Assessment
-        fields = ('id', 'name', )
+        fields = ('id', 'name', 'type', 'source_url' )
 
 class StudentAssessmentSerializer(serializers.ModelSerializer):
     """JSON serializer"""
