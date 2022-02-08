@@ -36,7 +36,7 @@ class StudentAssessmentView(ViewSet):
         Returns:
             Response -- JSON serialized instance
         """
-        if "sourceURL" in request.data:
+        if "sourceURL" in request.data and request.auth.user.is_staff:
             assmt = Assessment()
             assmt.name = request.data["name"]
             assmt.source_url = request.data["sourceURL"]
@@ -48,7 +48,7 @@ class StudentAssessmentView(ViewSet):
 
         else:
             student_assessment = StudentAssessment()
-            student_assessment.student = NssUser.objects.get(user=request.auth.user)
+            student_assessment.student = NssUser.objects.get(pk=request.data["studentId"])
             student_assessment.assessment = Assessment.objects.get(pk=request.data["assessmentId"])
             student_assessment.status = StudentAssessmentStatus.objects.get(status="In Progress")
 
