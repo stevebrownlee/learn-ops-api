@@ -1,16 +1,15 @@
 from django.http import HttpResponseServerError
-from django.db.models import Count, Q, Sum
+from django.db.models import Count, Q
 from rest_framework import permissions, serializers, status
 from rest_framework.decorators import action
-from rest_framework.viewsets import ViewSet, ModelViewSet
-from rest_framework.response import Response
-from rest_framework import status
-from LearningAPI.models import NssUser, OneOnOneNote, Cohort, LearningRecordEntry, LearningRecord
-from django.forms.models import model_to_dict
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
+from LearningAPI.models import NssUser, OneOnOneNote, Cohort, LearningRecordEntry, LearningRecord
 
 
 class StudentPermission(permissions.BasePermission):
+    """Permissions for student resource"""
 
     def has_permission(self, request, view):
         if view.action in ['list', 'destroy', 'status']:
@@ -24,6 +23,7 @@ class StudentPermission(permissions.BasePermission):
 
 
 class StudentPagination(PageNumberPagination):
+    """Pagination for student resource"""
     page_size = 40
     page_size_query_param = 'page_size'
     max_page_size = 80
@@ -123,15 +123,15 @@ class StudentViewSet(ModelViewSet):
         if student_status == "unassigned":
             students = NssUser.objects.\
                 annotate(cohort_count=Count('assigned_cohorts')).\
-                filter(user__is_staff=False, cohort_count=0)
+                filter(user__is_staff=False, user__is_active=True, cohort_count=0)
         else:
-            students = NssUser.objects.filter(user__is_staff=False)
+            students = NssUser.objects.filter(user__is_active=True, user__is_staff=False)
 
         serializer = SingleStudent(
             students, many=True, context={'request': request})
 
         search_terms = self.request.query_params.get('q', None)
-        if search_terms != None:
+        if search_terms is not None:
             for letter in list(search_terms):
                 students = students.filter(
                     Q(user__first_name__icontains=letter)
@@ -157,7 +157,8 @@ class StudentViewSet(ModelViewSet):
                     students, many=True, context={'request': request})
 
         page = self.paginate_queryset(serializer.data)
-        return self.get_paginated_response(page)
+        paginated_response = self.get_paginated_response(page)
+        return paginated_response
 
     @action(methods=['post'], detail=True)
     def status(self, request, pk):
