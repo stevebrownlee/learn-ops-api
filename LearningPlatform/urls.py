@@ -37,6 +37,7 @@ router.register(r'notes', views.ChapterNoteViewSet, 'note')
 router.register(r'assessments', views.StudentAssessmentView, 'assessment')
 router.register(r'statuses', views.AssessmentStatusView, 'status')
 router.register(r'objectives', views.LearningObjectiveViewSet, 'learningobjective')
+router.register(r'slackchannels', views.SlackChannel, 'slackchannel')
 
 
 urlpatterns = [

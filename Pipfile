@@ -19,6 +19,7 @@ dj-database-url = "*"
 psycopg2-binary = "*"
 dj-rest-auth = "*"
 django-allauth = "*"
+requests = "*"
 
 [requires]
 python_version = "*"
