@@ -1,9 +1,12 @@
 """View module for handling requests about park areas"""
 import os
+import json
+from urllib import response
 import requests
 from rest_framework import status
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
+from LearningAPI.models import NssUser
 
 
 class SlackChannel(ViewSet):
@@ -12,16 +15,39 @@ class SlackChannel(ViewSet):
     def create(self, request):
         """Handle POST requests to create team Slack channels"""
 
-        payload = {
-            'name': request.data['name'],
-            'token': os.getenv('SLACK_BOT_TOKEN')
-        }
+        # Create the Slack channel
         headers = {
             'Content-Type': 'application/x-www-form-urlencoded'
         }
+        channel_payload = {
+            'name': request.data['name'],
+            'token': os.getenv('SLACK_BOT_TOKEN')
+        }
+
+        student_slack_ids = set()
+        for student_id in request.data["students"]:
+            student = NssUser.objects.get(user__id=student_id)
+            if student.slack_handle is not None:
+                student_slack_ids.add(student.slack_handle)
 
         res = requests.post(
-            "https://slack.com/api/conversations.create", data=payload, headers=headers)
+            "https://slack.com/api/conversations.create", data=channel_payload, headers=headers)
+        channel_res = res.json()
 
-        return Response(res.json(), status=status.HTTP_201_CREATED)
-        # return Response({ "res": "test" }, status=status.HTTP_201_CREATED)
+        # Add students to Slack channel
+        invitation_payload = {
+            'channel': channel_res['channel']['id'],
+            'users': ",".join(list(student_slack_ids)),
+            'token': os.getenv('SLACK_BOT_TOKEN')
+        }
+
+        res = requests.post(
+            "https://slack.com/api/conversations.invite", data=invitation_payload, headers=headers)
+        students_res = res.json()
+
+        combined_response = {
+            "channel": channel_res,
+            "invitations": students_res
+        }
+
+        return Response(combined_response, status=status.HTTP_201_CREATED)
