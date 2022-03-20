@@ -1,7 +1,5 @@
 """View module for handling requests about park areas"""
 import os
-import json
-from urllib import response
 import requests
 from rest_framework import status
 from rest_framework.viewsets import ViewSet
@@ -17,11 +15,11 @@ class SlackChannel(ViewSet):
 
         # Create the Slack channel
         headers = {
-            'Content-Type': 'application/x-www-form-urlencoded'
+            "Content-Type": "application/x-www-form-urlencoded"
         }
         channel_payload = {
-            'name': request.data['name'],
-            'token': os.getenv('SLACK_BOT_TOKEN')
+            "name": request.data["name"],
+            "token": os.getenv("SLACK_BOT_TOKEN")
         }
 
         student_slack_ids = set()
@@ -36,9 +34,9 @@ class SlackChannel(ViewSet):
 
         # Add students to Slack channel
         invitation_payload = {
-            'channel': channel_res['channel']['id'],
-            'users': ",".join(list(student_slack_ids)),
-            'token': os.getenv('SLACK_BOT_TOKEN')
+            "channel": channel_res["channel"]["id"],
+            "users": ",".join(list(student_slack_ids)),
+            "token": os.getenv("SLACK_BOT_TOKEN")
         }
 
         res = requests.post(
