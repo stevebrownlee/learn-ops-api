@@ -185,6 +185,7 @@ class StudentViewSet(ModelViewSet):
 
 
 def student_score(self, obj):
+    """Return total learning score"""
     total = 0
     scores = LearningRecord.objects.\
         filter(student=obj, achieved=True).\
@@ -309,5 +310,5 @@ class SingleStudent(serializers.ModelSerializer):
 
     class Meta:
         model = NssUser
-        fields = ('id', 'name', 'email', 'github', 'staff',
+        fields = ('id', 'name', 'email', 'github', 'staff', 'slack_handle',
                   'cohorts', 'feedback', 'repos', 'score',)

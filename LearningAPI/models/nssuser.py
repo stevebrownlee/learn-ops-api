@@ -1,10 +1,10 @@
+"""NssUser database model"""
 from django.db import models
 from django.conf import settings
-from django.forms.models import model_to_dict
-from LearningAPI.models.nssuser_cohort import NssUserCohort
 
 
 class NssUser(models.Model):
+    """Model for NSS-specific user information beyond Django user"""
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     slack_handle = models.CharField(max_length=55, null=True, blank=True)
