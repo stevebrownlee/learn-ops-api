@@ -79,8 +79,10 @@ class StudentViewSet(ModelViewSet):
             student = NssUser.objects.get(pk=pk)
 
             if request.auth.user == student.user or request.auth.user.is_staff:
-                student.slack_handle = request.data["slack_handle"]
-                student.gitub_handle = request.data["gitub_handle"]
+                if "slack_handle" in request.data:
+                    student.slack_handle = request.data["slack_handle"]
+                if "gitub_handle" in request.data:
+                    student.gitub_handle = request.data["gitub_handle"]
 
                 student.save()
 
@@ -88,7 +90,7 @@ class StudentViewSet(ModelViewSet):
             else:
                 return Response(None, status=status.HTTP_401_UNAUTHORIZED)
 
-        except NssUser.DoesNotExist as ex:
+        except NssUser.DoesNotExist:
             return Response(None, status=status.HTTP_404_NOT_FOUND)
 
         except Exception as ex:
