@@ -4,7 +4,7 @@ from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
-from rest_framework.viewsets import ViewSet, ModelViewSet
+from rest_framework.viewsets import ModelViewSet
 from LearningAPI.models import LearningRecord
 from LearningAPI.models import LearningRecordEntry
 from LearningAPI.models.learning_weight import LearningWeight
@@ -143,22 +143,18 @@ class LearningRecordViewSet(ModelViewSet):
             return HttpResponseServerError(ex)
 
     @action(methods=['delete', 'post'], detail=False)
-    def entries(self, request, entryId=None):
-        """
-        Delete learning record entries
-        """
+    def entries(self, request, entry_id=None):
+        """ Manage learning record entries """
 
         if request.method == "POST":
-            """Handle POST operations
-
-            Returns:
-                Response -- JSON serialized instance
-            """
+            # Handle POST operations
             try:
                 record = LearningRecord.objects.get(pk=request.data["record"])
-                weight = LearningWeight.objects.get(pk=request.data["weight"])
             except LearningRecord.DoesNotExist:
                 return Response({"reason": "Learning record not found"}, status=status.HTTP_404_NOT_FOUND)
+
+            try:
+                weight = LearningWeight.objects.get(pk=request.data["weight"])
             except LearningWeight.DoesNotExist:
                 return Response({"reason": "Learning weight not found"}, status=status.HTTP_404_NOT_FOUND)
 
@@ -180,7 +176,7 @@ class LearningRecordViewSet(ModelViewSet):
         if request.method == "DELETE":
 
             try:
-                entry = LearningRecordEntry.objects.get(pk=entryId)
+                entry = LearningRecordEntry.objects.get(pk=entry_id)
                 record_id = entry.record_id
                 entry.delete()
 

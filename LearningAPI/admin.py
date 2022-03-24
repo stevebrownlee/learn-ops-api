@@ -3,11 +3,18 @@ from django.contrib import admin
 # Register your models here.
 from .models import (
     NssUser,
-    LearningRecordEntry,
-    LearningRecord,
-    LearningWeight
+    LearningRecordEntry, LearningRecord, LearningWeight,
+    CoreSkill, CoreSkillRecord, CoreSkillRecordEntry
 )
 
+
+@admin.register(CoreSkill)
+class CoreSkillAdmin(admin.ModelAdmin):
+    list_display = ['label',]
+
+@admin.register(CoreSkillRecord)
+class CoreSkillRecordAdmin(admin.ModelAdmin):
+    list_display = ('student', 'skill', 'level',)
 
 @admin.register(LearningWeight)
 class LearningWeightAdmin(admin.ModelAdmin):

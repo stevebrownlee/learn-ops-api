@@ -38,11 +38,13 @@ router.register(r'assessments', views.StudentAssessmentView, 'assessment')
 router.register(r'statuses', views.AssessmentStatusView, 'status')
 router.register(r'objectives', views.LearningObjectiveViewSet, 'learningobjective')
 router.register(r'slackchannels', views.SlackChannel, 'slackchannel')
+router.register(r'coreskills', views.CoreSkillViewSet, 'coreskill')
+router.register(r'coreskillrecords', views.CoreSkillRecordViewSet, 'coreskillrecord')
 
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('records/entries/<int:entryId>', views.LearningRecordViewSet.as_view({'delete': 'entries'}), name="entries"),
+    path('records/entries/<int:entry_id>', views.LearningRecordViewSet.as_view({'delete': 'entries'}), name="entries"),
 
     path('accounts', views.register_user),
     path('accounts/verify', rest_views.obtain_auth_token, name='api-token-auth'),

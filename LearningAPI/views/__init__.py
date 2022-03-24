@@ -17,3 +17,5 @@ from .github_login import GithubLogin
 from .assessment import StudentAssessmentView
 from .assessment_status import AssessmentStatusView
 from .slack import SlackChannel
+from .core_skill_view import CoreSkillViewSet
+from .core_skill_record_view import CoreSkillRecordViewSet

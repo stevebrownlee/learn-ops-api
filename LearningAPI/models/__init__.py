@@ -30,3 +30,6 @@ from .learning_record_entry import LearningRecordEntry
 from .assessment import Assessment
 from .student_assessment_status import StudentAssessmentStatus
 from .student_assessment import StudentAssessment
+from .core_skill import CoreSkill
+from .core_skill_record import CoreSkillRecord
+from .core_skill_record_entry import CoreSkillRecordEntry
