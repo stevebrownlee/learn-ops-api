@@ -185,6 +185,29 @@ class StudentViewSet(ModelViewSet):
 
         return Response({'message': 'Unsupported HTTP method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
+    @action(methods=['post'], detail=True)
+    def feedback(self, request, pk):
+        """Add feedback from 1:1 session"""
+
+        if request.method == "POST":
+            try:
+                note = OneOnOneNote()
+                note.coach = NssUser.objects.get(user=request.auth.user)
+                note.student = NssUser.objects.get(pk=pk)
+                note.notes = request.data["notes"]
+
+                note.save()
+
+            except NssUser.DoesNotExist as ex:
+                return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+
+            except Exception as ex:
+                return HttpResponseServerError(ex)
+
+            return Response({'message': 'Student note created'}, status=status.HTTP_201_CREATED)
+
+        return Response({'message': 'Unsupported HTTP method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
 
 def student_score(self, obj):
     """Return total learning score"""

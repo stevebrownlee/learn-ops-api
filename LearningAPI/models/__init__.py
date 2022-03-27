@@ -33,3 +33,4 @@ from .student_assessment import StudentAssessment
 from .core_skill import CoreSkill
 from .core_skill_record import CoreSkillRecord
 from .core_skill_record_entry import CoreSkillRecordEntry
+from .daily_status import DailyStatus
