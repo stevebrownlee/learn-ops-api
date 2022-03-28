@@ -5,14 +5,14 @@ from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from LearningAPI.models import NssUser, OneOnOneNote, Cohort, LearningRecordEntry, LearningRecord
+from LearningAPI.models import DailyStatus, NssUser, OneOnOneNote, Cohort, LearningRecordEntry, LearningRecord
 
 
 class StudentPermission(permissions.BasePermission):
     """Permissions for student resource"""
 
     def has_permission(self, request, view):
-        if view.action in ['list', 'destroy', 'status']:
+        if view.action in ['list', 'destroy', 'status', 'feedback']:
             return request.auth.user.is_staff
         elif view.action == 'create':
             return True
@@ -164,16 +164,21 @@ class StudentViewSet(ModelViewSet):
 
     @action(methods=['post'], detail=True)
     def status(self, request, pk):
-        """Add feedback from 1:1 session"""
+        """Add daily status from stand-up"""
 
         if request.method == "POST":
             try:
-                note = OneOnOneNote()
-                note.coach = NssUser.objects.get(user=request.auth.user)
-                note.student = NssUser.objects.get(pk=pk)
-                note.notes = request.data["notes"]
+                daily_status = DailyStatus()
+                daily_status.coach = NssUser.objects.get(user=request.auth.user)
+                daily_status.student = NssUser.objects.get(pk=pk)
+                daily_status.status = request.data["status"]
 
-                note.save()
+                daily_status.save()
+
+                response = {
+                    "id": daily_status.id,
+                    "status": daily_status.status
+                }
 
             except NssUser.DoesNotExist as ex:
                 return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
@@ -181,7 +186,7 @@ class StudentViewSet(ModelViewSet):
             except Exception as ex:
                 return HttpResponseServerError(ex)
 
-            return Response({'message': 'Student note created'}, status=status.HTTP_201_CREATED)
+            return Response(response, status=status.HTTP_201_CREATED)
 
         return Response({'message': 'Unsupported HTTP method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
@@ -230,6 +235,14 @@ class StudentNoteSerializer(serializers.ModelSerializer):
         fields = ['id', 'notes', 'session_date', 'author']
 
 
+class StudentStatusSerializer(serializers.ModelSerializer):
+    """JSON serializer for student notes"""
+
+    class Meta:
+        model = DailyStatus
+        fields = ['id', 'status', 'created_on', 'author']
+
+
 class LearningRecordEntrySerializer(serializers.ModelSerializer):
     """JSON serializer"""
     instructor = serializers.SerializerMethodField()
@@ -258,6 +271,7 @@ class LearningRecordSerializer(serializers.ModelSerializer):
 class StudentSerializer(serializers.ModelSerializer):
     """JSON serializer"""
     feedback = StudentNoteSerializer(many=True)
+    statuses = StudentStatusSerializer(many=True)
     name = serializers.SerializerMethodField()
     email = serializers.SerializerMethodField()
     github = serializers.SerializerMethodField()
@@ -284,7 +298,7 @@ class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = NssUser
         fields = ('id', 'name', 'email', 'github', 'score',
-                  'cohorts', 'feedback', 'records')
+                  'cohorts', 'feedback', 'records', 'statuses')
 
 
 class MicroStudents(serializers.ModelSerializer):
