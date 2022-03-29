@@ -5,7 +5,12 @@ from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from LearningAPI.models import DailyStatus, NssUser, OneOnOneNote, Cohort, LearningRecordEntry, LearningRecord
+from LearningAPI.models import (
+    DailyStatus, NssUser, OneOnOneNote,
+    Cohort, LearningRecordEntry, LearningRecord,
+    CoreSkillRecord
+)
+from LearningAPI.views.core_skill_record_view import CoreSkillRecordSerializer
 
 
 class StudentPermission(permissions.BasePermission):
@@ -277,6 +282,7 @@ class StudentSerializer(serializers.ModelSerializer):
     github = serializers.SerializerMethodField()
     records = serializers.SerializerMethodField()
     score = serializers.SerializerMethodField()
+    core_skill_records = serializers.SerializerMethodField()
 
     def get_score(self, obj):
         return student_score(self, obj)
@@ -284,6 +290,10 @@ class StudentSerializer(serializers.ModelSerializer):
     def get_records(self, obj):
         records = LearningRecord.objects.filter(student=obj).order_by("achieved")
         return LearningRecordSerializer(records, many=True).data
+
+    def get_core_skill_records(self, obj):
+        records = CoreSkillRecord.objects.filter(student=obj).order_by("pk")
+        return CoreSkillRecordSerializer(records, many=True).data
 
     def get_github(self, obj):
         github = obj.user.socialaccount_set.get(user=obj.user)
@@ -297,7 +307,7 @@ class StudentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = NssUser
-        fields = ('id', 'name', 'email', 'github', 'score',
+        fields = ('id', 'name', 'email', 'github', 'score', 'core_skill_records',
                   'cohorts', 'feedback', 'records', 'statuses')
 
 

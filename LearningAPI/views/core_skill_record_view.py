@@ -148,3 +148,4 @@ class CoreSkillRecordSerializer(serializers.ModelSerializer):
     class Meta:
         model = CoreSkillRecord
         fields = ( 'id', 'student', 'skill', 'level', 'notes', 'created_on', )
+        depth = 1
