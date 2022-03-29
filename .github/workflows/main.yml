@@ -53,6 +53,7 @@ jobs:
           command: install
 
       - name: Apply migrations
+        uses: VaultVulp/action-pipenv@v2.0.1
         run: ./manage.py migrate
 
       - name: Restart Django
