@@ -27,3 +27,4 @@ python_version = "*"
 [scripts]
 seed = "bash ./seed.sh"
 collect = "bash ./collect.sh"
+migrate = "./manage.py migrate"
