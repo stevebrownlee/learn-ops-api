@@ -1,6 +1,6 @@
 import datetime
 from django.db import models
-from LearningAPI.models import CoreSkillRecord
+from . import CoreSkillRecord
 
 
 class CoreSkillRecordEntry(models.Model):

@@ -1,6 +1,7 @@
 """Model for student assessments"""
 from django.db import models
-from . import NssUser, Assessment, StudentAssessmentStatus
+from . import Assessment, StudentAssessmentStatus, NssUser
+
 
 
 class StudentAssessment(models.Model):

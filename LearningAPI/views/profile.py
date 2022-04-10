@@ -3,9 +3,7 @@ from rest_framework import status
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from allauth.socialaccount.models import SocialAccount
-from LearningAPI.models import NssUser
-from LearningAPI.models.cohort import Cohort
-from LearningAPI.models.nssuser_cohort import NssUserCohort
+from LearningAPI.models.people import Cohort, NssUserCohort, NssUser
 from LearningAPI.views.student_view import SingleStudent
 
 

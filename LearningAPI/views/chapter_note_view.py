@@ -5,8 +5,8 @@ from rest_framework import serializers, status
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
-from LearningAPI.models import FavoriteNote
-from LearningAPI.models import ChapterNote, Chapter, NssUser
+from LearningAPI.models.people import NssUser
+from LearningAPI.models.coursework import FavoriteNote,ChapterNote, Chapter
 
 
 class ChapterNoteViewSet(ViewSet):

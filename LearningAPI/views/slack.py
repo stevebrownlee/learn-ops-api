@@ -4,7 +4,7 @@ import requests
 from rest_framework import status
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
-from LearningAPI.models import NssUser
+from LearningAPI.models.people import NssUser
 
 
 class SlackChannel(ViewSet):

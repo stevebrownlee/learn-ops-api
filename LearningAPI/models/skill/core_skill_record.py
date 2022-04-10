@@ -1,7 +1,8 @@
 import datetime
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
-from LearningAPI.models import CoreSkill, NssUser
+from . import CoreSkill
+from ..people import NssUser
 
 
 class CoreSkillRecord(models.Model):

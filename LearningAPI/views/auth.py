@@ -8,8 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
-from LearningAPI.models import NssUser
-from LearningAPI.models import Cohort, NssUserCohort
+from LearningAPI.models.people import NssUser, Cohort, NssUserCohort
 
 
 @csrf_exempt

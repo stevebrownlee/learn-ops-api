@@ -1,12 +1,11 @@
 from django.http.response import HttpResponseServerError
 from rest_framework import serializers, status
 from rest_framework.decorators import action
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from LearningAPI.models import CoreSkill, CoreSkillRecord, CoreSkillRecordEntry
-from LearningAPI.models.nssuser import NssUser
+from LearningAPI.models.skill import CoreSkill, CoreSkillRecord, CoreSkillRecordEntry
+from LearningAPI.models.people import NssUser
 
 
 class CoreSkillRecordViewSet(ModelViewSet):

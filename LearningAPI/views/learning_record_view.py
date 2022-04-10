@@ -5,10 +5,8 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from LearningAPI.models import LearningRecord
-from LearningAPI.models import LearningRecordEntry
-from LearningAPI.models.learning_weight import LearningWeight
-from LearningAPI.models.nssuser import NssUser
+from LearningAPI.models.skill import LearningRecord, LearningRecordEntry, LearningWeight
+from LearningAPI.models.people import NssUser
 
 
 class NssUserSerializer(serializers.ModelSerializer):

@@ -2,7 +2,8 @@ from rest_framework import serializers
 from rest_framework import status
 from rest_framework.viewsets import ViewSet
 from rest_framework.permissions import IsAdminUser
-from LearningAPI.models import Capstone, NssUser
+from ..models.coursework import Capstone
+from ..models.people import NssUser
 from rest_framework.response import Response
 
 

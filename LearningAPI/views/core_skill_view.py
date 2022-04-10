@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.permissions import IsAdminUser
 from rest_framework.viewsets import ModelViewSet
-from LearningAPI.models import CoreSkill
+from LearningAPI.models.skill import CoreSkill
 
 
 class CoreSkillSerializer(serializers.ModelSerializer):

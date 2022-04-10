@@ -1,12 +1,9 @@
-from django.db.models import Count
 from django.http import HttpResponseServerError
 from rest_framework import serializers, status
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
-from LearningAPI.models import Book
-from LearningAPI.models import Course
-from LearningAPI.models import Chapter
+from LearningAPI.models.coursework import Book, Course, Chapter
 
 
 class BookViewSet(ViewSet):

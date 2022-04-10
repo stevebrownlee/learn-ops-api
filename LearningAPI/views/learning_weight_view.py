@@ -4,12 +4,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAdminUser
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
-from LearningAPI.models import LearningWeight
-from django.db.models import Q
-from django.forms.models import model_to_dict
-
-
-from LearningAPI.models.learning_record import LearningRecord
+from LearningAPI.models.skill import LearningWeight
 
 
 class LearningWeightSerializer(serializers.ModelSerializer):

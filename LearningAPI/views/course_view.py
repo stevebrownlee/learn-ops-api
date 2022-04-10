@@ -4,7 +4,7 @@ from rest_framework import serializers, status
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
-from LearningAPI.models import Course, Book
+from LearningAPI.models.coursework import Course, Book
 
 
 class CourseViewSet(ViewSet):

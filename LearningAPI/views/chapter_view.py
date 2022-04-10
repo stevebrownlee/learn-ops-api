@@ -5,7 +5,9 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
-from LearningAPI.models import Chapter, Book, Project, LearningObjective, ChapterObjective
+from LearningAPI.models.coursework import (
+    Chapter, Book, Project, LearningObjective, ChapterObjective
+)
 
 
 class ChapterViewSet(ViewSet):

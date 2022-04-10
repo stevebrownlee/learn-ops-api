@@ -1,6 +1,6 @@
 from rest_framework import serializers, permissions
 from rest_framework.viewsets import ModelViewSet
-from LearningAPI.models import StudentAssessmentStatus
+from LearningAPI.models.people import StudentAssessmentStatus
 
 
 class StatusSerializer(serializers.ModelSerializer):

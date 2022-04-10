@@ -1,4 +1,3 @@
-from LearningAPI.models import proposal_status
 from django.db import models
 
 

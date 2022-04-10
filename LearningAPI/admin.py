@@ -1,10 +1,10 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import (
-    NssUser,
+from .models.people import NssUser
+from .models.skill import (
+    CoreSkill, CoreSkillRecord,
     LearningRecordEntry, LearningRecord, LearningWeight,
-    CoreSkill, CoreSkillRecord, CoreSkillRecordEntry
 )
 
 

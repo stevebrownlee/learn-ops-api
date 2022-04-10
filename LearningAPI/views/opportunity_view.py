@@ -1,12 +1,8 @@
-from django.db.models import Count
 from django.http import HttpResponseServerError
 from rest_framework import serializers, status
-from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
-from LearningAPI.models import Opportunity
-from LearningAPI.models import NssUser
-from LearningAPI.models import Cohort
+from LearningAPI.models.people import Opportunity, NssUser, Cohort
 
 
 class OpportunityViewSet(ViewSet):

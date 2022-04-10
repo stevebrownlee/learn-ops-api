@@ -7,8 +7,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
-from LearningAPI.models import Cohort, NssUser
-from LearningAPI.models.nssuser_cohort import NssUserCohort
+from ..models.people import Cohort, NssUser, NssUserCohort
 
 class CohortPermission(permissions.BasePermission):
 

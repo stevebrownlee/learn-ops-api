@@ -5,11 +5,8 @@ from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from LearningAPI.models import (
-    DailyStatus, NssUser, OneOnOneNote,
-    Cohort, LearningRecordEntry, LearningRecord,
-    CoreSkillRecord
-)
+from LearningAPI.models.people import NssUser, Cohort, DailyStatus, OneOnOneNote
+from LearningAPI.models.skill import CoreSkillRecord, LearningRecordEntry, LearningRecord
 from LearningAPI.views.core_skill_record_view import CoreSkillRecordSerializer
 
 

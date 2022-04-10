@@ -1,11 +1,10 @@
-from LearningAPI.models.favorite_notes import FavoriteNote
-from rest_framework.decorators import action
 from django.http import HttpResponseServerError
 from rest_framework import serializers, status
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
-from LearningAPI.models import LearningObjective, NssUser, TaxonomyLevel
+from LearningAPI.models.coursework import LearningObjective, TaxonomyLevel
+from LearningAPI.models.people import NssUser
 
 
 class LearningObjectiveViewSet(ViewSet):

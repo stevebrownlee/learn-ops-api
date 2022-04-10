@@ -1,6 +1,7 @@
 import datetime
 from django.db import models
-from LearningAPI.models import LearningWeight, NssUser
+from . import LearningWeight
+from ..people import NssUser
 
 
 class LearningRecord(models.Model):
