@@ -1,4 +1,4 @@
-from django.db.models import Q
+"""Common deorators for use in the Learning Platform"""
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -18,7 +18,7 @@ def is_instructor():
 def is_staff():
     def decorator(func):
         def __wrapper(request, *args, **kwargs):
-            if request.user.groups.filter(Q(name='Staff') | Q(name='Instructors')).exists():
+            if request.user.groups.filter(name='Staff').exists():
                 return func(request, *args, **kwargs)
             else:
                 return Response(
