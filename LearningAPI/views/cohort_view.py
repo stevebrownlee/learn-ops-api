@@ -4,12 +4,13 @@ from django.http import HttpResponseServerError
 from rest_framework import serializers, status
 from rest_framework import permissions
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 from ..models.people import Cohort, NssUser, NssUserCohort
 
+
 class CohortPermission(permissions.BasePermission):
+    """Cohort permissions"""
 
     def has_permission(self, request, view):
         if view.action in ['create', 'update', 'destroy', 'assign']:
@@ -18,6 +19,7 @@ class CohortPermission(permissions.BasePermission):
             return True
         else:
             return False
+
 
 class CohortViewSet(ViewSet):
     """Cohort view set"""
@@ -127,13 +129,15 @@ class CohortViewSet(ViewSet):
                 for letter in list(search_terms):
                     cohorts = cohorts.filter(name__icontains=letter)
 
-                serializer = MiniCohortSerializer(cohorts, many=True, context={'request': request})
+                serializer = MiniCohortSerializer(
+                    cohorts, many=True, context={'request': request})
                 return Response(serializer.data, status=status.HTTP_200_OK)
 
-
             cohorts = cohorts.annotate(
-                students=Count('members', filter=Q(members__nss_user__user__is_staff=False)),
-                instructors=Count('members', filter=Q(members__nss_user__user__is_staff=True))
+                students=Count('members', filter=Q(
+                    members__nss_user__user__is_staff=False)),
+                instructors=Count('members', filter=Q(
+                    members__nss_user__user__is_staff=True))
             ).all().order_by('pk')
 
             serializer = CohortSerializer(
@@ -161,7 +165,7 @@ class CohortViewSet(ViewSet):
                     status=status.HTTP_400_BAD_REQUEST
                 )
 
-            except NssUserCohort.DoesNotExist as ex:
+            except NssUserCohort.DoesNotExist:
                 relationship = NssUserCohort()
                 relationship.cohort = cohort
                 relationship.nss_user = member
@@ -203,13 +207,13 @@ class CohortViewSet(ViewSet):
         return Response({'message': 'Unsupported HTTP method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
-
 class MiniCohortSerializer(serializers.ModelSerializer):
     """JSON serializer"""
 
     class Meta:
         model = Cohort
         fields = ('id', 'name')
+
 
 class CohortSerializer(serializers.ModelSerializer):
     """JSON serializer"""

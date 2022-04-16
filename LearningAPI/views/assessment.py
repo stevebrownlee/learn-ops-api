@@ -1,8 +1,10 @@
 from django.http import HttpResponseServerError
+from django.utils.decorators import method_decorator
 from rest_framework import permissions, serializers, status
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
+from LearningAPI.decorators import is_instructor
 from LearningAPI.models.people import NssUser, StudentAssessment, StudentAssessmentStatus, Assessment
 
 
@@ -30,6 +32,7 @@ class StudentAssessmentView(ViewSet):
     permission_classes = (StudentAssessmentPermission,)
     pagination_class = StudentAssessmentPagination
 
+    @method_decorator(is_instructor())
     def create(self, request):
         """Handle POST operations
 

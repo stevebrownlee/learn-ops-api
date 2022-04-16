@@ -1,27 +1,15 @@
 from django.http import HttpResponseServerError
+from django.utils.decorators import method_decorator
 from django.db.models import Count, Q
 from rest_framework import permissions, serializers, status
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+from LearningAPI.decorators import is_instructor
 from LearningAPI.models.people import NssUser, Cohort, DailyStatus, OneOnOneNote
 from LearningAPI.models.skill import CoreSkillRecord, LearningRecordEntry, LearningRecord
 from LearningAPI.views.core_skill_record_view import CoreSkillRecordSerializer
-
-
-class StudentPermission(permissions.BasePermission):
-    """Permissions for student resource"""
-
-    def has_permission(self, request, view):
-        if view.action in ['list', 'destroy', 'status', 'feedback']:
-            return request.auth.user.is_staff
-        elif view.action == 'create':
-            return True
-        elif view.action in ['retrieve', 'update', 'partial_update']:
-            return True
-        else:
-            return False
 
 
 class StudentPagination(PageNumberPagination):
@@ -34,7 +22,6 @@ class StudentPagination(PageNumberPagination):
 class StudentViewSet(ModelViewSet):
     """Student view set"""
 
-    permission_classes = (StudentPermission,)
     pagination_class = StudentPagination
 
     def create(self, request):
@@ -98,6 +85,7 @@ class StudentViewSet(ModelViewSet):
         except Exception as ex:
             return HttpResponseServerError(ex)
 
+    @method_decorator(is_instructor())
     def destroy(self, request, pk=None):
         """Handle DELETE requests for a single student
 
@@ -116,6 +104,7 @@ class StudentViewSet(ModelViewSet):
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    @method_decorator(is_instructor())
     def list(self, request):
         """Handle GET requests for all students
 
@@ -164,6 +153,7 @@ class StudentViewSet(ModelViewSet):
         paginated_response = self.get_paginated_response(page)
         return paginated_response
 
+    @method_decorator(is_instructor())
     @action(methods=['post'], detail=True)
     def status(self, request, pk):
         """Add daily status from stand-up"""
@@ -192,6 +182,7 @@ class StudentViewSet(ModelViewSet):
 
         return Response({'message': 'Unsupported HTTP method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
+    @method_decorator(is_instructor())
     @action(methods=['post'], detail=True)
     def feedback(self, request, pk):
         """Add feedback from 1:1 session"""
