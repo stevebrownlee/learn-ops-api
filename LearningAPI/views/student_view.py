@@ -1,7 +1,8 @@
+"""Student view module"""
 from django.http import HttpResponseServerError
 from django.utils.decorators import method_decorator
 from django.db.models import Count, Q
-from rest_framework import permissions, serializers, status
+from rest_framework import serializers, status
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
@@ -20,7 +21,7 @@ class StudentPagination(PageNumberPagination):
 
 
 class StudentViewSet(ModelViewSet):
-    """Student view set"""
+    """Student viewset"""
 
     pagination_class = StudentPagination
 
@@ -116,9 +117,11 @@ class StudentViewSet(ModelViewSet):
         if student_status == "unassigned":
             students = NssUser.objects.\
                 annotate(cohort_count=Count('assigned_cohorts')).\
-                filter(user__is_staff=False, user__is_active=True, cohort_count=0)
+                filter(user__is_staff=False,
+                       user__is_active=True, cohort_count=0)
         else:
-            students = NssUser.objects.filter(user__is_active=True, user__is_staff=False)
+            students = NssUser.objects.filter(
+                user__is_active=True, user__is_staff=False)
 
         serializer = SingleStudent(
             students, many=True, context={'request': request})
@@ -161,7 +164,8 @@ class StudentViewSet(ModelViewSet):
         if request.method == "POST":
             try:
                 daily_status = DailyStatus()
-                daily_status.coach = NssUser.objects.get(user=request.auth.user)
+                daily_status.coach = NssUser.objects.get(
+                    user=request.auth.user)
                 daily_status.student = NssUser.objects.get(pk=pk)
                 daily_status.status = request.data["status"]
 
@@ -276,7 +280,8 @@ class StudentSerializer(serializers.ModelSerializer):
         return student_score(self, obj)
 
     def get_records(self, obj):
-        records = LearningRecord.objects.filter(student=obj).order_by("achieved")
+        records = LearningRecord.objects.filter(
+            student=obj).order_by("achieved")
         return LearningRecordSerializer(records, many=True).data
 
     def get_core_skill_records(self, obj):
