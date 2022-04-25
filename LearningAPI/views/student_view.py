@@ -1,4 +1,5 @@
 """Student view module"""
+import statistics
 from django.http import HttpResponseServerError
 from django.utils.decorators import method_decorator
 from django.db.models import Count, Q
@@ -213,6 +214,8 @@ class StudentViewSet(ModelViewSet):
 
 def student_score(self, obj):
     """Return total learning score"""
+
+    # First get the total of the student's technical objectives
     total = 0
     scores = LearningRecord.objects.\
         filter(student=obj, achieved=True).\
@@ -220,6 +223,22 @@ def student_score(self, obj):
 
     for score in scores:
         total += score.weight.weight
+
+    # Get the average of the core skills' levels and adjust the
+    # technical score positively by the percent
+    core_skill_records = CoreSkillRecord.objects.filter(student=obj).order_by("pk")
+    scores = [record.level for record in core_skill_records]
+    # for record in core_skill_records:
+    #     scores.append(record.level)
+
+    try:
+        # Hannah and I did this on a Monday morning, so it may be the wrong
+        # approach, but it's a step in the right direction
+        mean = statistics.mean(scores)
+        total = round(total * (1 + (mean / 10)))
+
+    except statistics.StatisticsError:
+        pass
 
     return total
 
@@ -301,7 +320,7 @@ class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = NssUser
         fields = ('id', 'name', 'email', 'github', 'score', 'core_skill_records',
-                  'cohorts', 'feedback', 'records', 'statuses')
+                  'cohorts', 'feedback', 'records', 'statuses',)
 
 
 class MicroStudents(serializers.ModelSerializer):
