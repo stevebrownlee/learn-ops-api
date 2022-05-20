@@ -1,27 +1,17 @@
+"""Student view module"""
+import statistics
 from django.http import HttpResponseServerError
+from django.utils.decorators import method_decorator
 from django.db.models import Count, Q
-from rest_framework import permissions, serializers, status
+from rest_framework import serializers, status
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+from LearningAPI.decorators import is_instructor
 from LearningAPI.models.people import NssUser, Cohort, DailyStatus, OneOnOneNote
 from LearningAPI.models.skill import CoreSkillRecord, LearningRecordEntry, LearningRecord
 from LearningAPI.views.core_skill_record_view import CoreSkillRecordSerializer
-
-
-class StudentPermission(permissions.BasePermission):
-    """Permissions for student resource"""
-
-    def has_permission(self, request, view):
-        if view.action in ['list', 'destroy', 'status', 'feedback']:
-            return request.auth.user.is_staff
-        elif view.action == 'create':
-            return True
-        elif view.action in ['retrieve', 'update', 'partial_update']:
-            return True
-        else:
-            return False
 
 
 class StudentPagination(PageNumberPagination):
@@ -32,9 +22,8 @@ class StudentPagination(PageNumberPagination):
 
 
 class StudentViewSet(ModelViewSet):
-    """Student view set"""
+    """Student viewset"""
 
-    permission_classes = (StudentPermission,)
     pagination_class = StudentPagination
 
     def create(self, request):
@@ -98,6 +87,7 @@ class StudentViewSet(ModelViewSet):
         except Exception as ex:
             return HttpResponseServerError(ex)
 
+    @method_decorator(is_instructor())
     def destroy(self, request, pk=None):
         """Handle DELETE requests for a single student
 
@@ -116,6 +106,7 @@ class StudentViewSet(ModelViewSet):
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    @method_decorator(is_instructor())
     def list(self, request):
         """Handle GET requests for all students
 
@@ -127,9 +118,11 @@ class StudentViewSet(ModelViewSet):
         if student_status == "unassigned":
             students = NssUser.objects.\
                 annotate(cohort_count=Count('assigned_cohorts')).\
-                filter(user__is_staff=False, user__is_active=True, cohort_count=0)
+                filter(user__is_staff=False,
+                       user__is_active=True, cohort_count=0)
         else:
-            students = NssUser.objects.filter(user__is_active=True, user__is_staff=False)
+            students = NssUser.objects.filter(
+                user__is_active=True, user__is_staff=False)
 
         serializer = SingleStudent(
             students, many=True, context={'request': request})
@@ -164,6 +157,7 @@ class StudentViewSet(ModelViewSet):
         paginated_response = self.get_paginated_response(page)
         return paginated_response
 
+    @method_decorator(is_instructor())
     @action(methods=['post'], detail=True)
     def status(self, request, pk):
         """Add daily status from stand-up"""
@@ -171,7 +165,8 @@ class StudentViewSet(ModelViewSet):
         if request.method == "POST":
             try:
                 daily_status = DailyStatus()
-                daily_status.coach = NssUser.objects.get(user=request.auth.user)
+                daily_status.coach = NssUser.objects.get(
+                    user=request.auth.user)
                 daily_status.student = NssUser.objects.get(pk=pk)
                 daily_status.status = request.data["status"]
 
@@ -192,6 +187,7 @@ class StudentViewSet(ModelViewSet):
 
         return Response({'message': 'Unsupported HTTP method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
+    @method_decorator(is_instructor())
     @action(methods=['post'], detail=True)
     def feedback(self, request, pk):
         """Add feedback from 1:1 session"""
@@ -218,6 +214,8 @@ class StudentViewSet(ModelViewSet):
 
 def student_score(self, obj):
     """Return total learning score"""
+
+    # First get the total of the student's technical objectives
     total = 0
     scores = LearningRecord.objects.\
         filter(student=obj, achieved=True).\
@@ -225,6 +223,22 @@ def student_score(self, obj):
 
     for score in scores:
         total += score.weight.weight
+
+    # Get the average of the core skills' levels and adjust the
+    # technical score positively by the percent
+    core_skill_records = CoreSkillRecord.objects.filter(student=obj).order_by("pk")
+    scores = [record.level for record in core_skill_records]
+    # for record in core_skill_records:
+    #     scores.append(record.level)
+
+    try:
+        # Hannah and I did this on a Monday morning, so it may be the wrong
+        # approach, but it's a step in the right direction
+        mean = statistics.mean(scores)
+        total = round(total * (1 + (mean / 10)))
+
+    except statistics.StatisticsError:
+        pass
 
     return total
 
@@ -285,7 +299,8 @@ class StudentSerializer(serializers.ModelSerializer):
         return student_score(self, obj)
 
     def get_records(self, obj):
-        records = LearningRecord.objects.filter(student=obj).order_by("achieved")
+        records = LearningRecord.objects.filter(
+            student=obj).order_by("achieved")
         return LearningRecordSerializer(records, many=True).data
 
     def get_core_skill_records(self, obj):
@@ -305,7 +320,7 @@ class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = NssUser
         fields = ('id', 'name', 'email', 'github', 'score', 'core_skill_records',
-                  'cohorts', 'feedback', 'records', 'statuses')
+                  'cohorts', 'feedback', 'records', 'statuses',)
 
 
 class MicroStudents(serializers.ModelSerializer):
