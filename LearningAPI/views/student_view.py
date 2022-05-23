@@ -106,7 +106,6 @@ class StudentViewSet(ModelViewSet):
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    @method_decorator(is_instructor())
     def list(self, request):
         """Handle GET requests for all students
 
