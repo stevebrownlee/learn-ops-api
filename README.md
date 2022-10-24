@@ -21,7 +21,8 @@
 ### Database
 
 1. Go to [Postgresapp](https://postgresapp.com/) to download and run the Postgres app for your platform.
-1. Once installed, open pgAdmin and create a new database named `learnops` on the server that was automatically created during installation.
+2. Go to [pgAdmin](https://www.pgadmin.org/download/) to download the administration tool for Postgres.
+3. Once installed, open pgAdmin and create a new database named `learnops` on the server that was automatically created during installation.
 
 ### Getting the Code
 
