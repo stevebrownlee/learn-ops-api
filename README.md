@@ -22,7 +22,11 @@
 
 1. Go to [Postgresapp](https://postgresapp.com/) to download and run the Postgres app for your platform.
 2. Go to [pgAdmin](https://www.pgadmin.org/download/) to download the administration tool for Postgres.
-3. Once installed, open pgAdmin and create a new database named `learnops` on the server that was automatically created during installation.
+3. Once installed, open pgAdmin, right-click on "Server" and choose "Create > Server".
+4. Name the server "NSS"
+5. Go to the connections tab and enter "localhost" for the host name.
+6. Click "Ok" to save
+7. Right-click on the NSS server and create a new database named `learnops`.
 
 ### Getting the Code
 
