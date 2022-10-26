@@ -17,5 +17,9 @@ from .github_login import GithubLogin
 from .assessment import StudentAssessmentView
 from .assessment_status import AssessmentStatusView
 from .slack import SlackChannel
+from .slack_message import SlackMessage
 from .core_skill_view import CoreSkillViewSet
 from .core_skill_record_view import CoreSkillRecordViewSet
+from .student_personality_view import StudentPersonalityViewSet
+from .proposal_status import ProposalStatusView
+from .proposal_timeline import TimelineView

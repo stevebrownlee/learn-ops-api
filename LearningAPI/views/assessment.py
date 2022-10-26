@@ -1,11 +1,15 @@
+"""Assessment view module"""
 from django.http import HttpResponseServerError
 from django.utils.decorators import method_decorator
+
 from rest_framework import permissions, serializers, status
-from rest_framework.viewsets import ViewSet
-from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.response import Response
+from rest_framework.viewsets import ViewSet
+
 from LearningAPI.decorators import is_instructor
-from LearningAPI.models.people import NssUser, StudentAssessment, StudentAssessmentStatus, Assessment
+from LearningAPI.models.people import (Assessment, NssUser, StudentAssessment,
+                                       StudentAssessmentStatus)
 
 
 class StudentAssessmentPermission(permissions.BasePermission):
