@@ -1,12 +1,16 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models.people import NssUser
+from .models.people import NssUser, Cohort
 from .models.skill import (
     CoreSkill, CoreSkillRecord,
     LearningRecordEntry, LearningRecord, LearningWeight,
 )
 
+
+@admin.register(Cohort)
+class CohortAdmin(admin.ModelAdmin):
+    list_display = ['name', 'slack_channel', 'start_date', 'end_date', ]
 
 @admin.register(CoreSkill)
 class CoreSkillAdmin(admin.ModelAdmin):
