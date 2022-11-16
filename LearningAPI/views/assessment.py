@@ -152,8 +152,7 @@ class StudentAssessmentView(ViewSet):
                                 "text",
                                 f':fox-yay-woo-hoo: Self-Assessment Review Complete\n\n\n:white_check_mark: Your coaching team just marked {assessment.assessment.name} as completed.\n\nVisit https://learning.nss.team to view your messages.'),
                             "token": os.getenv("SLACK_BOT_TOKEN"),
-                            # "channel": assessment.student.slack_handle
-                            "channel": 'U03F2SDTS'
+                            "channel": assessment.student.slack_handle
                         }
 
                         requests.post(
