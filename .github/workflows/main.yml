@@ -52,10 +52,8 @@ jobs:
         with:
           command: install
 
-      - name: Django Migration Checker
-        uses: hardcoretech/django-migration-checker-action@v1
-        with:
-          app-path: LearningPlatform
+      - name: Apply migrations
+        run: ./manage.py migrate
 
       - name: Restart Django
         run: sudo service learning restart
