@@ -49,7 +49,7 @@ class Profile(ViewSet):
                 usercohort.nss_user = nss_user
                 usercohort.save()
 
-        if nss_user.personality is None:
+        if personality not in nss_user:
             personality = StudentPersonality()
             personality.briggs_myers_type = ""
             personality.bfi_extraversion = 0
