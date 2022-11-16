@@ -52,11 +52,6 @@ jobs:
         with:
           command: install
 
-      - name: Run migrations
-        uses: VaultVulp/action-pipenv@v2.0.1
-        with:
-          command: run migrate
-
       - name: Restart Django
         run: sudo service learning restart
 
