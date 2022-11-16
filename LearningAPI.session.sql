@@ -23,6 +23,7 @@ FROM public."authtoken_token";
 select * from pg_catalog.pg_tables;
 
 SELECT * FROM public."LearningAPI_studentpersonality";
+DELETE FROM public."LearningAPI_studentpersonality";
 
 INSERT INTO public."LearningAPI_studentpersonality"
     (student_id, briggs_myers_type,

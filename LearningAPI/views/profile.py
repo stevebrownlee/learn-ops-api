@@ -50,7 +50,7 @@ class Profile(ViewSet):
                 usercohort.save()
 
         try:
-            StudentPersonality.objects.get(student=nss_user)
+            personality = StudentPersonality.objects.get(student=nss_user)
         except StudentPersonality.DoesNotExist:
             personality = StudentPersonality()
             personality.briggs_myers_type = ""
@@ -71,7 +71,6 @@ class Profile(ViewSet):
             profile["person"]["first_name"] = request.auth.user.first_name
             profile["person"]["last_name"] = request.auth.user.last_name
             profile["person"]["github"] = {}
-            profile["person"]["personality"] = personality
             profile["person"]["github"]["login"] = person.extra_data["login"]
             profile["person"]["github"]["repos"] = person.extra_data["repos_url"]
             profile["staff"] = request.auth.user.is_staff
