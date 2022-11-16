@@ -14,6 +14,8 @@ class StatusPermission(permissions.BasePermission):
     def has_permission(self, request, view):
         if view.action in ['list', 'retrieve',]:
             return True
+        if view.action in ['create', 'update',]:
+            return request.auth.user.is_staff
         else:
             return False
 

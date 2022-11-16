@@ -1,10 +1,15 @@
 from django.contrib import admin
 
-from .models.people import NssUser
+from .models.people import NssUser, Assessment
 from .models.coursework import Course
 from .models.skill import (CoreSkill, CoreSkillRecord, LearningRecord,
                            LearningRecordEntry, LearningWeight)
 
+
+@admin.register(Assessment)
+class AssessmentAdmin(admin.ModelAdmin):
+    """Core skills"""
+    list_display = ('name', 'source_url', 'type',)
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):

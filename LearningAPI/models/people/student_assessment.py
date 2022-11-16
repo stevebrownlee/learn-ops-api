@@ -3,14 +3,13 @@ from django.db import models
 from . import Assessment, StudentAssessmentStatus, NssUser
 
 
-
 class StudentAssessment(models.Model):
     """Model for assessments assigned to a student"""
     student = models.ForeignKey(NssUser, on_delete=models.DO_NOTHING, related_name='assessments')
-    assessment = models.ForeignKey(Assessment, on_delete=models.CASCADE)
+    assessment = models.ForeignKey(Assessment, on_delete=models.CASCADE, related_name='students')
     status = models.ForeignKey(StudentAssessmentStatus, on_delete=models.DO_NOTHING)
     instructor = models.ForeignKey(NssUser, null=True, on_delete=models.SET_NULL, related_name='assignments')
     url = models.CharField(max_length=512, default="")
 
     class Meta:
-       unique_together = (('student', 'assessment',),)
+        unique_together = (('student', 'assessment',),)

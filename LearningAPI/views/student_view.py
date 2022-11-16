@@ -225,7 +225,6 @@ class StudentViewSet(ModelViewSet):
                 except Exception:
                     pass
 
-
             except NssUser.DoesNotExist as ex:
                 return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
