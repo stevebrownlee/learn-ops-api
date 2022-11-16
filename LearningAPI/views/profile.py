@@ -49,7 +49,9 @@ class Profile(ViewSet):
                 usercohort.nss_user = nss_user
                 usercohort.save()
 
-        if personality not in nss_user:
+        try:
+            StudentPersonality.objects.get(student=nss_user)
+        except StudentPersonality.DoesNotExist:
             personality = StudentPersonality()
             personality.briggs_myers_type = ""
             personality.bfi_extraversion = 0
@@ -59,7 +61,6 @@ class Profile(ViewSet):
             personality.bfi_openness = 0
             personality.student = nss_user
             personality.save()
-
 
         if request.auth.user.is_staff is False:
             serializer = ProfileSerializer(nss_user, context={'request': request})
