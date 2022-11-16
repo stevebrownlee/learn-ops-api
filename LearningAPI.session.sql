@@ -9,9 +9,6 @@ SELECT *
 FROM public."LearningAPI_learningrecord";
 
 SELECT *
-FROM public."LearningAPI_LearningRecordEntry";
-
-SELECT *
 FROM public."socialaccount_socialaccount";
 
 SELECT *
@@ -25,59 +22,35 @@ FROM public."authtoken_token";
 
 select * from pg_catalog.pg_tables;
 
-SELECT *
-FROM public."LearningAPI_nssusercohort";
+SELECT * FROM public."LearningAPI_studentpersonality";
 
-INSERT INTO public."LearningAPI_nssusercohort" (cohort_id, nss_user_id)
-VALUES (1, 6);
+INSERT INTO public."LearningAPI_studentpersonality"
+    (student_id, briggs_myers_type,
+        bfi_extraversion, bfi_agreeableness, bfi_conscientiousness,
+        bfi_neuroticism, bfi_openness)
+VALUES
+    (2, 'ENTJ-A', 69, 96, 73, 0, 94);
 
+SELECT * FROM  public."LearningAPI_capstone";
+SELECT * FROM  public."LearningAPI_proposalstatus";
 
-DELETE from public."LearningAPI_nssusercohort"
-where id = 2;
-
-
-INSERT INTO public."LearningAPI_course" (name)
-VALUES ('JavaScript and React');
-
-INSERT INTO public."LearningAPI_book" (name, course_id)
-VALUES ('Bangazon', 1);
-
-
+INSERT INTO public."LearningAPI_capstonetimeline"
+(capstone_id, status_id, date)
+VALUES
+(3, 1, '2022-11-04');
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+INSERT INTO public."LearningAPI_capstone"
+    (proposal_url, repo_url, course_id,
+     student_id, description)
+VALUES
+    (
+        'http://www.claire.com',
+        'http://www.claire.com',
+        3,
+        56,
+        'Client side capstone proposal'
+    );
 
 
 
@@ -106,11 +79,6 @@ FROM "LearningAPI_cohort"
     )
 GROUP BY "LearningAPI_cohort"."id"
 ;
-
-
-
-
-
 
 
 select * from public."LearningAPI_learningrecord";

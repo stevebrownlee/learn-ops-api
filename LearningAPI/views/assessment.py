@@ -1,11 +1,19 @@
+"""Assessment view module"""
+import os
+import requests
+
 from django.http import HttpResponseServerError
 from django.utils.decorators import method_decorator
+
 from rest_framework import permissions, serializers, status
-from rest_framework.viewsets import ViewSet
-from rest_framework.response import Response
+from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.response import Response
+from rest_framework.viewsets import ViewSet
+
 from LearningAPI.decorators import is_instructor
-from LearningAPI.models.people import NssUser, StudentAssessment, StudentAssessmentStatus, Assessment
+from LearningAPI.models.people import (Assessment, NssUser, StudentAssessment,
+                                       StudentAssessmentStatus)
 
 
 class StudentAssessmentPermission(permissions.BasePermission):
@@ -132,6 +140,30 @@ class StudentAssessmentView(ViewSet):
                 # Set new status and save
                 assessment.status = assessment_status
                 assessment.save()
+
+                # Send message to student
+                try:
+                    if assessment.status.status == 'Reviewed and Complete':
+                        headers = {
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        }
+                        channel_payload = {
+                            "text": request.data.get(
+                                "text",
+                                f':fox-yay-woo-hoo: Self-Assessment Review Complete\n\n\n:white_check_mark: Your coaching team just marked {assessment.assessment.name} as completed.\n\nVisit https://learning.nss.team to view your messages.'),
+                            "token": os.getenv("SLACK_BOT_TOKEN"),
+                            # "channel": assessment.student.slack_handle
+                            "channel": 'U03F2SDTS'
+                        }
+
+                        requests.post(
+                            "https://slack.com/api/chat.postMessage",
+                            data=channel_payload,
+                            headers=headers
+                        )
+                except Exception:
+                    pass
+
 
                 return Response(None, status=status.HTTP_204_NO_CONTENT)
             else:

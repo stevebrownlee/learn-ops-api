@@ -53,7 +53,12 @@ pipenv install
     ./seed.sh
     ```
 
-1. Create a Django superuser account with `python manage.py createsuperuser`. This will give you an account with which you can get into the admin site.
+1. For Mac, if you get feedback that `psql command not found`, add the following to your PATH in your shell initialization file _(.bashrc or .zshrc)_. Make sure the version is correct. You may not have version 10 of Postgres.
+    ```
+    /Applications/Postgres.app/Contents/Versions/10/bin
+    ```
+
+2. Create a Django superuser account with `python manage.py createsuperuser`. This will give you an account with which you can get into the admin site.
 
 ## Testing the Installation
 

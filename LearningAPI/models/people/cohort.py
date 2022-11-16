@@ -22,7 +22,7 @@ class Cohort(models.Model):
         """
         try:
             return self.__students
-        except AttributeError as ex:
+        except AttributeError:
             return 0
 
     @students.setter
@@ -38,9 +38,8 @@ class Cohort(models.Model):
         """
         try:
             return self.__instructors
-        except AttributeError as ex:
+        except AttributeError:
             return 0
-
 
     @instructors.setter
     def instructors(self, value):

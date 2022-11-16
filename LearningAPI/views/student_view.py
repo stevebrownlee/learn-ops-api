@@ -1,16 +1,22 @@
 """Student view module"""
+import os
 import statistics
+
+import requests
+from django.db.models import Count, Q
 from django.http import HttpResponseServerError
 from django.utils.decorators import method_decorator
-from django.db.models import Count, Q
 from rest_framework import serializers, status
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+
 from LearningAPI.decorators import is_instructor
-from LearningAPI.models.people import NssUser, Cohort, DailyStatus, OneOnOneNote
-from LearningAPI.models.skill import CoreSkillRecord, LearningRecordEntry, LearningRecord
+from LearningAPI.models.people import (Cohort, DailyStatus, NssUser,
+                                       OneOnOneNote)
+from LearningAPI.models.skill import (CoreSkillRecord, LearningRecord,
+                                      LearningRecordEntry)
 from LearningAPI.views.core_skill_record_view import CoreSkillRecordSerializer
 
 
@@ -193,12 +199,31 @@ class StudentViewSet(ModelViewSet):
 
         if request.method == "POST":
             try:
+                student = NssUser.objects.get(pk=pk)
                 note = OneOnOneNote()
                 note.coach = NssUser.objects.get(user=request.auth.user)
-                note.student = NssUser.objects.get(pk=pk)
+                note.student = student
                 note.notes = request.data["notes"]
-
                 note.save()
+
+                # Send message to student
+                try:
+                    headers = {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    }
+                    channel_payload = {
+                        "text": request.data.get("text", "You just received feedback from one of your coaches.\n\nVisit https://learning.nss.team to view your messages."),
+                        "token": os.getenv("SLACK_BOT_TOKEN"),
+                        "channel": student.slack_handle
+                    }
+
+                    requests.post(
+                        "https://slack.com/api/chat.postMessage",
+                        data=channel_payload,
+                        headers=headers
+                    )
+                except Exception:
+                    pass
 
             except NssUser.DoesNotExist as ex:
                 return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)

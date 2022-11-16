@@ -1,7 +1,9 @@
+"""Chapter note class module"""
 from django.db import models
 
 
 class ChapterNote(models.Model):
+    """Notes for book chapters"""
     user = models.ForeignKey("NssUser", on_delete=models.CASCADE)
     markdown_text = models.TextField()
     chapter = models.ForeignKey("Chapter", on_delete=models.CASCADE)

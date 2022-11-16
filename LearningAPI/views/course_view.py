@@ -1,17 +1,22 @@
 from django.db.models import Count
+from django.utils.decorators import method_decorator
 from django.http import HttpResponseServerError
+
 from rest_framework import serializers, status
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
+
+from LearningAPI.decorators import is_instructor
 from LearningAPI.models.coursework import Course, Book
 
 
 class CourseViewSet(ViewSet):
     """Course view set"""
 
-    permission_classes = (IsAdminUser,)
+    # permission_classes = (IsAdminUser,)
 
+    @method_decorator(is_instructor())
     def create(self, request):
         """Handle POST operations
 
@@ -44,6 +49,7 @@ class CourseViewSet(ViewSet):
         except Exception as ex:
             return HttpResponseServerError(ex)
 
+    @method_decorator(is_instructor())
     def update(self, request, pk=None):
         """Handle PUT requests
 
@@ -63,6 +69,7 @@ class CourseViewSet(ViewSet):
 
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
+    @method_decorator(is_instructor())
     def destroy(self, request, pk=None):
         """Handle DELETE requests for a single item
 
@@ -107,7 +114,6 @@ class BookSerializer(serializers.ModelSerializer):
 class CourseSerializer(serializers.ModelSerializer):
     """JSON serializer"""
     books = BookSerializer(many=True)
-    # books = serializers.SlugRelatedField(many=True, slug_field='name', queryset=Book.objects.all())
 
     class Meta:
         model = Course
