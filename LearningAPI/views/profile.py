@@ -84,10 +84,7 @@ class PersonalitySerializer(serializers.ModelSerializer):
 
     def get_briggs_myers_type(self, obj):
         if obj.briggs_myers_type != '':
-            return {
-                "code": obj.briggs_myers_type,
-                "description": myers_briggs_persona(obj.briggs_myers_type)
-            }
+            return obj.briggs_myers_type
 
         return ""
     class Meta:
