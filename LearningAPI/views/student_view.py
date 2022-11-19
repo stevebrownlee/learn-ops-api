@@ -49,6 +49,20 @@ class StudentViewSet(ModelViewSet):
             except ValueError as ex:
                 student = NssUser.objects.get(slack_handle=pk)
 
+            try:
+                personality = StudentPersonality.objects.get(student=student)
+            except StudentPersonality.DoesNotExist:
+                personality = StudentPersonality()
+                personality.briggs_myers_type = ""
+                personality.bfi_extraversion = 0
+                personality.bfi_agreeableness = 0
+                personality.bfi_conscientiousness = 0
+                personality.bfi_neuroticism = 0
+                personality.bfi_openness = 0
+                personality.student = student
+                personality.save()
+
+
             if request.auth.user == student.user or request.auth.user.is_staff:
                 serializer = StudentSerializer(
                     student, context={'request': request})
@@ -314,10 +328,13 @@ class PersonalitySerializer(serializers.ModelSerializer):
     briggs_myers_type = serializers.SerializerMethodField()
 
     def get_briggs_myers_type(self, obj):
-        return {
-            "code": obj.briggs_myers_type,
-            "description": myers_briggs_persona(obj.briggs_myers_type)
-        }
+        if obj.briggs_myers_type != "":
+            return {
+                "code": obj.briggs_myers_type,
+                "description": myers_briggs_persona(obj.briggs_myers_type)
+            }
+        else:
+            return {}
 
     class Meta:
         model = StudentPersonality
