@@ -171,6 +171,20 @@ class StudentViewSet(ModelViewSet):
             cohort_filter = Cohort.objects.get(pk=cohort)
             students = students.filter(assigned_cohorts__cohort=cohort_filter)
 
+            for student in students:
+                try:
+                    personality = StudentPersonality.objects.get(student=student)
+                except StudentPersonality.DoesNotExist:
+                    personality = StudentPersonality()
+                    personality.briggs_myers_type = ""
+                    personality.bfi_extraversion = 0
+                    personality.bfi_agreeableness = 0
+                    personality.bfi_conscientiousness = 0
+                    personality.bfi_neuroticism = 0
+                    personality.bfi_openness = 0
+                    personality.student = student
+                    personality.save()
+
             if feedback is not None and feedback == 'true':
                 serializer = MicroStudents(
                     students, many=True, context={'request': request})
