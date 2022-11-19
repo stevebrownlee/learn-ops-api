@@ -54,7 +54,7 @@ class StudentAssessmentView(ViewSet):
             assmt.type = request.data["type"]
 
             assmt.save()
-            serializer = AssessmentSerializer(assmt, context={'request': request})
+            serializer = AssessmentSerializer(assmt)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         else:
@@ -65,7 +65,7 @@ class StudentAssessmentView(ViewSet):
 
             try:
                 student_assessment.save()
-                serializer = StudentAssessmentSerializer(student_assessment, context={'request': request})
+                serializer = StudentAssessmentSerializer(student_assessment)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             except Exception as ex:
                 return Response({"reason": ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
@@ -77,14 +77,14 @@ class StudentAssessmentView(ViewSet):
             student_assessments = StudentAssessment.objects.filter(student=student)
 
             try:
-                serializer = StudentAssessmentSerializer(student_assessments, many=True, context={'request': request})
+                serializer = StudentAssessmentSerializer(student_assessments, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             except Exception as ex:
                 return Response({"reason": ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
 
         else:
             assessments = Assessment.objects.all()
-            serializer = AssessmentSerializer(assessments, many=True, context={'request': request})
+            serializer = AssessmentSerializer(assessments, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
 
     def retrieve(self, request, pk=None):
@@ -97,7 +97,7 @@ class StudentAssessmentView(ViewSet):
             assessment = StudentAssessment.objects.get(pk=pk)
 
             if request.auth.user == assessment.student or request.auth.user.is_staff:
-                serializer = StudentAssessmentSerializer(assessment, context={'request': request})
+                serializer = StudentAssessmentSerializer(assessment)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:
                 return Response(
@@ -202,28 +202,19 @@ class AssessmentSerializer(serializers.ModelSerializer):
 
 class StudentAssessmentSerializer(serializers.ModelSerializer):
     """JSON serializer"""
-    student = serializers.SerializerMethodField()
     assessment = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
 
     def get_assessment(self, obj):
         """Return just the name of the assessment"""
         return {
-            "id": obj.id,
+            "id": obj.assessment.id,
             "name": obj.assessment.name
         }
 
     def get_status(self, obj):
         """Return the status of assessment"""
         return obj.status.status
-
-    def get_student(self, obj):
-        """Return the student full name"""
-        return {
-            "id": obj.student.user.id,
-            "name": f'{obj.student.user.first_name} {obj.student.user.last_name}'
-        }
-
     class Meta:
         model = StudentAssessment
-        fields = ('id', 'student', 'assessment', 'status', 'url', )
+        fields = ('id', 'assessment', 'status', 'url', )

@@ -8,8 +8,6 @@ from LearningAPI.models.people.student_personality import StudentPersonality
 from LearningAPI.views.student_view import SingleStudent, StudentNoteSerializer
 
 
-
-
 class Profile(ViewSet):
     """Person can see profile information"""
 
@@ -63,7 +61,8 @@ class Profile(ViewSet):
             personality.save()
 
         if request.auth.user.is_staff is False:
-            serializer = ProfileSerializer(nss_user, context={'request': request})
+            serializer = ProfileSerializer(
+                nss_user, context={'request': request})
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             profile = {}
@@ -80,9 +79,21 @@ class Profile(ViewSet):
 
 class PersonalitySerializer(serializers.ModelSerializer):
     """Serializer for a student's personality info"""
+    briggs_myers_type = serializers.SerializerMethodField()
+
+    def get_briggs_myers_type(self, obj):
+        return {
+            "code": obj.briggs_myers_type,
+            "description": myers_briggs_persona(obj.briggs_myers_type)
+        }
     class Meta:
         model = StudentPersonality
-        fields = '__all__'
+        fields = (
+            'briggs_myers_type', 'bfi_extraversion',
+            'bfi_agreeableness', 'bfi_conscientiousness',
+            'bfi_neuroticism', 'bfi_openness',
+        )
+
 
 class ProfileSerializer(serializers.ModelSerializer):
     """JSON serializer"""
@@ -115,4 +126,3 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = NssUser
         fields = ('id', 'name', 'email', 'github', 'staff', 'slack_handle',
                   'cohorts', 'feedback', 'repos', 'personality')
-

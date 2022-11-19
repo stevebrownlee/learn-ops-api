@@ -1,18 +1,10 @@
 """Student view module"""
-import statistics
 from django.http import HttpResponseServerError
-from django.utils.decorators import method_decorator
-from django.db.models import Count, Q
-from rest_framework import serializers, status
-from rest_framework.decorators import action
-from rest_framework.pagination import PageNumberPagination
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from LearningAPI.decorators import is_instructor
-from LearningAPI.models.people import NssUser, Cohort, DailyStatus, OneOnOneNote
+from LearningAPI.models.people import NssUser
 from LearningAPI.models.people.student_personality import StudentPersonality
-from LearningAPI.models.skill import CoreSkillRecord, LearningRecordEntry, LearningRecord
-from LearningAPI.views.core_skill_record_view import CoreSkillRecordSerializer
 
 
 class StudentPersonalityViewSet(ModelViewSet):

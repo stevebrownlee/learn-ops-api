@@ -25,12 +25,16 @@ select * from pg_catalog.pg_tables;
 SELECT * FROM public."LearningAPI_studentpersonality";
 DELETE FROM public."LearningAPI_studentpersonality";
 
+UPDATE public."LearningAPI_studentpersonality"
+    SET briggs_myers_type = 'INTJ'
+    WHERE student_id = 56;
+
 INSERT INTO public."LearningAPI_studentpersonality"
     (student_id, briggs_myers_type,
         bfi_extraversion, bfi_agreeableness, bfi_conscientiousness,
         bfi_neuroticism, bfi_openness)
 VALUES
-    (2, 'ENTJ-A', 69, 96, 73, 0, 94);
+    (56, 'ENTJ-A', 69, 96, 73, 0, 94);
 
 SELECT * FROM  public."LearningAPI_capstone";
 SELECT * FROM  public."LearningAPI_proposalstatus";
