@@ -235,4 +235,7 @@ PERSONALITY_TYPES = {
 }
 
 def myers_briggs_persona(code):
+    if code == '':
+        return code
+
     return PERSONALITY_TYPES[code[0:4]]

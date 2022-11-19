@@ -3,9 +3,10 @@ from rest_framework import serializers, status
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from allauth.socialaccount.models import SocialAccount
-from LearningAPI.models.people import Cohort, NssUserCohort, NssUser, nssuser
+from LearningAPI.models.people import Cohort, NssUserCohort, NssUser
 from LearningAPI.models.people.student_personality import StudentPersonality
-from LearningAPI.views.student_view import SingleStudent, StudentNoteSerializer
+from LearningAPI.views.student_view import StudentNoteSerializer
+from .personality import myers_briggs_persona
 
 
 class Profile(ViewSet):
@@ -82,10 +83,13 @@ class PersonalitySerializer(serializers.ModelSerializer):
     briggs_myers_type = serializers.SerializerMethodField()
 
     def get_briggs_myers_type(self, obj):
-        return {
-            "code": obj.briggs_myers_type,
-            "description": myers_briggs_persona(obj.briggs_myers_type)
-        }
+        if obj.briggs_myers_type != '':
+            return {
+                "code": obj.briggs_myers_type,
+                "description": myers_briggs_persona(obj.briggs_myers_type)
+            }
+
+        return ""
     class Meta:
         model = StudentPersonality
         fields = (
