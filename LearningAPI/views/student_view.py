@@ -1,6 +1,7 @@
 """Student view module"""
 import os
 import statistics
+import logging
 
 import requests
 from django.db.models import Count, Q
@@ -42,11 +43,13 @@ class StudentViewSet(ModelViewSet):
         Returns:
             Response -- JSON serialized instance
         """
+        logger = logging.getLogger("LearningPlatform")
+
         try:
             try:
                 student = NssUser.objects.get(pk=pk)
 
-            except ValueError as ex:
+            except ValueError:
                 student = NssUser.objects.get(slack_handle=pk)
 
             try:
@@ -61,7 +64,8 @@ class StudentViewSet(ModelViewSet):
                 personality.bfi_openness = 0
                 personality.student = student
                 personality.save()
-
+            except Exception as ex:
+                logger.exception(getattr(ex, 'message', repr(ex)))
 
             if request.auth.user == student.user or request.auth.user.is_staff:
                 serializer = StudentSerializer(
@@ -72,12 +76,13 @@ class StudentViewSet(ModelViewSet):
                     {"message": "You are not authorized to view this student profile."},
                     status=status.HTTP_401_UNAUTHORIZED)
 
-        except NssUser.DoesNotExist as ex:
+        except NssUser.DoesNotExist:
             return Response(
                 {"message": "That student does not exist."},
                 status=status.HTTP_404_NOT_FOUND)
 
         except Exception as ex:
+            logger.exception(getattr(ex, 'message', repr(ex)))
             return HttpResponseServerError(ex)
 
     def update(self, request, pk=None):
