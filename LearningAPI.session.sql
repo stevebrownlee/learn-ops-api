@@ -26,7 +26,7 @@ SELECT * FROM public."LearningAPI_studentpersonality";
 DELETE FROM public."LearningAPI_studentpersonality";
 
 UPDATE public."LearningAPI_studentpersonality"
-    SET briggs_myers_type = 'INTJ'
+    SET briggs_myers_type = 'ENFP'
     WHERE student_id = 56;
 
 INSERT INTO public."LearningAPI_studentpersonality"
