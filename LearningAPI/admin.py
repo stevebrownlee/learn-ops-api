@@ -2,12 +2,16 @@ from django.contrib import admin
 
 # Register your models here.
 from .models.people import NssUser, Assessment, Cohort
-from .models.coursework import Course
+from .models.coursework import Course, ProposalStatus
 
 from .models.skill import (
     CoreSkill, CoreSkillRecord,
     LearningRecordEntry, LearningRecord, LearningWeight,
 )
+
+@admin.register(ProposalStatus)
+class ProposalStatusAdmin(admin.ModelAdmin):
+    list_display = ['status', ]
 
 @admin.register(Cohort)
 class CohortAdmin(admin.ModelAdmin):
