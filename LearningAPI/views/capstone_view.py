@@ -1,3 +1,7 @@
+import os
+import requests
+import logging
+
 from rest_framework import serializers
 from rest_framework import status, permissions
 from rest_framework.viewsets import ViewSet
@@ -18,6 +22,7 @@ class CapstonePermission(permissions.BasePermission):
         else:
             return False
 
+
 class CapstoneViewSet(ViewSet):
     """Capstone view set"""
 
@@ -33,7 +38,7 @@ class CapstoneViewSet(ViewSet):
             course = Course.objects.get(pk=request.data.get('course', None))
         except Course.DoesNotExist:
             return Response(
-                { 'message': 'Could not find any matches courses'},
+                { 'message': 'Could not find any matching courses'},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
@@ -45,7 +50,31 @@ class CapstoneViewSet(ViewSet):
         proposal.repo_url = request.data.get("repoURL", "")
         proposal.save()
 
-        return Response({}, status=status.HTTP_200_OK)
+        # Send message to instructors
+        try:
+            slack_channel = student.assigned_cohorts.order_by("-id").first().cohort.slack_channel
+
+            headers = {
+                "Content-Type": "application/x-www-form-urlencoded"
+            }
+
+            channel_payload = {
+                "text": f"{student} has submitted their {course} capstone proposal",
+                "token": os.getenv("SLACK_BOT_TOKEN"),
+                "channel": slack_channel
+            }
+
+            requests.post(
+                "https://slack.com/api/chat.postMessage",
+                data=channel_payload,
+                headers=headers
+            )
+        except Exception as ex:
+            logger = logging.getLogger("LearningPlatform")
+            logger.exception(getattr(ex, 'message', repr(ex)))
+            return Response({'message': 'Proposal saved but unable to send Slack message'}, status=status.HTTP_201_CREATED)
+
+        return Response({}, status=status.HTTP_201_CREATED)
 
     def retrieve(self, request, pk=None):
         """Handle GET requests for single item
@@ -65,7 +94,7 @@ class CapstoneViewSet(ViewSet):
             Response -- Empty body with 204 status code
         """
 
-        return Response({}, status=status.HTTP_200_OK)
+        return Response({}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def destroy(self, request, pk=None):
         """Handle DELETE requests for a single item
@@ -73,7 +102,7 @@ class CapstoneViewSet(ViewSet):
         Returns:
             Response -- 200, 404, or 500 status code
         """
-        return Response({}, status=status.HTTP_200_OK)
+        return Response({}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def list(self, request):
         """Handle GET requests for all items

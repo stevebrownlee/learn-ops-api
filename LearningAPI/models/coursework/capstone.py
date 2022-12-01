@@ -7,4 +7,4 @@ class Capstone(models.Model):
     course = models.ForeignKey("Course", on_delete=models.DO_NOTHING)
     proposal_url = models.CharField(max_length=256)
     repo_url = models.CharField(max_length=256, blank=True, null=True)
-    description = models.CharField(max_length=256)
+    description = models.TextField()

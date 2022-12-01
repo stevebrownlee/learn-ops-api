@@ -47,10 +47,16 @@ jobs:
         with:
           python-version: 3.8
 
-      - name: Install dependecies
+      - name: Install dependencies
         uses: VaultVulp/action-pipenv@v2.0.1
         with:
           command: install
+
+      - name: Migrate
+        uses: VaultVulp/action-pipenv@v2.0.1
+        with:
+          command: run migrate
+
 
       - name: Restart Django
         run: sudo service learning restart

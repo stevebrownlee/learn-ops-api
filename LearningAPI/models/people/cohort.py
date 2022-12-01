@@ -13,6 +13,9 @@ class Cohort(models.Model):
     def __repr__(self) -> str:
         return self.name
 
+    def __str__(self) -> str:
+        return self.name
+
     @property
     def students(self):
         """students property, which will be calculated per cohort

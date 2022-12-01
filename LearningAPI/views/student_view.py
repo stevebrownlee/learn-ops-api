@@ -462,5 +462,3 @@ class SingleStudent(serializers.ModelSerializer):
         model = NssUser
         fields = ('id', 'name', 'email', 'github', 'staff', 'slack_handle',
                   'cohorts', 'feedback', 'repos', 'score',)
-
-
