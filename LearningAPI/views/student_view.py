@@ -14,6 +14,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from LearningAPI.decorators import is_instructor
+from LearningAPI.models.coursework import Capstone
 from LearningAPI.models.people import (Cohort, DailyStatus, NssUser,
                                        OneOnOneNote, StudentPersonality)
 from LearningAPI.models.skill import (CoreSkillRecord, LearningRecord,
@@ -376,6 +377,14 @@ class StudentSerializer(serializers.ModelSerializer):
     score = serializers.SerializerMethodField()
     core_skill_records = serializers.SerializerMethodField()
     personality = PersonalitySerializer(many=False)
+    pending_proposal = serializers.SerializerMethodField()
+
+    def get_pending_proposal(self, obj):
+        pending = Capstone.objects.filter(student=obj).annotate(
+            status_count=Count("statuses")
+        ).filter(status_count=0)
+        response = pending.count() > 0
+        return response
 
     def get_score(self, obj):
         return student_score(self, obj)
@@ -402,7 +411,9 @@ class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = NssUser
         fields = ('id', 'name', 'email', 'github', 'score', 'core_skill_records',
-                  'cohorts', 'feedback', 'records', 'statuses', 'personality')
+                  'cohorts', 'feedback', 'records', 'statuses', 'personality',
+                  'capstones', 'pending_proposal'
+                  )
 
 
 class MicroStudents(serializers.ModelSerializer):
@@ -410,6 +421,14 @@ class MicroStudents(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
     score = serializers.SerializerMethodField()
     personality = serializers.SerializerMethodField()
+    pending_proposal = serializers.SerializerMethodField()
+
+    def get_pending_proposal(self, obj):
+        pending = Capstone.objects.filter(student=obj).annotate(
+            status_count=Count("statuses")
+        ).filter(status_count=0)
+        response = pending.count() > 0
+        return response
 
     def get_score(self, obj):
         return student_score(self, obj)
@@ -425,7 +444,7 @@ class MicroStudents(serializers.ModelSerializer):
 
     class Meta:
         model = NssUser
-        fields = ('id', 'name', 'score', 'personality')
+        fields = ('id', 'name', 'score', 'personality', 'pending_proposal',)
 
 
 class SingleStudent(serializers.ModelSerializer):

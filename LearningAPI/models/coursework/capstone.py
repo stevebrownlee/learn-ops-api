@@ -8,3 +8,6 @@ class Capstone(models.Model):
     proposal_url = models.CharField(max_length=256)
     repo_url = models.CharField(max_length=256, blank=True, null=True)
     description = models.TextField()
+
+    def __str__(self) -> str:
+        return self.course.name

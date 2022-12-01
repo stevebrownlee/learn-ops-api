@@ -2,12 +2,17 @@ from django.contrib import admin
 
 # Register your models here.
 from .models.people import NssUser, Assessment, Cohort, NssUserCohort
-from .models.coursework import Course, ProposalStatus, Capstone
+from .models.coursework import Course, ProposalStatus, Capstone, CapstoneTimeline
 
 from .models.skill import (
     CoreSkill, CoreSkillRecord,
     LearningRecordEntry, LearningRecord, LearningWeight,
 )
+
+@admin.register(CapstoneTimeline)
+class CapstoneTimelineAdmin(admin.ModelAdmin):
+    """For assigning students to cohorts"""
+    list_display = ('capstone', 'status', 'student')
 
 @admin.register(NssUserCohort)
 class NssUserCohortAdmin(admin.ModelAdmin):
