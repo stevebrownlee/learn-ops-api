@@ -8,7 +8,7 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 
 from ..models.coursework import Capstone, Course, CapstoneTimeline
-from ..models.people import NssUser
+from ..models.people import NssUser, Cohort
 
 
 class CapstonePermission(permissions.BasePermission):
@@ -111,12 +111,19 @@ class CapstoneViewSet(ViewSet):
             Response -- JSON serialized array
         """
         student_id = request.query_params.get("studentId", None)
-        student = NssUser.objects.get(pk=student_id)
+        cohort_id = request.query_params.get("cohortId", None)
 
-        proposals = Capstone.objects.filter(student=student)
-        serializer = CapstoneSerializer(proposals, many=True)
+        if cohort_id is not None:
+            cohort = Cohort.objects.get(pk=cohort_id)
+            proposals = Capstone.objects.filter(student__assigned_cohorts__cohort=cohort)
+            serializer = CapstoneSerializer(proposals, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        if student_id is not None:
+            student = NssUser.objects.get(pk=student_id)
+            proposals = Capstone.objects.filter(student=student)
+            serializer = CapstoneSerializer(proposals, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class CapstoneStatusSerializer(serializers.ModelSerializer):

@@ -61,10 +61,15 @@ class CohortViewSet(ViewSet):
             Response -- JSON serialized instance
         """
         try:
-            cohort = Cohort.objects.annotate(students=Count(
-                'members', filter=Q(members__nss_user__user__is_staff=False)),
+            cohort = Cohort.objects.annotate(
+                students=Count(
+                    'members',
+                    filter=Q(members__nss_user__user__is_staff=False)
+                ),
                 instructors=Count(
-                'members', filter=Q(members__nss_user__user__is_staff=True))
+                    'members',
+                    filter=Q(members__nss_user__user__is_staff=True)
+                )
             ).get(pk=pk)
 
             serializer = CohortSerializer(cohort, context={'request': request})
