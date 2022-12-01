@@ -11,3 +11,11 @@ class Capstone(models.Model):
 
     def __str__(self) -> str:
         return self.course.name
+
+    @property
+    def status_count(self):
+        return self.__status_count
+
+    @status_count.setter
+    def status_count(self, value):
+        self.__status_count = value

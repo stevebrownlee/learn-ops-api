@@ -14,7 +14,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from LearningAPI.decorators import is_instructor
-from LearningAPI.models.coursework import Capstone
+from LearningAPI.models.coursework import Capstone, CapstoneTimeline, ProposalStatus
 from LearningAPI.models.people import (Cohort, DailyStatus, NssUser,
                                        OneOnOneNote, StudentPersonality)
 from LearningAPI.models.skill import (CoreSkillRecord, LearningRecord,
@@ -377,14 +377,6 @@ class StudentSerializer(serializers.ModelSerializer):
     score = serializers.SerializerMethodField()
     core_skill_records = serializers.SerializerMethodField()
     personality = PersonalitySerializer(many=False)
-    pending_proposal = serializers.SerializerMethodField()
-
-    def get_pending_proposal(self, obj):
-        pending = Capstone.objects.filter(student=obj).annotate(
-            status_count=Count("statuses")
-        ).filter(status_count=0)
-        response = pending.count() > 0
-        return response
 
     def get_score(self, obj):
         return student_score(self, obj)
@@ -412,7 +404,7 @@ class StudentSerializer(serializers.ModelSerializer):
         model = NssUser
         fields = ('id', 'name', 'email', 'github', 'score', 'core_skill_records',
                   'cohorts', 'feedback', 'records', 'statuses', 'personality',
-                  'capstones', 'pending_proposal'
+                  'capstones',
                   )
 
 
@@ -424,11 +416,33 @@ class MicroStudents(serializers.ModelSerializer):
     pending_proposal = serializers.SerializerMethodField()
 
     def get_pending_proposal(self, obj):
-        pending = Capstone.objects.filter(student=obj).annotate(
-            status_count=Count("statuses")
-        ).filter(status_count=0)
-        response = pending.count() > 0
-        return response
+        # Three stages - "submitted", "reviewed", "approved"
+        capstones = Capstone.objects.filter(student=obj).annotate(
+            status_count=Count("statuses"),
+            approved=Count(
+                    'statuses',
+                    filter=Q(statuses__status__status="Approved")
+                )
+        )
+
+        capstone_statuses = []
+
+        for capstone in capstones:
+            response = "unknown"
+
+            if capstone.status_count == 0:
+                response = "submitted"
+            elif capstone.status_count > 0 and capstone.approved == 0:
+                response = "reviewed"
+            elif capstone.status_count > 0 and capstone.approved == 1:
+                response = "approved"
+
+            capstone_statuses.append({
+                "id": capstone.id,
+                "status": response
+            })
+
+        return capstone_statuses
 
     def get_score(self, obj):
         return student_score(self, obj)
