@@ -162,9 +162,15 @@ class CohortViewSet(ViewSet):
             member = None
 
             try:
+                user_type = request.query_params.get("userType", None)
+
+                if user_type is not None and user_type == "instructor":
+                    user_id = request.auth.user.id
+                else:
+                    user_id = int(request.data["person_id"])
+
                 cohort = Cohort.objects.get(pk=pk)
-                member = NssUser.objects.get(
-                    pk=int(request.data["person_id"]))
+                member = NssUser.objects.get(pk=user_id)
                 NssUserCohort.objects.get(cohort=cohort, nss_user=member)
 
                 return Response(
@@ -176,8 +182,8 @@ class CohortViewSet(ViewSet):
                 relationship = NssUserCohort()
                 relationship.cohort = cohort
                 relationship.nss_user = member
-
                 relationship.save()
+
             except Cohort.DoesNotExist as ex:
                 return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
