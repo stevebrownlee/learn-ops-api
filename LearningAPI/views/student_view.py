@@ -14,7 +14,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from LearningAPI.decorators import is_instructor
-from LearningAPI.models.coursework import Capstone, CapstoneTimeline, ProposalStatus
+from LearningAPI.models.coursework import Capstone
 from LearningAPI.models.people import (Cohort, DailyStatus, NssUser,
                                        OneOnOneNote, StudentPersonality)
 from LearningAPI.models.skill import (CoreSkillRecord, LearningRecord,
@@ -271,7 +271,7 @@ class StudentViewSet(ModelViewSet):
         return Response({'message': 'Unsupported HTTP method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
-def student_score(self, obj):
+def student_score(obj):
     """Return total learning score"""
 
     # First get the total of the student's technical objectives
@@ -288,8 +288,6 @@ def student_score(self, obj):
     core_skill_records = CoreSkillRecord.objects.filter(
         student=obj).order_by("pk")
     scores = [record.level for record in core_skill_records]
-    # for record in core_skill_records:
-    #     scores.append(record.level)
 
     try:
         # Hannah and I did this on a Monday morning, so it may be the wrong
@@ -379,7 +377,7 @@ class StudentSerializer(serializers.ModelSerializer):
     personality = PersonalitySerializer(many=False)
 
     def get_score(self, obj):
-        return student_score(self, obj)
+        return student_score(obj)
 
     def get_records(self, obj):
         records = LearningRecord.objects.filter(
@@ -413,39 +411,39 @@ class MicroStudents(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
     score = serializers.SerializerMethodField()
     personality = serializers.SerializerMethodField()
-    pending_proposal = serializers.SerializerMethodField()
+    proposals = serializers.SerializerMethodField()
 
-    def get_pending_proposal(self, obj):
+    def get_proposals(self, obj):
         # Three stages - "submitted", "reviewed", "approved"
-        capstones = Capstone.objects.filter(student=obj).annotate(
+        proposals = Capstone.objects.filter(student=obj).annotate(
             status_count=Count("statuses"),
             approved=Count(
-                    'statuses',
-                    filter=Q(statuses__status__status="Approved")
-                )
+                'statuses',
+                filter=Q(statuses__status__status="Approved")
+            )
         )
 
-        capstone_statuses = []
+        proposal_statuses = []
 
-        for capstone in capstones:
-            response = "unknown"
+        for proposal in proposals:
+            proposal_status = ""
 
-            if capstone.status_count == 0:
-                response = "submitted"
-            elif capstone.status_count > 0 and capstone.approved == 0:
-                response = "reviewed"
-            elif capstone.status_count > 0 and capstone.approved == 1:
-                response = "approved"
+            if proposal.status_count == 0:
+                proposal_status = "submitted"
+            elif proposal.status_count > 0 and proposal.approved == 0:
+                proposal_status = "reviewed"
+            elif proposal.status_count > 0 and proposal.approved == 1:
+                proposal_status = "approved"
 
-            capstone_statuses.append({
-                "id": capstone.id,
-                "status": response
+            proposal_statuses.append({
+                "id": proposal.id,
+                "status": proposal_status
             })
 
-        return capstone_statuses
+        return proposal_statuses
 
     def get_score(self, obj):
-        return student_score(self, obj)
+        return student_score(obj)
 
     def get_personality(self, obj):
         if obj.personality.briggs_myers_type != '':
@@ -458,7 +456,7 @@ class MicroStudents(serializers.ModelSerializer):
 
     class Meta:
         model = NssUser
-        fields = ('id', 'name', 'score', 'personality', 'pending_proposal',)
+        fields = ('id', 'name', 'score', 'personality', 'proposals',)
 
 
 class SingleStudent(serializers.ModelSerializer):
@@ -472,9 +470,9 @@ class SingleStudent(serializers.ModelSerializer):
     score = serializers.SerializerMethodField()
 
     def get_score(self, obj):
-        return student_score(self, obj)
+        return student_score(obj)
 
-    def get_staff(self, obj):
+    def get_staff(self):
         return False
 
     def get_github(self, obj):

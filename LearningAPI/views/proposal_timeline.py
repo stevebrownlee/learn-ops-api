@@ -13,7 +13,7 @@ class TimelineSerializer(serializers.ModelSerializer):
 class TimelinePermission(permissions.BasePermission):
     """Custom permissions for assessment status view"""
     def has_permission(self, request, view):
-        if view.action in ['create', 'retrieve', 'list']:
+        if view.action in ['create', 'retrieve', 'list', 'destroy']:
             return request.auth.user.is_staff
 
         return False
