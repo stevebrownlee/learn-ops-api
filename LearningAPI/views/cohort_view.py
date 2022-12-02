@@ -126,6 +126,8 @@ class CohortViewSet(ViewSet):
 
             # Fuzzy search on `q` param present
             search_terms = self.request.query_params.get('q', None)
+            limit = self.request.query_params.get('limit', None)
+
             if search_terms != None:
                 for letter in list(search_terms):
                     cohorts = cohorts.filter(name__icontains=letter)
@@ -137,6 +139,9 @@ class CohortViewSet(ViewSet):
             cohorts = cohorts.annotate(
                 students=Count('members', filter=Q(members__nss_user__user__is_staff=False))
             ).all().order_by('-pk')
+
+            if limit is not None:
+                cohorts = cohorts.all()[0:int(limit)]
 
             serializer = CohortSerializer(
                 cohorts, many=True, context={'request': request})
