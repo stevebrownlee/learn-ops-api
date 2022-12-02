@@ -26,6 +26,17 @@ class Cohort(models.Model):
             })
         return coaches
 
+    @property
+    def is_instructor(self):
+        try:
+            return self.__is_instructor
+        except AttributeError:
+            return False
+
+    @is_instructor.setter
+    def is_instructor(self, value):
+        self.__is_instructor = value
+
 
 
     @property

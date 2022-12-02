@@ -1,4 +1,5 @@
-from django.db.models import Count, Q
+from django.db.models import Count, Q, Case, When
+from django.db.models.fields import BooleanField
 from django.db import IntegrityError
 from django.http import HttpResponseServerError
 from rest_framework import serializers, status
@@ -137,8 +138,11 @@ class CohortViewSet(ViewSet):
                 return Response(serializer.data, status=status.HTTP_200_OK)
 
             cohorts = cohorts.annotate(
-                students=Count('members', filter=Q(members__nss_user__user__is_staff=False))
+                students=Count('members', filter=Q(members__nss_user__user__is_staff=False)),
+                is_instructor=Count('members', filter=Q(members__nss_user__user=request.auth.user)),
             ).all().order_by('-pk')
+
+
 
             if limit is not None:
                 cohorts = cohorts.all()[0:int(limit)]
@@ -186,10 +190,16 @@ class CohortViewSet(ViewSet):
             return Response({'message': 'User assigned to cohort'}, status=status.HTTP_201_CREATED)
 
         elif request.method == "DELETE":
+            user_type = request.query_params.get("userType", None)
+
+            if user_type is not None and user_type == "instructor":
+                user_id = request.auth.user.id
+            else:
+                user_id = int(request.data["student_id"])
+
             try:
                 cohort = Cohort.objects.get(pk=pk)
-                member = NssUser.objects.get(
-                    pk=int(request.data["student_id"]))
+                member = NssUser.objects.get(pk=user_id)
                 rel = NssUserCohort.objects.get(cohort=cohort, nss_user=member)
                 rel.delete()
 
@@ -224,4 +234,4 @@ class CohortSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cohort
         fields = ('id', 'name', 'slack_channel', 'start_date', 'end_date', 'coaches',
-                  'break_start_date', 'break_end_date', 'students')
+                  'break_start_date', 'break_end_date', 'students', 'is_instructor', )
