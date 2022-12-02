@@ -472,7 +472,7 @@ class SingleStudent(serializers.ModelSerializer):
     def get_score(self, obj):
         return student_score(obj)
 
-    def get_staff(self):
+    def get_staff(self, obj):
         return False
 
     def get_github(self, obj):

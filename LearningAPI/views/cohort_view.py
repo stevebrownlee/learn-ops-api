@@ -65,10 +65,6 @@ class CohortViewSet(ViewSet):
                 students=Count(
                     'members',
                     filter=Q(members__nss_user__user__is_staff=False)
-                ),
-                instructors=Count(
-                    'members',
-                    filter=Q(members__nss_user__user__is_staff=True)
                 )
             ).get(pk=pk)
 
@@ -139,11 +135,8 @@ class CohortViewSet(ViewSet):
                 return Response(serializer.data, status=status.HTTP_200_OK)
 
             cohorts = cohorts.annotate(
-                students=Count('members', filter=Q(
-                    members__nss_user__user__is_staff=False)),
-                instructors=Count('members', filter=Q(
-                    members__nss_user__user__is_staff=True))
-            ).all().order_by('pk')
+                students=Count('members', filter=Q(members__nss_user__user__is_staff=False))
+            ).all().order_by('-pk')
 
             serializer = CohortSerializer(
                 cohorts, many=True, context={'request': request})
@@ -225,5 +218,5 @@ class CohortSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cohort
-        fields = ('id', 'name', 'slack_channel', 'start_date', 'end_date',
-                  'break_start_date', 'break_end_date', 'students', 'instructors')
+        fields = ('id', 'name', 'slack_channel', 'start_date', 'end_date', 'coaches',
+                  'break_start_date', 'break_end_date', 'students')
