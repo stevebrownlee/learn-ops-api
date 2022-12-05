@@ -1,5 +1,4 @@
-from django.db.models import Count, Q, Case, When
-from django.db.models.fields import BooleanField
+from django.db.models import Count, Q
 from django.db import IntegrityError
 from django.http import HttpResponseServerError
 from rest_framework import serializers, status
@@ -38,8 +37,8 @@ class CohortViewSet(ViewSet):
         cohort.slack_channel = request.data["slackChannel"]
         cohort.start_date = request.data["startDate"]
         cohort.end_date = request.data["endDate"]
-        cohort.break_start_date = request.data["breakStartDate"]
-        cohort.break_end_date = request.data["breakEndDate"]
+        cohort.break_start_date = '2022-01-01'
+        cohort.break_end_date = '2022-01-01'
 
         try:
             cohort.save()
@@ -129,7 +128,7 @@ class CohortViewSet(ViewSet):
             search_terms = self.request.query_params.get('q', None)
             limit = self.request.query_params.get('limit', None)
 
-            if search_terms != None:
+            if search_terms is not None:
                 for letter in list(search_terms):
                     cohorts = cohorts.filter(name__icontains=letter)
 
@@ -142,10 +141,8 @@ class CohortViewSet(ViewSet):
                 is_instructor=Count('members', filter=Q(members__nss_user__user=request.auth.user)),
             ).all().order_by('-pk')
 
-
-
             if limit is not None:
-                cohorts = cohorts.all()[0:int(limit)]
+                cohorts = cohorts.order_by("-start_date")[0:int(limit)]
 
             serializer = CohortSerializer(
                 cohorts, many=True, context={'request': request})
@@ -160,17 +157,29 @@ class CohortViewSet(ViewSet):
         if request.method == "POST":
             cohort = None
             member = None
+            user_type = request.query_params.get("userType", None)
 
             try:
-                user_type = request.query_params.get("userType", None)
 
                 if user_type is not None and user_type == "instructor":
                     user_id = request.auth.user.id
+
+                    try:
+                        member = NssUser.objects.get(pk=user_id)
+                        NssUserCohort.objects.get(nss_user=member)
+
+                        return Response(
+                            {'message': 'Instructor cannot be in more than 1 cohort at a time'},
+                            status=status.HTTP_400_BAD_REQUEST
+                        )
+                    except NssUserCohort.DoesNotExist:
+                        pass
+
                 else:
                     user_id = int(request.data["person_id"])
+                    member = NssUser.objects.get(pk=user_id)
 
                 cohort = Cohort.objects.get(pk=pk)
-                member = NssUser.objects.get(pk=user_id)
                 NssUserCohort.objects.get(cohort=cohort, nss_user=member)
 
                 return Response(
