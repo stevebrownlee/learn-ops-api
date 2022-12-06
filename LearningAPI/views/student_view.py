@@ -14,7 +14,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from LearningAPI.decorators import is_instructor
-from LearningAPI.models.coursework import Capstone, StudentChapter
+from LearningAPI.models.coursework import Capstone, StudentProject
 from LearningAPI.models.people import (Cohort, DailyStatus, NssUser,
                                        OneOnOneNote, StudentPersonality)
 from LearningAPI.models.skill import (CoreSkillRecord, LearningRecord,
@@ -413,18 +413,24 @@ class MicroStudents(serializers.ModelSerializer):
     personality = serializers.SerializerMethodField()
     proposals = serializers.SerializerMethodField()
     book = serializers.SerializerMethodField()
+    core_skill_records = serializers.SerializerMethodField()
+
+    def get_core_skill_records(self, obj):
+        records = CoreSkillRecord.objects.filter(student=obj).order_by("pk")
+        return CoreSkillRecordSerializer(records, many=True).data
 
     def get_book(self, obj):
-        student_chapter = StudentChapter.objects.filter(student=obj).last()
+        student_project = StudentProject.objects.filter(student=obj).last()
 
-        if student_chapter is None:
-            return {}
+        if student_project is None:
+            return {
+                "id": 0,
+                "name": ""
+            }
 
-        chapter = student_chapter.chapter
-        book = chapter.book
         return {
-            "id": book.id,
-            "name": book.name
+            "id": student_project.book.id,
+            "name": student_project.book.name
         }
 
     def get_proposals(self, obj):
@@ -470,7 +476,9 @@ class MicroStudents(serializers.ModelSerializer):
 
     class Meta:
         model = NssUser
-        fields = ('id', 'name', 'score', 'personality', 'proposals', 'book', )
+        fields = ('id', 'name', 'score',
+                  'personality', 'proposals', 'book',
+                  'core_skill_records', )
 
 
 class SingleStudent(serializers.ModelSerializer):

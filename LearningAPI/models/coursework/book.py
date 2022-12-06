@@ -5,3 +5,5 @@ class Book(models.Model):
     name = models.CharField(max_length=75)
     course = models.ForeignKey("Course", on_delete=models.CASCADE, related_name="books")
 
+    def __str__(self) -> str:
+        return self.name

@@ -3,7 +3,7 @@ from rest_framework import serializers, status
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
-from LearningAPI.models.coursework import Chapter, Book, Project
+from LearningAPI.models.coursework import Book, Project
 
 
 class ProjectViewSet(ViewSet):
@@ -106,18 +106,9 @@ class BookSerializer(serializers.ModelSerializer):
         fields = ('id', 'name',)
 
 
-class ChapterSerializer(serializers.ModelSerializer):
-    """JSON serializer"""
-    book = BookSerializer()
-
-    class Meta:
-        model = Chapter
-        fields = ('id', 'name', 'book' )
-
 class ProjectSerializer(serializers.ModelSerializer):
     """JSON serializer"""
-    chapters = ChapterSerializer(many=True)
 
     class Meta:
         model = Project
-        fields = ('id', 'name', 'implementation_url', 'chapters', )
+        fields = ('id', 'name', 'implementation_url', 'book', )

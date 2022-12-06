@@ -3,7 +3,7 @@ from rest_framework import serializers, status
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
-from LearningAPI.models.coursework import Book, Course, Chapter
+from LearningAPI.models.coursework import Book, Course
 
 
 class BookViewSet(ViewSet):
@@ -100,17 +100,10 @@ class BookViewSet(ViewSet):
             return HttpResponseServerError(ex)
 
 
-class ChapterSerializer(serializers.ModelSerializer):
-    """JSON serializer"""
-
-    class Meta:
-        model = Chapter
-        fields = ('id', 'name',)
-
 class BookSerializer(serializers.ModelSerializer):
     """JSON serializer"""
-    chapters = ChapterSerializer(many=True)
 
     class Meta:
         model = Book
-        fields = ('id', 'name', 'chapters', 'course')
+        fields = ('id', 'name', 'course', 'projects')
+        depth = 1

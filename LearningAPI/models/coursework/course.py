@@ -7,14 +7,3 @@ class Course(models.Model):
 
     def __str__(self) -> str:
         return self.name
-
-    @property
-    def chapters(self):
-        try:
-            return self.__chapters
-        except AttributeError:
-            return 0
-
-    @chapters.setter
-    def chapters(self, value):
-        self.__chapters = value
