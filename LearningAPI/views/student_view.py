@@ -425,12 +425,14 @@ class MicroStudents(serializers.ModelSerializer):
         if student_project is None:
             return {
                 "id": 0,
-                "name": ""
+                "name": "",
+                "project": ""
             }
 
         return {
-            "id": student_project.book.id,
-            "name": student_project.book.name
+            "id": student_project.project.book.id,
+            "name": student_project.project.book.name,
+            "project": student_project.project.name
         }
 
     def get_proposals(self, obj):

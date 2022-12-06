@@ -17,8 +17,6 @@ python3 manage.py loaddata assessments
 python3 manage.py loaddata student_assessment_statuses
 python3 manage.py loaddata student_assessments
 python3 manage.py loaddata projects
-python3 manage.py loaddata chapters
-python3 manage.py loaddata chapter_notes
 python3 manage.py loaddata favorited_notes
 python3 manage.py loaddata taxonomy_levels
 python3 manage.py loaddata opportunities
