@@ -10,7 +10,7 @@ from .chapter_objective import ChapterObjective
 from .proposal_status import ProposalStatus
 from .capstone import Capstone
 from .capstone_timeline import CapstoneTimeline
-from .studentproject import StudentProject
+from .student_chapter import StudentChapter
 from .chapter_note import ChapterNote
 from .objective_tag import ObjectiveTag
 from .project_tag import ProjectTag

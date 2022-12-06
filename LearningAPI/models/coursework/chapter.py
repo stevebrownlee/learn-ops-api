@@ -13,3 +13,6 @@ class Chapter(models.Model):
     @learning_objectives.setter
     def learning_objectives(self, value):
         self.__objectives = value
+
+    def __str__(self) -> str:
+        return self.name

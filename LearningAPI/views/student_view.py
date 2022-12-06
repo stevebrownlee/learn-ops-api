@@ -14,7 +14,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from LearningAPI.decorators import is_instructor
-from LearningAPI.models.coursework import Capstone
+from LearningAPI.models.coursework import Capstone, StudentChapter
 from LearningAPI.models.people import (Cohort, DailyStatus, NssUser,
                                        OneOnOneNote, StudentPersonality)
 from LearningAPI.models.skill import (CoreSkillRecord, LearningRecord,
@@ -412,6 +412,20 @@ class MicroStudents(serializers.ModelSerializer):
     score = serializers.SerializerMethodField()
     personality = serializers.SerializerMethodField()
     proposals = serializers.SerializerMethodField()
+    book = serializers.SerializerMethodField()
+
+    def get_book(self, obj):
+        student_chapter = StudentChapter.objects.filter(student=obj).last()
+
+        if student_chapter is None:
+            return {}
+
+        chapter = student_chapter.chapter
+        book = chapter.book
+        return {
+            "id": book.id,
+            "name": book.name
+        }
 
     def get_proposals(self, obj):
         # Three stages - "submitted", "reviewed", "approved"
@@ -456,7 +470,7 @@ class MicroStudents(serializers.ModelSerializer):
 
     class Meta:
         model = NssUser
-        fields = ('id', 'name', 'score', 'personality', 'proposals',)
+        fields = ('id', 'name', 'score', 'personality', 'proposals', 'book', )
 
 
 class SingleStudent(serializers.ModelSerializer):
