@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 
 from LearningAPI.decorators import is_instructor
-from LearningAPI.models.coursework import Course, Book
+from LearningAPI.models.coursework import Course, Book, Project
 
 
 class CourseViewSet(ViewSet):
@@ -103,18 +103,32 @@ class CourseViewSet(ViewSet):
         except Exception as ex:
             return HttpResponseServerError(ex)
 
+class ProjectSerializer(serializers.ModelSerializer):
+    """JSON serializer"""
+
+    class Meta:
+        model = Project
+        fields = ('id', 'name',)
+
 
 class BookSerializer(serializers.ModelSerializer):
     """JSON serializer"""
+    projects = ProjectSerializer(many=True)
 
     class Meta:
         model = Book
-        fields = ('id', 'name',)
+        fields = ('id', 'name', 'projects')
+        depth = 1
+
 
 class CourseSerializer(serializers.ModelSerializer):
     """JSON serializer"""
-    books = BookSerializer(many=True)
+    books = serializers.SerializerMethodField()
+
+    def get_books(self, obj):
+        books = Book.objects.filter(course=obj).order_by("cardinality")
+        return BookSerializer(books, many=True).data
 
     class Meta:
         model = Course
-        fields = ('id', 'name', 'books', 'chapters')
+        fields = ('id', 'name', 'books',)

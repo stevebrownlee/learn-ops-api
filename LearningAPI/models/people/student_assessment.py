@@ -10,6 +10,7 @@ class StudentAssessment(models.Model):
     status = models.ForeignKey(StudentAssessmentStatus, on_delete=models.DO_NOTHING)
     instructor = models.ForeignKey(NssUser, null=True, on_delete=models.SET_NULL, related_name='assignments')
     url = models.CharField(max_length=512, default="")
+    date_created = models.DateField(auto_now=True, auto_now_add=False)
 
     class Meta:
         unique_together = (('student', 'assessment',),)

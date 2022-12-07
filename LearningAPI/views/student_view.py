@@ -14,7 +14,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from LearningAPI.decorators import is_instructor
-from LearningAPI.models.coursework import Capstone, StudentProject
+from LearningAPI.models.coursework import Capstone, StudentProject, Book
 from LearningAPI.models.people import (Cohort, DailyStatus, NssUser,
                                        OneOnOneNote, StudentPersonality)
 from LearningAPI.models.skill import (CoreSkillRecord, LearningRecord,
@@ -423,9 +423,10 @@ class MicroStudents(serializers.ModelSerializer):
         student_project = StudentProject.objects.filter(student=obj).last()
 
         if student_project is None:
+            book = Book.objects.get(course__name__icontains="JavaScript", cardinality=0)
             return {
-                "id": 0,
-                "name": "Book 0",
+                "id": book.id,
+                "name": book.name,
                 "project": ""
             }
 
