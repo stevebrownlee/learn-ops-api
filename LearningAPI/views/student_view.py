@@ -14,7 +14,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from LearningAPI.decorators import is_instructor
-from LearningAPI.models.coursework import Capstone, StudentProject, Book
+from LearningAPI.models.coursework import Capstone, StudentProject, Book, Project
 from LearningAPI.models.people import (Cohort, DailyStatus, NssUser,
                                        OneOnOneNote, StudentPersonality)
 from LearningAPI.models.skill import (CoreSkillRecord, LearningRecord,
@@ -196,6 +196,23 @@ class StudentViewSet(ModelViewSet):
         page = self.paginate_queryset(serializer.data)
         paginated_response = self.get_paginated_response(page)
         return paginated_response
+
+    @method_decorator(is_instructor())
+    @action(methods=['post'], detail=True)
+    def project(self, request, pk):
+        """Add to the list of projects being worked on by student"""
+
+        if request.method == "POST":
+            try:
+                student_project = StudentProject()
+                student_project.student = NssUser.objects.get(user__id=pk)
+                student_project.project = Project.objects.get(pk=int(request.data['projectId']))
+                student_project.save()
+            except Exception as ex:
+                return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+            return Response({'message': 'Success'}, status=status.HTTP_201_CREATED)
+
 
     @method_decorator(is_instructor())
     @action(methods=['post'], detail=True)
