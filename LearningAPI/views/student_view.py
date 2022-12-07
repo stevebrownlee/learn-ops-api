@@ -15,8 +15,9 @@ from rest_framework.viewsets import ModelViewSet
 
 from LearningAPI.decorators import is_instructor
 from LearningAPI.models.coursework import Capstone, StudentProject, Book, Project
-from LearningAPI.models.people import (Cohort, DailyStatus, NssUser,
-                                       OneOnOneNote, StudentPersonality)
+from LearningAPI.models.people import (Cohort, DailyStatus, NssUser, StudentAssessment,
+                                       OneOnOneNote, StudentPersonality, Assessment,
+                                       StudentAssessmentStatus)
 from LearningAPI.models.skill import (CoreSkillRecord, LearningRecord,
                                       LearningRecordEntry)
 from LearningAPI.views.core_skill_record_view import CoreSkillRecordSerializer
@@ -196,6 +197,27 @@ class StudentViewSet(ModelViewSet):
         page = self.paginate_queryset(serializer.data)
         paginated_response = self.get_paginated_response(page)
         return paginated_response
+
+    @method_decorator(is_instructor())
+    @action(methods=['post'], detail=True)
+    def assess(self, request, pk):
+        """Add to the list of projects being worked on by student"""
+
+        if request.method == "POST":
+            try:
+                assessment = Assessment.objects.get(book__id=int(request.data['bookId']))
+
+
+                student_assessment = StudentAssessment()
+                student_assessment.student = NssUser.objects.get(user__id=pk)
+                student_assessment.instructor = NssUser.objects.get(user=request.auth.user)
+                student_assessment.status = StudentAssessmentStatus.objects.get(status="In Progress")
+                student_assessment.assessment = assessment
+                student_assessment.save()
+            except Exception as ex:
+                return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+            return Response({'message': 'Success'}, status=status.HTTP_201_CREATED)
 
     @method_decorator(is_instructor())
     @action(methods=['post'], detail=True)
@@ -431,6 +453,23 @@ class MicroStudents(serializers.ModelSerializer):
     proposals = serializers.SerializerMethodField()
     book = serializers.SerializerMethodField()
     core_skill_records = serializers.SerializerMethodField()
+    on_assessment = serializers.SerializerMethodField()
+
+    def get_on_assessment(self, obj):
+        student_project = StudentProject.objects.filter(student=obj).last()
+
+        if student_project is not None:
+            book = student_project.project.book
+
+            working_on_assessment = True
+            try:
+                StudentAssessment.objects.get(assessment__book=book, student=obj)
+            except StudentAssessment.DoesNotExist:
+                working_on_assessment = False
+
+            return working_on_assessment
+        else:
+            return False
 
     def get_core_skill_records(self, obj):
         records = CoreSkillRecord.objects.filter(student=obj).order_by("pk")
@@ -498,7 +537,7 @@ class MicroStudents(serializers.ModelSerializer):
         model = NssUser
         fields = ('id', 'name', 'score',
                   'personality', 'proposals', 'book',
-                  'core_skill_records', )
+                  'core_skill_records', 'on_assessment')
 
 
 class SingleStudent(serializers.ModelSerializer):

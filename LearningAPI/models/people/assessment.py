@@ -10,6 +10,7 @@ class Assessment(models.Model):
     )
     name = models.CharField(max_length=255)
     source_url = models.CharField(max_length=512)
+    book = models.ForeignKey("Book", on_delete=models.CASCADE, default=1)
     type = models.CharField(
         max_length=8,
         choices=ASSESSMENT_TYPES,
