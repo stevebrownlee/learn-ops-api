@@ -425,7 +425,7 @@ class MicroStudents(serializers.ModelSerializer):
         if student_project is None:
             return {
                 "id": 0,
-                "name": "",
+                "name": "Book 0",
                 "project": ""
             }
 
