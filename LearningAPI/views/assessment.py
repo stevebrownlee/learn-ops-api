@@ -60,7 +60,6 @@ class StudentAssessmentView(ViewSet):
         else:
             student_assessment = StudentAssessment()
             student_assessment.student = NssUser.objects.get(pk=request.data["studentId"])
-            student_assessment.instructor = NssUser.objects.get(user=request.auth.user)
             student_assessment.assessment = Assessment.objects.get(pk=request.data["assessmentId"])
             student_assessment.status = StudentAssessmentStatus.objects.get(status="In Progress")
 

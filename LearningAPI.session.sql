@@ -21,7 +21,7 @@ FROM public."auth_user";
 
 
 SELECT *
-FROM public."LearningAPI_nssuser";
+FROM public."LearningAPI_studentassessment";
 
 
 SELECT *
@@ -36,8 +36,9 @@ SELECT *
 FROM public."LearningAPI_studentpersonality";
 
 
-DELETE
-FROM public."LearningAPI_studentpersonality";
+UPDATE public."LearningAPI_nssuser"
+SET slack_handle = 'G08NYBJSY'
+;
 
 
 UPDATE public."LearningAPI_studentpersonality"

@@ -199,11 +199,45 @@ class StudentViewSet(ModelViewSet):
         return paginated_response
 
     @method_decorator(is_instructor())
-    @action(methods=['post'], detail=True)
+    @action(methods=['post', 'put'], detail=True)
     def assess(self, request, pk):
         """Add to the list of projects being worked on by student"""
 
-        if request.method == "POST":
+        if request.method == "PUT":
+            student = NssUser.objects.get(pk=pk)
+            assessment_status = StudentAssessmentStatus.objects.get(pk=request.data['statusId'])
+            latest_assessment = StudentAssessment.objects.filter(student=student).last()
+
+            if latest_assessment is not None:
+                latest_assessment.status = assessment_status
+                latest_assessment.save()
+
+                try:
+                    if latest_assessment.status.status == 'Reviewed and Complete':
+                        headers = {
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        }
+                        channel_payload = {
+                            "text": request.data.get(
+                                "text",
+                                f':fox-yay-woo-hoo: Self-Assessment Review Complete\n\n\n:white_check_mark: Your coaching team just marked {assessment.assessment.name} as completed.\n\nVisit https://learning.nss.team to view your messages.'),
+                            "token": os.getenv("SLACK_BOT_TOKEN"),
+                            "channel": latest_assessment.student.slack_handle
+                        }
+
+                        requests.post(
+                            "https://slack.com/api/chat.postMessage",
+                            data=channel_payload,
+                            headers=headers
+                        )
+                except Exception:
+                    pass
+
+                return Response(None, status=status.HTTP_204_NO_CONTENT)
+            else:
+                return Response({'message': 'Students has no assessments assigned'}, status=status.HTTP_400_BAD_REQUEST)
+
+        elif request.method == "POST":
             try:
                 assessment = Assessment.objects.get(book__id=int(request.data['bookId']))
 
@@ -453,23 +487,31 @@ class MicroStudents(serializers.ModelSerializer):
     proposals = serializers.SerializerMethodField()
     book = serializers.SerializerMethodField()
     core_skill_records = serializers.SerializerMethodField()
-    on_assessment = serializers.SerializerMethodField()
+    assessment_status = serializers.SerializerMethodField()
 
-    def get_on_assessment(self, obj):
+    def get_assessment_status(self, obj):
         student_project = StudentProject.objects.filter(student=obj).last()
 
         if student_project is not None:
             book = student_project.project.book
 
-            working_on_assessment = True
+            # Not assigned book assessment yet
+            assessment_status = 0
             try:
-                StudentAssessment.objects.get(assessment__book=book, student=obj)
-            except StudentAssessment.DoesNotExist:
-                working_on_assessment = False
+                student_assessment = StudentAssessment.objects.get(assessment__book=book, student=obj)
+                if student_assessment.status.status == "In Progress":
+                    assessment_status = 1
+                if student_assessment.status.status == "Ready for Review":
+                    assessment_status = 2
+                if student_assessment.status.status == "Reviewed and Complete":
+                    assessment_status = 3
 
-            return working_on_assessment
+            except StudentAssessment.DoesNotExist:
+                assessment_status = 0
+
+            return assessment_status
         else:
-            return False
+            return 0
 
     def get_core_skill_records(self, obj):
         records = CoreSkillRecord.objects.filter(student=obj).order_by("pk")
@@ -537,7 +579,7 @@ class MicroStudents(serializers.ModelSerializer):
         model = NssUser
         fields = ('id', 'name', 'score',
                   'personality', 'proposals', 'book',
-                  'core_skill_records', 'on_assessment')
+                  'core_skill_records', 'assessment_status')
 
 
 class SingleStudent(serializers.ModelSerializer):
