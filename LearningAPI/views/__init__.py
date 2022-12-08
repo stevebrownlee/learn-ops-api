@@ -21,3 +21,5 @@ from .core_skill_record_view import CoreSkillRecordViewSet
 from .student_personality_view import StudentPersonalityViewSet
 from .proposal_status import ProposalStatusView
 from .proposal_timeline import TimelineView
+from .tag_view import TagViewSet
+from .student_tag_view import StudentTagViewSet

@@ -14,10 +14,11 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from LearningAPI.decorators import is_instructor
+from LearningAPI.models import Tag
 from LearningAPI.models.coursework import Capstone, StudentProject, Book, Project
 from LearningAPI.models.people import (Cohort, DailyStatus, NssUser, StudentAssessment,
                                        OneOnOneNote, StudentPersonality, Assessment,
-                                       StudentAssessmentStatus)
+                                       StudentAssessmentStatus, StudentTag)
 from LearningAPI.models.skill import (CoreSkillRecord, LearningRecord,
                                       LearningRecordEntry)
 from LearningAPI.views.core_skill_record_view import CoreSkillRecordSerializer
@@ -479,8 +480,16 @@ class StudentSerializer(serializers.ModelSerializer):
                   )
 
 
+class StudentTagSerializer(serializers.ModelSerializer):
+    """JSON serializer"""
+    class Meta:
+        model = StudentTag
+        fields = ('id', 'tag',)
+        depth = 1
+
 class MicroStudents(serializers.ModelSerializer):
     """JSON serializer"""
+    tags = StudentTagSerializer(many=True)
     name = serializers.SerializerMethodField()
     score = serializers.SerializerMethodField()
     personality = serializers.SerializerMethodField()
@@ -577,7 +586,7 @@ class MicroStudents(serializers.ModelSerializer):
 
     class Meta:
         model = NssUser
-        fields = ('id', 'name', 'score',
+        fields = ('id', 'name', 'score', 'tags',
                   'personality', 'proposals', 'book',
                   'core_skill_records', 'assessment_status')
 

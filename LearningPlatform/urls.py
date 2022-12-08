@@ -42,6 +42,8 @@ router.register(r'slackchannels', views.SlackChannel, 'slackchannel')
 router.register(r'messages', views.SlackMessage, 'slackmessage')
 router.register(r'coreskills', views.CoreSkillViewSet, 'coreskill')
 router.register(r'coreskillrecords', views.CoreSkillRecordViewSet, 'coreskillrecord')
+router.register(r'tags', views.TagViewSet, 'tag')
+router.register(r'studenttags', views.StudentTagViewSet, 'studenttag')
 
 
 urlpatterns = [
