@@ -201,7 +201,7 @@ class StudentViewSet(ModelViewSet):
     @method_decorator(is_instructor())
     @action(methods=['post', 'put'], detail=True)
     def assess(self, request, pk):
-        """Add to the list of projects being worked on by student"""
+        """POST when a student starts working on book assessment. PUT to change status."""
 
         if request.method == "PUT":
             student = NssUser.objects.get(pk=pk)
@@ -220,7 +220,7 @@ class StudentViewSet(ModelViewSet):
                         channel_payload = {
                             "text": request.data.get(
                                 "text",
-                                f':fox-yay-woo-hoo: Self-Assessment Review Complete\n\n\n:white_check_mark: Your coaching team just marked {assessment.assessment.name} as completed.\n\nVisit https://learning.nss.team to view your messages.'),
+                                f':fox-yay-woo-hoo: Self-Assessment Review Complete\n\n\n:white_check_mark: Your coaching team just marked {latest_assessment.assessment.name} as completed.\n\nVisit https://learning.nss.team to view your messages.'),
                             "token": os.getenv("SLACK_BOT_TOKEN"),
                             "channel": latest_assessment.student.slack_handle
                         }
@@ -231,7 +231,7 @@ class StudentViewSet(ModelViewSet):
                             headers=headers
                         )
                 except Exception:
-                    pass
+                    return Response({'message': 'Updated, but no Slack message sent'}, status=status.HTTP_204_NO_CONTENT)
 
                 return Response(None, status=status.HTTP_204_NO_CONTENT)
             else:
