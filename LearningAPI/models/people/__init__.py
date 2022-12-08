@@ -10,3 +10,4 @@ from .student_assessment_status import StudentAssessmentStatus
 from .student_assessment import StudentAssessment
 from .daily_status import DailyStatus
 from .student_personality import StudentPersonality
+from .student_tag import StudentTag
