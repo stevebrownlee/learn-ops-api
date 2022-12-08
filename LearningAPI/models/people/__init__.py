@@ -8,6 +8,6 @@ from .one_on_one_note import OneOnOneNote
 from .opportunities import Opportunity
 from .student_assessment_status import StudentAssessmentStatus
 from .student_assessment import StudentAssessment
-from .daily_status import DailyStatus
+from .student_note import StudentNote
 from .student_personality import StudentPersonality
 from .student_tag import StudentTag

@@ -16,7 +16,7 @@ from rest_framework.viewsets import ModelViewSet
 from LearningAPI.decorators import is_instructor
 from LearningAPI.models import Tag
 from LearningAPI.models.coursework import Capstone, StudentProject, Book, Project
-from LearningAPI.models.people import (Cohort, DailyStatus, NssUser, StudentAssessment,
+from LearningAPI.models.people import (Cohort, StudentNote, NssUser, StudentAssessment,
                                        OneOnOneNote, StudentPersonality, Assessment,
                                        StudentAssessmentStatus, StudentTag)
 from LearningAPI.models.skill import (CoreSkillRecord, LearningRecord,
@@ -273,22 +273,21 @@ class StudentViewSet(ModelViewSet):
 
     @method_decorator(is_instructor())
     @action(methods=['post'], detail=True)
-    def status(self, request, pk):
+    def note(self, request, pk):
         """Add daily status from stand-up"""
 
         if request.method == "POST":
             try:
-                daily_status = DailyStatus()
-                daily_status.coach = NssUser.objects.get(
+                instructor_note = StudentNote()
+                instructor_note.coach = NssUser.objects.get(
                     user=request.auth.user)
-                daily_status.student = NssUser.objects.get(pk=pk)
-                daily_status.status = request.data["status"]
-
-                daily_status.save()
+                instructor_note.student = NssUser.objects.get(pk=pk)
+                instructor_note.status = request.data["note"]
+                instructor_note.save()
 
                 response = {
-                    "id": daily_status.id,
-                    "status": daily_status.status
+                    "id": instructor_note.id,
+                    "status": instructor_note.status
                 }
 
             except NssUser.DoesNotExist as ex:
@@ -383,12 +382,12 @@ class StudentNoteSerializer(serializers.ModelSerializer):
         fields = ['id', 'notes', 'session_date', 'author']
 
 
-class StudentStatusSerializer(serializers.ModelSerializer):
+class InstructorNoteSerializer(serializers.ModelSerializer):
     """JSON serializer for student notes"""
 
     class Meta:
-        model = DailyStatus
-        fields = ['id', 'status', 'created_on', 'author']
+        model = StudentNote
+        fields = ['id', 'note', 'created_on', 'author']
 
 
 class LearningRecordEntrySerializer(serializers.ModelSerializer):
@@ -441,7 +440,7 @@ class PersonalitySerializer(serializers.ModelSerializer):
 class StudentSerializer(serializers.ModelSerializer):
     """JSON serializer"""
     feedback = StudentNoteSerializer(many=True)
-    statuses = StudentStatusSerializer(many=True)
+    notes = InstructorNoteSerializer(many=True)
     name = serializers.SerializerMethodField()
     email = serializers.SerializerMethodField()
     github = serializers.SerializerMethodField()
@@ -475,7 +474,7 @@ class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = NssUser
         fields = ('id', 'name', 'email', 'github', 'score', 'core_skill_records',
-                  'cohorts', 'feedback', 'records', 'statuses', 'personality',
+                  'cohorts', 'feedback', 'records', 'notes', 'personality',
                   'capstones',
                   )
 
