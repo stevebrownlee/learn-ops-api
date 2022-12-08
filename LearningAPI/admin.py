@@ -1,7 +1,11 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models.people import NssUser, Assessment, Cohort, NssUserCohort
+from .models.people import (
+    NssUser, Assessment,
+    Cohort, NssUserCohort,
+    StudentAssessmentStatus
+)
 from .models.coursework import (
     Course, ProposalStatus, Capstone, Book,
     CapstoneTimeline, StudentProject, Project
@@ -11,6 +15,11 @@ from .models.skill import (
     CoreSkill, CoreSkillRecord,
     LearningRecordEntry, LearningRecord, LearningWeight,
 )
+
+@admin.register(StudentAssessmentStatus)
+class StudentAssessmentStatusAdmin(admin.ModelAdmin):
+    """For assigning students to cohorts"""
+    list_display = ('status', )
 
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
