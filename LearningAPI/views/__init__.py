@@ -24,3 +24,4 @@ from .proposal_timeline import TimelineView
 from .tag_view import TagViewSet
 from .student_tag_view import StudentTagViewSet
 from .student_note_view import StudentNoteViewSet
+from .personality_view import PersonalityView

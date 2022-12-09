@@ -283,7 +283,7 @@ class StudentViewSet(ModelViewSet):
     @method_decorator(is_instructor())
     @action(methods=['post'], detail=True)
     def note(self, request, pk):
-        """Add daily status from stand-up"""
+        """Add note for student"""
 
         if request.method == "POST":
             try:

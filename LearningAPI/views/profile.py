@@ -6,7 +6,6 @@ from allauth.socialaccount.models import SocialAccount
 from LearningAPI.models.people import Cohort, NssUserCohort, NssUser
 from LearningAPI.models.people.student_personality import StudentPersonality
 from LearningAPI.views.student_view import StudentNoteSerializer
-from .personality import myers_briggs_persona
 
 
 class Profile(ViewSet):
