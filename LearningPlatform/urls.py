@@ -44,6 +44,7 @@ router.register(r'coreskills', views.CoreSkillViewSet, 'coreskill')
 router.register(r'coreskillrecords', views.CoreSkillRecordViewSet, 'coreskillrecord')
 router.register(r'tags', views.TagViewSet, 'tag')
 router.register(r'studenttags', views.StudentTagViewSet, 'studenttag')
+router.register(r'notes', views.StudentNoteViewSet, 'note')
 
 
 urlpatterns = [

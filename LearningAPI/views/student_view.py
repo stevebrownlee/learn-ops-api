@@ -270,7 +270,6 @@ class StudentViewSet(ModelViewSet):
 
             return Response({'message': 'Success'}, status=status.HTTP_201_CREATED)
 
-
     @method_decorator(is_instructor())
     @action(methods=['post'], detail=True)
     def note(self, request, pk):
@@ -491,11 +490,17 @@ class MicroStudents(serializers.ModelSerializer):
     tags = StudentTagSerializer(many=True)
     name = serializers.SerializerMethodField()
     score = serializers.SerializerMethodField()
-    personality = serializers.SerializerMethodField()
     proposals = serializers.SerializerMethodField()
     book = serializers.SerializerMethodField()
     core_skill_records = serializers.SerializerMethodField()
     assessment_status = serializers.SerializerMethodField()
+    personality = PersonalitySerializer(many=False)
+    github = serializers.SerializerMethodField()
+    archetype = serializers.SerializerMethodField()
+
+    def get_github(self, obj):
+        github = obj.user.socialaccount_set.get(user=obj.user)
+        return github.extra_data["login"]
 
     def get_assessment_status(self, obj):
         student_project = StudentProject.objects.filter(student=obj).last()
@@ -574,7 +579,7 @@ class MicroStudents(serializers.ModelSerializer):
     def get_score(self, obj):
         return student_score(obj)
 
-    def get_personality(self, obj):
+    def get_archetype(self, obj):
         if obj.personality.briggs_myers_type != '':
             return myers_briggs_persona(obj.personality.briggs_myers_type)["type"]
 
@@ -587,7 +592,9 @@ class MicroStudents(serializers.ModelSerializer):
         model = NssUser
         fields = ('id', 'name', 'score', 'tags',
                   'personality', 'proposals', 'book',
-                  'core_skill_records', 'assessment_status')
+                  'core_skill_records', 'assessment_status',
+                  'personality', 'github', 'cohorts',
+                  'archetype')
 
 
 class SingleStudent(serializers.ModelSerializer):
