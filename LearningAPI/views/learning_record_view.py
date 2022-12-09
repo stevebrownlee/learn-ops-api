@@ -45,6 +45,7 @@ class LearningRecordSerializer(serializers.ModelSerializer):
     class Meta:
         model = LearningRecord
         fields = ( 'id', 'student', 'weight', 'achieved', 'created_on', )
+        depth = 1
 
 
 class LargeResultsSetPagination(PageNumberPagination):
@@ -83,14 +84,15 @@ class LearningRecordViewSet(ModelViewSet):
         Returns:
             Response -- JSON serialized array
         """
-        try:
-            records = LearningRecord.objects.all().order_by('-created_on')
+        student_id = request.query_params.get('studentId', None)
 
-            serializer = LearningRecordSerializer(
-                records, many=True, context={'request': request})
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except Exception as ex:
-            return HttpResponseServerError(ex)
+        if student_id is not None:
+            student = NssUser.objects.get(pk=student_id)
+            records = LearningRecord.objects.filter(student=student).order_by("achieved")
+            json_data = LearningRecordSerializer(records, many=True).data
+            return Response(json_data, status=status.HTTP_200_OK)
+
+        return Response({'reason': 'Missing `studendId` query parameter.'}, status=status.HTTP_400_BAD_REQUEST)
 
     def create(self, request):
         """Handle POST operations

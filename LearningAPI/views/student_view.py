@@ -573,7 +573,7 @@ class MicroStudents(serializers.ModelSerializer):
                 'statuses',
                 filter=Q(statuses__status__status="Approved")
             )
-        )
+        ).order_by("pk")
 
         proposal_statuses = []
 
