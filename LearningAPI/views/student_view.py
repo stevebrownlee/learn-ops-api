@@ -4,7 +4,8 @@ import statistics
 import logging
 
 import requests
-from django.db.models import Count, Q
+from django.db.models import Count, Q, Case, When
+from django.db.models.fields import IntegerField
 from django.http import HttpResponseServerError
 from django.utils.decorators import method_decorator
 from rest_framework import serializers, status
@@ -21,7 +22,6 @@ from LearningAPI.models.people import (Cohort, StudentNote, NssUser, StudentAsse
                                        StudentAssessmentStatus, StudentTag)
 from LearningAPI.models.skill import (CoreSkillRecord, LearningRecord,
                                       LearningRecordEntry)
-from LearningAPI.views.core_skill_record_view import CoreSkillRecordSerializer
 from .personality import myers_briggs_persona
 
 
@@ -142,6 +142,7 @@ class StudentViewSet(ModelViewSet):
             Response -- JSON serialized array
         """
         student_status = self.request.query_params.get('status', None)
+        # annotate(cohort_count=Count('assigned_cohorts')).\
 
         if student_status == "unassigned":
             students = NssUser.objects.\
@@ -176,7 +177,8 @@ class StudentViewSet(ModelViewSet):
 
             for student in students:
                 try:
-                    personality = StudentPersonality.objects.get(student=student)
+                    personality = StudentPersonality.objects.get(
+                        student=student)
                 except StudentPersonality.DoesNotExist:
                     personality = StudentPersonality()
                     personality.briggs_myers_type = ""
@@ -206,8 +208,10 @@ class StudentViewSet(ModelViewSet):
 
         if request.method == "PUT":
             student = NssUser.objects.get(pk=pk)
-            assessment_status = StudentAssessmentStatus.objects.get(pk=request.data['statusId'])
-            latest_assessment = StudentAssessment.objects.filter(student=student).last()
+            assessment_status = StudentAssessmentStatus.objects.get(
+                pk=request.data['statusId'])
+            latest_assessment = StudentAssessment.objects.filter(
+                student=student).last()
 
             if latest_assessment is not None:
                 latest_assessment.status = assessment_status
@@ -240,13 +244,18 @@ class StudentViewSet(ModelViewSet):
 
         elif request.method == "POST":
             try:
-                assessment = Assessment.objects.get(book__id=int(request.data['bookId']))
+                try:
+                    assessment = Assessment.objects.get(book__id=int(request.data['bookId']))
+                except Assessment.DoesNotExist:
+                    return Response({'message': 'There is no assessment for this book.'}, status=status.HTTP_404_NOT_FOUND)
 
 
                 student_assessment = StudentAssessment()
                 student_assessment.student = NssUser.objects.get(user__id=pk)
-                student_assessment.instructor = NssUser.objects.get(user=request.auth.user)
-                student_assessment.status = StudentAssessmentStatus.objects.get(status="In Progress")
+                student_assessment.instructor = NssUser.objects.get(
+                    user=request.auth.user)
+                student_assessment.status = StudentAssessmentStatus.objects.get(
+                    status="In Progress")
                 student_assessment.assessment = assessment
                 student_assessment.save()
             except Exception as ex:
@@ -263,7 +272,8 @@ class StudentViewSet(ModelViewSet):
             try:
                 student_project = StudentProject()
                 student_project.student = NssUser.objects.get(user__id=pk)
-                student_project.project = Project.objects.get(pk=int(request.data['projectId']))
+                student_project.project = Project.objects.get(
+                    pk=int(request.data['projectId']))
                 student_project.save()
             except Exception as ex:
                 return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -485,6 +495,16 @@ class StudentTagSerializer(serializers.ModelSerializer):
         fields = ('id', 'tag',)
         depth = 1
 
+
+class CoreSkillRecordSerializer(serializers.ModelSerializer):
+    """Serializer for Core Skill Record"""
+
+    class Meta:
+        model = CoreSkillRecord
+        fields = ('id', 'skill', 'level', )
+        depth = 1
+
+
 class MicroStudents(serializers.ModelSerializer):
     """JSON serializer"""
     tags = StudentTagSerializer(many=True)
@@ -492,9 +512,7 @@ class MicroStudents(serializers.ModelSerializer):
     score = serializers.SerializerMethodField()
     proposals = serializers.SerializerMethodField()
     book = serializers.SerializerMethodField()
-    core_skill_records = serializers.SerializerMethodField()
     assessment_status = serializers.SerializerMethodField()
-    personality = PersonalitySerializer(many=False)
     github = serializers.SerializerMethodField()
     archetype = serializers.SerializerMethodField()
 
@@ -509,16 +527,19 @@ class MicroStudents(serializers.ModelSerializer):
             book = student_project.project.book
 
             # Not assigned book assessment yet
+            # annotate(cohort_count=Count('assigned_cohorts'))
             assessment_status = 0
             try:
-                student_assessment = StudentAssessment.objects.get(assessment__book=book, student=obj)
-                if student_assessment.status.status == "In Progress":
-                    assessment_status = 1
-                if student_assessment.status.status == "Ready for Review":
-                    assessment_status = 2
-                if student_assessment.status.status == "Reviewed and Complete":
-                    assessment_status = 3
+                student_assessment = StudentAssessment.objects.annotate(assessment_status=Case(
+                        When(status__status="In Progress", then=1),
+                        When(status__status="Ready for Review", then=2),
+                        When(status__status="Reviewed and Complete", then=2),
+                        default=0,
+                        output_field=IntegerField()
+                    ))\
+                    .get(assessment__book=book, student=obj)
 
+                assessment_status = student_assessment.assessment_status
             except StudentAssessment.DoesNotExist:
                 assessment_status = 0
 
@@ -526,15 +547,12 @@ class MicroStudents(serializers.ModelSerializer):
         else:
             return 0
 
-    def get_core_skill_records(self, obj):
-        records = CoreSkillRecord.objects.filter(student=obj).order_by("pk")
-        return CoreSkillRecordSerializer(records, many=True).data
-
     def get_book(self, obj):
         student_project = StudentProject.objects.filter(student=obj).last()
 
         if student_project is None:
-            book = Book.objects.get(course__name__icontains="JavaScript", cardinality=0)
+            book = Book.objects.get(
+                course__name__icontains="JavaScript", cardinality=0)
             return {
                 "id": book.id,
                 "name": book.name,
@@ -591,10 +609,10 @@ class MicroStudents(serializers.ModelSerializer):
     class Meta:
         model = NssUser
         fields = ('id', 'name', 'score', 'tags',
-                  'personality', 'proposals', 'book',
-                  'core_skill_records', 'assessment_status',
-                  'personality', 'github', 'cohorts',
-                  'archetype')
+                  'proposals', 'book',
+                  'assessment_status',
+                  'github', 'cohorts',
+                  'archetype',)
 
 
 class SingleStudent(serializers.ModelSerializer):

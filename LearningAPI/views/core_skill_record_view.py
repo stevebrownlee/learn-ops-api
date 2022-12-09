@@ -17,11 +17,20 @@ class CoreSkillRecordViewSet(ModelViewSet):
 
     def retrieve(self, request, pk=None):
         """Not supported"""
+
         return Response(None, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def list(self, request):
         """Not supported"""
-        return Response(None, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        student_id = request.query_params.get('studentId', None)
+
+        if student_id is not None:
+            student = NssUser.objects.get(pk=student_id)
+            records = CoreSkillRecord.objects.filter(student=student)
+            json_data = CoreSkillRecordSerializer(records, many=True).data
+            return Response(json_data, status=status.HTTP_200_OK)
+
+        return Response({'reason': 'Missing `studendId` query parameter.'}, status=status.HTTP_400_BAD_REQUEST)
 
     def create(self, request):
         """Handle POST operations
@@ -47,8 +56,7 @@ class CoreSkillRecordViewSet(ModelViewSet):
 
             entry.save()
 
-            serializer = CoreSkillRecordSerializer(
-                record, context={'request': request})
+            serializer = CoreSkillRecordSerializer(record)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         except Exception as ex:
             return Response({"reason": ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
@@ -136,15 +144,8 @@ class CoreSkillRecordViewSet(ModelViewSet):
 
 class CoreSkillRecordSerializer(serializers.ModelSerializer):
     """Serializer for Core Skill Record"""
-    student = serializers.SerializerMethodField()
-
-    def get_student(self, obj):
-        return {
-            'name': f'{obj.student.user.first_name} {obj.student.user.last_name}',
-            'id': obj.student.id
-        }
 
     class Meta:
         model = CoreSkillRecord
-        fields = ( 'id', 'student', 'skill', 'level', 'notes', 'created_on', )
+        fields = ('id', 'skill', 'level',)
         depth = 1

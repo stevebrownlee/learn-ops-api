@@ -2,7 +2,6 @@
 from django.db import models
 from django.conf import settings
 
-
 class NssUser(models.Model):
     """Model for NSS-specific user information beyond Django user"""
     user = models.OneToOneField(

@@ -7,7 +7,7 @@ from ..people import NssUser
 class LearningRecord(models.Model):
     """Model for tracking learning objectives per student"""
     student = models.ForeignKey(
-        NssUser, on_delete=models.CASCADE, related_name='records')
+        NssUser, on_delete=models.CASCADE, related_name='learning_records')
     weight = models.ForeignKey(
         LearningWeight, on_delete=models.CASCADE, related_name='records')
     achieved = models.BooleanField(default=False)
