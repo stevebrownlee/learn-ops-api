@@ -12,5 +12,8 @@ class StudentAssessment(models.Model):
     url = models.CharField(max_length=512, default="")
     date_created = models.DateField(auto_now=True, auto_now_add=False)
 
+    def __str__(self):
+        return f'{self.student} and {self.assessment} is {self.status}'
+
     class Meta:
         unique_together = (('student', 'assessment',),)

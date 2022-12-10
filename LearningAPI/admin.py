@@ -4,7 +4,8 @@ from django.contrib import admin
 from .models.people import (
     NssUser, Assessment,
     Cohort, NssUserCohort,
-    StudentAssessmentStatus
+    StudentAssessmentStatus,
+    StudentAssessment
 )
 from .models.coursework import (
     Course, ProposalStatus, Capstone, Book,
@@ -15,6 +16,11 @@ from .models.skill import (
     CoreSkill, CoreSkillRecord,
     LearningRecordEntry, LearningRecord, LearningWeight,
 )
+
+@admin.register(StudentAssessment)
+class StudentAssessmentAdmin(admin.ModelAdmin):
+    """For assigning students to cohorts"""
+    list_display = ('student', 'assessment', 'status', )
 
 @admin.register(StudentAssessmentStatus)
 class StudentAssessmentStatusAdmin(admin.ModelAdmin):

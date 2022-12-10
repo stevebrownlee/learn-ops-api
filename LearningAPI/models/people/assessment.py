@@ -16,3 +16,6 @@ class Assessment(models.Model):
         choices=ASSESSMENT_TYPES,
         default="SELF",
     )
+
+    def __str__(self):
+        return self.name

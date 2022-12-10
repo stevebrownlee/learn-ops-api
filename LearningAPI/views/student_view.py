@@ -533,7 +533,7 @@ class MicroStudents(serializers.ModelSerializer):
                 student_assessment = StudentAssessment.objects.annotate(assessment_status=Case(
                         When(status__status="In Progress", then=1),
                         When(status__status="Ready for Review", then=2),
-                        When(status__status="Reviewed and Complete", then=2),
+                        When(status__status="Reviewed and Complete", then=3),
                         default=0,
                         output_field=IntegerField()
                     ))\
