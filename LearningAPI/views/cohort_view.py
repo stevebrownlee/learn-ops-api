@@ -37,8 +37,8 @@ class CohortViewSet(ViewSet):
         cohort.slack_channel = request.data["slackChannel"]
         cohort.start_date = request.data["startDate"]
         cohort.end_date = request.data["endDate"]
-        cohort.break_start_date = request.data["breakStartDate"]
-        cohort.break_end_date = request.data["breakEndDate"]
+        cohort.break_start_date = '2022-01-01'
+        cohort.break_end_date = '2022-01-01'
 
         try:
             cohort.save()
@@ -65,10 +65,6 @@ class CohortViewSet(ViewSet):
                 students=Count(
                     'members',
                     filter=Q(members__nss_user__user__is_staff=False)
-                ),
-                instructors=Count(
-                    'members',
-                    filter=Q(members__nss_user__user__is_staff=True)
                 )
             ).get(pk=pk)
 
@@ -130,7 +126,9 @@ class CohortViewSet(ViewSet):
 
             # Fuzzy search on `q` param present
             search_terms = self.request.query_params.get('q', None)
-            if search_terms != None:
+            limit = self.request.query_params.get('limit', None)
+
+            if search_terms is not None:
                 for letter in list(search_terms):
                     cohorts = cohorts.filter(name__icontains=letter)
 
@@ -139,11 +137,12 @@ class CohortViewSet(ViewSet):
                 return Response(serializer.data, status=status.HTTP_200_OK)
 
             cohorts = cohorts.annotate(
-                students=Count('members', filter=Q(
-                    members__nss_user__user__is_staff=False)),
-                instructors=Count('members', filter=Q(
-                    members__nss_user__user__is_staff=True))
-            ).all().order_by('pk')
+                students=Count('members', filter=Q(members__nss_user__user__is_staff=False)),
+                is_instructor=Count('members', filter=Q(members__nss_user__user=request.auth.user)),
+            ).all().order_by('-pk')
+
+            if limit is not None:
+                cohorts = cohorts.order_by("-start_date")[0:int(limit)]
 
             serializer = CohortSerializer(
                 cohorts, many=True, context={'request': request})
@@ -158,11 +157,29 @@ class CohortViewSet(ViewSet):
         if request.method == "POST":
             cohort = None
             member = None
+            user_type = request.query_params.get("userType", None)
 
             try:
+
+                if user_type is not None and user_type == "instructor":
+                    user_id = request.auth.user.id
+
+                    try:
+                        member = NssUser.objects.get(pk=user_id)
+                        NssUserCohort.objects.get(nss_user=member)
+
+                        return Response(
+                            {'message': 'Instructor cannot be in more than 1 cohort at a time'},
+                            status=status.HTTP_400_BAD_REQUEST
+                        )
+                    except NssUserCohort.DoesNotExist:
+                        pass
+
+                else:
+                    user_id = int(request.data["person_id"])
+                    member = NssUser.objects.get(pk=user_id)
+
                 cohort = Cohort.objects.get(pk=pk)
-                member = NssUser.objects.get(
-                    pk=int(request.data["person_id"]))
                 NssUserCohort.objects.get(cohort=cohort, nss_user=member)
 
                 return Response(
@@ -174,8 +191,8 @@ class CohortViewSet(ViewSet):
                 relationship = NssUserCohort()
                 relationship.cohort = cohort
                 relationship.nss_user = member
-
                 relationship.save()
+
             except Cohort.DoesNotExist as ex:
                 return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
@@ -188,10 +205,16 @@ class CohortViewSet(ViewSet):
             return Response({'message': 'User assigned to cohort'}, status=status.HTTP_201_CREATED)
 
         elif request.method == "DELETE":
+            user_type = request.query_params.get("userType", None)
+
+            if user_type is not None and user_type == "instructor":
+                user_id = request.auth.user.id
+            else:
+                user_id = int(request.data["student_id"])
+
             try:
                 cohort = Cohort.objects.get(pk=pk)
-                member = NssUser.objects.get(
-                    pk=int(request.data["student_id"]))
+                member = NssUser.objects.get(pk=user_id)
                 rel = NssUserCohort.objects.get(cohort=cohort, nss_user=member)
                 rel.delete()
 
@@ -225,5 +248,5 @@ class CohortSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cohort
-        fields = ('id', 'name', 'slack_channel', 'start_date',
-                  'end_date', 'students', 'instructors')
+        fields = ('id', 'name', 'slack_channel', 'start_date', 'end_date', 'coaches',
+                  'break_start_date', 'break_end_date', 'students', 'is_instructor', )

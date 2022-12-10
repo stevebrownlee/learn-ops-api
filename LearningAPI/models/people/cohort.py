@@ -1,5 +1,5 @@
 from django.db import models
-
+from .nssuser_cohort import NssUserCohort
 
 class Cohort(models.Model):
     """Model for student cohorts"""
@@ -17,6 +17,29 @@ class Cohort(models.Model):
         return self.name
 
     @property
+    def coaches(self):
+        coaches = []
+        user_cohorts = NssUserCohort.objects.filter(cohort=self, nss_user__user__is_staff=True)
+        for user_cohort in user_cohorts:
+            coaches.append({
+                "name": f'{user_cohort.nss_user}'
+            })
+        return coaches
+
+    @property
+    def is_instructor(self):
+        try:
+            return self.__is_instructor
+        except AttributeError:
+            return False
+
+    @is_instructor.setter
+    def is_instructor(self, value):
+        self.__is_instructor = value
+
+
+
+    @property
     def students(self):
         """students property, which will be calculated per cohort
 
@@ -32,18 +55,3 @@ class Cohort(models.Model):
     def students(self, value):
         self.__students = value
 
-    @property
-    def instructors(self):
-        """instructors property, which will be calculated per cohort
-
-        Returns:
-            int: Number of instructors per cohort
-        """
-        try:
-            return self.__instructors
-        except AttributeError:
-            return 0
-
-    @instructors.setter
-    def instructors(self, value):
-        self.__instructors = value

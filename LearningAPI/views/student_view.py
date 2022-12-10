@@ -624,11 +624,15 @@ class SingleStudent(serializers.ModelSerializer):
     repos = serializers.SerializerMethodField()
     staff = serializers.SerializerMethodField()
     score = serializers.SerializerMethodField()
+    date_joined = serializers.SerializerMethodField()
+
+    def get_date_joined(self, obj):
+        return obj.user.date_joined
 
     def get_score(self, obj):
         return student_score(obj)
 
-    def get_staff(self):
+    def get_staff(self, obj):
         return False
 
     def get_github(self, obj):
@@ -648,4 +652,4 @@ class SingleStudent(serializers.ModelSerializer):
     class Meta:
         model = NssUser
         fields = ('id', 'name', 'email', 'github', 'staff', 'slack_handle',
-                  'cohorts', 'feedback', 'repos', 'score',)
+                  'cohorts', 'feedback', 'repos', 'score', 'date_joined')
