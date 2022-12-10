@@ -26,7 +26,7 @@ class CoreSkillRecordViewSet(ModelViewSet):
 
         if student_id is not None:
             student = NssUser.objects.get(pk=student_id)
-            records = CoreSkillRecord.objects.filter(student=student)
+            records = CoreSkillRecord.objects.filter(student=student).order_by("skill__label")
             json_data = CoreSkillRecordSerializer(records, many=True).data
             return Response(json_data, status=status.HTTP_200_OK)
 

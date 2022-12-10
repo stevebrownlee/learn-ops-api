@@ -35,6 +35,8 @@ class LearningWeightViewSet(ModelViewSet):
             Response -- JSON serialized array
         """
         student = self.request.query_params.get('studentId', None)
+        min_tier = self.request.query_params.get('tiermin', None)
+        max_tier = self.request.query_params.get('tiermax', None)
 
         try:
             if student is not None:
@@ -56,7 +58,11 @@ class LearningWeightViewSet(ModelViewSet):
                     """,
                     [student])
             else:
-                weights = LearningWeight.objects.all().order_by('tier')
+                if min_tier is not None and max_tier is not None:
+                    weights = LearningWeight.objects.filter(tier__gte=min_tier, tier__lte=max_tier).order_by('tier')
+
+                else:
+                    weights = LearningWeight.objects.all().order_by('tier')
 
             serializer = LearningWeightSerializer(
                 weights, many=True, context={'request': request})

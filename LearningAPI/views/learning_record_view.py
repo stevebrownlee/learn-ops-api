@@ -40,15 +40,23 @@ class RecordWeightSerializer(serializers.ModelSerializer):
 
 class LearningRecordSerializer(serializers.ModelSerializer):
     """JSON serializer"""
-    student = NssUserSerializer()
+    score = serializers.SerializerMethodField()
+    objective = serializers.SerializerMethodField()
+
+    def get_score(self, obj):
+        return obj.weight.weight
+
+    def get_objective(self, obj):
+        return obj.weight.id
 
     class Meta:
         model = LearningRecord
-        fields = ( 'id', 'student', 'weight', 'achieved', 'created_on', )
+        fields = ( 'id', 'score', 'achieved', 'objective', )
         depth = 1
 
 
 class LargeResultsSetPagination(PageNumberPagination):
+    """Pagination for large results sets"""
     page_size = 50
     page_size_query_param = 'page_size'
     max_page_size = 100
@@ -72,8 +80,7 @@ class LearningRecordViewSet(ModelViewSet):
         try:
             learningrecord = LearningRecord.objects.get(pk=pk)
 
-            serializer = LearningRecordSerializer(
-                learningrecord, context={'request': request})
+            serializer = LearningRecordSerializer(learningrecord)
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
@@ -136,7 +143,7 @@ class LearningRecordViewSet(ModelViewSet):
             else:
                 return Response(None, status=status.HTTP_401_UNAUTHORIZED)
 
-        except LearningRecord.DoesNotExist as ex:
+        except LearningRecord.DoesNotExist:
             return Response(None, status=status.HTTP_404_NOT_FOUND)
 
         except Exception as ex:
