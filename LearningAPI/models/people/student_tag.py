@@ -7,3 +7,6 @@ class StudentTag(models.Model):
         "NssUser", on_delete=models.CASCADE, related_name="tags")
     tag = models.ForeignKey(
         "Tag", on_delete=models.CASCADE, related_name="students")
+
+    class Meta:
+        unique_together = (('student', 'tag',),)
