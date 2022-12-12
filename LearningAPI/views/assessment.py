@@ -194,7 +194,7 @@ class StudentAssessmentView(ViewSet):
             Response -- 200, 404, or 500 status code
         """
         try:
-            assessment = StudentAssessment.objects.get(pk=pk)
+            assessment = Assessment.objects.get(pk=pk)
             assessment.delete()
 
             return Response(None, status=status.HTTP_204_NO_CONTENT)
