@@ -6,7 +6,6 @@ from django.http import HttpResponseServerError
 from django.utils.decorators import method_decorator
 
 from rest_framework import permissions, serializers, status
-from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
@@ -14,6 +13,7 @@ from rest_framework.viewsets import ViewSet
 from LearningAPI.decorators import is_instructor
 from LearningAPI.models.people import (Assessment, NssUser, StudentAssessment,
                                        StudentAssessmentStatus)
+from LearningAPI.models.coursework import Book
 
 
 class StudentAssessmentPermission(permissions.BasePermission):
@@ -47,11 +47,24 @@ class StudentAssessmentView(ViewSet):
         Returns:
             Response -- JSON serialized instance
         """
-        if "sourceURL" in request.data and request.auth.user.is_staff:
+        book_id = request.data.get("bookId", None)
+        source_url = request.data.get("sourceURL", None)
+        name = request.data.get("name", None)
+
+        if name is not None and \
+            source_url is not None and \
+            book_id is not None and\
+            request.auth.user.is_staff:
+
             assmt = Assessment()
             assmt.name = request.data["name"]
             assmt.source_url = request.data["sourceURL"]
-            assmt.type = request.data["type"]
+
+            try:
+                assmt.book = Book.objects.get(pk=book_id)
+            except Book.DoesNotExist:
+                return Response({'reason': 'Invalid book id sent'}, status=status.HTTP_400_BAD_REQUEST)
+
 
             assmt.save()
             serializer = AssessmentSerializer(assmt)
@@ -198,7 +211,7 @@ class AssessmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Assessment
-        fields = ('id', 'name', 'type', 'source_url' )
+        fields = ('id', 'name', 'source_url', 'assigned_book', 'course' )
 
 class StudentAssessmentSerializer(serializers.ModelSerializer):
     """JSON serializer"""

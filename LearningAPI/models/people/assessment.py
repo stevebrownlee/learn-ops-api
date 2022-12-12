@@ -10,12 +10,26 @@ class Assessment(models.Model):
     )
     name = models.CharField(max_length=255)
     source_url = models.CharField(max_length=512)
-    book = models.ForeignKey("Book", on_delete=models.CASCADE, default=1)
+    book = models.ForeignKey("Book", on_delete=models.CASCADE, default=1, related_name="assessments")
     type = models.CharField(
         max_length=8,
         choices=ASSESSMENT_TYPES,
         default="SELF",
     )
+
+    @property
+    def assigned_book(self):
+        return {
+            "id": self.book.id,
+            "name": self.book.name
+        }
+
+    @property
+    def course(self):
+        return {
+            "id": self.book.course.id,
+            "name": self.book.course.name
+        }
 
     def __str__(self):
         return self.name

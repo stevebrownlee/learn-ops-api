@@ -91,10 +91,9 @@ class BookViewSet(ViewSet):
             Response -- JSON serialized array
         """
         try:
-            books = Book.objects.all().order_by('pk')
+            books = Book.objects.all()
 
-            serializer = BookSerializer(
-                books, many=True, context={'request': request})
+            serializer = BookSerializer(books, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as ex:
             return HttpResponseServerError(ex)
@@ -105,5 +104,5 @@ class BookSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Book
-        fields = ('id', 'name', 'course', 'projects')
+        fields = ('id', 'name', 'course', 'has_assessment', )
         depth = 1
