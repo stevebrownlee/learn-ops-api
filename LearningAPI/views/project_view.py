@@ -3,7 +3,7 @@ from rest_framework import serializers, status
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
-from LearningAPI.models.coursework import Book, Project
+from LearningAPI.models.coursework import Book, Project, Course
 
 
 class ProjectViewSet(ViewSet):
@@ -23,8 +23,7 @@ class ProjectViewSet(ViewSet):
 
         try:
             project.save()
-            serializer = ProjectSerializer(
-                project, context={'request': request})
+            serializer = ProjectSerializer(project)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         except Exception as ex:
             return Response({"reason": ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
@@ -38,8 +37,7 @@ class ProjectViewSet(ViewSet):
         try:
             project = Project.objects.get(pk=pk)
 
-            serializer = ProjectSerializer(
-                project, context={'request': request})
+            serializer = ProjectSerializer(project, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
@@ -88,11 +86,19 @@ class ProjectViewSet(ViewSet):
         Returns:
             Response -- JSON serialized array
         """
-        try:
-            projects = Project.objects.all().order_by('pk')
+        book_id = request.query_params.get("bookId", None)
+        course_id = request.query_params.get("courseId", None)
 
-            serializer = ProjectSerializer(
-                projects, many=True, context={'request': request})
+        try:
+            projects = Project.objects.all()
+
+            if course_id is not None:
+                projects = projects.filter(book__course__id=course_id)
+
+            if book_id is not None:
+                projects = projects.filter(book__id=book_id)
+
+            serializer = ProjectSerializer(projects, many=True, context={'request': request})
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as ex:
             return HttpResponseServerError(ex)
@@ -105,10 +111,37 @@ class BookSerializer(serializers.ModelSerializer):
         model = Book
         fields = ('id', 'name',)
 
-
-class ProjectSerializer(serializers.ModelSerializer):
+class CourseSerializer(serializers.ModelSerializer):
     """JSON serializer"""
 
     class Meta:
+        model = Course
+        fields = ('id', 'name',)
+
+
+class ProjectSerializer(serializers.ModelSerializer):
+    """JSON serializer"""
+    book = serializers.SerializerMethodField()
+    course = serializers.SerializerMethodField()
+
+    def get_book(self, obj):
+        request = self.context.get('request')
+        if request is not None:
+            expansions = request.query_params.getlist("expand", None)
+            if 'book' in expansions:
+                book = BookSerializer(obj.book, many=False)
+                return book.data
+        return obj.book.id
+
+    def get_course(self, obj):
+        request = self.context.get('request')
+        if request is not None:
+            expansions = request.query_params.getlist("expand", None)
+            if 'course' in expansions:
+                course = CourseSerializer(obj.book.course, many=False)
+                return course.data
+        return obj.book.course.id
+
+    class Meta:
         model = Project
-        fields = ('id', 'name', 'book',)
+        fields = ('id', 'name', 'book', 'course')

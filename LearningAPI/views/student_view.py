@@ -527,8 +527,8 @@ class MicroStudents(serializers.ModelSerializer):
             book = student_project.project.book
 
             # Not assigned book assessment yet
-            # annotate(cohort_count=Count('assigned_cohorts'))
             assessment_status = 0
+
             try:
                 student_assessment = StudentAssessment.objects.annotate(assessment_status=Case(
                         When(status__status="In Progress", then=1),
