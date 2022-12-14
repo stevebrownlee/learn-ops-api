@@ -35,6 +35,9 @@ from pg_catalog.pg_tables;
 SELECT *
 FROM public."LearningAPI_studentpersonality";
 
+DELETE FROM public."LearningAPI_cohort" where id = 12;
+DELETE FROM public."LearningAPI_cohortcourse";
+
 
 UPDATE public."LearningAPI_nssuser"
 SET slack_handle = 'G08NYBJSY'

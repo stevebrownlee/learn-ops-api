@@ -7,6 +7,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 from ..models.people import Cohort, NssUser, NssUserCohort
+from ..models.coursework import CohortCourse, Course
 
 
 class CohortPermission(permissions.BasePermission):
@@ -32,6 +33,10 @@ class CohortViewSet(ViewSet):
         Returns:
             Response -- JSON serialized instance
         """
+        courses = request.data.get('courses', None)
+        if courses is  None:
+            return Response({"reason": "Please choose some courses for this cohort."}, status=status.HTTP_400_BAD_REQUEST)
+
         cohort = Cohort()
         cohort.name = request.data["name"]
         cohort.slack_channel = request.data["slackChannel"]
@@ -42,6 +47,14 @@ class CohortViewSet(ViewSet):
 
         try:
             cohort.save()
+
+            for course in courses:
+                cohort_course = CohortCourse()
+                cohort_course.course = Course.objects.get(pk=course)
+                cohort_course.cohort = cohort
+                cohort_course.save()
+
+
             serializer = CohortSerializer(cohort, context={'request': request})
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 

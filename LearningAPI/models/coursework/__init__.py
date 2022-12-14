@@ -12,3 +12,4 @@ from .student_project import StudentProject
 from .objective_tag import ObjectiveTag
 from .project_tag import ProjectTag
 from .lightning_tag import LightningTag
+from .cohort_course import CohortCourse

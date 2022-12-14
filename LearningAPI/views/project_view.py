@@ -19,6 +19,7 @@ class ProjectViewSet(ViewSet):
         """
         project = Project()
         project.name = request.data["name"]
+        project.book = Book.objects.get(pk=request.data["book"])
         project.implementation_url = request.data["implementation_url"]
 
         try:

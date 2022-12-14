@@ -91,7 +91,12 @@ class BookViewSet(ViewSet):
             Response -- JSON serialized array
         """
         try:
+            course_id = request.query_params.get('courseId', None)
+
             books = Book.objects.all()
+
+            if course_id is not None:
+                books = books.filter(course__id=course_id)
 
             serializer = BookSerializer(books, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
