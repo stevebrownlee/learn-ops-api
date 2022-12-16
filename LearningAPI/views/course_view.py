@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 
 from LearningAPI.decorators import is_instructor
-from LearningAPI.models.coursework import Course, Book, Project
+from LearningAPI.models.coursework import Course, Book, Project, CohortCourse
 
 
 class CourseViewSet(ViewSet):
@@ -94,11 +94,17 @@ class CourseViewSet(ViewSet):
         Returns:
             Response -- JSON serialized array
         """
-        try:
-            courses = Course.objects.all().order_by('pk')
+        cohort = request.query_params.get("cohortId", None)
+        active = request.query_params.get("active", None)
 
-            serializer = CourseSerializer(
-                courses, many=True, context={'request': request})
+        try:
+            courses = Course.objects.all()
+
+            if cohort is not None and active is not None:
+                active_cohort_course = CohortCourse.objects.get(cohort__id=cohort, active=bool(active))
+                courses = courses.filter(pk=active_cohort_course.course.id)
+
+            serializer = CourseSerializer(courses, many=True, context={'request': request})
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as ex:
             return HttpResponseServerError(ex)
@@ -117,7 +123,7 @@ class BookSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Book
-        fields = ('id', 'name', 'projects')
+        fields = ('id', 'name', 'projects', 'cardinality')
         depth = 1
 
 

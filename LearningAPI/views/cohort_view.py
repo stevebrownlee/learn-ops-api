@@ -50,10 +50,15 @@ class CohortViewSet(ViewSet):
 
             for course in courses:
                 cohort_course = CohortCourse()
-                cohort_course.course = Course.objects.get(pk=course)
+                course_instance = Course.objects.get(pk=course)
+                cohort_course.course = course_instance
                 cohort_course.cohort = cohort
-                cohort_course.save()
+                cohort_course.active = False
 
+                if 'JavaScript' in course_instance.name:
+                    cohort_course.active = True
+
+                cohort_course.save()
 
             serializer = CohortSerializer(cohort, context={'request': request})
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -162,6 +167,16 @@ class CohortViewSet(ViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as ex:
             return HttpResponseServerError(ex)
+
+    @action(methods=['put',], detail=True)
+    def migrate(self, request, pk):
+        """Migrate all students in a cohort from client side to server side
+
+        1. Assign all students in cohort to first book of chosen server-side course
+        """
+
+        if request.method == "PUT":
+            pass
 
     @action(methods=['post', 'delete'], detail=True)
     def assign(self, request, pk):

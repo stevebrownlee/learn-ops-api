@@ -27,6 +27,25 @@ FROM public."LearningAPI_studentassessment";
 SELECT *
 FROM public."authtoken_token";
 
+DELETE FROM public."LearningAPI_cohortcourse";
+
+SELECT *
+FROM public."LearningAPI_course";
+
+SELECT *
+FROM public."LearningAPI_cohort";
+
+SELECT *
+FROM public."LearningAPI_cohortcourse";
+
+
+insert into public."LearningAPI_cohortcourse"
+ (cohort_id, course_id, active)
+values (3, 1, FALSE);
+
+insert into public."LearningAPI_cohortcourse"
+ (cohort_id, course_id, active)
+values (3, 3, TRUE);
 
 select *
 from pg_catalog.pg_tables;

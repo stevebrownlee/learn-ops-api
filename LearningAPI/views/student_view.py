@@ -142,7 +142,8 @@ class StudentViewSet(ModelViewSet):
             Response -- JSON serialized array
         """
         student_status = self.request.query_params.get('status', None)
-        # annotate(cohort_count=Count('assigned_cohorts')).\
+        cohort = self.request.query_params.get('cohort', None)
+        search_terms = self.request.query_params.get('q', None)
 
         if student_status == "unassigned":
             students = NssUser.objects.\
@@ -153,10 +154,8 @@ class StudentViewSet(ModelViewSet):
             students = NssUser.objects.filter(
                 user__is_active=True, user__is_staff=False)
 
-        serializer = SingleStudent(
-            students, many=True, context={'request': request})
+        serializer = SingleStudent(students, many=True)
 
-        search_terms = self.request.query_params.get('q', None)
         if search_terms is not None:
             for letter in list(search_terms):
                 students = students.filter(
@@ -164,12 +163,8 @@ class StudentViewSet(ModelViewSet):
                     | Q(user__last_name__icontains=letter)
                 )
 
-            serializer = SingleStudent(
-                students, many=True, context={'request': request})
+            serializer = SingleStudent(students, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
-
-        cohort = self.request.query_params.get('cohort', None)
-        feedback = self.request.query_params.get('feedback', None)
 
         if cohort is not None:
             cohort_filter = Cohort.objects.get(pk=cohort)
@@ -177,8 +172,8 @@ class StudentViewSet(ModelViewSet):
 
             for student in students:
                 try:
-                    personality = StudentPersonality.objects.get(
-                        student=student)
+                    personality = StudentPersonality.objects.get(student=student)
+
                 except StudentPersonality.DoesNotExist:
                     personality = StudentPersonality()
                     personality.briggs_myers_type = ""
@@ -190,12 +185,7 @@ class StudentViewSet(ModelViewSet):
                     personality.student = student
                     personality.save()
 
-            if feedback is not None and feedback == 'true':
-                serializer = MicroStudents(
-                    students, many=True, context={'request': request})
-            else:
-                serializer = MicroStudents(
-                    students, many=True, context={'request': request})
+            serializer = MicroStudents(students, many=True)
 
         page = self.paginate_queryset(serializer.data)
         paginated_response = self.get_paginated_response(page)
