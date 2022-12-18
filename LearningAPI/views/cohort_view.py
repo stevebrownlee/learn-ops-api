@@ -176,6 +176,16 @@ class CohortViewSet(ViewSet):
         """
 
         if request.method == "PUT":
+            client_side_course = CohortCourse.objects.get(cohort__id=pk, active=True)
+
+            server_side_course = CohortCourse.objects.get(cohort__id=pk, active=False)
+            # Get first project of server side course
+
+            # Get all students in cohort
+            cohort_students = NssUser.objects.filter(current_cohort=pk)
+            # Create record in student project
+            # Deactivate client side course
+            # Active server side course
             pass
 
     @action(methods=['post', 'delete'], detail=True)

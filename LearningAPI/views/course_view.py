@@ -123,7 +123,7 @@ class BookSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Book
-        fields = ('id', 'name', 'projects', 'cardinality')
+        fields = ('id', 'name', 'projects', 'index')
         depth = 1
 
 
@@ -132,7 +132,7 @@ class CourseSerializer(serializers.ModelSerializer):
     books = serializers.SerializerMethodField()
 
     def get_books(self, obj):
-        books = Book.objects.filter(course=obj).order_by("cardinality")
+        books = Book.objects.filter(course=obj).order_by("index")
         return BookSerializer(books, many=True).data
 
     class Meta:

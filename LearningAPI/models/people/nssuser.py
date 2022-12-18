@@ -2,6 +2,7 @@
 from django.db import models
 from django.conf import settings
 
+
 class NssUser(models.Model):
     """Model for NSS-specific user information beyond Django user"""
     user = models.OneToOneField(
@@ -28,3 +29,8 @@ class NssUser(models.Model):
                 "end_date": assignment.cohort.end_date,
             })
         return cohort_list
+
+    @property
+    def current_cohort(self):
+        assignment = self.assigned_cohorts.order_by("-id").last()
+        return assignment.cohort.id

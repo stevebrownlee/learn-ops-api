@@ -19,6 +19,7 @@ class ProjectViewSet(ViewSet):
         """
         project = Project()
         project.name = request.data["name"]
+        project.index = request.data["index"]
         project.book = Book.objects.get(pk=request.data["book"])
         project.implementation_url = request.data["implementation_url"]
 
@@ -49,10 +50,13 @@ class ProjectViewSet(ViewSet):
         Returns:
             Response -- Empty body with 204 status code
         """
+        url = request.data.get("implementation_url", "")
+
         try:
             project = Project.objects.get(pk=pk)
             project.name = request.data["name"]
-            project.implementation_url = request.data["implementation_url"]
+            project.index = request.data["index"]
+            project.implementation_url = url
 
             project.save()
         except Project.DoesNotExist:
@@ -91,7 +95,7 @@ class ProjectViewSet(ViewSet):
         course_id = request.query_params.get("courseId", None)
 
         try:
-            projects = Project.objects.all()
+            projects = Project.objects.all().order_by('book__index', 'index')
 
             if course_id is not None:
                 projects = projects.filter(book__course__id=course_id)
@@ -145,4 +149,4 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ('id', 'name', 'book', 'course')
+        fields = ('id', 'name', 'book', 'course', 'index')

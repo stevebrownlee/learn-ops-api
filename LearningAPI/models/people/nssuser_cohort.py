@@ -8,6 +8,8 @@ class NssUserCohort(models.Model):
     cohort = models.ForeignKey(
         "Cohort", on_delete=models.DO_NOTHING, related_name="members")
 
+    # TODO: Add an active property to determine which cohort student is currently in
+
     def __str__(self) -> str:
         return self.cohort.name
 

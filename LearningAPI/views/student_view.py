@@ -474,8 +474,7 @@ class StudentSerializer(serializers.ModelSerializer):
         model = NssUser
         fields = ('id', 'name', 'email', 'github', 'score', 'core_skill_records',
                   'cohorts', 'feedback', 'records', 'notes', 'personality',
-                  'capstones',
-                  )
+                  'capstones', 'current_cohort' )
 
 
 class StudentTagSerializer(serializers.ModelSerializer):
@@ -542,7 +541,7 @@ class MicroStudents(serializers.ModelSerializer):
 
         if student_project is None:
             book = Book.objects.get(
-                course__name__icontains="JavaScript", cardinality=0)
+                course__name__icontains="JavaScript", index=0)
             return {
                 "id": book.id,
                 "name": book.name,
@@ -642,4 +641,5 @@ class SingleStudent(serializers.ModelSerializer):
     class Meta:
         model = NssUser
         fields = ('id', 'name', 'email', 'github', 'staff', 'slack_handle',
-                  'cohorts', 'feedback', 'repos', 'score', 'date_joined')
+                  'cohorts', 'feedback', 'repos', 'score', 'date_joined',
+                  'current_cohort')
