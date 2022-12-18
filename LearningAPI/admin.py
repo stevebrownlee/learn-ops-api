@@ -9,13 +9,19 @@ from .models.people import (
 )
 from .models.coursework import (
     Course, ProposalStatus, Capstone, Book,
-    CapstoneTimeline, StudentProject, Project
+    CapstoneTimeline, StudentProject, Project,
+    CohortCourse
 )
 
 from .models.skill import (
     CoreSkill, CoreSkillRecord,
     LearningRecordEntry, LearningRecord, LearningWeight,
 )
+
+@admin.register(CohortCourse)
+class CohortCourseAdmin(admin.ModelAdmin):
+    """For assigning students to cohorts"""
+    list_display = ('cohort', 'course', 'active', )
 
 @admin.register(StudentAssessment)
 class StudentAssessmentAdmin(admin.ModelAdmin):

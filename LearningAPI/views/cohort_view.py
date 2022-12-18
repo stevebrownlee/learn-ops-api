@@ -7,14 +7,14 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 from ..models.people import Cohort, NssUser, NssUserCohort
-from ..models.coursework import CohortCourse, Course
+from ..models.coursework import CohortCourse, Course, Project, StudentProject
 
 
 class CohortPermission(permissions.BasePermission):
     """Cohort permissions"""
 
     def has_permission(self, request, view):
-        if view.action in ['create', 'update', 'destroy', 'assign']:
+        if view.action in ['create', 'update', 'destroy', 'assign', 'migrate']:
             return request.auth.user.is_staff
         elif view.action in ['retrieve', 'list']:
             return True
@@ -34,7 +34,7 @@ class CohortViewSet(ViewSet):
             Response -- JSON serialized instance
         """
         courses = request.data.get('courses', None)
-        if courses is  None:
+        if courses is None:
             return Response({"reason": "Please choose some courses for this cohort."}, status=status.HTTP_400_BAD_REQUEST)
 
         cohort = Cohort()
@@ -155,8 +155,10 @@ class CohortViewSet(ViewSet):
                 return Response(serializer.data, status=status.HTTP_200_OK)
 
             cohorts = cohorts.annotate(
-                students=Count('members', filter=Q(members__nss_user__user__is_staff=False)),
-                is_instructor=Count('members', filter=Q(members__nss_user__user=request.auth.user)),
+                students=Count('members', filter=Q(
+                    members__nss_user__user__is_staff=False)),
+                is_instructor=Count('members', filter=Q(
+                    members__nss_user__user=request.auth.user)),
             ).all().order_by('-pk')
 
             if limit is not None:
@@ -168,7 +170,7 @@ class CohortViewSet(ViewSet):
         except Exception as ex:
             return HttpResponseServerError(ex)
 
-    @action(methods=['put',], detail=True)
+    @action(methods=['put', ], detail=True)
     def migrate(self, request, pk):
         """Migrate all students in a cohort from client side to server side
 
@@ -176,17 +178,58 @@ class CohortViewSet(ViewSet):
         """
 
         if request.method == "PUT":
-            client_side_course = CohortCourse.objects.get(cohort__id=pk, active=True)
+            try:
+                client_side_course = CohortCourse.objects.get(
+                cohort__id=pk, active=True)
+            except CohortCourse.DoesNotExist:
+                return Response({
+                    'reason': 'Could not find an active client side course for this cohort'
+                }, status=status.HTTP_404_NOT_FOUND)
 
-            server_side_course = CohortCourse.objects.get(cohort__id=pk, active=False)
+            try:
+                server_side_course = CohortCourse.objects.get(
+                    cohort__id=pk, active=False)
+            except CohortCourse.DoesNotExist:
+                return Response({
+                    'reason': 'Could not find an inactive server side course for this cohort'
+                }, status=status.HTTP_404_NOT_FOUND)
+
             # Get first project of server side course
+            try:
+                first_project = Project.objects.get(
+                    book__course=server_side_course.course, book__index=0, index=0)
+            except Project.DoesNotExist:
+                return Response({
+                    'reason': 'Could not find a singular project in the first book of server side'
+                }, status=status.HTTP_404_NOT_FOUND)
 
             # Get all students in cohort
-            cohort_students = NssUser.objects.filter(current_cohort=pk)
+            try:
+                cohort = Cohort.objects.get(pk=pk)
+            except Cohort.DoesNotExist:
+                return Response({
+                    'reason': 'Cohort does not exist'
+                }, status=status.HTTP_404_NOT_FOUND)
+
+            cohort_students = NssUser.objects.filter(
+                user__is_active=True, user__is_staff=False, assigned_cohorts__cohort=cohort)
+
             # Create record in student project
+            for student in cohort_students:
+                student_project = StudentProject()
+                student_project.student = student
+                student_project.project = first_project
+                student_project.save()
+
             # Deactivate client side course
+            client_side_course.active = False
+            client_side_course.save()
+
             # Active server side course
-            pass
+            server_side_course.active = True
+            server_side_course.save()
+
+            return Response(None, status=status.HTTP_204_NO_CONTENT)
 
     @action(methods=['post', 'delete'], detail=True)
     def assign(self, request, pk):
@@ -281,10 +324,22 @@ class MiniCohortSerializer(serializers.ModelSerializer):
         fields = ('id', 'name')
 
 
-class CohortSerializer(serializers.ModelSerializer):
+class CohortCourseSerializer(serializers.ModelSerializer):
     """JSON serializer"""
 
     class Meta:
+        model = CohortCourse
+        fields = ('id', 'course', 'active')
+        depth = 1
+
+class CohortSerializer(serializers.ModelSerializer):
+    """JSON serializer"""
+    courses = CohortCourseSerializer(many=True)
+
+    class Meta:
         model = Cohort
-        fields = ('id', 'name', 'slack_channel', 'start_date', 'end_date', 'coaches',
-                  'break_start_date', 'break_end_date', 'students', 'is_instructor', )
+        fields = (
+            'id', 'name', 'slack_channel', 'start_date', 'end_date',
+            'coaches', 'break_start_date', 'break_end_date', 'students',
+            'is_instructor', 'courses'
+        )
