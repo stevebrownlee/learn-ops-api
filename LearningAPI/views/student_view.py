@@ -561,6 +561,10 @@ class MicroStudents(serializers.ModelSerializer):
             approved=Count(
                 'statuses',
                 filter=Q(statuses__status__status="Approved")
+            ),
+            mvp=Count(
+                'statuses',
+                filter=Q(statuses__status__status="MVP")
             )
         ).order_by("pk")
 
@@ -575,6 +579,8 @@ class MicroStudents(serializers.ModelSerializer):
                 proposal_status = "reviewed"
             elif proposal.status_count > 0 and proposal.approved == 1:
                 proposal_status = "approved"
+            elif proposal.status_count > 0 and proposal.mvp == 1:
+                proposal_status = "mvp"
 
             proposal_statuses.append({
                 "id": proposal.id,
