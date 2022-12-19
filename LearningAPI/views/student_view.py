@@ -575,12 +575,12 @@ class MicroStudents(serializers.ModelSerializer):
 
             if proposal.status_count == 0:
                 proposal_status = "submitted"
+            elif proposal.status_count > 0 and proposal.mvp == 1:
+                proposal_status = "mvp"
             elif proposal.status_count > 0 and proposal.approved == 0:
                 proposal_status = "reviewed"
             elif proposal.status_count > 0 and proposal.approved == 1:
                 proposal_status = "approved"
-            elif proposal.status_count > 0 and proposal.mvp == 1:
-                proposal_status = "mvp"
 
             proposal_statuses.append({
                 "id": proposal.id,
