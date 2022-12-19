@@ -261,7 +261,7 @@ class StudentViewSet(ModelViewSet):
         if request.method == "POST":
             try:
                 student_project = StudentProject()
-                student_project.student = NssUser.objects.get(user__id=pk)
+                student_project.student = NssUser.objects.get(pk=pk)
                 student_project.project = Project.objects.get(
                     pk=int(request.data['projectId']))
                 student_project.save()
