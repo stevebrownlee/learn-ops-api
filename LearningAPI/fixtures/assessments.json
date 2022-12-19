@@ -3,8 +3,9 @@
     "model": "LearningAPI.assessment",
     "pk": 1,
     "fields": {
-        "name": "Functions book self-assessment",
+        "name": "JavaScript: Mortgage Qualification Functions",
         "source_url": "https://github.com/Nashville-Software-School-Assessments/functions-book-assessment",
+        "book": 2,
         "type": "SELF"
     }
 },
@@ -12,17 +13,9 @@
     "model": "LearningAPI.assessment",
     "pk": 2,
     "fields": {
-        "name": "DOM and event listeners self-assessment",
+        "name": "JavaScript: Kids Dreams",
         "source_url": "https://github.com/Nashville-Software-School-Assessments/kids-dreams-assessment",
-        "type": "SELF"
-    }
-},
-{
-    "model": "LearningAPI.assessment",
-    "pk": 4,
-    "fields": {
-        "name": "Asynchronous code self-assessment",
-        "source_url": "https://github.com/Nashville-Software-School-Assessments/pen-pal-society-assessment",
+        "book": 12,
         "type": "SELF"
     }
 },
@@ -30,63 +23,50 @@
     "model": "LearningAPI.assessment",
     "pk": 3,
     "fields": {
-        "name": "State self-assessment",
+        "name": "JavaScript: House of Hummus",
         "source_url": "https://github.com/Nashville-Software-School-Assessments/house-of-hummus-assessment",
+        "book": 13,
         "type": "SELF"
     }
 },
 {
     "model": "LearningAPI.assessment",
-    "pk": 5,
+    "pk": 4,
     "fields": {
-        "name": "Foundations course self-assessment",
-        "source_url": "https://github.com/Nashville-Software-School-Assessments/foundations-course-assessment",
+        "name": "JavaScript: Modern Farm",
+        "source_url": "https://github.com/nashville-software-school/client-side-mastery/tree/master/projects/tier-1/modern-farm",
+        "book": 1,
         "type": "SELF"
     }
 },
 {
     "model": "LearningAPI.assessment",
-    "pk": 6,
+    "pk": 12,
     "fields": {
-        "name": "Location Extraction - JavaScript fundamentals assessment",
-        "source_url": "https://github.com/Nashville-Software-School-Assessments/interview-location-extraction",
-        "type": "ASSIGNED"
+        "name": "Python: Tuna Piano API",
+        "source_url": "https://github.com/Nashville-Software-School-Assessments/django-rest-api-assessment",
+        "book": 5,
+        "type": "SELF"
     }
 },
 {
     "model": "LearningAPI.assessment",
-    "pk": 7,
+    "pk": 13,
     "fields": {
-        "name": "Shopping Cart - Debugging assessment",
-        "source_url": "https://github.com/Nashville-Software-School-Assessments/interview-shopping-cart",
-        "type": "ASSIGNED"
+        "name": "Flower Shop",
+        "source_url": "https://github.com/nashville-software-school/client-side-mastery/blob/master/book-1-leonids-toys/chapters/JS_DATA_ASSESSMENT.md",
+        "book": 3,
+        "type": "SELF"
     }
 },
 {
     "model": "LearningAPI.assessment",
-    "pk": 8,
+    "pk": 17,
     "fields": {
-        "name": "Glassdale Criminals - Fetch and data assessment",
-        "source_url": "https://github.com/Nashville-Software-School-Assessments/interview-request-response",
-        "type": "ASSIGNED"
-    }
-},
-{
-    "model": "LearningAPI.assessment",
-    "pk": 9,
-    "fields": {
-        "name": "Customer Names - JavaScript fundamentals assessment",
-        "source_url": "https://github.com/Nashville-Software-School-Assessments/interview-full-names",
-        "type": "ASSIGNED"
-    }
-},
-{
-    "model": "LearningAPI.assessment",
-    "pk": 11,
-    "fields": {
-        "name": "Hairy Potter - Debugging assessment",
-        "source_url": "https://github.com/Nashville-Software-School-Assessments/interview-hairy-potter",
-        "type": "ASSIGNED"
+        "name": "Pen Pal Society",
+        "source_url": "https://github.com/Nashville-Software-School-Assessments/pen-pal-society-assessment",
+        "book": 14,
+        "type": "SELF"
     }
 }
 ]

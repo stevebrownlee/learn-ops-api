@@ -13,6 +13,8 @@ python3 manage.py loaddata cohorts
 python3 manage.py loaddata user_cohorts
 python3 manage.py loaddata courses
 python3 manage.py loaddata books
+python3 manage.py loaddata cohort_courses
+python3 manage.py loaddata projects
 python3 manage.py loaddata assessments
 python3 manage.py loaddata student_assessment_statuses
 python3 manage.py loaddata student_assessments
@@ -23,4 +25,4 @@ python3 manage.py loaddata opportunities
 python3 manage.py loaddata learning_weights
 python3 manage.py loaddata learning_records
 python3 manage.py loaddata learning_record_entries
-
+python3 manage.py loaddata proposal_statuses

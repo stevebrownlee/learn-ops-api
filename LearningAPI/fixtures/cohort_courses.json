@@ -1,0 +1,110 @@
+[
+{
+    "model": "LearningAPI.cohortcourse",
+    "pk": 7,
+    "fields": {
+        "cohort": 5,
+        "course": 3,
+        "active": true
+    }
+},
+{
+    "model": "LearningAPI.cohortcourse",
+    "pk": 8,
+    "fields": {
+        "cohort": 5,
+        "course": 1,
+        "active": false
+    }
+},
+{
+    "model": "LearningAPI.cohortcourse",
+    "pk": 9,
+    "fields": {
+        "cohort": 8,
+        "course": 1,
+        "active": false
+    }
+},
+{
+    "model": "LearningAPI.cohortcourse",
+    "pk": 10,
+    "fields": {
+        "cohort": 8,
+        "course": 3,
+        "active": true
+    }
+},
+{
+    "model": "LearningAPI.cohortcourse",
+    "pk": 11,
+    "fields": {
+        "cohort": 6,
+        "course": 1,
+        "active": false
+    }
+},
+{
+    "model": "LearningAPI.cohortcourse",
+    "pk": 12,
+    "fields": {
+        "cohort": 6,
+        "course": 3,
+        "active": true
+    }
+},
+{
+    "model": "LearningAPI.cohortcourse",
+    "pk": 13,
+    "fields": {
+        "cohort": 3,
+        "course": 1,
+        "active": false
+    }
+},
+{
+    "model": "LearningAPI.cohortcourse",
+    "pk": 14,
+    "fields": {
+        "cohort": 3,
+        "course": 3,
+        "active": true
+    }
+},
+{
+    "model": "LearningAPI.cohortcourse",
+    "pk": 15,
+    "fields": {
+        "cohort": 14,
+        "course": 3,
+        "active": true
+    }
+},
+{
+    "model": "LearningAPI.cohortcourse",
+    "pk": 16,
+    "fields": {
+        "cohort": 14,
+        "course": 2,
+        "active": false
+    }
+},
+{
+    "model": "LearningAPI.cohortcourse",
+    "pk": 17,
+    "fields": {
+        "cohort": 4,
+        "course": 3,
+        "active": true
+    }
+},
+{
+    "model": "LearningAPI.cohortcourse",
+    "pk": 18,
+    "fields": {
+        "cohort": 4,
+        "course": 2,
+        "active": false
+    }
+}
+]

@@ -3,21 +3,21 @@
     "model": "LearningAPI.course",
     "pk": 1,
     "fields": {
-        "name": "Python, Django and SQL"
+        "name": "Python"
     }
 },
 {
     "model": "LearningAPI.course",
     "pk": 2,
     "fields": {
-        "name": "C# and .NET"
+        "name": "C#"
     }
 },
 {
     "model": "LearningAPI.course",
     "pk": 3,
     "fields": {
-        "name": "JavaScript and React"
+        "name": "JavaScript"
     }
 }
 ]

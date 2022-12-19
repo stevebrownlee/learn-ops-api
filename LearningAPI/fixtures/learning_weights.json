@@ -1,146 +1,290 @@
 [
-    {
-        "model": "LearningAPI.learningweight",
-        "pk": 1,
-        "fields": {
-            "label": "JavaScript data types",
-            "weight": 6,
-            "tier": 1
-        }
-    },
-    {
-        "model": "LearningAPI.learningweight",
-        "pk": 2,
-        "fields": {
-            "label": "Array iteration",
-            "weight": 6,
-            "tier": 1
-        }
-    },
-    {
-        "model": "LearningAPI.learningweight",
-        "pk": 3,
-        "fields": {
-            "label": "Git workflow",
-            "weight": 6,
-            "tier": 1
-        }
-    },
-    {
-        "model": "LearningAPI.learningweight",
-        "pk": 4,
-        "fields": {
-            "label": "Functions (arguments, parameters, return)",
-            "weight": 10,
-            "tier": 1
-        }
-    },
-    {
-        "model": "LearningAPI.learningweight",
-        "pk": 5,
-        "fields": {
-            "label": "Debugger",
-            "weight": 10,
-            "tier": 1
-        }
-    },
-    {
-        "model": "LearningAPI.learningweight",
-        "pk": 6,
-        "fields": {
-            "label": "Algorithm development",
-            "weight": 6,
-            "tier": 1
-        }
-    },
-    {
-        "model": "LearningAPI.learningweight",
-        "pk": 7,
-        "fields": {
-            "label": "ERD and data relationships",
-            "weight": 6,
-            "tier": 2
-        }
-    },
-    {
-        "model": "LearningAPI.learningweight",
-        "pk": 8,
-        "fields": {
-            "label": "State",
-            "weight": 6,
-            "tier": 2
-        }
-    },
-    {
-        "model": "LearningAPI.learningweight",
-        "pk": 9,
-        "fields": {
-            "label": "Array methods",
-            "weight": 6,
-            "tier": 2
-        }
-    },
-    {
-        "model": "LearningAPI.learningweight",
-        "pk": 10,
-        "fields": {
-            "label": "Module code (import/export, SRP)",
-            "weight": 6,
-            "tier": 2
-        }
-    },
-    {
-        "model": "LearningAPI.learningweight",
-        "pk": 11,
-        "fields": {
-            "label": "Handling events (click, change, etc.)",
-            "weight": 6,
-            "tier": 2
-        }
-    },
-    {
-        "model": "LearningAPI.learningweight",
-        "pk": 12,
-        "fields": {
-            "label": "Asynchronous code",
-            "weight": 6,
-            "tier": 3
-        }
-    },
-    {
-        "model": "LearningAPI.learningweight",
-        "pk": 14,
-        "fields": {
-            "label": "React - Basic hooks",
-            "weight": 6,
-            "tier": 3
-        }
-    },
-    {
-        "model": "LearningAPI.learningweight",
-        "pk": 15,
-        "fields": {
-            "label": "React - Routing",
-            "weight": 6,
-            "tier": 3
-        }
-    },
-    {
-        "model": "LearningAPI.learningweight",
-        "pk": 16,
-        "fields": {
-            "label": "React - Passing properties",
-            "weight": 6,
-            "tier": 3
-        }
-    },
-    {
-        "model": "LearningAPI.learningweight",
-        "pk": 17,
-        "fields": {
-            "label": "React - Dev Tools",
-            "weight": 6,
-            "tier": 3
-        }
+{
+    "model": "LearningAPI.learningweight",
+    "pk": 1,
+    "fields": {
+        "label": "JavaScript data types",
+        "weight": 6,
+        "tier": 1
     }
+},
+{
+    "model": "LearningAPI.learningweight",
+    "pk": 2,
+    "fields": {
+        "label": "Array iteration",
+        "weight": 6,
+        "tier": 1
+    }
+},
+{
+    "model": "LearningAPI.learningweight",
+    "pk": 3,
+    "fields": {
+        "label": "Git workflow",
+        "weight": 6,
+        "tier": 1
+    }
+},
+{
+    "model": "LearningAPI.learningweight",
+    "pk": 4,
+    "fields": {
+        "label": "Functions",
+        "weight": 10,
+        "tier": 1
+    }
+},
+{
+    "model": "LearningAPI.learningweight",
+    "pk": 5,
+    "fields": {
+        "label": "Debugger",
+        "weight": 10,
+        "tier": 1
+    }
+},
+{
+    "model": "LearningAPI.learningweight",
+    "pk": 6,
+    "fields": {
+        "label": "Algorithm development",
+        "weight": 6,
+        "tier": 1
+    }
+},
+{
+    "model": "LearningAPI.learningweight",
+    "pk": 7,
+    "fields": {
+        "label": "ERD and data relationships",
+        "weight": 6,
+        "tier": 2
+    }
+},
+{
+    "model": "LearningAPI.learningweight",
+    "pk": 8,
+    "fields": {
+        "label": "State",
+        "weight": 6,
+        "tier": 2
+    }
+},
+{
+    "model": "LearningAPI.learningweight",
+    "pk": 9,
+    "fields": {
+        "label": "Array methods",
+        "weight": 6,
+        "tier": 2
+    }
+},
+{
+    "model": "LearningAPI.learningweight",
+    "pk": 10,
+    "fields": {
+        "label": "JavaScript Modules",
+        "weight": 6,
+        "tier": 2
+    }
+},
+{
+    "model": "LearningAPI.learningweight",
+    "pk": 11,
+    "fields": {
+        "label": "Basic Browser Events",
+        "weight": 6,
+        "tier": 2
+    }
+},
+{
+    "model": "LearningAPI.learningweight",
+    "pk": 12,
+    "fields": {
+        "label": "Asynchronous code",
+        "weight": 6,
+        "tier": 3
+    }
+},
+{
+    "model": "LearningAPI.learningweight",
+    "pk": 14,
+    "fields": {
+        "label": "React - Basic hooks",
+        "weight": 6,
+        "tier": 3
+    }
+},
+{
+    "model": "LearningAPI.learningweight",
+    "pk": 15,
+    "fields": {
+        "label": "React - Routing",
+        "weight": 6,
+        "tier": 3
+    }
+},
+{
+    "model": "LearningAPI.learningweight",
+    "pk": 16,
+    "fields": {
+        "label": "React - Passing properties",
+        "weight": 6,
+        "tier": 3
+    }
+},
+{
+    "model": "LearningAPI.learningweight",
+    "pk": 17,
+    "fields": {
+        "label": "React - Dev Tools",
+        "weight": 6,
+        "tier": 3
+    }
+},
+{
+    "model": "LearningAPI.learningweight",
+    "pk": 18,
+    "fields": {
+        "label": "Exception Handling",
+        "weight": 6,
+        "tier": 3
+    }
+},
+{
+    "model": "LearningAPI.learningweight",
+    "pk": 19,
+    "fields": {
+        "label": "Debugger usage in IDE",
+        "weight": 6,
+        "tier": 4
+    }
+},
+{
+    "model": "LearningAPI.learningweight",
+    "pk": 20,
+    "fields": {
+        "label": "Static Typing",
+        "weight": 6,
+        "tier": 4
+    }
+},
+{
+    "model": "LearningAPI.learningweight",
+    "pk": 21,
+    "fields": {
+        "label": "Client/Server Data Flow",
+        "weight": 8,
+        "tier": 5
+    }
+},
+{
+    "model": "LearningAPI.learningweight",
+    "pk": 22,
+    "fields": {
+        "label": "SQL (Single Table)",
+        "weight": 6,
+        "tier": 4
+    }
+},
+{
+    "model": "LearningAPI.learningweight",
+    "pk": 23,
+    "fields": {
+        "label": "SQL (Join Multiple)",
+        "weight": 6,
+        "tier": 4
+    }
+},
+{
+    "model": "LearningAPI.learningweight",
+    "pk": 24,
+    "fields": {
+        "label": "Database Models",
+        "weight": 6,
+        "tier": 5
+    }
+},
+{
+    "model": "LearningAPI.learningweight",
+    "pk": 25,
+    "fields": {
+        "label": "Controllers",
+        "weight": 6,
+        "tier": 5
+    }
+},
+{
+    "model": "LearningAPI.learningweight",
+    "pk": 26,
+    "fields": {
+        "label": "JSON Serialization",
+        "weight": 6,
+        "tier": 5
+    }
+},
+{
+    "model": "LearningAPI.learningweight",
+    "pk": 27,
+    "fields": {
+        "label": "Custom Types",
+        "weight": 10,
+        "tier": 6
+    }
+},
+{
+    "model": "LearningAPI.learningweight",
+    "pk": 28,
+    "fields": {
+        "label": "ORM (get/all)",
+        "weight": 6,
+        "tier": 5
+    }
+},
+{
+    "model": "LearningAPI.learningweight",
+    "pk": 29,
+    "fields": {
+        "label": "ORM (filter)",
+        "weight": 6,
+        "tier": 5
+    }
+},
+{
+    "model": "LearningAPI.learningweight",
+    "pk": 30,
+    "fields": {
+        "label": "ORM (navigating models)",
+        "weight": 8,
+        "tier": 5
+    }
+},
+{
+    "model": "LearningAPI.learningweight",
+    "pk": 31,
+    "fields": {
+        "label": "Integration Tests",
+        "weight": 6,
+        "tier": 6
+    }
+},
+{
+    "model": "LearningAPI.learningweight",
+    "pk": 32,
+    "fields": {
+        "label": "SSR HTML Templates",
+        "weight": 6,
+        "tier": 6
+    }
+},
+{
+    "model": "LearningAPI.learningweight",
+    "pk": 33,
+    "fields": {
+        "label": "Terminal Usage",
+        "weight": 6,
+        "tier": 3
+    }
+}
 ]

@@ -3,32 +3,40 @@
     "model": "LearningAPI.book",
     "pk": 1,
     "fields": {
-        "name": "Martins Aquarium",
-        "course": 3
+        "name": "Book 3",
+        "course": 3,
+        "description": "Intro to flexbox, low fidelity wireframes, and interacting with the browser",
+        "index": 3
     }
 },
 {
     "model": "LearningAPI.book",
     "pk": 2,
     "fields": {
-        "name": "Glassdale PD",
-        "course": 3
+        "name": "Book 2",
+        "course": 3,
+        "description": "Introduction to functions and import/export",
+        "index": 2
     }
 },
 {
     "model": "LearningAPI.book",
     "pk": 3,
     "fields": {
-        "name": "Nashville Kennels",
-        "course": 3
+        "name": "Book 1",
+        "course": 3,
+        "description": "JavaScript data types, data structures and iteration",
+        "index": 1
     }
 },
 {
     "model": "LearningAPI.book",
     "pk": 4,
     "fields": {
-        "name": "Nashville Kennels API",
-        "course": 1
+        "name": "Kennels API SQL",
+        "course": 1,
+        "description": "",
+        "index": 1
     }
 },
 {
@@ -36,47 +44,139 @@
     "pk": 5,
     "fields": {
         "name": "Level Up",
-        "course": 1
+        "course": 1,
+        "description": "",
+        "index": 2
     }
 },
 {
     "model": "LearningAPI.book",
     "pk": 6,
     "fields": {
+        "name": "Kennel API Python",
+        "course": 1,
+        "description": "",
+        "index": 0
+    }
+},
+{
+    "model": "LearningAPI.book",
+    "pk": 12,
+    "fields": {
+        "name": "Book 4",
+        "course": 3,
+        "description": "Introduction to browser events, data relationships, and ERDs",
+        "index": 4
+    }
+},
+{
+    "model": "LearningAPI.book",
+    "pk": 13,
+    "fields": {
+        "name": "Book 5",
+        "course": 3,
+        "description": "Introduction to transient and permanent state, and use of array methods",
+        "index": 5
+    }
+},
+{
+    "model": "LearningAPI.book",
+    "pk": 14,
+    "fields": {
+        "name": "Book 6",
+        "course": 3,
+        "description": "Introduction to asynchronous operations using Fetch API and json-server",
+        "index": 6
+    }
+},
+{
+    "model": "LearningAPI.book",
+    "pk": 15,
+    "fields": {
+        "name": "Book 7",
+        "course": 3,
+        "description": "Introduction to React and React Router DOM",
+        "index": 7
+    }
+},
+{
+    "model": "LearningAPI.book",
+    "pk": 16,
+    "fields": {
         "name": "Bangazon",
-        "course": 1
+        "course": 1,
+        "description": "",
+        "index": 3
     }
 },
 {
     "model": "LearningAPI.book",
-    "pk": 7,
+    "pk": 17,
     "fields": {
-        "name": "Orientation",
-        "course": 2
+        "name": "Book 0",
+        "course": 3,
+        "description": "Installations",
+        "index": 0
     }
 },
 {
     "model": "LearningAPI.book",
-    "pk": 8,
+    "pk": 18,
     "fields": {
-        "name": "MVC",
-        "course": 2
+        "name": "Book 1",
+        "course": 2,
+        "description": "",
+        "index": 0
     }
 },
 {
     "model": "LearningAPI.book",
-    "pk": 9,
+    "pk": 19,
     "fields": {
-        "name": "Web API",
-        "course": 2
+        "name": "Book 2",
+        "course": 2,
+        "description": "",
+        "index": 1
     }
 },
 {
     "model": "LearningAPI.book",
-    "pk": 11,
+    "pk": 20,
     "fields": {
-        "name": "Capstones",
-        "course": 2
+        "name": "Book 3",
+        "course": 2,
+        "description": "",
+        "index": 2
+    }
+},
+{
+    "model": "LearningAPI.book",
+    "pk": 21,
+    "fields": {
+        "name": "Book 4",
+        "course": 2,
+        "description": "",
+        "index": 3
+    }
+},
+{
+    "model": "LearningAPI.book",
+    "pk": 22,
+    "fields": {
+        "name": "Book 5",
+        "course": 2,
+        "description": "",
+        "index": 4
+    }
+},
+{
+    "model": "LearningAPI.book",
+    "pk": 23,
+    "fields": {
+        "name": "Algorithms",
+        "course": 3,
+        "description": "Supplemental book for practicing algorithmic thinking",
+        "index": 8
     }
 }
 ]
