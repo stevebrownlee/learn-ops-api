@@ -18,9 +18,11 @@ class BookViewSet(ViewSet):
             Response -- JSON serialized instance
         """
         book = Book()
+        book.description = request.data["description"]
         book.name = request.data["name"]
+        book.index = request.data["index"]
 
-        course = Course.objects.get(pk=int(request.data["course_id"]))
+        course = Course.objects.get(pk=int(request.data["course"]))
         book.course = course
 
         try:
@@ -52,9 +54,11 @@ class BookViewSet(ViewSet):
         """
         try:
             book = Book.objects.get(pk=pk)
+            book.description = request.data["description"]
             book.name = request.data["name"]
+            book.index = request.data["index"]
 
-            course = Course.objects.get(pk=int(request.data["course_id"]))
+            course = Course.objects.get(pk=int(request.data["course"]))
             book.course = course
 
             book.save()
@@ -109,5 +113,5 @@ class BookSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Book
-        fields = ('id', 'name', 'course', 'has_assessment', )
+        fields = ('id', 'index', 'name', 'course', 'has_assessment', 'description')
         depth = 1
