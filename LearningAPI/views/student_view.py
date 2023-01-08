@@ -271,7 +271,7 @@ class StudentViewSet(ModelViewSet):
             return Response({'message': 'Success'}, status=status.HTTP_201_CREATED)
 
     @method_decorator(is_instructor())
-    @action(methods=['post', 'delete'], detail=False)
+    @action(methods=['post'], detail=False)
     def teams(self, request):
         """Add/remove student tag for teams"""
 
@@ -290,7 +290,6 @@ class StudentViewSet(ModelViewSet):
                 assignment = StudentTag.objects.create( student = student, tag = tag )
 
             return Response(None, status=status.HTTP_201_CREATED)
-
 
     @method_decorator(is_instructor())
     @action(methods=['post'], detail=True)
