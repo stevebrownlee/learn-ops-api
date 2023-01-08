@@ -271,6 +271,28 @@ class StudentViewSet(ModelViewSet):
             return Response({'message': 'Success'}, status=status.HTTP_201_CREATED)
 
     @method_decorator(is_instructor())
+    @action(methods=['post', 'delete'], detail=False)
+    def teams(self, request):
+        """Add/remove student tag for teams"""
+
+        if request.method == "POST":
+            combos = request.data.get('combos', None)
+
+            for combo in combos:
+                student = NssUser.objects.get(pk=combo['student'])
+
+                try:
+                    tag = Tag.objects.get(name=combo['team'])
+                except Tag.DoesNotExist:
+                    tag = Tag.objects.create(name=combo['team'])
+
+
+                assignment = StudentTag.objects.create( student = student, tag = tag )
+
+            return Response(None, status=status.HTTP_201_CREATED)
+
+
+    @method_decorator(is_instructor())
     @action(methods=['post'], detail=True)
     def note(self, request, pk):
         """Add note for student"""

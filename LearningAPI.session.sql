@@ -33,6 +33,11 @@ SELECT *
 FROM public."LearningAPI_course";
 
 SELECT *
+FROM public."LearningAPI_studenttag";
+
+DELETE FROM public."LearningAPI_studenttag";
+
+SELECT *
 FROM public."LearningAPI_cohort";
 
 SELECT *
