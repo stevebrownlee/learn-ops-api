@@ -286,8 +286,7 @@ class StudentViewSet(ModelViewSet):
                 except Tag.DoesNotExist:
                     tag = Tag.objects.create(name=combo['team'])
 
-
-                assignment = StudentTag.objects.create( student = student, tag = tag )
+                StudentTag.objects.create( student = student, tag = tag )
 
             return Response(None, status=status.HTTP_201_CREATED)
 

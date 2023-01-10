@@ -22,6 +22,7 @@ class Cohort(models.Model):
         user_cohorts = NssUserCohort.objects.filter(cohort=self, nss_user__user__is_staff=True)
         for user_cohort in user_cohorts:
             coaches.append({
+                "id": user_cohort.nss_user.id,
                 "name": f'{user_cohort.nss_user}'
             })
         return coaches
