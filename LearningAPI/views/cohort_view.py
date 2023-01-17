@@ -6,7 +6,7 @@ from rest_framework import permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
-from ..models.people import Cohort, NssUser, NssUserCohort
+from ..models.people import Cohort, NssUser, NssUserCohort, CohortInfo
 from ..models.coursework import CohortCourse, Course, Project, StudentProject
 
 
@@ -315,7 +315,6 @@ class CohortViewSet(ViewSet):
 
         return Response({'message': 'Unsupported HTTP method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-
 class MiniCohortSerializer(serializers.ModelSerializer):
     """JSON serializer"""
 
@@ -335,11 +334,33 @@ class CohortCourseSerializer(serializers.ModelSerializer):
 class CohortSerializer(serializers.ModelSerializer):
     """JSON serializer"""
     courses = CohortCourseSerializer(many=True)
+    attendance_sheet_url = serializers.SerializerMethodField()
+    student_organization_url = serializers.SerializerMethodField()
+    github_classroom_url = serializers.SerializerMethodField()
+
+    def get_student_organization_url(self, obj):
+        try:
+            return obj.info.student_organization_url
+        except Exception as ex:
+            return ""
+
+    def get_github_classroom_url(self, obj):
+        try:
+            return obj.info.github_classroom_url
+        except Exception as ex:
+            return ""
+
+    def get_attendance_sheet_url(self, obj):
+        try:
+            return obj.info.attendance_sheet_url
+        except Exception as ex:
+            return ""
 
     class Meta:
         model = Cohort
         fields = (
             'id', 'name', 'slack_channel', 'start_date', 'end_date',
             'coaches', 'break_start_date', 'break_end_date', 'students',
-            'is_instructor', 'courses'
+            'is_instructor', 'courses', 'info', 'student_organization_url',
+            'github_classroom_url', 'attendance_sheet_url'
         )

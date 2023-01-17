@@ -1,5 +1,6 @@
 from .nssuser import NssUser
 from .cohort import Cohort
+from .cohort_info import CohortInfo
 from .assessment import Assessment
 from .nssuser_cohort import NssUserCohort
 from .assessment_objective import AssessmentObjective
