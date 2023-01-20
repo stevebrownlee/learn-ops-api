@@ -1,0 +1,8 @@
+git clone https://github.com/stevebrownlee/learn-ops-api.git
+sudo apt update -y
+sudo apt install python3-pip -y
+pip3 install -r requirements.txt
+sudo apt install postgresql postgresql-contrib -y
+sudo systemctl start postgresql.service
+sudo -u postgres createdb learnops
+sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'web571f8';"
