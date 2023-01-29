@@ -118,7 +118,6 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 
 
-
 class BookSerializer(serializers.ModelSerializer):
     """JSON serializer"""
     projects = ProjectSerializer(many=True)
@@ -139,4 +138,4 @@ class CourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ('id', 'name', 'books',)
+        fields = ('id', 'name', 'books', 'date_created')

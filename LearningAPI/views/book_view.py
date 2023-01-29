@@ -96,8 +96,14 @@ class BookViewSet(ViewSet):
         """
         try:
             course_id = request.query_params.get('courseId', None)
+            ordering = request.query_params.getlist('orderBy', None)
 
-            books = Book.objects.all()
+            if len(ordering) > 0:
+                books = Book.objects.order_by(*ordering)
+                print(books.query)
+            else:
+                books = Book.objects.all()
+
 
             if course_id is not None:
                 books = books.filter(course__id=course_id)
