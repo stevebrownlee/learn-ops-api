@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('LearningAPI', '0029_course_date_created'),
+        ('LearningAPI', '0027_alter_cohortinfo_cohort'),
     ]
 
     operations = [
