@@ -9,10 +9,12 @@ class Book(models.Model):
     index = models.IntegerField(default=0)
 
     @property
+    def projects(self):
+        return self.child_projects.all().order_by("index")
+
+    @property
     def has_assessment(self):
         return self.assessments.count() > 0
 
     def __str__(self) -> str:
         return self.name
-
-

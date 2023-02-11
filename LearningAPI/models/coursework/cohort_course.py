@@ -6,6 +6,7 @@ class CohortCourse(models.Model):
     cohort = models.ForeignKey("Cohort", on_delete=models.CASCADE, related_name="courses")
     course = models.ForeignKey("Course", on_delete=models.CASCADE, related_name="cohorts")
     active = models.BooleanField(default=False)
+    index = models.SmallIntegerField(default=1)
 
     class Meta:
         unique_together = (('cohort', 'course',),)

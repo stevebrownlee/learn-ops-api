@@ -33,9 +33,10 @@ class CohortViewSet(ViewSet):
         Returns:
             Response -- JSON serialized instance
         """
-        courses = request.data.get('courses', None)
-        if courses is None:
-            return Response({"reason": "Please choose some courses for this cohort."}, status=status.HTTP_400_BAD_REQUEST)
+        client_side = request.data.get('clientSide', None)
+        server_side = request.data.get('serverSide', None)
+        if client_side is None or server_side is None:
+            return Response({"reason": "Please choose both courses for this cohort."}, status=status.HTTP_400_BAD_REQUEST)
 
         cohort = Cohort()
         cohort.name = request.data["name"]
@@ -48,17 +49,23 @@ class CohortViewSet(ViewSet):
         try:
             cohort.save()
 
-            for course in courses:
-                cohort_course = CohortCourse()
-                course_instance = Course.objects.get(pk=course)
-                cohort_course.course = course_instance
-                cohort_course.cohort = cohort
-                cohort_course.active = False
+            # Assign client side course
+            cohort_course_client = CohortCourse()
+            course_instance = Course.objects.get(pk=client_side)
+            cohort_course_client.course = course_instance
+            cohort_course_client.cohort = cohort
+            cohort_course_client.active = True
+            cohort_course_client.index = 0
+            cohort_course_client.save()
 
-                if 'JavaScript' in course_instance.name:
-                    cohort_course.active = True
-
-                cohort_course.save()
+            # Assign server side course
+            cohort_course_server = CohortCourse()
+            course_instance = Course.objects.get(pk=server_side)
+            cohort_course_server.course = course_instance
+            cohort_course_server.cohort = cohort
+            cohort_course_server.active = False
+            cohort_course_server.index = 1
+            cohort_course_server.save()
 
             serializer = CohortSerializer(cohort, context={'request': request})
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -328,7 +335,7 @@ class CohortCourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CohortCourse
-        fields = ('id', 'course', 'active')
+        fields = ('id', 'course', 'active', 'index', )
         depth = 1
 
 class CohortSerializer(serializers.ModelSerializer):

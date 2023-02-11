@@ -562,10 +562,11 @@ class MicroStudents(serializers.ModelSerializer):
         if student_project is None:
             book = Book.objects.get(
                 course__name__icontains="JavaScript", index=0)
+            project = Project.objects.get(book=book, index=0)
             return {
                 "id": book.id,
                 "name": book.name,
-                "project": ""
+                "project": project.name
             }
 
         return {

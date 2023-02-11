@@ -14,8 +14,6 @@ from LearningAPI.models.coursework import Course, Book, Project, CohortCourse
 class CourseViewSet(ViewSet):
     """Course view set"""
 
-    # permission_classes = (IsAdminUser,)
-
     @method_decorator(is_instructor())
     def create(self, request):
         """Handle POST operations
@@ -40,9 +38,7 @@ class CourseViewSet(ViewSet):
             Response -- JSON serialized instance
         """
         try:
-            course = Course.objects.annotate(
-                chapters=Count('books__chapters')
-            ).get(pk=pk)
+            course = Course.objects.get(pk=pk)
 
             serializer = CourseSerializer(course, context={'request': request})
             return Response(serializer.data)
@@ -101,20 +97,23 @@ class CourseViewSet(ViewSet):
             courses = Course.objects.all()
 
             if cohort is not None and active is not None:
-                active_cohort_course = CohortCourse.objects.get(cohort__id=cohort, active=bool(active))
+                active_cohort_course = CohortCourse.objects.get(
+                    cohort__id=cohort, active=bool(active))
                 courses = courses.filter(pk=active_cohort_course.course.id)
 
-            serializer = CourseSerializer(courses, many=True, context={'request': request})
+            serializer = CourseSerializer(
+                courses, many=True, context={'request': request})
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as ex:
             return HttpResponseServerError(ex)
+
 
 class ProjectSerializer(serializers.ModelSerializer):
     """JSON serializer"""
 
     class Meta:
         model = Project
-        fields = ('id', 'name',)
+        fields = ('id', 'name', 'index')
 
 
 class BookSerializer(serializers.ModelSerializer):
@@ -137,4 +136,4 @@ class CourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ('id', 'name', 'books',)
+        fields = ('id', 'name', 'books', 'date_created')
