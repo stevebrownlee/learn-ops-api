@@ -100,7 +100,6 @@ class BookViewSet(ViewSet):
 
             if len(ordering) > 0:
                 books = Book.objects.order_by(*ordering)
-                print(books.query)
             else:
                 books = Book.objects.all()
 
