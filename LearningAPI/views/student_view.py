@@ -241,7 +241,7 @@ class StudentViewSet(ModelViewSet):
 
 
                 student_assessment = StudentAssessment()
-                student_assessment.student = NssUser.objects.get(user__id=pk)
+                student_assessment.student = NssUser.objects.get(pk=pk)
                 student_assessment.instructor = NssUser.objects.get(
                     user=request.auth.user)
                 student_assessment.status = StudentAssessmentStatus.objects.get(

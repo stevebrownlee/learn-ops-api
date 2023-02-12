@@ -20,6 +20,17 @@ from LearningAPI.models.skill import AssessmentWeight, LearningWeight
 class BookAssessmentView(ViewSet):
     """Book assessment view set"""
 
+    def list(self, request):
+        """Listing all assessments"""
+        book_id = request.query_params.get("bookId", None)
+        assessments = Assessment.objects.all()
+
+        if "bookId" is not None:
+            assessments = Assessment.objects.filter(book__id=book_id)
+
+        serializer = AssessmentSerializer(assessments, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
     def retrieve(self, request, pk=None):
         """Handle GET requests for single assessment
 
