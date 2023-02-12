@@ -16,6 +16,7 @@ class Assessment(models.Model):
         choices=ASSESSMENT_TYPES,
         default="SELF",
     )
+    objectives = models.ManyToManyField("LearningWeight", through='AssessmentWeight')
 
     @property
     def assigned_book(self):

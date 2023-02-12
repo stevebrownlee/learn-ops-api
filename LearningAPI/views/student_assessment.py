@@ -14,6 +14,7 @@ from LearningAPI.decorators import is_instructor
 from LearningAPI.models.people import (Assessment, NssUser, StudentAssessment,
                                        StudentAssessmentStatus)
 from LearningAPI.models.coursework import Book
+from LearningAPI.models.skill import AssessmentWeight, LearningWeight
 
 
 class StudentAssessmentPermission(permissions.BasePermission):
@@ -50,9 +51,11 @@ class StudentAssessmentView(ViewSet):
         book_id = request.data.get("bookId", None)
         source_url = request.data.get("sourceURL", None)
         name = request.data.get("name", None)
+        objectives = request.data.get("objectives", None)
 
         if name is not None and \
             source_url is not None and \
+            objectives is not None and \
             book_id is not None and\
             request.auth.user.is_staff:
 
@@ -65,8 +68,14 @@ class StudentAssessmentView(ViewSet):
             except Book.DoesNotExist:
                 return Response({'reason': 'Invalid book id sent'}, status=status.HTTP_400_BAD_REQUEST)
 
-
             assmt.save()
+
+            for objective in objectives:
+                AssessmentWeight.objects.create(
+                    assessment = assmt,
+                    weight_id = objective
+                )
+
             serializer = AssessmentSerializer(assmt)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -206,12 +215,20 @@ class StudentAssessmentView(ViewSet):
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class AssessmentSerializer(serializers.ModelSerializer):
+class AssessmentObjectiveSerializer(serializers.ModelSerializer):
     """JSON serializer"""
 
     class Meta:
+        model = LearningWeight
+        fields = ('id', 'label', )
+
+class AssessmentSerializer(serializers.ModelSerializer):
+    """JSON serializer"""
+    objectives = AssessmentObjectiveSerializer(many=True)
+
+    class Meta:
         model = Assessment
-        fields = ('id', 'name', 'source_url', 'assigned_book', 'course' )
+        fields = ('id', 'name', 'source_url', 'assigned_book', 'course', 'objectives' )
 
 class StudentAssessmentSerializer(serializers.ModelSerializer):
     """JSON serializer"""

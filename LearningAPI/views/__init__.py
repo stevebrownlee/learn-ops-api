@@ -13,7 +13,7 @@ from .learning_weight_view import LearningWeightViewSet
 from .learning_record_view import LearningRecordViewSet
 from .profile import Profile
 from .github_login import GithubLogin
-from .assessment import StudentAssessmentView
+from .student_assessment import StudentAssessmentView
 from .assessment_status import AssessmentStatusView
 from .slack import SlackChannel
 from .slack_message import SlackMessage
@@ -26,3 +26,4 @@ from .tag_view import TagViewSet
 from .student_tag_view import StudentTagViewSet
 from .student_note_view import StudentNoteViewSet
 from .personality_view import PersonalityView
+from .book_assessment import BookAssessmentView
