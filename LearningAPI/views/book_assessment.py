@@ -25,7 +25,7 @@ class BookAssessmentView(ViewSet):
         book_id = request.query_params.get("bookId", None)
         assessments = Assessment.objects.all()
 
-        if "bookId" is not None:
+        if book_id is not None:
             assessments = Assessment.objects.filter(book__id=book_id)
 
         serializer = AssessmentSerializer(assessments, many=True)
