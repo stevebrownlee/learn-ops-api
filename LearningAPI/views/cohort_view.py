@@ -251,8 +251,8 @@ class CohortViewSet(ViewSet):
 
                 if user_type is not None and user_type == "instructor":
                     try:
-                        nss_user = NssUser.objects.get(user=request.auth.user)
-                        membership = NssUserCohort.objects.get(nss_user=nss_user)
+                        member = NssUser.objects.get(user=request.auth.user)
+                        membership = NssUserCohort.objects.get(nss_user=member)
 
                         return Response(
                             {'message': f'Instructor cannot be in more than 1 cohort at a time. Currently assigned to cohort {membership.cohort.name}'},
