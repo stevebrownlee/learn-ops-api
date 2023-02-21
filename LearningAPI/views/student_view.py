@@ -562,6 +562,7 @@ class MicroStudents(serializers.ModelSerializer):
         if student_project is None:
             cohort_course = CohortCourse.objects.get(cohort__id=obj.cohorts[0]['id'], index=0)
             project = Project.objects.get(book__course=cohort_course.course, book__index=0, index=0)
+
             return {
                 "id": project.book.id,
                 "name": project.book.name,
