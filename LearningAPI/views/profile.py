@@ -65,6 +65,7 @@ class Profile(ViewSet):
                 nss_user, context={'request': request})
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
+
             profile = {}
             profile["person"] = {}
             profile["person"]["first_name"] = request.auth.user.first_name
@@ -73,6 +74,13 @@ class Profile(ViewSet):
             profile["person"]["github"]["login"] = person.extra_data["login"]
             profile["person"]["github"]["repos"] = person.extra_data["repos_url"]
             profile["staff"] = request.auth.user.is_staff
+
+            instructor_active_cohort = NssUserCohort.objects.filter(nss_user__user=request.auth.user).first()
+            if instructor_active_cohort is not None:
+                profile["person"]["active_cohort"] = instructor_active_cohort.cohort.id
+            else:
+                profile["person"]["active_cohort"] = 0
+
 
         return Response(profile)
 
