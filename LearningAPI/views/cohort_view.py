@@ -294,13 +294,13 @@ class CohortViewSet(ViewSet):
             user_type = request.query_params.get("userType", None)
 
             if user_type is not None and user_type == "instructor":
-                user_id = request.auth.user.id
+                member = NssUser.objects.get(user=request.auth.user)
             else:
                 user_id = int(request.data["student_id"])
+                member = NssUser.objects.get(pk=user_id)
 
             try:
                 cohort = Cohort.objects.get(pk=pk)
-                member = NssUser.objects.get(pk=user_id)
                 rel = NssUserCohort.objects.get(cohort=cohort, nss_user=member)
                 rel.delete()
 
