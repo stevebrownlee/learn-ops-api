@@ -16,5 +16,6 @@ pip-selfcheck.json
 .vscode/settings.json
 learningenv
 .secrets
+socialaccount.json
 db.local.json
 debug.log

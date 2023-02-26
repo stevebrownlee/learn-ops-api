@@ -114,11 +114,11 @@ WSGI_APPLICATION = 'LearningPlatform.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'learnops',
-        'USER': 'postgres',
-        'PASSWORD': 'web571f8',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': os.getenv("LEARN_OPS_DB"),
+        'USER': os.getenv("LEARN_OPS_USER"),
+        'PASSWORD': os.getenv("LEARN_OPS_PASSWORD"),
+        'HOST': os.getenv("LEARN_OPS_HOST"),
+        'PORT': os.getenv("LEARN_OPS_PORT"),
     }
 }
 

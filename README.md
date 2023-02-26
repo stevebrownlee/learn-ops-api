@@ -1,168 +1,155 @@
 # NSS Instructor Applications Project
 
-## Assets
+## Installs Needed
 
-### ERD
+### Postgres
 
-[dbdiagram.io ERD](https://dbdiagram.io/d/6005cc1080d742080a36d6d8)
+Go to [Postgresapp](https://postgresapp.com/) to download and run the Postgres app for your platform.
 
+### Learning Platform Request Collection
 
-### Postman testing requests
-
-1. Open Postman
+1. Install [Postman](https://www.postman.com/downloads/)
+1. Open Postman app
 1. Click Import from the navbar
 1. Choose the Link option
 1. Paste in this URL: https://www.getpostman.com/collections/46729eac036157ae9e1e
 1. You should be prompted to import LearnOps Collection.
 1. Click the Import button to complete the process.
 
+### pgAdmin (Optional)
+
+pgAdmin is not a required install, but if you ever have the desire to have a browser-based interface for working directly with the database, go to [pgAdmin](https://www.pgadmin.org/download/) to download the administration tool for Postgres.
+
 ## Setup
 
-### Database
+### Getting Started
 
-1. Go to [Postgresapp](https://postgresapp.com/) to download and run the Postgres app for your platform.
-2. Go to [pgAdmin](https://www.pgadmin.org/download/) to download the administration tool for Postgres.
-3. Once installed, open pgAdmin, right-click on "Server" and choose "Create > Server".
-4. Name the server "NSS"
-5. Go to the connections tab and enter "localhost" for the host name.
-6. Click "Ok" to save
-7. Right-click on the NSS server and create a new database named `learnops`.
+1. Fork this repo to your own Github account, and then clone it.
+1. Install dependencies
+   ```sh
+   cd learn-ops-api
+   pipenv shell
+   pipenv install
+   ```
 
-### Getting the Code
 
-1. Fork the learn-ops-api repo to your own account.
-1. Clone repository to your machine
+### Social Account Fixture
 
-### Set Up Environment
+In the `fixtures` directory of the API app, create a file named **socialaccount.json** and paste in the follow data.
+
+ ```json
+[
+   {
+      "model": "sites.site",
+      "pk": 1,
+      "fields": {
+         "domain": "learningplatform.com",
+         "name": "Learning Platform"
+      }
+   },
+   {
+      "model": "socialaccount.socialapp",
+      "pk": 1,
+      "fields": {
+         "provider": "github",
+         "name": "Github",
+         "client_id": "",
+         "secret": "",
+         "key": "",
+         "sites": [
+            1
+         ]
+      }
+   }
+]
+ ```
+
+### Github OAuth App
+
+1. Go to your Github account settings
+2. Open **Developer Settings**
+3. Open **OAuth Apps**
+4. Click **New OAuth App** button
+5. Application name should be **Learning Platform**
+6. Homepage URL should be `http://localhost:3000`
+7. Enter a description if you like
+8. Authorization callback should be `http://localhost:8000/auth/github/callback`
+9. Leave **Enable Device Flow** unchecked
+10. Create the app and **do not close** the screen that appears
+11. Open the `fixtures/socialaccount.json` file
+12. Go to Github and copy the **Client ID** and paste it into the `client_id` key in the JSON file.
+13. Go to Github and click the **Generate a new client secret** button
+14. Copy the secret key that is generated into the `secret` field into the JSON file.
+
+### Environment Variables
+
+Set up the following environment variables initialization file _(i.e. `.bashrc` or `.zshrc`)_. You get to pick any username and password you want. The location in the file is irrelevent.
+
+Just don't use spaces in the username or password.
 
 ```sh
-cd learn-ops-api
-pipenv shell
-pipenv install
+export LEARN_OPS_DB=learnops
+export LEARN_OPS_USER={Postgres username}
+export LEARN_OPS_PASSWORD={Postgres user password}
+export LEARN_OPS_HOST=localhost
+export LEARN_OPS_PORT=5432
 ```
 
-## Seed the Database
+Then reload your bash session with `source zsh` if you are using zshell or `source bash` if you have the default bash environment.
 
-1. Request the secret key from your administrator.
 
-1. Add the secret key to the `./LearningAPI/fixtures/socialaccount.json` file in the `"secret"` key for the `"socialaccount.socialapp"` object.
+### Create the Database
 
-1. In the main directory there is a bash script that you can run to create the tables and seed some data. You can run it with the command below.
+In the main directory there is a bash script that you can run to create the database and database user needed for the project. You can run the script with the command below.
 
-    ```sh
-    ./seed.sh
-    ```
+It will prompt you for your password.
 
-1. For Mac, if you get feedback that `psql command not found`, add the following to your PATH in your shell initialization file _(.bashrc or .zshrc)_. Make sure the version is correct. You may not have version 10 of Postgres.
-    ```
-    /Applications/Postgres.app/Contents/Versions/10/bin
-    ```
+```sh
+./createdb.sh
+```
 
-2. Create a Django superuser account with `python manage.py createsuperuser`. This will give you an account with which you can get into the admin site.
+### Seed the Database
+
+In the main directory there is a bash script that you can run to create the tables and seed some data. You can run it with the command below.
+
+```sh
+./seed.sh
+```
+
+> For Mac, if you get feedback that `psql command not found`, add the following to your PATH in your shell initialization file _(.bashrc or .zshrc)_. Make sure the version is correct. You may not have version 10 of Postgres.
+>
+>    ```
+>    /Applications/Postgres.app/Contents/Versions/10/bin
+>    ```
+
+### Create a Superuser
+
+Create a Django superuser account with `python manage.py createsuperuser`. This will give you an account with which you can get into the admin site.
 
 ## Testing the Installation
 
 1. Start the API in debug mode in Visual Studio Code.
-1. Open the client application.
-1. Authorize the client with Github.
 1. Visit http://localhost:8000/admin
-1. Authenticate with the superuser credentials you created previously.
-1. Verify that the following tables have data in them:
-    1. Tokens
-    1. Users
-    1. Nss users
-    1. Social accounts
-    1. Social application tokens
-    1. Learning records
-    1. Learning record weights
+1. Authenticate with the superuser credentials you created previously and then you can view all kinds of data that is in your database.
 
-### Get Student Profile
+## Make Yourself an Instructor
 
-1. Open Postman.
-1. Look in the Tokens data and find a token for a student.
-1. Open the **Users/Profile** request in Postman.
-1. Copy pasta the student token into the Authorization header of the request. Make sure it is preceded by `Token `.
-1. Send the request and verify that you get a response like the following.
-    ```json
-    {
-        "id": 3002,
-        "name": "John Student",
-        "email": "",
-        "github": "student",
-        "staff": false,
-        "cohorts": [
-            {
-                "id": 3,
-                "name": "Day Cohort 54",
-                "slack_channel": "day-cohort-54",
-                "start_date": "2022-01-03",
-                "end_date": "2022-06-24",
-                "break_start_date": "2020-06-29",
-                "break_end_date": "2020-07-03"
-            }
-        ],
-        "feedback": [],
-        "repos": "https://api.github.com/users/student/repos"
-    }
-    ```
+1. Start the React client application.
+1. Authorize the client with Github.
+1. Visit http://localhost:8000/admin and authenticate with your superuser credentials.
+2. Click on **Users** in the left navigation.
+3. Find the account that was just created for your Github authorization by searching for your Github username.
+4. Click on your user account.
+5. Toggle **Staff status** to be on.
+6. In the **Group** sections, double click **Instructor** so that it moves to the _Chosen groups_ list.
+7. Close the browser tab that is running the Learning Platform.
+8. Open a new tab and visit http://localhost:3000 again and authenticate.
+9. You should now see the instructor interface.
 
-### Get Instructor Data for Student
 
-1. Open the **Users/Get Single Student** request.
-1. Verify that you get a student object back with a `records` key containing many Learning Records.
 
-## Github Auth URL
+## Assets
 
-> The folowing content is just to document the process of Github authentication. It isn't step to follow, but it is good to understand the flow of tokens and redirections.
+### ERD
 
-1. Put a button in the client to send the user to the following URL to login with Github. This is a URL mapping on the API _(look in urls.py)_.
-
-    http://localhost:8000/auth/github/url
-
-1. The API code redirects the user to the following URL.
-
-    https://github.com/login/oauth/authorize?client_id=9494949494949494&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fauth%2Fgithub%2Fcallback&scope=&response_type=code&state=1010101010
-
-1. The student is presented with the interface to authorize the application with their Github credentials. Once the student authorizes, Github redirects to the following URL _(this is an API URL, not the client)_.
-
-    http://localhost:8000/auth/github/callback
-
-1. The API immediately redirects the user to the client callback URL with some query parameters.
-
-    http://localhost:3000/auth/github?code=8ad10df9d7c89dd28c89&state=tBozt4gdvy7a
-
-1. The client then uses the `code` query param to ping the API.
-
-    http://localhost:8000/auth/github?code=8ad10df9d7c89dd28c89
-
-1. The API will then respond with an authorization key.
-
-    ```json
-    {
-        "key": "seriesofrandomnumbersandletters"
-    }
-    ```
-
-1. Finally, the client can use authorization key to get the user information. All requests during the user's session must include the authorizaation token.
-
-    ```js
-    fetch("http://localhost:8000/profile", {
-        method: "GET",
-        headers: {
-            "Authorization": "Token seriesofrandomnumbersandletters",
-            "Accepts": "application/json"
-        }
-    }
-    ```
-
-1. That request responds with an object containing the student's profile information.
-
-    ```json
-    {
-        "pk":82,
-        "username":"colonelmustard",
-        "email":"killer@boddymansion.com",
-        "first_name":"Colonel",
-        "last_name":"Mustard"
-    }
-    ```
+[dbdiagram.io ERD](https://dbdiagram.io/d/6005cc1080d742080a36d6d8)
