@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from rest_framework import routers
 from rest_framework.authtoken import views as rest_views
-from allauth.socialaccount.providers.github import views as github_views
+from LearningAPI.views.github import views as github_views
 from LearningAPI import views
 
 router = routers.DefaultRouter(trailing_slash=False)

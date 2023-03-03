@@ -41,7 +41,7 @@ class Profile(ViewSet):
             nss_user.save()
 
             if cohort is not None:
-                coh = Cohort.objects.get(name=cohort)
+                coh = Cohort.objects.get(pk=cohort)
                 usercohort = NssUserCohort()
                 usercohort.cohort = coh
                 usercohort.nss_user = nss_user
