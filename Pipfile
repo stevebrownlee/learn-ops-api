@@ -20,6 +20,7 @@ psycopg2-binary = "*"
 dj-rest-auth = "*"
 django-allauth = "*"
 requests = "*"
+"backports.weakref" = "*"
 
 [requires]
 python_version = "*"
