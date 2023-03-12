@@ -1,7 +1,5 @@
 #!/bin/bash
 
-sudo systemctl start postgresql.service
-
 set -e
 
 sudo su - postgres <<EOF
