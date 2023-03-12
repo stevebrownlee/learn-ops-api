@@ -11,3 +11,5 @@ psql -c "ALTER ROLE $LEARN_OPS_USER SET default_transaction_isolation TO 'read c
 psql -c "ALTER ROLE $LEARN_OPS_USER SET timezone TO 'UTC';"
 psql -c "GRANT ALL PRIVILEGES ON DATABASE $LEARN_OPS_DB TO $LEARN_OPS_USER;"
 EOF
+
+sudo servicectl restart postgresql
