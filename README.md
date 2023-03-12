@@ -32,38 +32,6 @@ pgAdmin is not a required install, but if you ever have the desire to have a bro
    pipenv install
    ```
 
-
-### Social Account Fixture
-
-In the `fixtures` directory of the API app, create a file named **socialaccount.json** and paste in the follow data.
-
- ```json
-[
-   {
-      "model": "sites.site",
-      "pk": 1,
-      "fields": {
-         "domain": "learningplatform.com",
-         "name": "Learning Platform"
-      }
-   },
-   {
-      "model": "socialaccount.socialapp",
-      "pk": 1,
-      "fields": {
-         "provider": "github",
-         "name": "Github",
-         "client_id": "",
-         "secret": "",
-         "key": "",
-         "sites": [
-            1
-         ]
-      }
-   }
-]
- ```
-
 ### Github OAuth App
 
 1. Go to your Github account settings
@@ -79,21 +47,54 @@ In the `fixtures` directory of the API app, create a file named **socialaccount.
 11. Open the `fixtures/socialaccount.json` file
 12. Go to Github and copy the **Client ID** and paste it into the `client_id` key in the JSON file.
 13. Go to Github and click the **Generate a new client secret** button
-14. Copy the secret key that is generated into the `secret` field into the JSON file.
+14. **DO NOT CLOSE THIS TAB OR NAVIGATE AWAY**
 
 ### Environment Variables
 
-Set up the following environment variables initialization file _(i.e. `.bashrc` or `.zshrc`)_. You get to pick any username and password you want. The location in the file is irrelevent.
+Several environment variables need to be set up by you to make the setup process faster and more secure.
 
-Just don't use spaces in the username or password.
+#### Database and OAuth Variables
+
+Set up the following environment variables in your shell initialization file _(i.e. `.bashrc` or `.zshrc`)_.  The location in the file is irrelevent.
+
+Copy the client ID and secret key that was generated in the previous step as the value of the corresponding variables.
+
+> **Tip:** You get to pick any Postgres password you want, but don't use spaces in it.
+
 
 ```sh
 export LEARN_OPS_DB=learnops
-export LEARN_OPS_USER={Postgres username}
+export LEARN_OPS_USER=learnops
 export LEARN_OPS_PASSWORD={Postgres user password}
 export LEARN_OPS_HOST=localhost
 export LEARN_OPS_PORT=5432
+export LEARN_OPS_CLIENT_ID={Github app client ID}
+export LEARN_OPS_SECRET_KEY={Github app secret}
 ```
+
+#### Django Secret Key
+
+To generate a Django secret key, run the following command in your terminal.
+
+```sh
+python3 -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
+```
+
+Then add a new variable to your init file.
+
+```sh
+export LEARN_OPS_DJANGO_SECRET_KEY={insert generated key}
+```
+
+#### Django Allowed Hosts
+
+Add the following environment variable to your init file. If you are running the API in a container using a tool like Multipass or Docker, you must add the IP address of the container to this comma-separated list.
+
+```sh
+export LEARN_OPS_ALLOWED_HOSTS="learning.nss.team,learningapi.nss.team,127.0.0.1,localhost"
+```
+
+### Activate Environment Variables
 
 Then reload your bash session with `source zsh` if you are using zshell or `source bash` if you have the default bash environment.
 
@@ -108,6 +109,13 @@ It will prompt you for your password.
 ./createdb.sh
 ```
 
+> For Mac, if you get feedback that `psql command not found`, add the following to your PATH in your shell initialization file _(.bashrc or .zshrc)_. Make sure the version is correct. You may not have version 10 of Postgres. If you don't, determine your version and replace the 10.
+>
+>    ```
+>    /Applications/Postgres.app/Contents/Versions/10/bin
+>    ```
+
+
 ### Seed the Database
 
 In the main directory there is a bash script that you can run to create the tables and seed some data. You can run it with the command below.
@@ -116,11 +124,6 @@ In the main directory there is a bash script that you can run to create the tabl
 ./seed.sh
 ```
 
-> For Mac, if you get feedback that `psql command not found`, add the following to your PATH in your shell initialization file _(.bashrc or .zshrc)_. Make sure the version is correct. You may not have version 10 of Postgres.
->
->    ```
->    /Applications/Postgres.app/Contents/Versions/10/bin
->    ```
 
 ### Create a Superuser
 
