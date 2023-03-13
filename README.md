@@ -20,17 +20,24 @@ Go to [Postgresapp](https://postgresapp.com/) to download and run the Postgres a
 
 pgAdmin is not a required install, but if you ever have the desire to have a browser-based interface for working directly with the database, go to [pgAdmin](https://www.pgadmin.org/download/) to download the administration tool for Postgres.
 
+### Multipass (optional)
+
+If you want to run the Learning Platform in an Ubuntu instance instead of installting everything on your machine, you can install Multipass.
+
+Visit the [Multipass installation](https://multipass.run/install) page and install it.
+
 ## Setup
 
 ### Getting Started
 
-1. Fork this repo to your own Github account, and then clone it.
-1. Install dependencies
-   ```sh
-   cd learn-ops-api
-   pipenv shell
-   pipenv install
-   ```
+Fork this repo to your own Github account, and then clone it. Then `cd` into the project directory.
+
+If you are using Multipass, run the following command. Run `pwd` to get your current directory to use in the command.
+
+```sh
+mp launch -m 1G -d 2G -n learnops --mount /path/to/LearningPlatform:/mnt/learnops
+```
+
 
 ### Github OAuth App
 
@@ -99,6 +106,16 @@ export LEARN_OPS_ALLOWED_HOSTS="learning.nss.team,learningapi.nss.team,127.0.0.1
 ### Activate Environment Variables
 
 Then reload your bash session with `source zsh` if you are using zshell or `source bash` if you have the default bash environment.
+
+### Project Installs and Config
+
+If you are running on a Mac, run the following commands
+
+```sh
+pipenv shell
+pipenv install
+```
+
 
 
 ### Create the Database
