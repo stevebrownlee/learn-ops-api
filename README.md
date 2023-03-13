@@ -51,16 +51,20 @@ pgAdmin is not a required install, but if you ever have the desire to have a bro
 
 ### Environment Variables
 
-Several environment variables need to be set up by you to make the setup process faster and more secure.
+Several environment variables need to be set up by you to make the setup process faster and more secure. Set up the following environment variables anywhere in your shell initialization file _(i.e. `.bashrc` or `.zshrc`)_.
 
-#### Database and OAuth Variables
-
-Set up the following environment variables in your shell initialization file _(i.e. `.bashrc` or `.zshrc`)_.  The location in the file is irrelevent.
+#### OAuth
 
 Copy the client ID and secret key that was generated in the previous step as the value of the corresponding variables.
 
-> **Tip:** You get to pick any Postgres password you want, but don't use spaces in it.
+```sh
+export LEARN_OPS_CLIENT_ID={Github app client ID}
+export LEARN_OPS_SECRET_KEY={Github app secret}
+```
 
+#### Database
+
+> **Tip:** You get to pick any Postgres password you want, but don't use spaces in it.
 
 ```sh
 export LEARN_OPS_DB=learnops
@@ -68,8 +72,6 @@ export LEARN_OPS_USER=learnops
 export LEARN_OPS_PASSWORD={Postgres user password}
 export LEARN_OPS_HOST=localhost
 export LEARN_OPS_PORT=5432
-export LEARN_OPS_CLIENT_ID={Github app client ID}
-export LEARN_OPS_SECRET_KEY={Github app secret}
 ```
 
 #### Django Secret Key

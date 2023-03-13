@@ -124,17 +124,6 @@ DATABASES = {
     }
 }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'OPTIONS': {
-#             'service': 'learning_service',
-#             'passfile': '.pgpass',
-#         },
-#     }
-# }
-
-
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
 
