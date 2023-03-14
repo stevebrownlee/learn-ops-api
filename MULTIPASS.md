@@ -20,20 +20,33 @@ Go to [Postgresapp](https://postgresapp.com/) to download and run the Postgres a
 
 pgAdmin is not a required install, but if you ever have the desire to have a browser-based interface for working directly with the database, go to [pgAdmin](https://www.pgadmin.org/download/) to download the administration tool for Postgres.
 
+### Multipass (optional)
+
+If you want to run the Learning Platform in an Ubuntu instance instead of installting everything on your machine, you can install Multipass.
+
+Visit the [Multipass installation](https://multipass.run/install) page and install it.
+
 ## Setup
 
 ### Getting Started
 
 Fork this repo to your own Github account, and then clone it. Then `cd` into the project directory.
 
-### Project Installs and Config
+#### Mac OS
 
-If you are running on a Mac or Ubuntu, run the following commands.
+You can move on to the next step.
+
+#### Multipass
+
+If you are using Multipass, run the following command. Run `pwd` to get your current directory to use in the command.
 
 ```sh
-pipenv shell
-pipenv install
+multipass launch -m 1G -d 2G -n learnops --mount /absolute/path/to/learn-ops-api:/mnt/learnops
+multipass shell learnops
 ```
+
+You should now be logged into your Ubuntu image.
+
 
 ### Github OAuth App
 
@@ -47,7 +60,9 @@ pipenv install
 8. Authorization callback should be `http://localhost:8000/auth/github/callback`
 9. Leave **Enable Device Flow** unchecked
 10. Create the app and **do not close** the screen that appears
-11. Go to Github and click the **Generate a new client secret** button
+11. Open the `fixtures/socialaccount.json` file
+12. Go to Github and copy the **Client ID** and paste it into the `client_id` key in the JSON file.
+13. Go to Github and click the **Generate a new client secret** button
 14. **DO NOT CLOSE THIS TAB OR NAVIGATE AWAY**
 
 ### Environment Variables
@@ -86,7 +101,7 @@ python3 -c "from django.core.management.utils import get_random_secret_key; prin
 Then add a new variable to your init file.
 
 ```sh
-export LEARN_OPS_DJANGO_SECRET_KEY="{insert generated key}"
+export LEARN_OPS_DJANGO_SECRET_KEY={insert generated key}
 ```
 
 #### Django Allowed Hosts
@@ -99,7 +114,18 @@ export LEARN_OPS_ALLOWED_HOSTS="learning.nss.team,learningapi.nss.team,127.0.0.1
 
 ### Activate Environment Variables
 
-Then reload your bash session with `source ~/.zshrc` if you are using zshell or `source ~/.bashrc` if you have the default bash environment.
+Then reload your bash session with `source zsh` if you are using zshell or `source bash` if you have the default bash environment.
+
+### Project Installs and Config
+
+If you are running on a Mac, run the following commands
+
+```sh
+pipenv shell
+pipenv install
+```
+
+
 
 ### Create the Database
 

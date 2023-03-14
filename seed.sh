@@ -1,11 +1,5 @@
 #!/bin/bash
 
-# Dump the existing database
-set -e
-sudo su - postgres <<EOF
-psql -U $LEARN_OPS_USER $LEARN_OPS_DB -t -c "select 'drop table \"' || tablename || '\" cascade;' from pg_tables where schemaname = 'public'"  | psql -U $LEARN_OPS_USER $LEARN_OPS_DB
-EOF
-
 echo '[
     {
        "model": "sites.site",
