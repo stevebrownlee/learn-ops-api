@@ -1,15 +1,17 @@
 #!/bin/bash
 
+
 # ************************************************************************
 # SAMPLE USAGE
 #
 # ./setup_ubuntu.sh \
-#     --client=githuboauthappclientid \
-#     --secret=githuboauthappseretkey \
-#     --password=passwordofyourchoice \
+#     --client=GithubOAuthAppClientId \
+#     --secret=GithubOAuthAppSeretKey \
+#     --password=DBPasswordOfYourChoice \
 #     --django="longstringofrandomcharacters" \
-#     --hosts="learning.nss.team,learningapi.nss.team,127.0.0.1,localhost" \
+#     --hosts="IP.ADDRESS.OF.VM,127.0.0.1,localhost" \
 #     --user=ubuntu
+#     --supass=SuperuserPasswordOfYourChoice
 #
 # ************************************************************************
 
@@ -40,6 +42,9 @@ case $i in
     -k=*|--slack=*)
     SLACKTOKEN="${i#*=}"
     ;;
+    -w=*|--supass=*)
+    SUPERPASS="${i#*=}"
+    ;;
     --default)
     DEFAULT=YES
     ;;
@@ -48,6 +53,7 @@ case $i in
     ;;
 esac
 done
+
 
 export LEARN_OPS_CLIENT_ID=${CLIENT}
 export LEARN_OPS_SECRET_KEY=${OAUTHSECRET}
@@ -159,3 +165,36 @@ python3 manage.py migrate
 # Load data from backup
 python3 manage.py loaddata socialaccount
 python3 manage.py loaddata complete_backup
+
+
+
+
+export DJANGO_SETTINGS_MODULE="LearningPlatform.settings"
+PWD=$(python3 ./djangopass.py $SUPERPASS >&1)
+
+
+echo '[
+    {
+        "model": "auth.user",
+        "pk": null,
+        "fields": {
+            "password": "'$PWD'",
+            "last_login": null,
+            "is_superuser": true,
+            "username": "me@me.com",
+            "first_name": "Admina",
+            "last_name": "Straytor",
+            "email": "me@me.com",
+            "is_staff": true,
+            "is_active": true,
+            "date_joined": "2023-03-17T03:03:13.265Z",
+            "groups": [
+                2
+            ],
+            "user_permissions": []
+        }
+    }
+]' > ./LearningAPI/fixtures/superuser.json
+
+python3 manage.py loaddata superuser
+rm ./LearningAPI/fixtures/superuser.json
