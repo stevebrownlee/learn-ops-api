@@ -1,4 +1,4 @@
-# NSS Instructor Applications Project
+# Learning Platform Project
 
 ## Installs Needed
 
@@ -20,22 +20,14 @@ Go to [Postgresapp](https://postgresapp.com/) to download and run the Postgres a
 
 pgAdmin is not a required install, but if you ever have the desire to have a browser-based interface for working directly with the database, go to [pgAdmin](https://www.pgadmin.org/download/) to download the administration tool for Postgres.
 
-## Setup
+## Getting Started
 
-### Getting Started
+1. Fork this repo to your own Github account.
+2. Clone it.
+3. `cd` into the project directory.
+4. Run `pipenv shell` to create a virtual environment.
 
-Fork this repo to your own Github account, and then clone it. Then `cd` into the project directory.
-
-### Project Installs and Config
-
-If you are running on a Mac or Ubuntu, run the following commands.
-
-```sh
-pipenv shell
-pipenv install
-```
-
-### Github OAuth App
+## Github OAuth App
 
 1. Go to your Github account settings
 2. Open **Developer Settings**
@@ -48,53 +40,36 @@ pipenv install
 9. Leave **Enable Device Flow** unchecked
 10. Create the app and **do not close** the screen that appears
 11. Go to Github and click the **Generate a new client secret** button
-14. **DO NOT CLOSE THIS TAB OR NAVIGATE AWAY**
+12. **DO NOT CLOSE TAB. CLIENT AND SECRET NEEDED BELOW.**
 
-### Environment Variables
+## Environment Variables
 
-Several environment variables need to be set up by you to make the setup process faster and more secure. Set up the following environment variables anywhere in your shell initialization file _(i.e. `.bashrc` or `.zshrc`)_.
+Several environment variables need to be set up by you to make the setup process faster and more secure.
 
-#### OAuth
+### Django Secret Key
 
-Copy the client ID and secret key that was generated in the previous step as the value of the corresponding variables.
-
-```sh
-export LEARN_OPS_CLIENT_ID={Github app client ID}
-export LEARN_OPS_SECRET_KEY={Github app secret}
-```
-
-#### Database
-
-> **Tip:** You get to pick any Postgres password you want, but don't use spaces in it.
-
-```sh
-export LEARN_OPS_DB=learnops
-export LEARN_OPS_USER=learnops
-export LEARN_OPS_PASSWORD={Postgres user password}
-export LEARN_OPS_HOST=localhost
-export LEARN_OPS_PORT=5432
-```
-
-#### Django Secret Key
-
-To generate a Django secret key, run the following command in your terminal.
+You will need a Django secret key environment variable. Run the following command in your terminal to generate one and save it for later.
 
 ```sh
 python3 -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
 ```
 
-Then add a new variable to your init file.
+### All Variables Needed
+
+Set up the following environment variables anywhere in your shell initialization file _(i.e. `.bashrc` or `.zshrc`)_.
 
 ```sh
-export LEARN_OPS_DJANGO_SECRET_KEY="{insert generated key}"
-```
-
-#### Django Allowed Hosts
-
-Add the following environment variable to your init file. If you are running the API in a container using a tool like Multipass or Docker, you must add the IP address of the container to this comma-separated list.
-
-```sh
-export LEARN_OPS_ALLOWED_HOSTS="learning.nss.team,learningapi.nss.team,127.0.0.1,localhost"
+export LEARN_OPS_DB=learnopsdev
+export LEARN_OPS_USER=learnopsdev
+export LEARN_OPS_PASSWORD=DatabasePasswordOfYourChoice
+export LEARN_OPS_HOST=127.0.0.1
+export LEARN_OPS_PORT=5432
+export LEARN_OPS_CLIENT_ID=GithubOAuthAppClientId
+export LEARN_OPS_SECRET_KEY=GithubOAuthAppSecret
+export LEARN_OPS_DJANGO_SECRET_KEY="GeneratedDjangoSecretKey"
+export LEARN_OPS_ALLOWED_HOSTS="127.0.0.1,localhost"
+export LEARN_OPS_SUPERUSER_NAME=AdminUsernameOfYourChoice
+export LEARN_OPS_SUPERUSER_PASSWORD=AdminPasswordOfYourChoice
 ```
 
 ### Activate Environment Variables
@@ -108,7 +83,7 @@ In the main directory there is a bash script that you can run to create the data
 It will prompt you for your password.
 
 ```sh
-./createdb.sh
+./setup_mac.sh
 ```
 
 > For Mac, if you get feedback that `psql command not found`, add the following to your PATH in your shell initialization file _(.bashrc or .zshrc)_. Make sure the version is correct. You may not have version 10 of Postgres. If you don't, determine your version and replace the 10.
@@ -116,20 +91,6 @@ It will prompt you for your password.
 >    ```
 >    /Applications/Postgres.app/Contents/Versions/10/bin
 >    ```
-
-
-### Seed the Database
-
-In the main directory there is a bash script that you can run to create the tables and seed some data. You can run it with the command below.
-
-```sh
-./seed.sh
-```
-
-
-### Create a Superuser
-
-Create a Django superuser account with `python manage.py createsuperuser`. This will give you an account with which you can get into the admin site.
 
 ## Testing the Installation
 
