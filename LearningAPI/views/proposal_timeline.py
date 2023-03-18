@@ -58,7 +58,7 @@ class TimelineView(ModelViewSet):
             channel_payload = {
                 "text": f":hi: Hello, {capstone.student}!\n\n\n:mortar_board: Your capstone proposal was marked as {proposal_status.status}.",
                 "token": os.getenv("SLACK_BOT_TOKEN"),
-                "channel": "G08NYBJSY"
+                "channel": capstone.student.slack_handle
             }
 
             requests.post(

@@ -65,12 +65,12 @@ class CapstoneViewSet(ViewSet):
                 "channel": slack_channel
             }
 
-            # requests.post(
-            #     "https://slack.com/api/chat.postMessage",
-            #     data=channel_payload,
-            #     headers=headers,
-            #     timeout=10
-            # )
+            requests.post(
+                "https://slack.com/api/chat.postMessage",
+                data=channel_payload,
+                headers=headers,
+                timeout=10
+            )
 
             # Send message to student
             channel_payload = {
