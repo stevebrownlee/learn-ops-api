@@ -58,16 +58,32 @@ class CapstoneViewSet(ViewSet):
                 "Content-Type": "application/x-www-form-urlencoded"
             }
 
+            # Send message to instructor channel
             channel_payload = {
                 "text": f"{student} has submitted their {course} capstone proposal",
                 "token": os.getenv("SLACK_BOT_TOKEN"),
                 "channel": slack_channel
             }
 
+            # requests.post(
+            #     "https://slack.com/api/chat.postMessage",
+            #     data=channel_payload,
+            #     headers=headers,
+            #     timeout=10
+            # )
+
+            # Send message to student
+            channel_payload = {
+                "text": f":mortar_board: Your {course} capstone proposal was successfully submitted.\n\n\nIf you make changes to anything in your proposal, you do not need to submit again.",
+                "token": os.getenv("SLACK_BOT_TOKEN"),
+                "channel": student.slack_handle
+            }
+
             requests.post(
                 "https://slack.com/api/chat.postMessage",
                 data=channel_payload,
-                headers=headers
+                headers=headers,
+                timeout=10
             )
         except Exception as ex:
             logger = logging.getLogger("LearningPlatform")

@@ -223,7 +223,8 @@ class StudentViewSet(ModelViewSet):
                         requests.post(
                             "https://slack.com/api/chat.postMessage",
                             data=channel_payload,
-                            headers=headers
+                            headers=headers,
+                            timeout=10
                         )
                 except Exception:
                     return Response({'message': 'Updated, but no Slack message sent'}, status=status.HTTP_204_NO_CONTENT)
@@ -605,6 +606,7 @@ class MicroStudents(serializers.ModelSerializer):
 
             proposal_statuses.append({
                 "id": proposal.id,
+                "course": proposal.course.id,
                 "status": proposal_status
             })
 

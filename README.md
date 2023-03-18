@@ -86,12 +86,6 @@ It will prompt you for your password.
 ./setup_mac.sh
 ```
 
-> For Mac, if you get feedback that `psql command not found`, add the following to your PATH in your shell initialization file _(.bashrc or .zshrc)_. Make sure the version is correct. You may not have version 10 of Postgres. If you don't, determine your version and replace the 10.
->
->    ```
->    /Applications/Postgres.app/Contents/Versions/10/bin
->    ```
-
 ## Testing the Installation
 
 1. Start the API in debug mode in Visual Studio Code.
