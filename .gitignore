@@ -20,3 +20,5 @@ socialaccount.json
 db.local.json
 debug.log
 .ubuntusetup
+prod_backup*.json
+prod_backup*.sql
