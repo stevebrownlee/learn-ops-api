@@ -16,7 +16,8 @@ FROM public."socialaccount_socialaccount";
 
 
 SELECT *
-FROM public."auth_user";
+FROM public."auth_user"
+ORDER BY id DESC;
 
 
 SELECT *

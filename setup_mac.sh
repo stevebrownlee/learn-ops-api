@@ -47,7 +47,7 @@ echo '[
             "password": "'$PWD'",
             "last_login": null,
             "is_superuser": true,
-            "username": "me@me.com",
+            "username": "'$LEARN_OPS_SUPERUSER_NAME'",
             "first_name": "Admina",
             "last_name": "Straytor",
             "email": "me@me.com",
