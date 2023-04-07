@@ -36,7 +36,7 @@ echo '[
 
 
 export DJANGO_SETTINGS_MODULE="LearningPlatform.settings"
-PWD=$(python3 ./djangopass.py $LEARN_OPS_SUPERUSER_PASSWORD >&1)
+PWD=$(python3 ./djangopass.py "$LEARN_OPS_SUPERUSER_PASSWORD" >&1)
 
 
 echo '[
@@ -44,10 +44,10 @@ echo '[
         "model": "auth.user",
         "pk": null,
         "fields": {
-            "password": "'$PWD'",
+            "password": "'"$PWD"'",
             "last_login": null,
             "is_superuser": true,
-            "username": "'$LEARN_OPS_SUPERUSER_NAME'",
+            "username": "'"$LEARN_OPS_SUPERUSER_NAME"'",
             "first_name": "Admina",
             "last_name": "Straytor",
             "email": "me@me.com",

@@ -78,7 +78,8 @@ export LEARN_OPS_ALLOWED_HOSTS=\"${HOSTS}\"
 export SLACK_BOT_TOKEN=${SLACKTOKEN}
 " >> ~/.bashrc
 
-source /home/$CURRENTUSER/.bashrc
+INIT=/home/$CURRENTUSER/.bashrc
+source "$INIT"
 
 sudo apt update -y
 sudo apt install git curl python3-pip postgresql postgresql-contrib -y
@@ -87,7 +88,7 @@ echo "Checking if systemd is enabled"
 SYSTEMD_PID=$(pidof systemd)
 
 echo "Restarting Postgresql"
-if [ x"${SYSTEMD_PID}" == "x" ]; then
+if [ "${SYSTEMD_PID}" == "" ]; then
     sudo systemctl start postgresql >> /dev/null
 else
     sudo service postgresql start >> /dev/null
@@ -96,7 +97,7 @@ fi
 # Create directory to store static files and take ownership
 echo "Creating static file directory"
 sudo mkdir -p /var/www/learning.nss.team
-sudo chown $USER:www-data /var/www/learning.nss.team
+sudo chown "$USER":www-data /var/www/learning.nss.team
 
 # # Create the role in the database
 echo "Creating Postgresql role and database"
@@ -115,16 +116,16 @@ COMMANDS
 
 # Create the Ubuntu account
 echo "Creating Linux user matching Postgres database"
-sudo useradd -p $(openssl passwd -1 $LEARN_OPS_PASSWORD) $LEARN_OPS_USER
+sudo useradd -p "$(openssl passwd -1 "$LEARN_OPS_PASSWORD")" "$LEARN_OPS_USER"
 
 # Get Postgres version
 echo "Checking version of Postgres"
-VERSION=$( $(sudo find /usr -wholename '*/bin/postgres') -V | (egrep -oah -m 1 '[0-9]{1,}') | head -1)
+VERSION=$( $(sudo find /usr -wholename '*/bin/postgres') -V | (grep -E -oah -m 1 '[0-9]{1,}') | head -1)
 echo "Found version $VERSION"
 
 
 # Replace `peer` with `md5` in the pg_hba file to enable peer authentication
-sudo sed -i -e 's/peer/md5/g' /etc/postgresql/$VERSION/main/pg_hba.conf
+sudo sed -i -e 's/peer/md5/g' /etc/postgresql/"$VERSION"/main/pg_hba.conf
 
 # Check for systemd
 pidof systemd && sudo systemctl restart postgresql || service postgresql restart
@@ -170,7 +171,7 @@ python3 manage.py loaddata complete_backup
 
 
 export DJANGO_SETTINGS_MODULE="LearningPlatform.settings"
-PWD=$(python3 ./djangopass.py $SUPERPASS >&1)
+PWD=$(python3 ./djangopass.py "$SUPERPASS" >&1)
 
 
 echo '[
@@ -178,7 +179,7 @@ echo '[
         "model": "auth.user",
         "pk": null,
         "fields": {
-            "password": "'$PWD'",
+            "password": "'"$PWD"'",
             "last_login": null,
             "is_superuser": true,
             "username": "me@me.com",
