@@ -24,12 +24,11 @@ class SlackChannel(ViewSet):
 
         student_slack_ids = set()
         for student_id in request.data["students"]:
-            student = NssUser.objects.get(user__id=student_id)
+            student = NssUser.objects.get(pk=student_id)
             if student.slack_handle is not None:
                 student_slack_ids.add(student.slack_handle)
 
-        res = requests.post(
-            "https://slack.com/api/conversations.create", data=channel_payload, headers=headers)
+        res = requests.post("https://slack.com/api/conversations.create", timeout=10, data=channel_payload, headers=headers)
         channel_res = res.json()
 
         # Add students to Slack channel
@@ -39,8 +38,7 @@ class SlackChannel(ViewSet):
             "token": os.getenv("SLACK_BOT_TOKEN")
         }
 
-        res = requests.post(
-            "https://slack.com/api/conversations.invite", data=invitation_payload, headers=headers)
+        res = requests.post("https://slack.com/api/conversations.invite", timeout=10, data=invitation_payload, headers=headers)
         students_res = res.json()
 
         combined_response = {
