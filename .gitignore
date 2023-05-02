@@ -22,3 +22,5 @@ debug.log
 .ubuntusetup
 prod_backup*.json
 prod_backup*.sql
+setup
+learning.service

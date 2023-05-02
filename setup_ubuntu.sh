@@ -36,9 +36,6 @@ case $i in
     -d=*|--django=*)
     DJANGOSECRET="${i#*=}"
     ;;
-    -u=*|--user=*)
-    CURRENTUSER="${i#*=}"
-    ;;
     -k=*|--slack=*)
     SLACKTOKEN="${i#*=}"
     ;;
@@ -66,23 +63,60 @@ export LEARN_OPS_DJANGO_SECRET_KEY="${DJANGOSECRET}"
 export LEARN_OPS_ALLOWED_HOSTS="${HOSTS}"
 export SLACK_BOT_TOKEN=${SLACKTOKEN}
 
-echo "export LEARN_OPS_CLIENT_ID=${CLIENT}
-export LEARN_OPS_SECRET_KEY=${OAUTHSECRET}
+#####
+# Create the Ubuntu user account
+#####
+
+USER_HOME="/home/$LEARN_OPS_USER"
+if id "$LEARN_OPS_USER" >/dev/null 2>&1; then
+    echo "User exists"
+else
+    echo "Creating Linux user matching Postgres database"
+    sudo useradd -p "$(openssl passwd -1 "$LEARN_OPS_PASSWORD")" "$LEARN_OPS_USER"
+    sudo mkdir -p "$USER_HOME"
+    sudo usermod -d $USER_HOME $LEARN_OPS_USER
+    sudo chown -R $LEARN_OPS_USER $USER_HOME
+fi
+
+#####
+# Create shell init file and reload
+#####
+ENV_VARS=$(cat << EOF
+export LEARN_OPS_CLIENT_ID=$CLIENT
+export LEARN_OPS_SECRET_KEY=$OAUTHSECRET
 export LEARN_OPS_DB=learnops
 export LEARN_OPS_USER=learnops
-export LEARN_OPS_PASSWORD=\"${PASSWORD}\"
+export LEARN_OPS_PASSWORD=$PASSWORD
 export LEARN_OPS_HOST=localhost
 export LEARN_OPS_PORT=5432
-export LEARN_OPS_DJANGO_SECRET_KEY=\"${DJANGOSECRET}\"
-export LEARN_OPS_ALLOWED_HOSTS=\"${HOSTS}\"
-export SLACK_BOT_TOKEN=${SLACKTOKEN}
-" >> ~/.bashrc
+export LEARN_OPS_DJANGO_SECRET_KEY=$LEARN_OPS_DJANGO_SECRET_KEY
+export LEARN_OPS_ALLOWED_HOSTS=$HOSTS
+export SLACK_BOT_TOKEN=$SLACKTOKEN
+EOF
+)
 
-INIT=/home/$CURRENTUSER/.bashrc
-source "$INIT"
+echo "$ENV_VARS" > .env
+SHELL_INIT_FILE="$USER_HOME/.bashrc"
+sudo mv .env "$SHELL_INIT_FILE"
+source "$SHELL_INIT_FILE"
 
+
+#####
+# Install required software
+#####
 sudo apt update -y
-sudo apt install git curl python3-pip postgresql postgresql-contrib -y
+packages=("git" "curl" "python3-pip" "postgresql" "postgresql-contrib")
+
+for package in "${packages[@]}"; do
+  if ! dpkg-query -W -f='${Status}\n' "$package" | grep -q "ok installed"; then
+    echo "Package $package is not installed. Installing..."
+    sudo apt-get install -y "$package"
+  else
+    echo "Package $package is already installed. Skipping..."
+  fi
+done
+
+# sudo apt install git curl python3-pip postgresql postgresql-contrib -y
 
 echo "Checking if systemd is enabled"
 SYSTEMD_PID=$(pidof systemd)
@@ -94,12 +128,30 @@ else
     sudo service postgresql start >> /dev/null
 fi
 
-# Create directory to store static files and take ownership
-echo "Creating static file directory"
-sudo mkdir -p /var/www/learning.nss.team
-sudo chown "$USER":www-data /var/www/learning.nss.team
+#####
+# Get Postgres version
+#####
+echo "Checking version of Postgres"
+VERSION=$( $(sudo find /usr -wholename '*/bin/postgres') -V | (grep -E -oah -m 1 '[0-9]{1,}') | head -1)
+echo "Found version $VERSION"
 
-# # Create the role in the database
+
+
+#####
+# Replace `peer` with `md5` in the pg_hba file to enable peer authentication
+#####
+sudo sed -i -e 's/peer/trust/g' /etc/postgresql/"$VERSION"/main/pg_hba.conf
+
+
+#####
+# Check for systemd
+#####
+pidof systemd && sudo systemctl restart postgresql || sudo service postgresql restart
+
+
+#####
+# Create the role in the database
+#####
 echo "Creating Postgresql role and database"
 
 set -e
@@ -114,23 +166,40 @@ psql -c "ALTER ROLE $LEARN_OPS_USER SET timezone TO 'UTC';"
 psql -c "GRANT ALL PRIVILEGES ON DATABASE $LEARN_OPS_DB TO $LEARN_OPS_USER;"
 COMMANDS
 
-# Create the Ubuntu account
-echo "Creating Linux user matching Postgres database"
-sudo useradd -p "$(openssl passwd -1 "$LEARN_OPS_PASSWORD")" "$LEARN_OPS_USER"
 
-# Get Postgres version
-echo "Checking version of Postgres"
-VERSION=$( $(sudo find /usr -wholename '*/bin/postgres') -V | (grep -E -oah -m 1 '[0-9]{1,}') | head -1)
-echo "Found version $VERSION"
+#####
+# Create directory to store static files and take ownership
+#####
+echo "Creating static file directory"
+sudo mkdir -p /var/www/learning.nss.team
+sudo chown "$LEARN_OPS_USER":www-data /var/www/learning.nss.team
 
 
-# Replace `peer` with `md5` in the pg_hba file to enable peer authentication
-sudo sed -i -e 's/peer/md5/g' /etc/postgresql/"$VERSION"/main/pg_hba.conf
+#####
+# Clone the project into /var/www/learningapi
+#####
+API_HOME=/var/www/learningapi
+echo "Creating project directory"
+if [ ! -d $API_HOME ]; then
+    sudo mkdir $API_HOME
+fi
 
-# Check for systemd
-pidof systemd && sudo systemctl restart postgresql || service postgresql restart
+echo "Setting ${LEARN_OPS_USER} as owner of project directory"
+sudo chown "${LEARN_OPS_USER}":www-data $API_HOME
 
+cd $API_HOME
+if [ -f "$API_HOME/manage.py" ]; then
+    echo "Cleaning project directory"
+    sudo rm -rf $API_HOME/{*,.[a-zA-z]*}
+fi
+echo "Cloning project"
+sudo git clone https://github.com/stevebrownlee/learn-ops-api.git .
+sudo chown -R learnops $API_HOME
+
+
+#####
 # Create socialaccount.json fixture
+#####
 echo '[
     {
        "model": "sites.site",
@@ -155,26 +224,30 @@ echo '[
         }
     }
   ]
-' > ./LearningAPI/fixtures/socialaccount.json
+' | sudo tee $API_HOME/LearningAPI/fixtures/socialaccount.json
 
+#####
 # Install project requirements
+#####
 pip3 install -r requirements.txt
 
+
+#####
 # Run existing migrations
 python3 manage.py migrate
+#####
 
+
+#####
 # Load data from backup
+#####
 python3 manage.py loaddata socialaccount
 python3 manage.py loaddata complete_backup
-
-
-
 
 export DJANGO_SETTINGS_MODULE="LearningPlatform.settings"
 PWD=$(python3 ./djangopass.py "$SUPERPASS" >&1)
 
-
-echo '[
+sudo echo '[
     {
         "model": "auth.user",
         "pk": null,
@@ -195,7 +268,53 @@ echo '[
             "user_permissions": []
         }
     }
-]' > ./LearningAPI/fixtures/superuser.json
+]' | sudo tee $API_HOME/LearningAPI/fixtures/superuser.json
 
 python3 manage.py loaddata superuser
-rm ./LearningAPI/fixtures/superuser.json
+rm $API_HOME/LearningAPI/fixtures/superuser.json
+
+#####
+# Create gunicorn service file and start service
+#####
+SVC_FILE_CONTENTS=$(cat << EOF
+[Unit]
+Description=learnops gunicorn daemon
+After=network.target
+# Comment
+[Service]
+Environment="DEBUG=False"
+Environment="DEVELOPMENT_MODE=False"
+Environment="LEARNING_GITHUB_CALLBACK=https://learning.nss.team/auth/github"
+Environment="SLACK_BOT_TOKEN=${SLACKTOKEN}"
+Environment="LEARN_OPS_DB=${LEARN_OPS_USER}"
+Environment="LEARN_OPS_USER=${LEARN_OPS_USER}"
+Environment="LEARN_OPS_PASSWORD=${PASSWORD}"
+Environment="LEARN_OPS_HOST=localhost"
+Environment="LEARN_OPS_PORT=5432"
+Environment="LEARN_OPS_CLIENT_ID=${LEARN_OPS_CLIENT_ID}"
+Environment="LEARN_OPS_SECRET_KEY=${LEARN_OPS_SECRET_KEY}"
+Environment="LEARN_OPS_DJANGO_SECRET_KEY=${LEARN_OPS_DJANGO_SECRET_KEY}"
+Environment="LEARN_OPS_ALLOWED_HOSTS=${LEARN_OPS_ALLOWED_HOSTS}"
+User=${LEARN_OPS_USER}
+Group=www-data
+WorkingDirectory=$API_HOME
+ExecStart=/usr/local/bin/gunicorn -w 3 --bind 127.0.0.1:8000 LearningPlatform.wsgi
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
+EOF
+)
+
+echo "$SVC_FILE_CONTENTS" > .service
+sudo mv .service /etc/systemd/system/learning.service
+if [ "${SYSTEMD_PID}" == "" ]; then
+    sudo systemctl start learning >> /dev/null
+else
+    sudo service learning start >> /dev/null
+fi
+
+
+
+
+# ExecStart=/usr/local/bin/gunicorn -w 3 --bind 127.0.0.1:8000 LearningPlatform.wsgi --log-level info --access-logfile /home/chortlehoort/www/logs/admin.gunicorn.access.log --error-logfile /home/chortlehoort/www/logs/admin.gunicorn.error.log --access-logformat '%%({X-REAL-IP}i)s %%(l)s %%(u)s %%(t)s "%%(r)s" %%(s)s %%(b)s "%%(f)s" "%%(a)s"'
