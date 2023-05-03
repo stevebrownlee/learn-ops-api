@@ -78,10 +78,13 @@ else
     sudo chown -R $LEARN_OPS_USER $USER_HOME
 fi
 
+
+
+
 #####
 # Create shell init file and reload
 #####
-ENV_VARS=$(cat << EOF
+sudo tee $USER_HOME/.bashrc <<EOF
 export LEARN_OPS_CLIENT_ID=$CLIENT
 export LEARN_OPS_SECRET_KEY=$OAUTHSECRET
 export LEARN_OPS_DB=learnops
@@ -93,14 +96,8 @@ export LEARN_OPS_DJANGO_SECRET_KEY=$LEARN_OPS_DJANGO_SECRET_KEY
 export LEARN_OPS_ALLOWED_HOSTS=$HOSTS
 export SLACK_BOT_TOKEN=$SLACKTOKEN
 EOF
-)
 
-echo "$ENV_VARS" > .env
-SHELL_INIT_FILE="$USER_HOME/.bashrc"
-sudo mv .env "$SHELL_INIT_FILE"
-sudo su - learnops << EOF
-source ~/.bashrc
-EOF
+sudo su - learnops -c "source ~/.bashrc"
 
 
 
@@ -143,13 +140,13 @@ echo "Found version $VERSION"
 #####
 # Replace `peer` with `md5` in the pg_hba file to enable peer authentication
 #####
-# sudo sed -i -e 's/peer/trust/g' /etc/postgresql/"$VERSION"/main/pg_hba.conf
+sudo sed -i -e 's/peer/trust/g' /etc/postgresql/"$VERSION"/main/pg_hba.conf
 
 
 #####
 # Check for systemd
 #####
-# pidof systemd && sudo systemctl restart postgresql || sudo service postgresql restart
+pidof systemd && sudo systemctl restart postgresql || sudo service postgresql restart
 
 
 #####
@@ -159,15 +156,15 @@ echo "Creating Postgresql role and database"
 
 set -e
 
-# sudo su - postgres <<COMMANDS
-# psql -c "DROP DATABASE IF EXISTS $LEARN_OPS_DB WITH (FORCE);"
-# psql -c "CREATE DATABASE $LEARN_OPS_DB;"
-# psql -c "CREATE USER $LEARN_OPS_USER WITH PASSWORD '$LEARN_OPS_PASSWORD';"
-# psql -c "ALTER ROLE $LEARN_OPS_USER SET client_encoding TO 'utf8';"
-# psql -c "ALTER ROLE $LEARN_OPS_USER SET default_transaction_isolation TO 'read committed';"
-# psql -c "ALTER ROLE $LEARN_OPS_USER SET timezone TO 'UTC';"
-# psql -c "GRANT ALL PRIVILEGES ON DATABASE $LEARN_OPS_DB TO $LEARN_OPS_USER;"
-# COMMANDS
+sudo su - postgres <<COMMANDS
+psql -c "DROP DATABASE IF EXISTS $LEARN_OPS_DB WITH (FORCE);"
+psql -c "CREATE DATABASE $LEARN_OPS_DB;"
+psql -c "CREATE USER $LEARN_OPS_USER WITH PASSWORD '$LEARN_OPS_PASSWORD';"
+psql -c "ALTER ROLE $LEARN_OPS_USER SET client_encoding TO 'utf8';"
+psql -c "ALTER ROLE $LEARN_OPS_USER SET default_transaction_isolation TO 'read committed';"
+psql -c "ALTER ROLE $LEARN_OPS_USER SET timezone TO 'UTC';"
+psql -c "GRANT ALL PRIVILEGES ON DATABASE $LEARN_OPS_DB TO $LEARN_OPS_USER;"
+COMMANDS
 
 
 #####
@@ -191,13 +188,13 @@ echo "Setting ${LEARN_OPS_USER} as owner of project directory"
 sudo chown "${LEARN_OPS_USER}":www-data $API_HOME
 
 cd $API_HOME
-if [ -f "$API_HOME/manage.py" ]; then
-    echo "Cleaning project directory"
-    sudo rm -rf $API_HOME/{*,.[a-zA-z]*}
-fi
-echo "Cloning project"
-sudo git clone https://github.com/stevebrownlee/learn-ops-api.git .
-sudo chown -R learnops $API_HOME
+# if [ -f "$API_HOME/manage.py" ]; then
+#     echo "Cleaning project directory"
+#     sudo rm -rf $API_HOME/{*,.[a-zA-z]*}
+# fi
+# echo "Cloning project"
+# sudo git clone https://github.com/stevebrownlee/learn-ops-api.git .
+# sudo chown -R learnops $API_HOME
 
 
 #####
@@ -222,96 +219,27 @@ sudo tee $API_HOME/LearningAPI/fixtures/socialaccount.json <<EOF
         "fields": {
             "provider": "github",
             "name": "Github",
-            "client_id": "'"$LEARN_OPS_CLIENT_ID"'",
-            "secret": "'"$LEARN_OPS_SECRET_KEY"'",
+            "client_id": "$LEARN_OPS_CLIENT_ID",
+            "secret": "$LEARN_OPS_SECRET_KEY",
             "key": "",
             "sites": [
                 1
             ]
         }
     }
-  ]
+]
 EOF
-
-
-
-# sudo -u learnops echo '[
-#     {
-#        "model": "sites.site",
-#        "pk": 1,
-#        "fields": {
-#           "domain": "learningplatform.com",
-#           "name": "Learning Platform"
-#        }
-#     },
-#     {
-#         "model": "socialaccount.socialapp",
-#         "pk": 1,
-#         "fields": {
-#             "provider": "github",
-#             "name": "Github",
-#             "client_id": "'"$LEARN_OPS_CLIENT_ID"'",
-#             "secret": "'"$LEARN_OPS_SECRET_KEY"'",
-#             "key": "",
-#             "sites": [
-#                 1
-#             ]
-#         }
-#     }
-#   ]
-# ' | sudo tee $API_HOME/LearningAPI/fixtures/socialaccount.json
-
-#####
-# Install project requirements
-#####
-echo "Installing project requirements"
-sudo su - learnops << EOF
-cd $API_HOME
-python3 -m venv venv
-source venv/bin/activate
-pip3 install django
-pip3 install -r requirements.txt
-EOF
-
-#####
-# Run existing migrations
-#####
-echo "Running DB migrations"
-if [ ! -d "$API_HOME/logs" ]; then
-    mkdir $API_HOME/logs
-fi
-sudo chown -R learnops:www-data $API_HOME/logs
-sudo su - learnops << EOF
-cd $API_HOME
-export LEARN_OPS_DB=learnops
-export LEARN_OPS_USER=learnops
-export LEARN_OPS_PASSWORD=$PASSWORD
-export LEARN_OPS_HOST=localhost
-export LEARN_OPS_PORT=5432
-export LEARN_OPS_DJANGO_SECRET_KEY=$LEARN_OPS_DJANGO_SECRET_KEY
-export LEARN_OPS_ALLOWED_HOSTS=$HOSTS
-python3 manage.py migrate
-EOF
-
-#####
-# Load data from backup
-#####
-echo "Loading fixtures"
-su - learnops << SETUP
-python3 manage.py loaddata socialaccount
-python3 manage.py loaddata complete_backup
-SETUP
 
 echo "Generating Django password"
-su - learnops << SETUP
-PWD=$(python3 ./djangopass.py "$SUPERPASS" >&1)
+DJANGO_GENERATED_PASSWORD=$(python3 ./djangopass.py "$SUPERPASS" >&1)
 
-echo '[
+sudo tee $API_HOME/LearningAPI/fixtures/superuser.json <<EOF
+[
     {
         "model": "auth.user",
         "pk": null,
         "fields": {
-            "password": "'"$PWD"'",
+            "password": "$DJANGO_GENERATED_PASSWORD",
             "last_login": null,
             "is_superuser": true,
             "username": "me@me.com",
@@ -327,14 +255,41 @@ echo '[
             "user_permissions": []
         }
     }
-]' | tee $API_HOME/LearningAPI/fixtures/superuser.json
-SETUP
+]
+EOF
 
-echo "Loading superuser data"
-su - learnops << SETUP
+
+#####
+# Install project requirements
+#####
+# echo "Installing project requirements"
+# sudo su - learnops << EOF
+# cd $API_HOME
+# python3 -m venv venv
+# source venv/bin/activate
+# pip3 install django
+# pip3 install -r requirements.txt
+# EOF
+
+#####
+# Run existing migrations
+#####
+echo "Running DB migrations"
+if [ ! -d "$API_HOME/logs" ]; then
+    mkdir $API_HOME/logs
+fi
+sudo chown -R learnops:www-data $API_HOME/logs
+sudo su - learnops << EOF
+cd $API_HOME
+source ~/.bashrc
+
+python3 manage.py migrate
+python3 manage.py loaddata socialaccount
+python3 manage.py loaddata complete_backup
 python3 manage.py loaddata superuser
 rm $API_HOME/LearningAPI/fixtures/superuser.json
-SETUP
+EOF
+
 
 #####
 # Create gunicorn service file and start service
