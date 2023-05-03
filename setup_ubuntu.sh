@@ -105,7 +105,7 @@ sudo su - learnops -c "source ~/.bashrc"
 # Install required software
 #####
 # sudo apt update -y
-packages=("git" "curl" "python3-pip" "python3.10-venv" "postgresql" "postgresql-contrib")
+packages=("git" "curl" "nginx" "certbot" "python3-pip" "python3.10-venv" "postgresql" "postgresql-contrib")
 
 for package in "${packages[@]}"; do
   if ! dpkg-query -W -f='${Status}\n' "$package" | grep -q "ok installed"; then
@@ -331,8 +331,3 @@ if [ "${SYSTEMD_PID}" == "" ]; then
 else
     sudo service learning start >> /dev/null
 fi
-
-
-
-
-# ExecStart=/usr/local/bin/gunicorn -w 3 --bind 127.0.0.1:8000 LearningPlatform.wsgi --log-level info --access-logfile /home/chortlehoort/www/logs/admin.gunicorn.access.log --error-logfile /home/chortlehoort/www/logs/admin.gunicorn.error.log --access-logformat '%%({X-REAL-IP}i)s %%(l)s %%(u)s %%(t)s "%%(r)s" %%(s)s %%(b)s "%%(f)s" "%%(a)s"'
