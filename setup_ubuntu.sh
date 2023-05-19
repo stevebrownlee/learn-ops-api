@@ -21,33 +21,15 @@ set -eu
 for i in "$@"
 do
 case $i in
-    -h=*|--hosts=*)
-    HOSTS="${i#*=}"
-    ;;
-    -p=*|--password=*)
-    PASSWORD="${i#*=}"
-    ;;
-    -s=*|--secret=*)
-    OAUTHSECRET="${i#*=}"
-    ;;
-    -c=*|--client=*)
-    CLIENT="${i#*=}"
-    ;;
-    -d=*|--django=*)
-    DJANGOSECRET="${i#*=}"
-    ;;
-    -k=*|--slack=*)
-    SLACKTOKEN="${i#*=}"
-    ;;
-    -w=*|--supass=*)
-    SUPERPASS="${i#*=}"
-    ;;
-    --default)
-    DEFAULT=YES
-    ;;
-    *)
-            # unknown option
-    ;;
+    -h=*|--hosts=*) HOSTS="${i#*=}" ;;
+    -p=*|--password=*) PASSWORD="${i#*=}" ;;
+    -s=*|--secret=*) OAUTHSECRET="${i#*=}" ;;
+    -c=*|--client=*) CLIENT="${i#*=}" ;;
+    -d=*|--django=*) DJANGOSECRET="${i#*=}" ;;
+    -k=*|--slack=*) SLACKTOKEN="${i#*=}" ;;
+    -w=*|--supass=*) SUPERPASS="${i#*=}" ;;
+    --default) DEFAULT=YES ;;
+    *) # unknown option ;;
 esac
 done
 
@@ -66,7 +48,6 @@ export SLACK_BOT_TOKEN=${SLACKTOKEN}
 #####
 # Create the Ubuntu user account
 #####
-
 USER_HOME="/home/$LEARN_OPS_USER"
 if id "$LEARN_OPS_USER" >/dev/null 2>&1; then
     echo "User exists"
@@ -77,8 +58,6 @@ else
     sudo usermod -d $USER_HOME $LEARN_OPS_USER
     sudo chown -R $LEARN_OPS_USER $USER_HOME
 fi
-
-
 
 
 #####
@@ -96,16 +75,16 @@ export LEARN_OPS_DJANGO_SECRET_KEY=$LEARN_OPS_DJANGO_SECRET_KEY
 export LEARN_OPS_ALLOWED_HOSTS=$HOSTS
 export SLACK_BOT_TOKEN=$SLACKTOKEN
 EOF
+sudo su - learnops -c "bash -c 'source ~/.bashrc'"
 
-sudo su - learnops -c "source ~/.bashrc"
-
+# sudo su - learnops -c "source ~/.bashrc"
 
 
 #####
 # Install required software
 #####
-# sudo apt update -y
-packages=("git" "curl" "nginx" "certbot" "python3-pip" "python3.10-venv" "postgresql" "postgresql-contrib")
+sudo apt update -y
+packages=("git" "curl" "nginx" "certbot" "postgresql-12" "postgresql-contrib-12" "python3-pip" "python3.8-venv")
 
 for package in "${packages[@]}"; do
   if ! dpkg-query -W -f='${Status}\n' "$package" | grep -q "ok installed"; then
@@ -115,8 +94,6 @@ for package in "${packages[@]}"; do
     echo "Package $package is already installed. Skipping..."
   fi
 done
-
-# sudo apt install git curl python3-pip postgresql postgresql-contrib -y
 
 echo "Checking if systemd is enabled"
 SYSTEMD_PID=$(pidof systemd)
