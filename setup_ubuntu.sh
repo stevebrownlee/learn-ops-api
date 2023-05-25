@@ -267,6 +267,7 @@ python3 manage.py loaddata socialaccount
 python3 manage.py loaddata complete_backup
 python3 manage.py loaddata superuser
 rm $API_HOME/LearningAPI/fixtures/superuser.json
+python3 manage.py collectstatic
 EOF
 
 
@@ -295,7 +296,7 @@ Environment="LEARN_OPS_ALLOWED_HOSTS=${LEARN_OPS_ALLOWED_HOSTS}"
 User=${LEARN_OPS_USER}
 Group=www-data
 WorkingDirectory=$API_HOME
-ExecStart=/var/www/learningapi/venv/bin/gunicorn -w 3 --bind 127.0.0.1:8000 --log-file /var/www/learningapi/learning.log --access-logfile /var/www/learningapi/learning-access.log LearningPlatform.wsgi
+ExecStart=/var/www/learningapi/venv/bin/gunicorn -w 3 --bind 127.0.0.1:8000 --log-file /var/www/learningapi/logs/learning.log --access-logfile /var/www/learningapi/logs/learning-access.log LearningPlatform.wsgi
 PrivateTmp=true
 
 [Install]
@@ -312,3 +313,30 @@ if [ "${SYSTEMD_PID}" == "" ]; then
 else
     sudo service learning start >> /dev/null
 fi
+
+
+#####
+# Create nginx reverse proxy for API
+#####
+
+echo 'server {
+    listen 80;
+    server_name staging.nss.team;
+
+    location / {
+        proxy_pass http://localhost:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_redirect off;
+    }
+
+    location /static/ {
+        autoindex off;
+        root /var/www/learning.nss.team/;
+    }
+}
+' > /etc/nginx/sites-available/api
+
+ln -s /etc/nginx/sites-available/api /etc/nginx/sites-enabled/api
+sudo systemctl restart nginx
