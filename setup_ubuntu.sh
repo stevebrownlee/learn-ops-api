@@ -27,6 +27,7 @@ case $i in
     -c=*|--client=*) CLIENT="${i#*=}" ;;
     -d=*|--django=*) DJANGOSECRET="${i#*=}" ;;
     -k=*|--slack=*) SLACKTOKEN="${i#*=}" ;;
+    -u=*|--suser=*) SUPERUSER="${i#*=}" ;;
     -w=*|--supass=*) SUPERPASS="${i#*=}" ;;
     --default) DEFAULT=YES ;;
     *) # unknown option ;;
@@ -34,22 +35,22 @@ esac
 done
 
 
-export LEARN_OPS_CLIENT_ID=${CLIENT}
-export LEARN_OPS_SECRET_KEY=${OAUTHSECRET}
+export LEARN_OPS_CLIENT_ID="$CLIENT"
+export LEARN_OPS_SECRET_KEY="$OAUTHSECRET"
 export LEARN_OPS_DB=learnops
 export LEARN_OPS_USER=learnops
-export LEARN_OPS_PASSWORD="${PASSWORD}"
+export LEARN_OPS_PASSWORD="$PASSWORD"
 export LEARN_OPS_HOST=localhost
 export LEARN_OPS_PORT=5432
-export LEARN_OPS_DJANGO_SECRET_KEY="${DJANGOSECRET}"
-export LEARN_OPS_ALLOWED_HOSTS="${HOSTS}"
-export SLACK_BOT_TOKEN=${SLACKTOKEN}
+export LEARN_OPS_DJANGO_SECRET_KEY="$DJANGOSECRET"
+export LEARN_OPS_ALLOWED_HOSTS="$HOSTS"
+export SLACK_BOT_TOKEN="$SLACKTOKEN"
 
 #####
 # Create the Ubuntu user account
 #####
 USER_HOME="/home/$LEARN_OPS_USER"
-if id "$LEARN_OPS_USER" >/dev/null 2>&1; then
+if id "$LEARN_OPS_USER" >>/dev/null 2>&1; then
     echo "User exists"
 else
     echo "Creating Linux user matching Postgres database"
@@ -74,6 +75,7 @@ export LEARN_OPS_PORT=5432
 export LEARN_OPS_DJANGO_SECRET_KEY=$LEARN_OPS_DJANGO_SECRET_KEY
 export LEARN_OPS_ALLOWED_HOSTS=$HOSTS
 export SLACK_BOT_TOKEN=$SLACKTOKEN
+export PATH=$PATH:/home/learnops/.local/bin
 EOF
 sudo su - learnops -c "bash -c 'source ~/.bashrc'"
 
@@ -83,8 +85,8 @@ sudo su - learnops -c "bash -c 'source ~/.bashrc'"
 #####
 # Install required software
 #####
-sudo apt update -y
-packages=("git" "curl" "nginx" "certbot" "postgresql-12" "postgresql-contrib-12" "python3-pip" "python3.8-venv")
+sudo apt-get update -y
+packages=("gcc" "git" "curl" "nginx" "certbot" "python3-django" "postgresql-12" "postgresql-contrib-12" "python3-pip" "python3.8-venv")
 
 for package in "${packages[@]}"; do
   if ! dpkg-query -W -f='${Status}\n' "$package" | grep -q "ok installed"; then
@@ -165,13 +167,13 @@ echo "Setting ${LEARN_OPS_USER} as owner of project directory"
 sudo chown "${LEARN_OPS_USER}":www-data $API_HOME
 
 cd $API_HOME
-# if [ -f "$API_HOME/manage.py" ]; then
-#     echo "Cleaning project directory"
-#     sudo rm -rf $API_HOME/{*,.[a-zA-z]*}
-# fi
-# echo "Cloning project"
-# sudo git clone https://github.com/stevebrownlee/learn-ops-api.git .
-# sudo chown -R learnops $API_HOME
+if [ -f "$API_HOME/manage.py" ]; then
+    echo "Cleaning project directory"
+    sudo rm -rf $API_HOME/{*,.[a-zA-z]*}
+fi
+echo "Cloning project"
+sudo git clone https://github.com/stevebrownlee/learn-ops-api.git .
+sudo chown -R learnops $API_HOME
 
 
 #####
@@ -219,7 +221,7 @@ sudo tee $API_HOME/LearningAPI/fixtures/superuser.json <<EOF
             "password": "$DJANGO_GENERATED_PASSWORD",
             "last_login": null,
             "is_superuser": true,
-            "username": "me@me.com",
+            "username": "$SUPERUSER",
             "first_name": "Admina",
             "last_name": "Straytor",
             "email": "me@me.com",
@@ -239,14 +241,14 @@ EOF
 #####
 # Install project requirements
 #####
-# echo "Installing project requirements"
-# sudo su - learnops << EOF
-# cd $API_HOME
-# python3 -m venv venv
-# source venv/bin/activate
-# pip3 install django
-# pip3 install -r requirements.txt
-# EOF
+echo "Installing project requirements"
+sudo su - learnops << EOF
+cd $API_HOME
+python3 -m venv venv
+source venv/bin/activate
+pip3 install django
+pip3 install -r requirements.txt >> /dev/null
+EOF
 
 #####
 # Run existing migrations
@@ -293,7 +295,7 @@ Environment="LEARN_OPS_ALLOWED_HOSTS=${LEARN_OPS_ALLOWED_HOSTS}"
 User=${LEARN_OPS_USER}
 Group=www-data
 WorkingDirectory=$API_HOME
-ExecStart=/usr/local/bin/gunicorn -w 3 --bind 127.0.0.1:8000 LearningPlatform.wsgi
+ExecStart=/var/www/learningapi/venv/bin/gunicorn -w 3 --bind 127.0.0.1:8000 --log-file /var/www/learningapi/learning.log --access-logfile /var/www/learningapi/learning-access.log LearningPlatform.wsgi
 PrivateTmp=true
 
 [Install]
@@ -303,6 +305,8 @@ EOF
 
 echo "$SVC_FILE_CONTENTS" > .service
 sudo mv .service /etc/systemd/system/learning.service
+sudo systemctl enable learning
+sudo systemctl daemon-reload
 if [ "${SYSTEMD_PID}" == "" ]; then
     sudo systemctl start learning >> /dev/null
 else
