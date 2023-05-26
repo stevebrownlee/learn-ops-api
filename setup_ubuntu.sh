@@ -246,9 +246,11 @@ EOF
 echo "Installing project requirements"
 sudo su - learnops << EOF
 cd $API_HOME
+pip3 install --upgrade pip setuptools
 python3 -m venv venv
 source venv/bin/activate
 pip3 install django
+pip3 install wheel
 pip3 install -r requirements.txt >> /dev/null
 EOF
 
