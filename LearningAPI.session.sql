@@ -7,8 +7,7 @@ SELECT *
 FROM public."LearningAPI_opportunity";
 
 
-SELECT *
-FROM public."LearningAPI_learningrecord";
+SELECT * FROM public."LearningAPI_learningrecord";
 
 
 SELECT *

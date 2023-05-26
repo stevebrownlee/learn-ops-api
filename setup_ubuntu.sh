@@ -58,6 +58,7 @@ else
     sudo mkdir -p "$USER_HOME"
     sudo usermod -d $USER_HOME $LEARN_OPS_USER
     sudo chown -R $LEARN_OPS_USER $USER_HOME
+    sudo chsh -s /bin/bash $LEARN_OPS_USER
 fi
 
 
@@ -78,8 +79,6 @@ export SLACK_BOT_TOKEN=$SLACKTOKEN
 export PATH=$PATH:/home/learnops/.local/bin
 EOF
 sudo su - learnops -c "bash -c 'source ~/.bashrc'"
-
-# sudo su - learnops -c "source ~/.bashrc"
 
 
 #####
@@ -143,7 +142,10 @@ psql -c "ALTER ROLE $LEARN_OPS_USER SET client_encoding TO 'utf8';"
 psql -c "ALTER ROLE $LEARN_OPS_USER SET default_transaction_isolation TO 'read committed';"
 psql -c "ALTER ROLE $LEARN_OPS_USER SET timezone TO 'UTC';"
 psql -c "GRANT ALL PRIVILEGES ON DATABASE $LEARN_OPS_DB TO $LEARN_OPS_USER;"
+psql -c "GRANT ALL PRIVILEGES ON SCHEMA public TO $LEARN_OPS_USER;"
 COMMANDS
+
+
 
 
 #####
@@ -278,7 +280,7 @@ SVC_FILE_CONTENTS=$(cat << EOF
 [Unit]
 Description=learnops gunicorn daemon
 After=network.target
-# Comment
+
 [Service]
 Environment="DEBUG=False"
 Environment="DEVELOPMENT_MODE=False"
