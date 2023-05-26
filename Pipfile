@@ -21,6 +21,7 @@ dj-rest-auth = "*"
 django-allauth = "*"
 requests = "*"
 "backports.weakref" = "*"
+wheel = "*"
 
 [requires]
 python_version = "*"
