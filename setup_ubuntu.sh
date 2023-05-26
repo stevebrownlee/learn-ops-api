@@ -241,30 +241,26 @@ EOF
 
 
 #####
-# Install project requirements
+# Install project requirements and run migrations
 #####
-echo "Installing project requirements"
+if [ ! -d "$API_HOME/logs" ]; then
+    mkdir $API_HOME/logs
+fi
+sudo chown -R learnops:www-data $API_HOME/logs
+
+
+echo "Installing project requirements and migrating"
 sudo su - learnops << EOF
+source ~/.bashrc
+export PATH=$PATH:/home/learnops/.local/bin
 cd $API_HOME
+
 pip3 install --upgrade pip setuptools
 python3 -m venv venv
 source venv/bin/activate
 pip3 install django
 pip3 install wheel
-pip3 install -r requirements.txt >> /dev/null
-EOF
-
-#####
-# Run existing migrations
-#####
-echo "Running DB migrations"
-if [ ! -d "$API_HOME/logs" ]; then
-    mkdir $API_HOME/logs
-fi
-sudo chown -R learnops:www-data $API_HOME/logs
-sudo su - learnops << EOF
-cd $API_HOME
-source ~/.bashrc
+pip3 install -r requirements.txt
 
 python3 manage.py migrate
 python3 manage.py loaddata socialaccount
