@@ -1,43 +1,76 @@
 #!/bin/bash
 
-psql -c "DROP DATABASE IF EXISTS $LEARN_OPS_USER WITH (FORCE);"
-psql -c "CREATE DATABASE $LEARN_OPS_USER;"
-psql -c "CREATE USER $LEARN_OPS_USER WITH PASSWORD '$LEARN_OPS_PASSWORD';"
-psql -c "ALTER ROLE $LEARN_OPS_USER SET client_encoding TO 'utf8';"
-psql -c "ALTER ROLE $LEARN_OPS_USER SET default_transaction_isolation TO 'read committed';"
-psql -c "ALTER ROLE $LEARN_OPS_USER SET timezone TO 'UTC';"
-psql -c "GRANT ALL PRIVILEGES ON DATABASE $LEARN_OPS_USER TO $LEARN_OPS_USER;"
+PYTHON_VERSION=3.9
+source setup_mac_python.sh
 
-echo '[
-    {
-       "model": "sites.site",
-       "pk": 1,
-       "fields": {
-          "domain": "learningplatform.com",
-          "name": "Learning Platform"
-       }
-    },
-    {
-        "model": "socialaccount.socialapp",
+function installBrew() {
+    if ! type brew &>/dev/null; then
+        echo -e "\n\n\n\nInstalling Homebrew..."
+
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+        echo 'eval $(/opt/homebrew/bin/brew shellenv)' >>$HOME/.zprofile
+        eval $(/opt/homebrew/bin/brew shellenv)
+    fi
+}
+
+function installPostgres() {
+    brew install postgresql
+}
+
+function configureDatabase() {
+    if psql -tAc "SELECT 1 FROM pg_database WHERE datname='$LEARN_OPS_DB'" | grep -q 1; then
+        echo "Database $LEARN_OPS_DB exists"
+    else
+        echo "Database $LEARN_OPS_DB does not exist"
+
+        psql -c "DROP DATABASE IF EXISTS $LEARN_OPS_DB WITH (FORCE);"
+        psql -c "CREATE DATABASE $LEARN_OPS_DB;"
+        psql -c "CREATE USER $LEARN_OPS_USER WITH PASSWORD '$LEARN_OPS_PASSWORD';"
+        psql -c "ALTER ROLE $LEARN_OPS_USER SET client_encoding TO 'utf8';"
+        psql -c "ALTER ROLE $LEARN_OPS_USER SET default_transaction_isolation TO 'read committed';"
+        psql -c "ALTER ROLE $LEARN_OPS_USER SET timezone TO 'UTC';"
+        psql -c "GRANT ALL PRIVILEGES ON DATABASE $LEARN_OPS_USER TO $LEARN_OPS_DB;"
+    fi
+}
+
+function generateSocialFixture() {
+    echo '[
+        {
+        "model": "sites.site",
         "pk": 1,
         "fields": {
-            "provider": "github",
-            "name": "Github",
-            "client_id": "'"$LEARN_OPS_CLIENT_ID"'",
-            "secret": "'"$LEARN_OPS_SECRET_KEY"'",
-            "key": "",
-            "sites": [
-                1
-            ]
+            "domain": "learningplatform.com",
+            "name": "Learning Platform"
         }
-    }
-  ]
-' > ./LearningAPI/fixtures/socialaccount.json
+        },
+        {
+            "model": "socialaccount.socialapp",
+            "pk": 1,
+            "fields": {
+                "provider": "github",
+                "name": "Github",
+                "client_id": "'"$LEARN_OPS_CLIENT_ID"'",
+                "secret": "'"$LEARN_OPS_SECRET_KEY"'",
+                "key": "",
+                "sites": [
+                    1
+                ]
+            }
+        }
+    ]
+    ' >./LearningAPI/fixtures/socialaccount.json
 
+}
+
+installBrew
+installPostgres
+installPython
+configureDatabase
+generateSocialFixture
 
 export DJANGO_SETTINGS_MODULE="LearningPlatform.settings"
 PWD=$(python3 ./djangopass.py "$LEARN_OPS_SUPERUSER_PASSWORD" >&1)
-
 
 echo '[
     {
@@ -60,7 +93,7 @@ echo '[
             "user_permissions": []
         }
     }
-]' > ./LearningAPI/fixtures/superuser.json
+]' >./LearningAPI/fixtures/superuser.json
 
 # Install project requirements
 pipenv install

@@ -44,19 +44,10 @@ pgAdmin is not a required install, but if you ever have the desire to have a bro
 
 ## Environment Variables
 
-Several environment variables need to be set up by you to make the setup process faster and more secure.
+Several environment variables need to be set up by you to make the setup process faster and more secure. Set up the following environment variables anywhere in your shell initialization file _(i.e. `.bashrc` or `.zshrc`)_.
+### Postgres Config
 
-### Django Secret Key
-
-You will need a Django secret key environment variable. Run the following command in your terminal to generate one and save it for later.
-
-```sh
-python3 -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
-```
-
-### All Variables Needed
-
-Set up the following environment variables anywhere in your shell initialization file _(i.e. `.bashrc` or `.zshrc`)_.
+These variables define the name of the database, the Postgres user _(with accompanying password)_, the host, and the port.
 
 ```sh
 export LEARN_OPS_DB=learnopsdev
@@ -64,9 +55,38 @@ export LEARN_OPS_USER=learnopsdev
 export LEARN_OPS_PASSWORD=DatabasePasswordOfYourChoice
 export LEARN_OPS_HOST=127.0.0.1
 export LEARN_OPS_PORT=5432
+```
+
+### Github OAuth Config
+
+These two variables are the client ID and secret key for the Github OAuth application you created.
+
+```sh
 export LEARN_OPS_CLIENT_ID=GithubOAuthAppClientId
 export LEARN_OPS_SECRET_KEY=GithubOAuthAppSecret
+```
+
+### Django Secret Key Config
+
+You will need a Django secret key environment variable. Run the following command in your terminal to generate one.
+
+```sh
+python3 -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
+```
+
+Then take the output and set it as the value of this environment variable.
+
+```sh
 export LEARN_OPS_DJANGO_SECRET_KEY="GeneratedDjangoSecretKey"
+```
+
+### Django Settings Config
+
+A super user account will be automatically created for you that will allow you to log into the admin console. Specify what you want your username and password to be with these variables.
+
+You can leave the allowed hosts value to what it already is for local development.
+
+```sh
 export LEARN_OPS_ALLOWED_HOSTS="127.0.0.1,localhost"
 export LEARN_OPS_SUPERUSER_NAME=AdminUsernameOfYourChoice
 export LEARN_OPS_SUPERUSER_PASSWORD=AdminPasswordOfYourChoice
