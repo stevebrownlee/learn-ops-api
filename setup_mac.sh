@@ -1,22 +1,8 @@
 #!/bin/bash
 
-
-function installBrew() {
-    if ! type brew &>/dev/null; then
-        echo -e "\n\n\n\nInstalling Homebrew..."
-
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-        echo 'eval $(/opt/homebrew/bin/brew shellenv)' >>$HOME/.zprofile
-        eval $(/opt/homebrew/bin/brew shellenv)
-    fi
-}
-
-function installPostgres() {
-    brew install postgresql
-}
-
 function configureDatabase() {
+    brew install postgresql
+
     if psql -tAc "SELECT 1 FROM pg_database WHERE datname='$LEARN_OPS_DB'" | grep -q 1; then
         echo "Database $LEARN_OPS_DB exists"
     else
@@ -58,24 +44,18 @@ function generateSocialFixture() {
         }
     ]
     ' >./LearningAPI/fixtures/socialaccount.json
-
 }
 
-installBrew
-installPostgres
-installPython
-configureDatabase
-generateSocialFixture
+function generateSuperuserFixture() {
+    export DJANGO_SETTINGS_MODULE="LearningPlatform.settings"
+    hashedPassword=$(python3 ./djangopass.py "$LEARN_OPS_SUPERUSER_PASSWORD" >&1)
 
-export DJANGO_SETTINGS_MODULE="LearningPlatform.settings"
-PWD=$(python3 ./djangopass.py "$LEARN_OPS_SUPERUSER_PASSWORD" >&1)
-
-echo '[
+    echo '[
     {
         "model": "auth.user",
         "pk": null,
         "fields": {
-            "password": "'"$PWD"'",
+            "password": "'"$hashedPassword"'",
             "last_login": null,
             "is_superuser": true,
             "username": "'"$LEARN_OPS_SUPERUSER_NAME"'",
@@ -92,17 +72,26 @@ echo '[
         }
     }
 ]' >./LearningAPI/fixtures/superuser.json
+}
 
-# Install project requirements
-pipenv install
+function initializeProject() {
+    # Install project requirements
+    pipenv install
 
-# Run existing migrations
-python3 manage.py migrate
+    # Run existing migrations
+    python3 manage.py migrate
 
-# Load data from backup
-python3 manage.py loaddata socialaccount
-python3 manage.py loaddata complete_backup
-python3 manage.py loaddata superuser
+    # Load data from backup
+    python3 manage.py loaddata socialaccount
+    python3 manage.py loaddata complete_backup
+    python3 manage.py loaddata superuser
 
-rm ./LearningAPI/fixtures/superuser.json
-rm ./LearningAPI/fixtures/socialaccount.json
+    rm ./LearningAPI/fixtures/superuser.json
+    rm ./LearningAPI/fixtures/socialaccount.json
+
+}
+
+configureDatabase
+generateSocialFixture
+generateSuperuserFixture
+initializeProject

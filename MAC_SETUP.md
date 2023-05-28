@@ -1,8 +1,22 @@
-# Learning Platform Project
+# Mac Development Environment Setup
 
-## Prerequisites
+## Step 1: Prerequisite Installations
 
-### Github OAuth App
+### Homebrew
+
+If you don't have Homebrew installed, [visit the Homebrew site](https://brew.sh/) and follow the simple instructions.
+
+### Bash Update
+
+It is highly recommended that you install an updated version of `bash` as the default version on a Mac is notoriously outdated.
+
+```sh
+brew install bash
+```
+
+Once complete, log out and back into your Mac.
+
+## Step 2: Github OAuth App
 
 This application uses Github for authorization instead of user accounts in Django. You will need to set up your own OAuth application for use during local development.
 
@@ -20,22 +34,13 @@ This application uses Github for authorization instead of user accounts in Djang
 12. **DO NOT CLOSE TAB. CLIENT AND SECRET NEEDED BELOW.**
 
 
-## Getting Started
-
-1. Fork this repo to your own Github account.
-2. Clone it.
-3. `cd` into the project directory.
-4. Click on the appropriate link below to follow the installations for your dev environment
-
-* [Mac environment installations](./MAC_SETUP.md)
-* [Linux environment installations](./LINUX_SETUP.md)
-
-## Environment Variables
+## Step 3: Environment Variables
 
 Several environment variables need to be set up by you to make the setup process faster and more secure. Set up the following environment variables anywhere in your shell initialization file _(i.e. `.bashrc` or `.zshrc`)_.
-### Postgres Config
 
-These variables define the name of the database, the Postgres user _(with accompanying password)_, the host, and the port.
+### Postgres
+
+These variables define the name of the database, the Postgres user _(with accompanying password)_, the host, and the port. It is recommended that you keep all default values except for the value of **LEARN_OPS_PASSWORD**.
 
 ```sh
 export LEARN_OPS_DB=learnopsdev
@@ -45,7 +50,7 @@ export LEARN_OPS_HOST=127.0.0.1
 export LEARN_OPS_PORT=5432
 ```
 
-### Github OAuth Config
+### Github OAuth
 
 These two variables are the client ID and secret key for the Github OAuth application you created.
 
@@ -54,21 +59,15 @@ export LEARN_OPS_CLIENT_ID=GithubOAuthAppClientId
 export LEARN_OPS_SECRET_KEY=GithubOAuthAppSecret
 ```
 
-### Django Secret Key Config
+### Django Secret Key
 
-You will need a Django secret key environment variable. Run the following command in your terminal to generate one. Make sure your virtual environment is activated before you run it.
-
-```sh
-python3 -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
-```
-
-Then take the output and set it as the value of this environment variable.
+You will need a Django secret key environment variable. A quick way to get a good secret key is to visit [Djecrety](https://djecrety.ir/). Then paste what it generates as the value of your environment variable. Make sure that the double quotes wrap your secret key.
 
 ```sh
 export LEARN_OPS_DJANGO_SECRET_KEY="GeneratedDjangoSecretKey"
 ```
 
-### Django Settings Config
+### Django Settings
 
 A super user account will be automatically created for you that will allow you to log into the admin console. Specify what you want your username and password to be with these variables.
 
@@ -83,6 +82,30 @@ export LEARN_OPS_SUPERUSER_PASSWORD=AdminPasswordOfYourChoice
 ### Activate Environment Variables
 
 Then reload your bash session with `source ~/.zshrc` if you are using zshell or `source ~/.bashrc` if you have the default bash environment.
+
+## Step 4: Install Python
+
+Run the following scripts to ensure the you have `pyenv` installed, which will, in turn, install the correct version of `python` for this project. It will also install `pipenv` which is used to manage the virutal environment for this project.
+
+```sh
+./setup_mac_python.sh
+```
+
+## Step 5: Activate Virtual Environment
+
+Run the following command from the project's top-level directory to activate the environment.
+
+```sh
+pipenv shell
+```
+
+## Step 6: Install Database and Initialize App
+
+If the virtual environment initialized properly, run the following command from the project's top-level directory to install the database, run migrations, seed it with data, and install all project dependencies.
+
+```sh
+./setup_mac.sh
+```
 
 ## Testing the Installation
 
