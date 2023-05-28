@@ -1,7 +1,5 @@
 #!/bin/bash
 
-PYTHON_VERSION=3.9
-source setup_mac_python.sh
 
 function installBrew() {
     if ! type brew &>/dev/null; then

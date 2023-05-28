@@ -1,25 +1,29 @@
 #!/bin/bash
 
+PYTHON_VERSION=3.9
+
 function installPyenv() {
     if [ $(brew list | grep -c pyenv) != 1 ]; then
         echo "Installing Pyenv"
         brew install pyenv
     else
-        echo "Skipping Pyenv install"
+        echo "Skipping Pyenv install. Ensuring latest version of pip."
+        python3 -m pip install --upgrade pip
     fi
 
-    if [ -v "$PYENV_ROOT" ]; then
+    if [[ PYENV_ROOT ]]; then
         echo "Skipping Pyenv Configuration"
     else
-        echo -e '\n\n# Configure pyenv\n
-export PYENV_ROOT="$HOME/.pyenv"\n
-export PIPENV_DIR="$HOME/.local"\n
-export PATH="$PIPENV_DIR/bin:$PYENV_ROOT/bin:$PATH"\n
+        echo "
+# Configure pyenv
+export PYENV_ROOT=\"$HOME/.pyenv\"
+export PIPENV_DIR=\"$HOME/.local\"
+export PATH=$PIPENV_DIR/bin:$PYENV_ROOT/bin:$PATH
 
-if command -v pyenv 1>/dev/null 2>&1; then\n
-\texport PATH=$(pyenv root)/shims:$PATH\n
-\teval "$(pyenv init -)"\n
-fi\n' >>~/.zshrc
+if command -v pyenv 1>/dev/null 2>&1; then
+    export PATH=$(pyenv root)/shims:$PATH
+    eval "$(pyenv init -)"\n
+fi" >>~/.zshrc
         source ~/.zshrc
     fi
 }
@@ -27,11 +31,42 @@ fi\n' >>~/.zshrc
 function installPython() {
     installPyenv
 
-    if [ $(pyenv versions | grep -c $PYTHON_VERSION) != 1 ]; then
+    versionInstalled=$(pyenv versions | grep -c "$PYTHON_VERSION")
+    if [ $versionInstalled != 1 ]; then
         echo "Installing Python version $PYTHON_VERSION"
         pyenv install ${PYTHON_VERSION}:latest
     else
         echo "Skipping $PYTHON_VERSION install"
     fi
+
+    INSTALLED_PYTHON_VERSION=$(pyenv versions | grep -o ${PYTHON_VERSION}'.*[0-9]' | tail -1)
+    pyenv global $INSTALLED_PYTHON_VERSION
+
+    if [ $(python3 -m pip list | grep -c pipenv) != 1 ]; then
+        echo "Install pipenv and autopep8"
+        python3 -m pip install pipenv autopep8
+    else
+        echo "Skipping pipenv and autopep8 install"
+    fi
+
+    if [[ $(which pipenv) == "pipenv not found" ]]; then
+        echo "Could not find pipenv, let an instructor know"
+        return 0
+    fi
+
 }
 
+function installBrew() {
+    if ! type brew &>/dev/null; then
+        echo -e "\n\n\n\nInstalling Homebrew..."
+
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+        echo 'eval $(/opt/homebrew/bin/brew shellenv)' >>$HOME/.zprofile
+        eval $(/opt/homebrew/bin/brew shellenv)
+    fi
+}
+
+
+installBrew
+installPython
