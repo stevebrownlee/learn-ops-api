@@ -11,14 +11,14 @@ This application uses Github for authorization instead of user accounts in Djang
 1. Go to your Github account settings
 2. Open **Developer Settings**
 3. Open **OAuth Apps**
-4. Click **New OAuth App** button
+4. Click **Register New Application** button
 5. Application name should be **Learning Platform**
 6. Homepage URL should be `http://localhost:3000`
 7. Enter a description if you like
 8. Authorization callback should be `http://localhost:8000/auth/github/callback`
 9. Leave **Enable Device Flow** unchecked
-10. Create the app and **do not close** the screen that appears
-11. Go to Github and click the **Generate a new client secret** button
+10. Click the **Register Application** button
+11. Click the **Generate a new client secret** button
 12. **DO NOT CLOSE TAB. CLIENT AND SECRET NEEDED BELOW.**
 
 ## Environment Variables
@@ -32,6 +32,7 @@ These two variables are the client ID and secret key for the Github OAuth applic
 ```sh
 export LEARN_OPS_CLIENT_ID=GithubOAuthAppClientId
 export LEARN_OPS_SECRET_KEY=GithubOAuthAppSecret
+export LEARNING_GITHUB_CALLBACK=http://localhost:3000/auth/github
 ```
 
 ### Postgres
