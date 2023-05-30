@@ -6,11 +6,11 @@ Visit the [Multipass installation](https://multipass.run/install) page and insta
 
 ## Create Ubuntu Virtual Machine
 
-Clone your repository and navigate to the project directory that is created. Run the following command to create an Ubuntu 22.04 virtual machine.
+Navigate to the project's top-level directory. Run the following command to create an Ubuntu 22.04 virtual machine.
 
 ```sh
 # On Mac, you may have to `multipass set local.driver=qemu` for this to work
-multipass launch jammy -m 1200M -d 3500M -n learnops --mount $(pwd):/mnt/learnops
+multipass launch jammy -m 2G -d 3500M -c 2 -n learnops --mount $(pwd):/mnt/learnops
 ```
 
 ## Configure Ubuntu Virtual Machine
@@ -18,7 +18,7 @@ multipass launch jammy -m 1200M -d 3500M -n learnops --mount $(pwd):/mnt/learnop
 Run the following script to install all software, create the database, get the code, install dependencies, seed the database, and configure nginx. When the script is done,
 
 ```sh
-multipass exec learnops -- /bin/bash -c "/mnt/learnops/setup_ubuntu_local.sh --client="$LEARN_OPS_CLIENT_ID" --secret="$LEARN_OPS_SECRET_KEY" --password="$LEARN_OPS_PASSWORD" --django="$LEARN_OPS_DJANGO_SECRET_KEY" --hosts="$LEARN_OPS_ALLOWED_HOSTS" --suser="$LEARN_OPS_SUPERUSER_NAME" --supass="$LEARN_OPS_SUPERUSER_PASSWORD" --slack="$SLACK_TOKEN
+multipass exec learnops -- /bin/bash -c "/mnt/learnops/config/setup_ubuntu_local.sh --client="$LEARN_OPS_CLIENT_ID" --secret="$LEARN_OPS_SECRET_KEY" --password="$LEARN_OPS_PASSWORD" --django="$LEARN_OPS_DJANGO_SECRET_KEY" --hosts="$LEARN_OPS_ALLOWED_HOSTS" --suser="$LEARN_OPS_SUPERUSER_NAME" --supass="$LEARN_OPS_SUPERUSER_PASSWORD" --slack="$SLACK_TOKEN
 ```
 
 ## Give Your Virtual Machine a Domain Name
@@ -39,7 +39,9 @@ the.ip4.address.copied      api.learning.local
 
 Run the following command to verify that the virtual machine is configured correctly and you get data back.
 
-`curl -H "Authorization: Token 86aa7dee6e554818fe9a3cf8a2c67f57bc4991eb" http://api.learning.local/cohorts/1`
+```sh
+curl -H "Authorization: Token 86aa7dee6e554818fe9a3cf8a2c67f57bc4991eb" http://api.learning.local/cohorts/1
+```
 
 ## Testing Superuser Credentials
 

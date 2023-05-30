@@ -21,7 +21,7 @@ Once complete, log out and back into your Mac.
 Run the following scripts to ensure the you have `pyenv` installed, which will, in turn, install the correct version of `python` for this project. It will also install `pipenv` which is used to manage the virutal environment for this project.
 
 ```sh
-./setup_mac_python.sh
+./config/setup_mac_python.sh
 ```
 
 ## Activate Virtual Environment
@@ -37,7 +37,7 @@ pipenv shell
 If the virtual environment initialized properly, run the following command from the project's top-level directory to install the database, run migrations, seed it with data, and install all project dependencies.
 
 ```sh
-./setup_mac.sh
+./config/setup_mac.sh
 ```
 
 ## Testing the Installation

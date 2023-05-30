@@ -212,6 +212,7 @@ EOF
 #####
 # Install project requirements and run migrations
 #####
+VENV_DIR="/home/learnops/venv"
 echo "Installing project requirements and migrating"
 sudo su - learnops << EOF
 source /home/learnops/.bashrc
@@ -219,8 +220,8 @@ export PATH=$PATH:/home/learnops/.local/bin
 cd $API_HOME
 
 pip3 install --upgrade pip setuptools
-python3 -m venv $HOME/venv
-source $HOME/venv/bin/activate
+python3 -m venv $VENV_DIR
+source $VENV_DIR/bin/activate
 pip3 install django
 pip3 install wheel
 pip3 install -r requirements.txt
@@ -243,9 +244,9 @@ Description=learnops gunicorn daemon
 After=network.target
 
 [Service]
-Environment="DEBUG=False"
-Environment="DEVELOPMENT_MODE=False"
-Environment="LEARNING_GITHUB_CALLBACK=https://learning.nss.team/auth/github"
+Environment="DEBUG=True"
+Environment="DEVELOPMENT_MODE=True"
+Environment="LEARNING_GITHUB_CALLBACK=http://api.learning.local/auth/github"
 Environment="SLACK_BOT_TOKEN=$SLACKTOKEN"
 Environment="LEARN_OPS_DB=$LEARN_OPS_USER"
 Environment="LEARN_OPS_USER=$LEARN_OPS_USER"
@@ -259,7 +260,7 @@ Environment="LEARN_OPS_ALLOWED_HOSTS=$LEARN_OPS_ALLOWED_HOSTS"
 User=$LEARN_OPS_USER
 Group=www-data
 WorkingDirectory=$API_HOME
-ExecStart=/var/www/learningapi/venv/bin/gunicorn -w 3 --bind 127.0.0.1:8000 --log-file /var/www/learningapi/logs/learning.log --access-logfile /var/www/learningapi/logs/learning-access.log LearningPlatform.wsgi
+ExecStart=$VENV_DIR/bin/gunicorn -w 3 --bind 127.0.0.1:8000 --log-file /mnt/learnops/logs/learning.log --access-logfile /mnt/learnops/logs/learning-access.log LearningPlatform.wsgi
 PrivateTmp=true
 
 [Install]

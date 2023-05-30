@@ -27,11 +27,11 @@ Several environment variables need to be set up by you to make the setup process
 
 ### Github OAuth
 
-These two variables are the client ID and secret key for the Github OAuth application you created.
+These two variables are the client ID and secret key for the Github OAuth application you created. Refer back to the browser tab you have open and replace the boilerplate values below with the real values.
 
 ```sh
-export LEARN_OPS_CLIENT_ID=GithubOAuthAppClientId
-export LEARN_OPS_SECRET_KEY=GithubOAuthAppSecret
+export LEARN_OPS_CLIENT_ID=replace_me
+export LEARN_OPS_SECRET_KEY=replace_me
 export LEARNING_GITHUB_CALLBACK=http://localhost:3000/auth/github
 ```
 
@@ -40,9 +40,9 @@ export LEARNING_GITHUB_CALLBACK=http://localhost:3000/auth/github
 These variables define the name of the database, the Postgres user _(with accompanying password)_, the host, and the port. It is recommended that you keep all default values except for the value of **LEARN_OPS_PASSWORD**.
 
 ```sh
+export LEARN_OPS_PASSWORD=replace_me
 export LEARN_OPS_DB=learnopsdev
 export LEARN_OPS_USER=learnopsdev
-export LEARN_OPS_PASSWORD=DatabasePasswordOfYourChoice
 export LEARN_OPS_HOST=127.0.0.1
 export LEARN_OPS_PORT=5432
 ```
@@ -52,7 +52,7 @@ export LEARN_OPS_PORT=5432
 You will need a Django secret key environment variable. A quick way to get a good secret key is to visit [Djecrety](https://djecrety.ir/). Then paste what it generates as the value of your environment variable. Make sure that the double quotes wrap your secret key.
 
 ```sh
-export LEARN_OPS_DJANGO_SECRET_KEY="GeneratedDjangoSecretKey"
+export LEARN_OPS_DJANGO_SECRET_KEY="replace_me"
 ```
 
 ### Django Settings
@@ -63,8 +63,8 @@ You can leave the allowed hosts value to what it already is for local developmen
 
 ```sh
 export LEARN_OPS_ALLOWED_HOSTS="api.learning.local,127.0.0.1,localhost"
-export LEARN_OPS_SUPERUSER_NAME=AdminUsernameOfYourChoice
-export LEARN_OPS_SUPERUSER_PASSWORD=AdminPasswordOfYourChoice
+export LEARN_OPS_SUPERUSER_NAME=replace_me
+export LEARN_OPS_SUPERUSER_PASSWORD=replace_me
 ```
 
 ### Activate Environment Variables
