@@ -42,13 +42,21 @@ class CapstoneViewSet(ViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        proposal = Capstone()
-        proposal.course = course
-        proposal.student = student
-        proposal.description = request.data.get("description", "")
-        proposal.proposal_url = request.data.get("proposalURL", "")
-        proposal.repo_url = request.data.get("repoURL", "")
-        proposal.save()
+        try:
+            existing = Capstone.objects.get(student=student, course=course)
+
+            return Response({'message': 'You have already submittted a proposal for this course. If you made updates, just let your instructional team know via Slack'}, status=status.HTTP_400_BAD_REQUEST)
+        except Capstone.DoesNotExist:
+            proposal = Capstone()
+            proposal.course = course
+            proposal.student = student
+            proposal.description = request.data.get("description", "")
+            proposal.proposal_url = request.data.get("proposalURL", "")
+            proposal.repo_url = request.data.get("repoURL", "")
+            proposal.save()
+
+
+
 
         # Send message to instructors
         try:
