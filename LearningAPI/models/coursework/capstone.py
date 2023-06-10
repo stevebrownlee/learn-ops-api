@@ -10,7 +10,7 @@ class Capstone(models.Model):
     description = models.TextField()
 
     def __str__(self) -> str:
-        return self.course.name
+        return f'{self.student}: {self.course.name}'
 
     @property
     def status_count(self):

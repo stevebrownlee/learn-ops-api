@@ -112,6 +112,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     github = serializers.SerializerMethodField()
     repos = serializers.SerializerMethodField()
     staff = serializers.SerializerMethodField()
+    capstones = serializers.SerializerMethodField()
 
     def get_staff(self, obj):
         return obj.user.is_staff
@@ -130,8 +131,19 @@ class ProfileSerializer(serializers.ModelSerializer):
     def get_email(self, obj):
         return obj.user.email
 
+    def get_capstones(self, obj):
+        student = NssUser.objects.get(user=obj.user)
+        capstones = []
+        for capstone in student.capstones.all():
+            capstones.append({
+                "course": capstone.course.name,
+                "proposal": capstone.proposal_url,
+                "statuses": capstone.statuses.order_by("-id").values('status__status', 'date')
+            })
+        return capstones
+
     class Meta:
         model = NssUser
         fields = ('id', 'name', 'email', 'github', 'staff', 'slack_handle',
                   'current_cohort', 'feedback', 'repos', 'personality',
-                  'assessment_overview', )
+                  'assessment_overview', 'capstones',)
