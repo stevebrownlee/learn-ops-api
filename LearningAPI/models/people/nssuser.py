@@ -18,8 +18,21 @@ class NssUser(models.Model):
         return f'{self.user.first_name} {self.user.last_name}'
 
     @property
+    def assessment_overview(self):
+        assessment_list = []
+        for assessment in self.assessments.all():
+            assessment_list.append({
+                "id": assessment.id,
+                "name": assessment.assessment.name,
+                "status": assessment.status.status,
+                "book": assessment.assessment.assigned_book,
+                "reviewed_by": assessment.instructor.user.first_name
+            })
+        return assessment_list
+
+    @property
     def cohorts(self):
-        assignments = self.assigned_cohorts.all().order_by("-id")
+        assignments = self.assigned_cohorts.all().order_by("-id").first()
         cohort_list = []
         for assignment in assignments:
             cohort_list.append({
@@ -33,4 +46,12 @@ class NssUser(models.Model):
     @property
     def current_cohort(self):
         assignment = self.assigned_cohorts.order_by("-id").last()
-        return assignment.cohort.id
+        return {
+            "name": assignment.cohort.name,
+            "id": assignment.cohort.id,
+            "client_course": assignment.cohort.info.client_course_url,
+            "server_course": assignment.cohort.info.server_course_url,
+            "start": assignment.cohort.start_date,
+            "end": assignment.cohort.end_date,
+            "github_org": assignment.cohort.info.student_organization_url,
+        }

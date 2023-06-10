@@ -5,7 +5,7 @@ from .models.people import (
     NssUser, Assessment,
     Cohort, NssUserCohort,
     StudentAssessmentStatus,
-    StudentAssessment
+    StudentAssessment, CohortInfo
 )
 from .models.coursework import (
     Course, ProposalStatus, Capstone, Book,
@@ -17,6 +17,11 @@ from .models.skill import (
     CoreSkill, CoreSkillRecord,
     LearningRecordEntry, LearningRecord, LearningWeight,
 )
+
+@admin.register(CohortInfo)
+class CohortInfoAdmin(admin.ModelAdmin):
+    """For assigning students to cohorts"""
+    list_display = ('cohort', )
 
 @admin.register(CohortCourse)
 class CohortCourseAdmin(admin.ModelAdmin):

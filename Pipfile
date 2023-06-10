@@ -22,6 +22,7 @@ django-allauth = "*"
 requests = "*"
 "backports.weakref" = "*"
 wheel = "*"
+openai = "*"
 
 [requires]
 python_version = "*"

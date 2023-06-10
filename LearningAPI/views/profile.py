@@ -133,4 +133,5 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = NssUser
         fields = ('id', 'name', 'email', 'github', 'staff', 'slack_handle',
-                  'cohorts', 'feedback', 'repos', 'personality')
+                  'current_cohort', 'feedback', 'repos', 'personality',
+                  'assessment_overview', )

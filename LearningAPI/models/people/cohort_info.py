@@ -6,3 +6,5 @@ class CohortInfo(models.Model):
     student_organization_url = models.CharField(max_length=75, null=True, blank=True)
     github_classroom_url = models.CharField(max_length=75, null=True, blank=True)
     attendance_sheet_url = models.CharField(max_length=255, null=True, blank=True)
+    client_course_url = models.CharField(max_length=255, null=True, blank=True)
+    server_course_url = models.CharField(max_length=255, null=True, blank=True)
