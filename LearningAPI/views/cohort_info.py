@@ -71,6 +71,9 @@ class CohortInfoViewSet(ViewSet):
             info.attendance_sheet_url = request.data.get('attendance_sheet_url', None)
             info.github_classroom_url = request.data.get('github_classroom_url', None)
             info.student_organization_url = request.data.get('student_organization_url', None)
+            info.server_course_url = request.data.get('server_course_url', None)
+            info.client_course_url = request.data.get('client_course_url', None)
+            info.zoom_url = request.data.get('zoom_url', None)
             info.save()
 
         except CohortInfo.DoesNotExist:
@@ -102,5 +105,9 @@ class CohortInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CohortInfo
-        fields = ('id', 'cohort', 'attendance_sheet_url', 'github_classroom_url', 'student_organization_url')
+        fields = (
+            'id', 'cohort', 'attendance_sheet_url', 'github_classroom_url',
+            'student_organization_url', 'client_course_url', 'zoom_url',
+            'server_course_url'
+        )
 

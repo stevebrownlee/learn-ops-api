@@ -8,3 +8,4 @@ class CohortInfo(models.Model):
     attendance_sheet_url = models.CharField(max_length=255, null=True, blank=True)
     client_course_url = models.CharField(max_length=255, null=True, blank=True)
     server_course_url = models.CharField(max_length=255, null=True, blank=True)
+    zoom_url = models.CharField(max_length=255, null=True, blank=True)

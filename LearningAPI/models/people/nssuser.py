@@ -32,7 +32,7 @@ class NssUser(models.Model):
 
     @property
     def cohorts(self):
-        assignments = self.assigned_cohorts.all().order_by("-id").first()
+        assignments = self.assigned_cohorts.all().order_by("-id")
         cohort_list = []
         for assignment in assignments:
             cohort_list.append({
