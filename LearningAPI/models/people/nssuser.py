@@ -51,6 +51,7 @@ class NssUser(models.Model):
             "id": assignment.cohort.id,
             "client_course": assignment.cohort.info.client_course_url,
             "server_course": assignment.cohort.info.server_course_url,
+            "zoom_url": assignment.cohort.info.zoom_url,
             "start": assignment.cohort.start_date,
             "end": assignment.cohort.end_date,
             "github_org": assignment.cohort.info.student_organization_url,
