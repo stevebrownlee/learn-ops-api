@@ -115,8 +115,16 @@ class BookViewSet(ViewSet):
 
 class BookSerializer(serializers.ModelSerializer):
     """JSON serializer"""
+    projects = serializers.SerializerMethodField()
+
+    def get_projects(self, obj):
+        return obj.projects.count()
 
     class Meta:
         model = Book
-        fields = ('id', 'index', 'name', 'course', 'has_assessment', 'description')
+        fields = (
+            'id', 'index', 'name', 'course',
+            'has_assessment', 'description',
+            'projects'
+        )
         depth = 1
