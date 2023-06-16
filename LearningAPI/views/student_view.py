@@ -16,8 +16,8 @@ from rest_framework.viewsets import ModelViewSet
 
 from LearningAPI.decorators import is_instructor
 from LearningAPI.models import Tag
-from LearningAPI.models.coursework import Capstone, StudentProject, Book, Project, CohortCourse
-from LearningAPI.models.people import (Cohort, StudentNote, NssUser, StudentAssessment,
+from LearningAPI.models.coursework import StudentProject, Project, CohortCourse
+from LearningAPI.models.people import (StudentNote, NssUser, StudentAssessment,
                                        OneOnOneNote, StudentPersonality, Assessment,
                                        StudentAssessmentStatus, StudentTag)
 from LearningAPI.models.skill import (CoreSkillRecord, LearningRecord,
@@ -55,21 +55,6 @@ class StudentViewSet(ModelViewSet):
 
             except ValueError:
                 student = NssUser.objects.get(slack_handle=pk)
-
-            try:
-                personality = StudentPersonality.objects.get(student=student)
-            except StudentPersonality.DoesNotExist:
-                personality = StudentPersonality()
-                personality.briggs_myers_type = ""
-                personality.bfi_extraversion = 0
-                personality.bfi_agreeableness = 0
-                personality.bfi_conscientiousness = 0
-                personality.bfi_neuroticism = 0
-                personality.bfi_openness = 0
-                personality.student = student
-                personality.save()
-            except Exception as ex:
-                logger.exception(getattr(ex, 'message', repr(ex)))
 
             if request.auth.user == student.user or request.auth.user.is_staff:
                 serializer = StudentSerializer(
@@ -167,23 +152,8 @@ class StudentViewSet(ModelViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         if cohort is not None:
-            cohort_filter = Cohort.objects.get(pk=cohort)
-            students = students.filter(assigned_cohorts__cohort=cohort_filter)
-
-            for student in students:
-                try:
-                    personality = StudentPersonality.objects.get(student=student)
-
-                except StudentPersonality.DoesNotExist:
-                    personality = StudentPersonality()
-                    personality.briggs_myers_type = ""
-                    personality.bfi_extraversion = 0
-                    personality.bfi_agreeableness = 0
-                    personality.bfi_conscientiousness = 0
-                    personality.bfi_neuroticism = 0
-                    personality.bfi_openness = 0
-                    personality.student = student
-                    personality.save()
+            # cohort_filter = Cohort.objects.get(pk=cohort)
+            students = students.filter(assigned_cohorts__cohort__id=cohort)
 
             serializer = MicroStudents(students, many=True)
 
@@ -236,10 +206,10 @@ class StudentViewSet(ModelViewSet):
         elif request.method == "POST":
             try:
                 try:
-                    assessment = Assessment.objects.get(book__id=int(request.data['bookId']))
+                    assessment = Assessment.objects.get(
+                        book__id=int(request.data['bookId']))
                 except Assessment.DoesNotExist:
                     return Response({'message': 'There is no assessment for this book.'}, status=status.HTTP_404_NOT_FOUND)
-
 
                 student_assessment = StudentAssessment()
                 student_assessment.student = NssUser.objects.get(pk=pk)
@@ -287,7 +257,7 @@ class StudentViewSet(ModelViewSet):
                 except Tag.DoesNotExist:
                     tag = Tag.objects.create(name=combo['team'])
 
-                StudentTag.objects.create( student = student, tag = tag )
+                StudentTag.objects.create(student=student, tag=tag)
 
             return Response(None, status=status.HTTP_201_CREATED)
 
@@ -467,7 +437,6 @@ class StudentSerializer(serializers.ModelSerializer):
     records = serializers.SerializerMethodField()
     score = serializers.SerializerMethodField()
     core_skill_records = serializers.SerializerMethodField()
-    personality = PersonalitySerializer(many=False)
 
     def get_score(self, obj):
         return student_score(obj)
@@ -494,8 +463,8 @@ class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = NssUser
         fields = ('id', 'name', 'email', 'github', 'score', 'core_skill_records',
-                  'cohorts', 'feedback', 'records', 'notes', 'personality',
-                  'capstones', 'current_cohort' )
+                  'cohorts', 'feedback', 'records', 'notes',
+                  'capstones', 'current_cohort')
 
 
 class StudentTagSerializer(serializers.ModelSerializer):
@@ -518,17 +487,8 @@ class CoreSkillRecordSerializer(serializers.ModelSerializer):
 class MicroStudents(serializers.ModelSerializer):
     """JSON serializer"""
     tags = StudentTagSerializer(many=True)
-    name = serializers.SerializerMethodField()
     score = serializers.SerializerMethodField()
-    proposals = serializers.SerializerMethodField()
-    book = serializers.SerializerMethodField()
     assessment_status = serializers.SerializerMethodField()
-    github = serializers.SerializerMethodField()
-    archetype = serializers.SerializerMethodField()
-
-    def get_github(self, obj):
-        github = obj.user.socialaccount_set.get(user=obj.user)
-        return github.extra_data["login"]
 
     def get_assessment_status(self, obj):
         student_project = StudentProject.objects.filter(student=obj).last()
@@ -541,13 +501,13 @@ class MicroStudents(serializers.ModelSerializer):
 
             try:
                 student_assessment = StudentAssessment.objects.annotate(assessment_status=Case(
-                        When(status__status="In Progress", then=1),
-                        When(status__status="Ready for Review", then=2),
-                        When(status__status="Reviewed and Incomplete", then=3),
-                        When(status__status="Reviewed and Complete", then=4),
-                        default=0,
-                        output_field=IntegerField()
-                    ))\
+                    When(status__status="In Progress", then=1),
+                    When(status__status="Ready for Review", then=2),
+                    When(status__status="Reviewed and Incomplete", then=3),
+                    When(status__status="Reviewed and Complete", then=4),
+                    default=0,
+                    output_field=IntegerField()
+                ))\
                     .get(assessment__book=book, student=obj)
 
                 assessment_status = student_assessment.assessment_status
@@ -558,80 +518,15 @@ class MicroStudents(serializers.ModelSerializer):
         else:
             return 0
 
-    def get_book(self, obj):
-        student_project = StudentProject.objects.filter(student=obj).last()
-
-        if student_project is None:
-            cohort_course = CohortCourse.objects.get(cohort__id=obj.cohorts[0]['id'], index=0)
-            project = Project.objects.get(book__course=cohort_course.course, book__index=0, index=0)
-
-            return {
-                "id": project.book.id,
-                "name": project.book.name,
-                "project": project.name
-            }
-
-        return {
-            "id": student_project.project.book.id,
-            "name": student_project.project.book.name,
-            "project": student_project.project.name
-        }
-
-    def get_proposals(self, obj):
-        # Three stages - "submitted", "reviewed", "approved"
-        proposals = Capstone.objects.filter(student=obj).annotate(
-            status_count=Count("statuses"),
-            approved=Count(
-                'statuses',
-                filter=Q(statuses__status__status="Approved")
-            ),
-            mvp=Count(
-                'statuses',
-                filter=Q(statuses__status__status="MVP")
-            )
-        ).order_by("pk")
-
-        proposal_statuses = []
-
-        for proposal in proposals:
-            proposal_status = ""
-
-            if proposal.status_count == 0:
-                proposal_status = "submitted"
-            elif proposal.status_count > 0 and proposal.mvp == 1:
-                proposal_status = "mvp"
-            elif proposal.status_count > 0 and proposal.approved == 0:
-                proposal_status = "reviewed"
-            elif proposal.status_count > 0 and proposal.approved == 1:
-                proposal_status = "approved"
-
-            proposal_statuses.append({
-                "id": proposal.id,
-                "course": proposal.course.id,
-                "status": proposal_status
-            })
-
-        return proposal_statuses
-
     def get_score(self, obj):
         return student_score(obj)
-
-    def get_archetype(self, obj):
-        if obj.personality.briggs_myers_type != '':
-            return myers_briggs_persona(obj.personality.briggs_myers_type)["type"]
-
-        return ""
-
-    def get_name(self, obj):
-        return f'{obj.user.first_name} {obj.user.last_name}'
 
     class Meta:
         model = NssUser
         fields = ('id', 'name', 'score', 'tags',
-                  'proposals', 'book',
-                  'assessment_status',
-                  'github', 'cohorts',
-                  'archetype',)
+                  'book', 'assessment_status', 'submitted_proposals',
+                  'github_handle', 'current_cohort',
+                  )
 
 
 class SingleStudent(serializers.ModelSerializer):

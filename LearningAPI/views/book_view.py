@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 from LearningAPI.models.coursework import Book, Course
+from LearningAPI.models.people import  Assessment
 
 
 class BookViewSet(ViewSet):
@@ -113,9 +114,18 @@ class BookViewSet(ViewSet):
             return HttpResponseServerError(ex)
 
 
+class BookAssessmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Assessment
+        fields = (
+            'id', 'name'
+        )
+
+
 class BookSerializer(serializers.ModelSerializer):
     """JSON serializer"""
     projects = serializers.SerializerMethodField()
+    assessments = BookAssessmentSerializer(many = True)
 
     def get_projects(self, obj):
         return obj.projects.count()
@@ -125,6 +135,6 @@ class BookSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'index', 'name', 'course',
             'has_assessment', 'description',
-            'projects'
+            'projects', 'assessments'
         )
         depth = 1

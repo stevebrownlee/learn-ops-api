@@ -9,6 +9,7 @@ from rest_framework.viewsets import ViewSet
 
 from LearningAPI.decorators import is_instructor
 from LearningAPI.models.coursework import Course, Book, Project, CohortCourse
+from LearningAPI.models.people import Assessment
 
 
 class CourseViewSet(ViewSet):
@@ -97,12 +98,10 @@ class CourseViewSet(ViewSet):
             courses = Course.objects.all()
 
             if cohort is not None and active is not None:
-                active_cohort_course = CohortCourse.objects.get(
-                    cohort__id=cohort, active=bool(active))
+                active_cohort_course = CohortCourse.objects.get(cohort__id=cohort, active=bool(active))
                 courses = courses.filter(pk=active_cohort_course.course.id)
 
-            serializer = CourseSerializer(
-                courses, many=True, context={'request': request})
+            serializer = CourseSerializer(courses, many=True, context={'request': request})
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as ex:
             return HttpResponseServerError(ex)
@@ -116,13 +115,20 @@ class ProjectSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'index')
 
 
+class AssessmentSerializer(serializers.ModelSerializer):
+    """JSON serializer"""
+    class Meta:
+        model = Assessment
+        fields = ('id', 'name',)
+
 class BookSerializer(serializers.ModelSerializer):
     """JSON serializer"""
     projects = ProjectSerializer(many=True)
+    assessments = AssessmentSerializer(many=True)
 
     class Meta:
         model = Book
-        fields = ('id', 'name', 'projects', 'index')
+        fields = ('id', 'name', 'projects', 'index', 'assessments')
         depth = 1
 
 

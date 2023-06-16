@@ -192,3 +192,34 @@ FROM "LearningAPI_book"
 ORDER BY "LearningAPI_book"."course_id" ASC,
          "LearningAPI_book"."index" ASC
          ;
+
+
+
+SELECT COUNT("LearningAPI_capstonetimeline"."id") AS "status_count",
+       COUNT("LearningAPI_capstonetimeline"."id") FILTER (
+                WHERE "LearningAPI_proposalstatus"."status" = 'Approved') AS approved,
+       COUNT("LearningAPI_capstonetimeline"."id") FILTER (
+                WHERE "LearningAPI_proposalstatus"."status" = 'MVP') AS mvp,
+       CASE
+           WHEN COUNT("LearningAPI_capstonetimeline"."id") = 0 THEN 'submitted'
+           WHEN (COUNT("LearningAPI_capstonetimeline"."id") > 0
+                 AND COUNT("LearningAPI_capstonetimeline"."id") FILTER (
+                WHERE ("LearningAPI_proposalstatus"."status" = 'MVP')) = 1) THEN 'mvp'
+           WHEN (COUNT("LearningAPI_capstonetimeline"."id") > 0
+                 AND COUNT("LearningAPI_capstonetimeline"."id") FILTER (
+                WHERE ("LearningAPI_proposalstatus"."status" = 'Approved')) = 0) THEN 'reviewed'
+           WHEN (COUNT("LearningAPI_capstonetimeline"."id") > 0
+                 AND COUNT("LearningAPI_capstonetimeline"."id") FILTER (
+                WHERE ("LearningAPI_proposalstatus"."status" = 'Approved')) = 1) THEN 'approved'
+           ELSE 'unsubmitted'
+       END AS current_status
+FROM "LearningAPI_capstone"
+LEFT OUTER JOIN "LearningAPI_capstonetimeline"
+        ON ("LearningAPI_capstone"."id" = "LearningAPI_capstonetimeline"."capstone_id")
+LEFT OUTER JOIN "LearningAPI_proposalstatus"
+        ON ("LearningAPI_capstonetimeline"."status_id" = "LearningAPI_proposalstatus"."id")
+WHERE "LearningAPI_capstone"."student_id" = 291
+GROUP BY "LearningAPI_capstone"."id"
+;
+
+

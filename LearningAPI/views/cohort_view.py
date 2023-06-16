@@ -157,8 +157,7 @@ class CohortViewSet(ViewSet):
                 for letter in list(search_terms):
                     cohorts = cohorts.filter(name__icontains=letter)
 
-                serializer = MiniCohortSerializer(
-                    cohorts, many=True, context={'request': request})
+                serializer = MiniCohortSerializer(cohorts, many=True, context={'request': request})
                 return Response(serializer.data, status=status.HTTP_200_OK)
 
             cohorts = cohorts.annotate(

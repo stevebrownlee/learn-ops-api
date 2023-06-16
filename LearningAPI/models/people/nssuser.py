@@ -1,6 +1,8 @@
 """NssUser database model"""
 from django.db import models
 from django.conf import settings
+from django.db.models import Count, Q
+from LearningAPI.models.coursework import Capstone, StudentProject, CohortCourse, Project
 
 
 class NssUser(models.Model):
@@ -18,6 +20,58 @@ class NssUser(models.Model):
         return f'{self.user.first_name} {self.user.last_name}'
 
     @property
+    def github(self):
+        return self.__github
+
+    @github.setter
+    def github(self, value):
+        self.__github = value
+
+    @property
+    def bookxx(self):
+        student_project = StudentProject.objects.filter(student=self).last()
+
+        if student_project is None:
+            cohort_course = CohortCourse.objects.get(cohort__id=self.cohorts[0]['id'], index=0)
+            project = Project.objects.get(book__course=cohort_course.course, book__index=0, index=0)
+
+            return {
+                "id": project.book.id,
+                "name": project.book.name,
+                "project": project.name
+            }
+
+        return {
+            "id": student_project.project.book.id,
+            "name": student_project.project.book.name,
+            "project": student_project.project.name
+        }
+
+    @property
+    def name(self):
+        return str(self)
+
+    @property
+    def submitted_proposals(self):
+        proposals = Capstone.objects.filter(student=self).annotate(
+            status_count=Count("statuses"),
+            approved=Count(
+                'statuses',
+                filter=Q(statuses__status__status="Approved")
+            ),
+            mvp=Count(
+                'statuses',
+                filter=Q(statuses__status__status="MVP")
+            ),
+            changes=Count(
+                'statuses',
+                filter=Q(statuses__status__status="Requires Changes")
+            )
+        ).values('status_count', 'approved', 'mvp', 'changes')
+
+        return proposals
+
+    @property
     def assessment_overview(self):
         assessment_list = []
         for assessment in self.assessments.all().order_by("-id"):
@@ -29,19 +83,6 @@ class NssUser(models.Model):
                 "reviewed_by": assessment.instructor.user.first_name
             })
         return assessment_list
-
-    @property
-    def cohorts(self):
-        assignments = self.assigned_cohorts.all().order_by("-id")
-        cohort_list = []
-        for assignment in assignments:
-            cohort_list.append({
-                "id": assignment.cohort.id,
-                "name": assignment.cohort.name,
-                "start_date": assignment.cohort.start_date,
-                "end_date": assignment.cohort.end_date,
-            })
-        return cohort_list
 
     @property
     def current_cohort(self):
