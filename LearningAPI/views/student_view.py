@@ -55,8 +55,7 @@ class StudentViewSet(ModelViewSet):
                 student = NssUser.objects.get(slack_handle=pk)
 
             if request.auth.user == student.user or request.auth.user.is_staff:
-                serializer = StudentSerializer(
-                    student, context={'request': request})
+                serializer = StudentSerializer(student, context={'request': request})
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:
                 return Response(
@@ -390,7 +389,6 @@ class StudentSerializer(serializers.ModelSerializer):
     notes = InstructorNoteSerializer(many=True)
     name = serializers.SerializerMethodField()
     email = serializers.SerializerMethodField()
-    github = serializers.SerializerMethodField()
     records = serializers.SerializerMethodField()
     core_skill_records = serializers.SerializerMethodField()
 
@@ -403,10 +401,6 @@ class StudentSerializer(serializers.ModelSerializer):
         records = CoreSkillRecord.objects.filter(student=obj).order_by("pk")
         return CoreSkillRecordSerializer(records, many=True).data
 
-    def get_github(self, obj):
-        github = obj.user.socialaccount_set.get(user=obj.user)
-        return github.extra_data["login"]
-
     def get_name(self, obj):
         return f'{obj.user.first_name} {obj.user.last_name}'
 
@@ -415,9 +409,10 @@ class StudentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = NssUser
-        fields = ('id', 'name', 'email', 'github', 'score', 'core_skill_records',
-                  'cohorts', 'feedback', 'records', 'notes',
-                  'capstones', 'current_cohort')
+        fields = (
+            'id', 'name', 'email', 'github_handle', 'score', 'core_skill_records',
+            'feedback', 'records', 'notes', 'capstones', 'current_cohort'
+        )
 
 
 class StudentTagSerializer(serializers.ModelSerializer):
