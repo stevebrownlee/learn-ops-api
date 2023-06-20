@@ -1,11 +1,9 @@
 """Student view module"""
 import os
-import statistics
 import logging
 
 import requests
-from django.db.models import Count, Q, Case, When
-from django.db.models.fields import IntegerField
+from django.db.models import Count, Q
 from django.http import HttpResponseServerError
 from django.utils.decorators import method_decorator
 from rest_framework import serializers, status
@@ -16,7 +14,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from LearningAPI.decorators import is_instructor
 from LearningAPI.models import Tag
-from LearningAPI.models.coursework import StudentProject, Project, CohortCourse
+from LearningAPI.models.coursework import StudentProject, Project
 from LearningAPI.models.people import (StudentNote, NssUser, StudentAssessment,
                                        OneOnOneNote, StudentPersonality, Assessment,
                                        StudentAssessmentStatus, StudentTag)
@@ -126,19 +124,10 @@ class StudentViewSet(ModelViewSet):
         Returns:
             Response -- JSON serialized array
         """
-        student_status = self.request.query_params.get('status', None)
         cohort = self.request.query_params.get('cohort', None)
         search_terms = self.request.query_params.get('q', None)
 
-        if student_status == "unassigned":
-            students = NssUser.objects.\
-                annotate(cohort_count=Count('assigned_cohorts')).\
-                filter(user__is_staff=False,
-                       user__is_active=True, cohort_count=0)
-        else:
-            students = NssUser.objects.filter(
-                user__is_active=True, user__is_staff=False)
-
+        students = NssUser.objects.filter(user__is_active=True, user__is_staff=False)
         serializer = SingleStudent(students, many=True)
 
         if search_terms is not None:
@@ -152,9 +141,7 @@ class StudentViewSet(ModelViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         if cohort is not None:
-            # cohort_filter = Cohort.objects.get(pk=cohort)
             students = students.filter(assigned_cohorts__cohort__id=cohort)
-
             serializer = MicroStudents(students, many=True)
 
         page = self.paginate_queryset(serializer.data)
@@ -334,36 +321,6 @@ class StudentViewSet(ModelViewSet):
         return Response({'message': 'Unsupported HTTP method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
-def student_score(obj):
-    """Return total learning score"""
-
-    # First get the total of the student's technical objectives
-    total = 0
-    scores = LearningRecord.objects.\
-        filter(student=obj, achieved=True).\
-        order_by("-id")
-
-    for score in scores:
-        total += score.weight.weight
-
-    # Get the average of the core skills' levels and adjust the
-    # technical score positively by the percent
-    core_skill_records = CoreSkillRecord.objects.filter(
-        student=obj).order_by("pk")
-    scores = [record.level for record in core_skill_records]
-
-    try:
-        # Hannah and I did this on a Monday morning, so it may be the wrong
-        # approach, but it's a step in the right direction
-        mean = statistics.mean(scores)
-        total = round(total * (1 + (mean / 10)))
-
-    except statistics.StatisticsError:
-        pass
-
-    return total
-
-
 class StudentNoteSerializer(serializers.ModelSerializer):
     """JSON serializer for student notes"""
 
@@ -435,11 +392,7 @@ class StudentSerializer(serializers.ModelSerializer):
     email = serializers.SerializerMethodField()
     github = serializers.SerializerMethodField()
     records = serializers.SerializerMethodField()
-    score = serializers.SerializerMethodField()
     core_skill_records = serializers.SerializerMethodField()
-
-    def get_score(self, obj):
-        return student_score(obj)
 
     def get_records(self, obj):
         records = LearningRecord.objects.filter(
@@ -487,44 +440,11 @@ class CoreSkillRecordSerializer(serializers.ModelSerializer):
 class MicroStudents(serializers.ModelSerializer):
     """JSON serializer"""
     tags = StudentTagSerializer(many=True)
-    score = serializers.SerializerMethodField()
-    assessment_status = serializers.SerializerMethodField()
-
-    def get_assessment_status(self, obj):
-        student_project = StudentProject.objects.filter(student=obj).last()
-
-        if student_project is not None:
-            book = student_project.project.book
-
-            # Not assigned book assessment yet
-            assessment_status = 0
-
-            try:
-                student_assessment = StudentAssessment.objects.annotate(assessment_status=Case(
-                    When(status__status="In Progress", then=1),
-                    When(status__status="Ready for Review", then=2),
-                    When(status__status="Reviewed and Incomplete", then=3),
-                    When(status__status="Reviewed and Complete", then=4),
-                    default=0,
-                    output_field=IntegerField()
-                ))\
-                    .get(assessment__book=book, student=obj)
-
-                assessment_status = student_assessment.assessment_status
-            except StudentAssessment.DoesNotExist:
-                assessment_status = 0
-
-            return assessment_status
-        else:
-            return 0
-
-    def get_score(self, obj):
-        return student_score(obj)
 
     class Meta:
         model = NssUser
         fields = ('id', 'name', 'score', 'tags',
-                  'book', 'assessment_status', 'submitted_proposals',
+                  'book', 'assessment_status', 'proposals',
                   'github_handle', 'current_cohort',
                   )
 
@@ -537,14 +457,10 @@ class SingleStudent(serializers.ModelSerializer):
     github = serializers.SerializerMethodField()
     repos = serializers.SerializerMethodField()
     staff = serializers.SerializerMethodField()
-    score = serializers.SerializerMethodField()
     date_joined = serializers.SerializerMethodField()
 
     def get_date_joined(self, obj):
         return obj.user.date_joined
-
-    def get_score(self, obj):
-        return student_score(obj)
 
     def get_staff(self, obj):
         return False

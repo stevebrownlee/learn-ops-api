@@ -15,17 +15,5 @@ class Capstone(models.Model):
         return f'{self.student}: {self.course.name}'
 
     @property
-    def status_count(self):
-        return self.__status_count
-
-    @status_count.setter
-    def status_count(self, value):
-        self.__status_count = value
-
-    @property
     def current_status(self):
-        return self.__current_status
-
-    @current_status.setter
-    def current_status(self, value):
-        self.__current_status = value
+        return self.statuses.order_by('-date').first()

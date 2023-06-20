@@ -1,8 +1,12 @@
 """NssUser database model"""
+import statistics
+
 from django.db import models
 from django.conf import settings
-from django.db.models import Count, Q
-from LearningAPI.models.coursework import Capstone, StudentProject, CohortCourse, Project
+from django.db.models import Sum, F, OuterRef, Subquery
+from LearningAPI.models.coursework import (
+    CapstoneTimeline, StudentProject, CohortCourse, Project
+)
 
 
 class NssUser(models.Model):
@@ -20,20 +24,15 @@ class NssUser(models.Model):
         return f'{self.user.first_name} {self.user.last_name}'
 
     @property
-    def github(self):
-        return self.__github
-
-    @github.setter
-    def github(self, value):
-        self.__github = value
-
-    @property
-    def bookxx(self):
+    def book(self):
         student_project = StudentProject.objects.filter(student=self).last()
+        cohort = self.assigned_cohorts.order_by("-id").last()
 
         if student_project is None:
-            cohort_course = CohortCourse.objects.get(cohort__id=self.cohorts[0]['id'], index=0)
-            project = Project.objects.get(book__course=cohort_course.course, book__index=0, index=0)
+            cohort_course = CohortCourse.objects.get(
+                cohort__id=cohort, index=0)
+            project = Project.objects.get(
+                book__course=cohort_course.course, book__index=0, index=0)
 
             return {
                 "id": project.book.id,
@@ -52,24 +51,65 @@ class NssUser(models.Model):
         return str(self)
 
     @property
-    def submitted_proposals(self):
-        proposals = Capstone.objects.filter(student=self).annotate(
-            status_count=Count("statuses"),
-            approved=Count(
-                'statuses',
-                filter=Q(statuses__status__status="Approved")
-            ),
-            mvp=Count(
-                'statuses',
-                filter=Q(statuses__status__status="MVP")
-            ),
-            changes=Count(
-                'statuses',
-                filter=Q(statuses__status__status="Requires Changes")
-            )
-        ).values('status_count', 'approved', 'mvp', 'changes')
+    def assessment_status(self):
+        try:
+            student_assessment = self.assessments.last() # pylint: disable=E1101
+            status = student_assessment.status.status
+            if status == "In Progress":
+                return 1
+            if status == "Ready for Review":
+                return 2
+            if status == "Reviewed and Incomplete":
+                return 3
+            if status == "Reviewed and Complete":
+                return 4
 
-        return proposals
+        except Exception:
+            return 0
+
+
+    @property
+    def proposals(self):
+        try:
+            lastest_status = CapstoneTimeline.objects.filter(capstone=OuterRef("pk")).order_by("-pk")
+
+            proposals = self.capstones.annotate(
+                course_name=F("course__name"),
+                current_status=Subquery(lastest_status.values("status__status")[:1])
+            ).values('id', 'current_status', 'course_name')
+
+            return proposals
+        except Exception:
+            return []
+
+
+    @property
+    def score(self):
+        """Return total learning score"""
+
+        # First get the total of the student's technical objectives
+        total = 0
+        scores = self.learning_records.filter(achieved=True) \
+            .annotate(total_score=Sum("weight__weight")) \
+            .values_list('total_score', flat=True)
+        total = sum(list(scores))
+
+
+        # Get the average of the core skills' levels and adjust the
+        # technical score positively by the percent
+
+        core_skill_records = list(self.core_skills.values_list('level', flat=True))
+
+        try:
+            # Hannah and I did this on a Monday morning, so it may be the wrong
+            # approach, but it's a step in the right direction
+            mean = statistics.mean(core_skill_records)
+            total = round(total * (1 + (mean / 10)))
+
+        except statistics.StatisticsError:
+            pass
+
+        return total
 
     @property
     def assessment_overview(self):

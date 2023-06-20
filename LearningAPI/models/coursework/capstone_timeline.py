@@ -9,4 +9,4 @@ class CapstoneTimeline(models.Model):
 
     @property
     def student(self):
-        return f'{self.capstone.student.user.first_name} {self.capstone.student.user.last_name}'
+        return f'{self.capstone.student.user.first_name} {self.capstone.student.user.last_name}' # pylint: disable=E1101
