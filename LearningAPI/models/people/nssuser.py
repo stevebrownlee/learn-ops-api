@@ -24,6 +24,10 @@ class NssUser(models.Model):
         return f'{self.user.first_name} {self.user.last_name}'
 
     @property
+    def full_name(self):
+        return f'{self.user.first_name} {self.user.last_name}'
+
+    @property
     def book(self):
         student_project = StudentProject.objects.filter(student=self).last()
         cohort = self.assigned_cohorts.order_by("-id").last()
@@ -37,12 +41,14 @@ class NssUser(models.Model):
             return {
                 "id": project.book.id,
                 "name": project.book.name,
-                "project": project.name
+                "project": project.name,
+                "index": project.book.index
             }
 
         return {
             "id": student_project.project.book.id,
             "name": student_project.project.book.name,
+            "index": student_project.project.book.index,
             "project": student_project.project.name
         }
 
@@ -53,7 +59,7 @@ class NssUser(models.Model):
     @property
     def assessment_status(self):
         try:
-            student_assessment = self.assessments.last() # pylint: disable=E1101
+            student_assessment = self.assessments.last()  # pylint: disable=E1101
             status = student_assessment.status.status
             if status == "In Progress":
                 return 1
@@ -67,21 +73,21 @@ class NssUser(models.Model):
         except Exception:
             return 0
 
-
     @property
     def proposals(self):
         try:
-            lastest_status = CapstoneTimeline.objects.filter(capstone=OuterRef("pk")).order_by("-pk")
+            lastest_status = CapstoneTimeline.objects.filter(
+                capstone=OuterRef("pk")).order_by("-pk")
 
             proposals = self.capstones.annotate(
                 course_name=F("course__name"),
-                current_status=Subquery(lastest_status.values("status__status")[:1])
+                current_status=Subquery(
+                    lastest_status.values("status__status")[:1])
             ).values('id', 'current_status', 'course_name')
 
             return proposals
         except Exception:
             return []
-
 
     @property
     def score(self):
@@ -94,11 +100,11 @@ class NssUser(models.Model):
             .values_list('total_score', flat=True)
         total = sum(list(scores))
 
-
         # Get the average of the core skills' levels and adjust the
         # technical score positively by the percent
 
-        core_skill_records = list(self.core_skills.values_list('level', flat=True))
+        core_skill_records = list(
+            self.core_skills.values_list('level', flat=True))
 
         try:
             # Hannah and I did this on a Monday morning, so it may be the wrong
@@ -127,6 +133,11 @@ class NssUser(models.Model):
     @property
     def current_cohort(self):
         assignment = self.assigned_cohorts.order_by("-id").last()
+        if assignment is None:
+            return {
+                "name": "Unassigned"
+            }
+
         return {
             "name": assignment.cohort.name,
             "id": assignment.cohort.id,

@@ -117,4 +117,5 @@ class LearningRecordEntryAdmin(admin.ModelAdmin):
 @admin.register(NssUser)
 class NssUserAdmin(admin.ModelAdmin):
     """Users"""
-    list_display = ('user', 'slack_handle', 'github_handle',)
+    list_display = ('full_name', 'slack_handle',)
+    ordering = ('-pk',)
