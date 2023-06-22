@@ -60,6 +60,9 @@ class NssUser(models.Model):
     def assessment_status(self):
         try:
             student_assessment = self.assessments.last()  # pylint: disable=E1101
+            if student_assessment.assessment.book.id != self.book["id"]:
+                return 0
+
             status = student_assessment.status.status
             if status == "In Progress":
                 return 1
@@ -70,7 +73,7 @@ class NssUser(models.Model):
             if status == "Reviewed and Complete":
                 return 4
 
-        except Exception:
+        except Exception as ex:
             return 0
 
     @property

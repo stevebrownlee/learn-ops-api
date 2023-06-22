@@ -219,8 +219,7 @@ class StudentViewSet(ModelViewSet):
             try:
                 student_project = StudentProject()
                 student_project.student = NssUser.objects.get(pk=pk)
-                student_project.project = Project.objects.get(
-                    pk=int(request.data['projectId']))
+                student_project.project = Project.objects.get(pk=int(request.data['projectId']))
                 student_project.save()
             except Exception as ex:
                 return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
