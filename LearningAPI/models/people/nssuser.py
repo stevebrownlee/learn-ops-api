@@ -83,8 +83,9 @@ class NssUser(models.Model):
 
             proposals = self.capstones.annotate(
                 course_name=F("course__name"),
-                current_status=Subquery(lastest_status.values("status__status")[:1])
-            ).values('id', 'current_status', 'course_name', 'proposal_url')
+                current_status_id=Subquery(lastest_status.values('status__id')[:1]),
+                current_status=Subquery(lastest_status.values('status__status')[:1])
+            ).values('id', 'current_status', 'course_name', 'proposal_url', 'current_status_id')
 
             return proposals
         except Exception:
