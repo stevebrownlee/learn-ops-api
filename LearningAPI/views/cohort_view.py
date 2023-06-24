@@ -225,7 +225,14 @@ class CohortViewSet(ViewSet):
                 student_project = StudentProject()
                 student_project.student = student
                 student_project.project = first_project
-                student_project.save()
+
+                try:
+                    student_project.save()
+                except IntegrityError as ex:
+                    existing = StudentProject.objects.get(student=student, project=first_project)
+                    existing.delete()
+                    student_project.save()
+
 
             # Deactivate client side course
             client_side_course.active = False

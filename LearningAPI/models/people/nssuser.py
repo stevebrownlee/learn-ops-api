@@ -79,14 +79,13 @@ class NssUser(models.Model):
     @property
     def proposals(self):
         try:
-            lastest_status = CapstoneTimeline.objects.filter(
-                capstone=OuterRef("pk")).order_by("-pk")
+            lastest_status = CapstoneTimeline.objects.filter(capstone=OuterRef("pk")).order_by("-pk")
 
             proposals = self.capstones.annotate(
                 course_name=F("course__name"),
-                current_status=Subquery(
-                    lastest_status.values("status__status")[:1])
-            ).values('id', 'current_status', 'course_name')
+                current_status_id=Subquery(lastest_status.values('status__id')[:1]),
+                current_status=Subquery(lastest_status.values('status__status')[:1])
+            ).values('id', 'current_status', 'course_name', 'proposal_url', 'current_status_id')
 
             return proposals
         except Exception:
