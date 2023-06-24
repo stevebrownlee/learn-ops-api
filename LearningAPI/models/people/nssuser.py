@@ -122,7 +122,7 @@ class NssUser(models.Model):
     @property
     def assessment_overview(self):
         assessment_list = []
-        for assessment in self.assessments.all().order_by("-id"):
+        for assessment in self.assessments.all().order_by("-assessment__book__index"):
             assessment_list.append({
                 "id": assessment.id,
                 "name": assessment.assessment.name,

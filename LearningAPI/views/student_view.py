@@ -430,16 +430,25 @@ class CoreSkillRecordSerializer(serializers.ModelSerializer):
         fields = ('id', 'skill', 'level', )
         depth = 1
 
+class StudentNotesSerializer(serializers.ModelSerializer):
+    """Serializer for Core Skill Record"""
+
+    class Meta:
+        model = StudentNote
+        fields = ('id', 'note', 'created_on', 'author')
+
 
 class MicroStudents(serializers.ModelSerializer):
     """JSON serializer"""
     tags = StudentTagSerializer(many=True)
+    notes = StudentNotesSerializer(many=True)
 
     class Meta:
         model = NssUser
         fields = ('id', 'name', 'score', 'tags',
                   'book', 'assessment_status', 'proposals',
                   'github_handle', 'current_cohort',
+                  'assessment_overview', 'notes'
                   )
 
 
