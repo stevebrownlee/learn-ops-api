@@ -149,5 +149,5 @@ class NssUser(models.Model):
             "start": assignment.cohort.start_date,
             "end": assignment.cohort.end_date,
             "github_org": assignment.cohort.info.student_organization_url,
-            "courses": assignment.cohort.courses.order_by('index').values('course__name', 'course__id'),
+            "courses": assignment.cohort.courses.order_by('index').values('course__name', 'course__id', 'active'),
         }

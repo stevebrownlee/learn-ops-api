@@ -228,7 +228,7 @@ class CohortViewSet(ViewSet):
 
                 try:
                     student_project.save()
-                except IntegrityError as ex:
+                except IntegrityError:
                     existing = StudentProject.objects.get(student=student, project=first_project)
                     existing.delete()
                     student_project.save()
