@@ -154,10 +154,8 @@ class StudentViewSet(ModelViewSet):
 
         if request.method == "PUT":
             student = NssUser.objects.get(pk=pk)
-            assessment_status = StudentAssessmentStatus.objects.get(
-                pk=request.data['statusId'])
-            latest_assessment = StudentAssessment.objects.filter(
-                student=student).last()
+            assessment_status = StudentAssessmentStatus.objects.get(pk=request.data['statusId'])
+            latest_assessment = StudentAssessment.objects.filter(student=student).last()
 
             if latest_assessment is not None:
                 latest_assessment.status = assessment_status
@@ -165,6 +163,7 @@ class StudentViewSet(ModelViewSet):
 
                 try:
                     if latest_assessment.status.status == 'Reviewed and Complete':
+                        # 1. Send message to student
                         headers = {
                             "Content-Type": "application/x-www-form-urlencoded"
                         }
@@ -182,6 +181,16 @@ class StudentViewSet(ModelViewSet):
                             headers=headers,
                             timeout=10
                         )
+
+                        # 2. Assign all objectives/weights to the student as complete
+                        assessment_objectives = latest_assessment.assessment.objectives.all()
+                        for objective in assessment_objectives:
+                            LearningRecord.objects.create(
+                                student=student,
+                                weight=objective,
+                                achieved=True,
+                            )
+
                 except Exception:
                     return Response({'message': 'Updated, but no Slack message sent'}, status=status.HTTP_204_NO_CONTENT)
 

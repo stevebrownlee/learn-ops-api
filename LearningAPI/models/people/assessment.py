@@ -21,16 +21,16 @@ class Assessment(models.Model):
     @property
     def assigned_book(self):
         return {
-            "id": self.book.id,
+            "id": self.book.id,             # pylint: disable=E1101
             "name": self.book.name
         }
 
     @property
     def course(self):
         return {
-            "id": self.book.course.id,
-            "name": self.book.course.name
+            "id": self.book.course.id,      # pylint: disable=E1101
+            "name": self.book.course.name   # pylint: disable=E1101
         }
 
-    def __str__(self):
+    def __str__(self):                      # pylint: disable=E0307
         return self.name
