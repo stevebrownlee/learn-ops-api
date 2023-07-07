@@ -33,8 +33,7 @@ class NssUser(models.Model):
         cohort = self.assigned_cohorts.order_by("-id").last()
 
         if student_project is None:
-            cohort_course = CohortCourse.objects.get(
-                cohort__id=cohort, index=0)
+            cohort_course = CohortCourse.objects.get(cohort=cohort, index=0)
             project = Project.objects.get(
                 book__course=cohort_course.course, book__index=0, index=0)
 
