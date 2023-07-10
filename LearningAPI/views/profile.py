@@ -19,6 +19,7 @@ class Profile(ViewSet):
         """
         personality = {}
         cohort = self.request.query_params.get('cohort', None)
+        mimic = self.request.query_params.get('mimic', None)
 
         #
         #  Discovered how to access social account info at following URL
@@ -60,9 +61,8 @@ class Profile(ViewSet):
             personality.student = nss_user
             personality.save()
 
-        if request.auth.user.is_staff is False:
-            serializer = ProfileSerializer(
-                nss_user, context={'request': request})
+        if not request.auth.user.is_staff or mimic:
+            serializer = ProfileSerializer(nss_user, context={'request': request})
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
 
