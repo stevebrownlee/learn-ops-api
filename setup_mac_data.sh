@@ -82,13 +82,13 @@ function initializeProject() {
     python3 manage.py migrate
 
     # Load data from backup
+    python3 manage.py flush --no-input
     python3 manage.py loaddata socialaccount
     python3 manage.py loaddata complete_backup
     python3 manage.py loaddata superuser
 
     rm ./LearningAPI/fixtures/superuser.json
     rm ./LearningAPI/fixtures/socialaccount.json
-
 }
 
 configureDatabase
