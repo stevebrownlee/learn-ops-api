@@ -22,10 +22,10 @@ done
 
 export LEARN_OPS_CLIENT_ID="$CLIENT"
 export LEARN_OPS_SECRET_KEY="$OAUTHSECRET"
-export LEARN_OPS_DB=learnops
-export LEARN_OPS_USER=learnops
+export LEARN_OPS_DB='learnops'
+export LEARN_OPS_USER='learnops'
 export LEARN_OPS_PASSWORD="$PASSWORD"
-export LEARN_OPS_HOST=localhost
+export LEARN_OPS_HOST='localhost'
 export LEARN_OPS_PORT=5432
 export LEARN_OPS_DJANGO_SECRET_KEY="$DJANGOSECRET"
 export LEARN_OPS_ALLOWED_HOSTS="$HOSTS"
