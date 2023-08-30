@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.db.models import Count, Q
 from django.db import IntegrityError
 from django.http import HttpResponseServerError
@@ -152,6 +153,11 @@ class CohortViewSet(ViewSet):
             # Fuzzy search on `q` param present
             search_terms = self.request.query_params.get('q', None)
             limit = self.request.query_params.get('limit', None)
+            active = self.request.query_params.get('active', None)
+
+            if active == 'true':
+                today = datetime.now().date()
+                cohorts = cohorts.filter(start_date__lte=today, end_date__gte=today)
 
             if search_terms is not None:
                 for letter in list(search_terms):
@@ -364,7 +370,7 @@ class CohortSerializer(serializers.ModelSerializer):
     def get_attendance_sheet_url(self, obj):
         try:
             return obj.info.attendance_sheet_url
-        except Exception as ex:
+        except Exception:
             return ""
 
     class Meta:
@@ -373,5 +379,5 @@ class CohortSerializer(serializers.ModelSerializer):
             'id', 'name', 'slack_channel', 'start_date', 'end_date',
             'coaches', 'break_start_date', 'break_end_date', 'students',
             'is_instructor', 'courses', 'info', 'student_organization_url',
-            'github_classroom_url', 'attendance_sheet_url'
+            'github_classroom_url', 'attendance_sheet_url',
         )

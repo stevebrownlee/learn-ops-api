@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import datetime
 from .nssuser_cohort import NssUserCohort
 
 class Cohort(models.Model):

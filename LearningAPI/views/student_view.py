@@ -451,13 +451,19 @@ class MicroStudents(serializers.ModelSerializer):
     """JSON serializer"""
     tags = StudentTagSerializer(many=True)
     notes = StudentNotesSerializer(many=True)
+    avatar = serializers.SerializerMethodField()
+
+    def get_avatar(self, obj):
+        github = obj.user.socialaccount_set.get(user=obj.user)
+        return github.extra_data["avatar_url"]
+
 
     class Meta:
         model = NssUser
         fields = ('id', 'name', 'score', 'tags',
                   'book', 'assessment_status', 'proposals',
                   'github_handle', 'current_cohort',
-                  'assessment_overview', 'notes'
+                  'assessment_overview', 'notes', 'avatar'
                   )
 
 
@@ -495,4 +501,4 @@ class SingleStudent(serializers.ModelSerializer):
         model = NssUser
         fields = ('id', 'name', 'email', 'github', 'staff', 'slack_handle',
                   'cohorts', 'feedback', 'repos', 'score', 'date_joined',
-                  'current_cohort')
+                  'current_cohort', )
