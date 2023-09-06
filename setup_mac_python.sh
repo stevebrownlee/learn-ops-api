@@ -50,7 +50,7 @@ function installPython() {
     fi
 
     if [[ $(which pipenv) == "pipenv not found" ]]; then
-        echo "Could not find pipenv, let an instructor know"
+        echo "Could not find pipenv. Exiting installation process..."
         return 0
     fi
 

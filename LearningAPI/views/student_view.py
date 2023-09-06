@@ -312,7 +312,8 @@ class StudentViewSet(ModelViewSet):
                     requests.post(
                         "https://slack.com/api/chat.postMessage",
                         data=channel_payload,
-                        headers=headers
+                        headers=headers,
+                        timeout=1000
                     )
                 except Exception:
                     pass

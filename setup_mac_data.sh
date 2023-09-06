@@ -3,30 +3,26 @@
 function configureDatabase() {
     brew install postgresql
 
-    if psql -tAc "SELECT 1 FROM pg_database WHERE datname='$LEARN_OPS_DB'" | grep -q 1; then
-        echo "Database $LEARN_OPS_DB exists"
-    else
-        echo "Database $LEARN_OPS_DB does not exist"
+    echo "Database $LEARN_OPS_DB does not exist"
 
-        psql -c "DROP DATABASE IF EXISTS $LEARN_OPS_DB WITH (FORCE);"
-        psql -c "CREATE DATABASE $LEARN_OPS_DB;"
-        psql -c "CREATE USER $LEARN_OPS_USER WITH PASSWORD '$LEARN_OPS_PASSWORD';"
-        psql -c "ALTER ROLE $LEARN_OPS_USER SET client_encoding TO 'utf8';"
-        psql -c "ALTER ROLE $LEARN_OPS_USER SET default_transaction_isolation TO 'read committed';"
-        psql -c "ALTER ROLE $LEARN_OPS_USER SET timezone TO 'UTC';"
-        psql -c "GRANT ALL PRIVILEGES ON DATABASE $LEARN_OPS_USER TO $LEARN_OPS_DB;"
-    fi
+    psql -c "DROP DATABASE IF EXISTS $LEARN_OPS_DB WITH (FORCE);"
+    psql -c "CREATE DATABASE $LEARN_OPS_DB;"
+    psql -c "CREATE USER $LEARN_OPS_USER WITH PASSWORD '$LEARN_OPS_PASSWORD';"
+    psql -c "ALTER ROLE $LEARN_OPS_USER SET client_encoding TO 'utf8';"
+    psql -c "ALTER ROLE $LEARN_OPS_USER SET default_transaction_isolation TO 'read committed';"
+    psql -c "ALTER ROLE $LEARN_OPS_USER SET timezone TO 'UTC';"
+    psql -c "GRANT ALL PRIVILEGES ON DATABASE $LEARN_OPS_USER TO $LEARN_OPS_DB;"
 }
 
 function generateSocialFixture() {
     echo '[
         {
-        "model": "sites.site",
-        "pk": 1,
-        "fields": {
-            "domain": "learningplatform.com",
-            "name": "Learning Platform"
-        }
+            "model": "sites.site",
+            "pk": 1,
+            "fields": {
+                "domain": "learningplatform.com",
+                "name": "Learning Platform"
+            }
         },
         {
             "model": "socialaccount.socialapp",
@@ -76,6 +72,7 @@ function generateSuperuserFixture() {
 
 function initializeProject() {
     # Install project requirements
+    pipenv shell
     pipenv install
 
     # Run existing migrations
