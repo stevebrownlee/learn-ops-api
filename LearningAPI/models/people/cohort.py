@@ -1,21 +1,20 @@
 from django.db import models
-from datetime import datetime
 from .nssuser_cohort import NssUserCohort
 
 class Cohort(models.Model):
     """Model for student cohorts"""
     name = models.CharField(max_length=55, unique=True)
-    slack_channel = models.CharField(max_length=55, unique=True)
+    slack_channel = models.CharField(max_length=55, unique=False)
     start_date = models.DateField(auto_now=False, auto_now_add=False)
     end_date = models.DateField(auto_now=False, auto_now_add=False)
     break_start_date = models.DateField(auto_now=False, auto_now_add=False)
     break_end_date = models.DateField(auto_now=False, auto_now_add=False)
 
     def __repr__(self) -> str:
-        return self.name
+        return f'{self.name}'
 
     def __str__(self) -> str:
-        return self.name
+        return f'{self.name}'
 
     @property
     def coaches(self):
