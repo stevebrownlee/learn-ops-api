@@ -4,7 +4,25 @@
 
 This project is the API for the Learning Platform. It is a Django project using the Django REST Framework application. It integrates with the Github OAuth platform to create accounts and perform authorization for the companion [Learning Platform React client](https://github.com/stevebrownlee/learn-ops-client).
 
-## Github OAuth App
+## Prerequisites for Windows Users
+
+If you are a Windows user, you will need to install WSL and Ubuntu.
+
+Do only steps 1-4 of these instructions if you have never installed WSL before.
+
+Do not do step 5... only steps 1-4.
+
+[Ubuntu on WSL install instructions](https://ubuntu.com/tutorials/install-ubuntu-on-wsl2-on-windows-11-with-gui-support#1-overview)
+
+Once you are done, you will be working in an Ubuntu terminal during all setup and developing on the API.
+
+## Project Setup
+
+1. Fork this repo to your own Github account.
+2. Clone it.
+3. `cd` into the project directory.
+
+### Github OAuth App
 
 This application uses Github for authorization instead of user accounts in Django. You will need to set up your own OAuth application for use during local development.
 
@@ -21,69 +39,40 @@ This application uses Github for authorization instead of user accounts in Djang
 11. Click the **Generate a new client secret** button
 12. **DO NOT CLOSE TAB. CLIENT AND SECRET NEEDED BELOW.**
 
-## Environment Variables
+### Environment Variables
 
-Several environment variables need to be set up by you to make the setup process faster and more secure. Set up the following environment variables anywhere in your shell initialization file _(i.e. `.bashrc` or `.zshrc`)_.
+Several environment variables need to be set up by you to make the setup process faster and more secure.
 
-### Github OAuth
+1. Open the project directory in your code editor.
+2. Make a copy of the `.env.template` file in the project directory and name it `.env`.
+3. Replace all "replace_me" values in the file and be sure to read the notes below.
 
-These two variables are the client ID and secret key for the Github OAuth application you created. Refer back to the browser tab you have open and replace the boilerplate values below with the real values.
+#### Environment Variables Notes
 
-```sh
-export LEARN_OPS_CLIENT_ID=replace_me
-export LEARN_OPS_SECRET_KEY=replace_me
-export LEARNING_GITHUB_CALLBACK=http://localhost:3000/auth/github
-```
+* The `LEARN_OPS_CLIENT_ID` and `LEARN_OPS_SECRET_KEY` values will be listed in the open tab you created previously for the Github OAuth app.
+* For the Django secret key, a quick way to get a good secret key is to visit [Djecrety](https://djecrety.ir/).
+* The superuser variables will be your credentials for logging into the Django admin panel where you can view and update data in a web interface.
+* The `LEARN_OPS_PASSWORD` variable is the password for a database user that will be created your local database. Make it something simple.
 
-### Postgres
+## Installations
 
-These variables define the name of the database, the Postgres user _(with accompanying password)_, the host, and the port. It is recommended that you keep all default values except for the value of **LEARN_OPS_PASSWORD**.
+Once your environment variables are established, you will run a bash script to install all the software needed for the API to run, create the database tables needed, and seed the database with some data.
 
-```sh
-export LEARN_OPS_PASSWORD=replace_me
-export LEARN_OPS_DB=learnopsdev
-export LEARN_OPS_USER=learnopsdev
-export LEARN_OPS_HOST=127.0.0.1
-export LEARN_OPS_PORT=5432
-```
+### Mac Users
 
-### Django Secret Key
-
-You will need a Django secret key environment variable. A quick way to get a good secret key is to visit [Djecrety](https://djecrety.ir/). Then paste what it generates as the value of your environment variable. Make sure that the double quotes wrap your secret key.
+In your terminal, be in the project directory, and run the following command.
 
 ```sh
-export LEARN_OPS_DJANGO_SECRET_KEY="replace_me"
+./setup_mac.sh
 ```
 
-### Django Settings
+### Windows Users
 
-A super user account will be automatically created for you that will allow you to log into the admin console. Specify what you want your username and password to be with these variables.
-
-You can leave the allowed hosts value to what it already is for local development.
+In your Ubuntu terminal, be in the project directory, and run the following command.
 
 ```sh
-export LEARN_OPS_ALLOWED_HOSTS="api.learning.local,127.0.0.1,localhost"
-export LEARN_OPS_SUPERUSER_NAME=replace_me
-export LEARN_OPS_SUPERUSER_PASSWORD=replace_me
+./setup_ubuntu_local.sh
 ```
-
-### Activate Environment Variables
-
-Then reload your bash session with `source ~/.zshrc` if you are using zshell or `source ~/.bashrc` if you have the default bash environment.
-
-## Project Setup
-
-1. Fork this repo to your own Github account.
-2. Clone it.
-3. `cd` into the project directory.
-
-
-The recommended way to set up your local development environment is using Multipass. This will create a virtual machine that you can stop and start any time you want when you want to work on the Learning Platform.
-
-Follow the instructions in the [Multipass Environment Setup](./MULTIPASS.md)
-
-> If you don't want to rely on a separate virtual machine for a development environment, and just use your Mac system as the environment, you can follow the instruction in the [Mac Development Environment Setup](./MAC_SETUP.md)
-
 
 ## ERD
 

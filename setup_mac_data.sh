@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source .env
+
 function configureDatabase() {
     brew install postgresql
 

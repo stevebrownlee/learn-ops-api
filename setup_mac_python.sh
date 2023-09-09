@@ -18,7 +18,7 @@ function installPyenv() {
 # Configure pyenv
 export PYENV_ROOT=\"$HOME/.pyenv\"
 export PIPENV_DIR=\"$HOME/.local\"
-export PATH=$PIPENV_DIR/bin:$PYENV_ROOT/bin:$PATH
+export PATH=$HOME/.local/bin:$HOME/.pyenv/bin:$PATH
 
 if command -v pyenv 1>/dev/null 2>&1; then
     export PATH=$(pyenv root)/shims:$PATH
