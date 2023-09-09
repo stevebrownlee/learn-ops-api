@@ -23,8 +23,8 @@ export PATH=$PIPENV_DIR/bin:$PYENV_ROOT/bin:$PATH
 if command -v pyenv 1>/dev/null 2>&1; then
     export PATH=$(pyenv root)/shims:$PATH
     eval "$(pyenv init -)"\n
-fi" >>~/.zshrc
-        source ~/.zshrc
+fi" >>$HOME/.zshrc
+        source $HOME/.zshrc
     fi
 }
 
@@ -53,7 +53,6 @@ function installPython() {
         echo "Could not find pipenv. Exiting installation process..."
         return 0
     fi
-
 }
 
 function installBrew() {
