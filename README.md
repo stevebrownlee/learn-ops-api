@@ -74,6 +74,42 @@ In your Ubuntu terminal, be in the project directory, and run the following comm
 ./setup_ubuntu_local.sh
 ```
 
+## API Account Setup
+
+Go back to VSCode and start a Django debugger _(recommend [creating a launcher profile](https://code.visualstudio.com/docs/python/tutorial-django#_create-a-debugger-launch-profile) for yourself)_. If the setup was successful, you will see the following output in the VSCode integrated terminal.
+
+```sh
+Performing system checks...
+
+System check identified no issues (0 silenced).
+September 09, 2023 - 19:46:38
+Django version 4.2.2, using settings 'LearningPlatform.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CONTROL-C.
+```
+
+### Testing Superuser Credentials
+
+1. Visit [http://localhost:8000/admin](http://localhost:8000/admin)
+1. Authenticate with the superuser credentials you specified in your environment variables and ensure that you gain access to the admin interface.
+
+### Make Yourself an Instructor
+
+If you successfully authenticated, follow these steps to access the instructor interface of the Learning Platform. You must have already cloned and set up the client application before you perform these steps.
+
+1. Start the React client application.
+1. Authorize the client with Github.
+2. Visit the [admin interface](http://localhost:8000/admin) and authenticate with your superuser credentials.
+3. Click on **Users** in the left navigation.
+4. Find the account that was just created for your Github authorization by searching for your Github username.
+5. Click on your user account.
+6. Toggle **Staff status** to be on.
+7. In the **Group** sections, double click **Instructor** so that it moves to the _Chosen groups_ list.
+8. Close the browser tab that is running the Learning Platform.
+9. Open a new tab and visit http://localhost:3000 again and authenticate.
+10. You should now see the instructor interface.
+
+
 ## ERD
 
 [dbdiagram.io ERD](https://dbdiagram.io/d/6005cc1080d742080a36d6d8)
