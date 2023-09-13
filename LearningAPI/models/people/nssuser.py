@@ -1,5 +1,6 @@
 """NssUser database model"""
 import statistics
+import datetime
 
 from django.db import models
 from django.conf import settings
@@ -41,14 +42,19 @@ class NssUser(models.Model):
                 "id": project.book.id,
                 "name": project.book.name,
                 "project": project.name,
-                "index": project.book.index
+                "index": project.book.index,
+                "project_duration": 0
             }
+
+        current_project_datestamp = student_project.date_created
+        project_duration = (datetime.datetime.now().date() - current_project_datestamp).days
 
         return {
             "id": student_project.project.book.id,
             "name": student_project.project.book.name,
             "index": student_project.project.book.index,
-            "project": student_project.project.name
+            "project": student_project.project.name,
+            "project_duration": project_duration
         }
 
     @property

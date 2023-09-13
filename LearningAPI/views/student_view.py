@@ -3,7 +3,7 @@ import os
 import logging
 
 import requests
-from django.db.models import Count, Q
+from django.db.models import Q
 from django.http import HttpResponseServerError
 from django.utils.decorators import method_decorator
 from rest_framework import serializers, status
@@ -464,7 +464,7 @@ class MicroStudents(serializers.ModelSerializer):
         fields = ('id', 'name', 'score', 'tags',
                   'book', 'assessment_status', 'proposals',
                   'github_handle', 'current_cohort',
-                  'assessment_overview', 'notes', 'avatar'
+                  'assessment_overview', 'notes', 'avatar',
                   )
 
 
