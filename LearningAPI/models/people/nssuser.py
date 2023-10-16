@@ -1,6 +1,7 @@
 """NssUser database model"""
 import statistics
 import datetime
+import logging
 
 from django.db import models
 from django.conf import settings
@@ -145,14 +146,26 @@ class NssUser(models.Model):
                 "name": "Unassigned"
             }
 
-        return {
-            "name": assignment.cohort.name,
-            "id": assignment.cohort.id,
-            "client_course": assignment.cohort.info.client_course_url,
-            "server_course": assignment.cohort.info.server_course_url,
-            "zoom_url": assignment.cohort.info.zoom_url,
-            "start": assignment.cohort.start_date,
-            "end": assignment.cohort.end_date,
-            "github_org": assignment.cohort.info.student_organization_url,
-            "courses": assignment.cohort.courses.order_by('index').values('course__name', 'course__id', 'active'),
-        }
+        try:
+            return {
+                "name": assignment.cohort.name,
+                "id": assignment.cohort.id,
+                "client_course": assignment.cohort.info.client_course_url,
+                "server_course": assignment.cohort.info.server_course_url,
+                "zoom_url": assignment.cohort.info.zoom_url,
+                "start": assignment.cohort.start_date,
+                "end": assignment.cohort.end_date,
+                "github_org": assignment.cohort.info.student_organization_url,
+                "courses": assignment.cohort.courses.order_by('index').values('course__name', 'course__id', 'active'),
+            }
+        except Exception as ex:
+            logger = logging.getLogger("LearningPlatform")
+            logger.exception(getattr(ex, 'message', repr(ex)))
+
+            return {
+                "name": assignment.cohort.name,
+                "id": assignment.cohort.id,
+                "start": assignment.cohort.start_date,
+                "end": assignment.cohort.end_date,
+                "courses": assignment.cohort.courses.order_by('index').values('course__name', 'course__id', 'active'),
+            }
