@@ -32,6 +32,8 @@ class CohortCourseAdmin(admin.ModelAdmin):
 class StudentAssessmentAdmin(admin.ModelAdmin):
     """For assigning students to cohorts"""
     list_display = ('student', 'assessment', 'status', )
+    search_fields = ["student__user__last_name"]
+    search_help_text = "Search by last name"
 
 @admin.register(StudentAssessmentStatus)
 class StudentAssessmentStatusAdmin(admin.ModelAdmin):
@@ -52,6 +54,8 @@ class BookAdmin(admin.ModelAdmin):
 class StudentProjectAdmin(admin.ModelAdmin):
     """For assigning students to cohorts"""
     list_display = ('student', 'project',)
+    search_fields = ["student__user__last_name"]
+    search_help_text = "Search by last name"
 
 @admin.register(CapstoneTimeline)
 class CapstoneTimelineAdmin(admin.ModelAdmin):
@@ -62,11 +66,15 @@ class CapstoneTimelineAdmin(admin.ModelAdmin):
 class NssUserCohortAdmin(admin.ModelAdmin):
     """For assigning students to cohorts"""
     list_display = ('nss_user', 'cohort',)
+    search_fields = ["nss_user__user__last_name"]
+    search_help_text = "Search by last name"
 
 @admin.register(Capstone)
 class CapstoneAdmin(admin.ModelAdmin):
     """For managing capstone proposals"""
     list_display = ('student', 'course', 'proposal_url',)
+    search_fields = ["student__user__last_name"]
+    search_help_text = "Search by last name"
 
 
 @admin.register(ProposalStatus)
@@ -119,3 +127,5 @@ class NssUserAdmin(admin.ModelAdmin):
     """Users"""
     list_display = ('full_name', 'slack_handle',)
     ordering = ('-pk',)
+    search_fields = ["user__last_name"]
+    search_help_text = "Search by last name"
