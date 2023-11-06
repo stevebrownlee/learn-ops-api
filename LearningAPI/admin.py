@@ -61,6 +61,9 @@ class StudentProjectAdmin(admin.ModelAdmin):
 class CapstoneTimelineAdmin(admin.ModelAdmin):
     """For assigning students to cohorts"""
     list_display = ('capstone', 'status', 'student')
+    search_fields = ["capstone__student__user__last_name"]
+    search_help_text = "Search by last name"
+
 
 @admin.register(NssUserCohort)
 class NssUserCohortAdmin(admin.ModelAdmin):
