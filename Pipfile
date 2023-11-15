@@ -23,6 +23,8 @@ requests = "*"
 "backports.weakref" = "*"
 wheel = "*"
 openai = "*"
+redis = "*"
+django-redis = "*"
 
 [requires]
 python_version = "*"

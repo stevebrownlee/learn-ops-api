@@ -26,3 +26,4 @@ setup
 learning.service
 logs/
 .env
+dump.rdb

@@ -31,6 +31,19 @@ class NssUser(models.Model):
 
     @property
     def book(self):
+        # return {
+        #     "id": 1,
+        #     "name": "test",
+        #     "project": "test",
+        #     "index": 1,
+        #     "project_duration": 0
+        # }
+
+        # 1850ms not
+        # 1587ms not
+        # 263ms cost
+
+
         student_project = StudentProject.objects.filter(student=self).last()
         assigned_cohort = self.assigned_cohorts.order_by("-id").last()
 
@@ -64,6 +77,11 @@ class NssUser(models.Model):
 
     @property
     def assessment_status(self):
+        # 1521ms implemented
+        # 1416ms not
+        # 105ms cost
+
+        # return 1
         try:
             student_assessment = self.assessments.last()  # pylint: disable=E1101
             if student_assessment.assessment.book.id != self.book["id"]:
@@ -84,6 +102,13 @@ class NssUser(models.Model):
 
     @property
     def proposals(self):
+
+        # 1440ms implemented
+        # 1208ms not
+        # 232ms cost
+
+
+        # return []
         try:
             lastest_status = CapstoneTimeline.objects.filter(capstone=OuterRef("pk")).order_by("-pk")
 
@@ -102,6 +127,13 @@ class NssUser(models.Model):
         """Return total learning score"""
 
         # First get the total of the student's technical objectives
+
+        # 1230ms implemented
+        # 1022ms not
+        # 208ms cost
+
+
+        # return 0
         total = 0
         scores = self.learning_records.filter(achieved=True) \
             .annotate(total_score=Sum("weight__weight")) \
@@ -127,6 +159,11 @@ class NssUser(models.Model):
 
     @property
     def assessment_overview(self):
+        # 1030ms implemented
+        # 922ms not
+        # 108ms cost
+
+        # return []
         assessment_list = []
         for assessment in self.assessments.all().order_by("-assessment__book__index"):
             assessment_list.append({
@@ -140,6 +177,12 @@ class NssUser(models.Model):
 
     @property
     def current_cohort(self):
+        return {
+            "name": "Unassigned"
+        }
+        # 922ms implemented
+        # 560ms not
+        # 362ms cost
         assignment = self.assigned_cohorts.order_by("-id").last()
         if assignment is None:
             return {

@@ -1,8 +1,9 @@
 """Student view module"""
 import os
 import logging
-
 import requests
+
+from django.core.cache import cache
 from django.db.models import Q
 from django.http import HttpResponseServerError
 from django.utils.decorators import method_decorator
@@ -126,26 +127,43 @@ class StudentViewSet(ModelViewSet):
         cohort = self.request.query_params.get('cohort', None)
         search_terms = self.request.query_params.get('q', None)
 
-        students = NssUser.objects.filter(user__is_active=True, user__is_staff=False)
-        serializer = SingleStudent(students, many=True)
+        if cohort is not None:
+            cache_key = f'cohort-{cohort}'
+            cached_response = cache.get(cache_key)
+
+            if cached_response is not None:
+                print("Retrieved from cache")
+                return Response(cached_response)
+
+            print("Students not cached")
+            students = NssUser.objects.filter(
+                user__is_active=True,
+                user__is_staff=False,
+                assigned_cohorts__cohort__id=cohort
+            )
+            page = self.paginate_queryset(students)
+
+            if page is not None:
+                serializer = MicroStudents(page, many=True)
+                paginated_response = self.get_paginated_response(serializer.data).data
+                cache.set(cache_key, paginated_response, timeout=25)
+                return Response(paginated_response)
+
+            serializer = MicroStudents(students, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
 
         if search_terms is not None:
             for letter in list(search_terms):
-                students = students.filter(
-                    Q(user__first_name__icontains=letter)
-                    | Q(user__last_name__icontains=letter)
+                students = NssUser.objects.filter(
+                    (Q(user__first_name__icontains=letter)
+                    | Q(user__last_name__icontains=letter)),
+                    user__is_active=True, user__is_staff=False,
                 )
 
             serializer = SingleStudent(students, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
 
-        if cohort is not None:
-            students = students.filter(assigned_cohorts__cohort__id=cohort)
-            serializer = MicroStudents(students, many=True)
-
-        page = self.paginate_queryset(serializer.data)
-        paginated_response = self.get_paginated_response(page)
-        return paginated_response
 
     @method_decorator(is_instructor())
     @action(methods=['post', 'put'], detail=True)
