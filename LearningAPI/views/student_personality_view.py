@@ -5,10 +5,10 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from LearningAPI.models.people import NssUser
 from LearningAPI.models.people.student_personality import StudentPersonality
-
+from .student_view import MicroStudents
 
 class StudentPersonalityViewSet(ModelViewSet):
-    """Student viewset"""
+    """Student personality viewset"""
 
     def update(self, request, pk=None):
         """Handle PUT requests
