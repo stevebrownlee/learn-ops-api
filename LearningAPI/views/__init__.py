@@ -27,3 +27,4 @@ from .student_tag_view import StudentTagViewSet
 from .student_note_view import StudentNoteViewSet
 from .personality_view import PersonalityView
 from .book_assessment import BookAssessmentView
+from .ai.question import query

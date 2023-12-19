@@ -54,6 +54,8 @@ urlpatterns = [
     path('', include(router.urls)),
     path('records/entries/<int:entry_id>', views.LearningRecordViewSet.as_view({'delete': 'entries'}), name="entries"),
 
+    path('chat', views.query),
+
     path('accounts', views.register_user),
     path('accounts/verify', rest_views.obtain_auth_token, name='api-token-auth'),
 
