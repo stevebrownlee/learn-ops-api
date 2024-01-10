@@ -56,6 +56,7 @@ class CourseViewSet(ViewSet):
         try:
             course = Course.objects.get(pk=pk)
             course.name = request.data["name"]
+            course.active = request.data["active"]
 
             course.save()
         except Course.DoesNotExist:
@@ -95,7 +96,7 @@ class CourseViewSet(ViewSet):
         active = request.query_params.get("active", None)
 
         try:
-            courses = Course.objects.all()
+            courses = Course.objects.filter(active=True)
 
             if cohort is not None and active is not None:
                 active_cohort_course = CohortCourse.objects.get(cohort__id=cohort, active=bool(active))
@@ -142,4 +143,4 @@ class CourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ('id', 'name', 'books', 'date_created')
+        fields = ('id', 'name', 'books', 'date_created', 'active')
