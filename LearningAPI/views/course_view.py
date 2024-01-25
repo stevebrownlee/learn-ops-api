@@ -1,14 +1,17 @@
-from django.db.models import Count
 from django.utils.decorators import method_decorator
 from django.http import HttpResponseServerError
+from django.db.models import Avg, F, Func, FloatField, fields, ExpressionWrapper
 
 from rest_framework import serializers, status
-from rest_framework.permissions import IsAdminUser
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 
 from LearningAPI.decorators import is_instructor
-from LearningAPI.models.coursework import Course, Book, Project, CohortCourse
+from LearningAPI.models.coursework import (
+    Course, Book, Project, CohortCourse,
+    StudentProject
+)
 from LearningAPI.models.people import Assessment
 
 
@@ -106,6 +109,23 @@ class CourseViewSet(ViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as ex:
             return HttpResponseServerError(ex)
+
+    @action(methods=['GET', ], detail=True)
+    def stats(self, request, pk):
+
+        from django.db import connection
+
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM get_project_average_start_delay(%s)", [pk])
+            columns = [col[0] for col in cursor.description]
+            results = [
+                dict(zip(columns, row))
+                for row in cursor.fetchall()
+            ]
+
+        return Response({
+            "data": results
+        }, status=status.HTTP_200_OK)
 
 
 class ProjectSerializer(serializers.ModelSerializer):

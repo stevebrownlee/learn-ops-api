@@ -222,4 +222,29 @@ WHERE "LearningAPI_capstone"."student_id" = 291
 GROUP BY "LearningAPI_capstone"."id"
 ;
 
+SELECT * FROM get_project_average_start_delay(3);
 
+SELECT
+    book.name AS "BookName",
+    book.index AS "BookIndex",
+    project.name AS "ProjectName",
+    project.index AS "ProjectIndex",
+    AVG(student_project.date_created - cohort.start_date) AS "AverageStartDelay"
+FROM
+    "LearningAPI_studentproject" AS student_project
+INNER JOIN
+    "LearningAPI_project" AS project ON student_project.project_id = project.id
+INNER JOIN
+    "LearningAPI_book" AS book ON project.book_id = book.id
+INNER JOIN
+    "LearningAPI_nssusercohort" AS nssusercohort ON student_project.student_id = nssusercohort.nss_user_id
+INNER JOIN
+    "LearningAPI_cohort" AS cohort ON nssusercohort.cohort_id = cohort.id
+INNER JOIN
+    "LearningAPI_course" AS course ON book.course_id = course.id
+WHERE course.id = 3
+GROUP BY
+    book.index, book.name, project.index, project.name
+ORDER BY
+    book.index, project.index
+;
