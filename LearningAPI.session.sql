@@ -7,7 +7,8 @@ SELECT *
 FROM public."LearningAPI_opportunity";
 
 
-SELECT * FROM public."LearningAPI_learningrecord";
+SELECT *
+FROM public."LearningAPI_learningrecord";
 
 
 SELECT *
@@ -190,61 +191,59 @@ SELECT "LearningAPI_book"."id",
        "LearningAPI_book"."index"
 FROM "LearningAPI_book"
 ORDER BY "LearningAPI_book"."course_id" ASC,
-         "LearningAPI_book"."index" ASC
-         ;
-
+         "LearningAPI_book"."index" ASC ;
 
 
 SELECT COUNT("LearningAPI_capstonetimeline"."id") AS "status_count",
        COUNT("LearningAPI_capstonetimeline"."id") FILTER (
-                WHERE "LearningAPI_proposalstatus"."status" = 'Approved') AS approved,
+                                                          WHERE "LearningAPI_proposalstatus"."status" = 'Approved') AS approved,
        COUNT("LearningAPI_capstonetimeline"."id") FILTER (
-                WHERE "LearningAPI_proposalstatus"."status" = 'MVP') AS mvp,
+                                                          WHERE "LearningAPI_proposalstatus"."status" = 'MVP') AS mvp,
        CASE
            WHEN COUNT("LearningAPI_capstonetimeline"."id") = 0 THEN 'submitted'
            WHEN (COUNT("LearningAPI_capstonetimeline"."id") > 0
                  AND COUNT("LearningAPI_capstonetimeline"."id") FILTER (
-                WHERE ("LearningAPI_proposalstatus"."status" = 'MVP')) = 1) THEN 'mvp'
+                                                                        WHERE ("LearningAPI_proposalstatus"."status" = 'MVP')) = 1) THEN 'mvp'
            WHEN (COUNT("LearningAPI_capstonetimeline"."id") > 0
                  AND COUNT("LearningAPI_capstonetimeline"."id") FILTER (
-                WHERE ("LearningAPI_proposalstatus"."status" = 'Approved')) = 0) THEN 'reviewed'
+                                                                        WHERE ("LearningAPI_proposalstatus"."status" = 'Approved')) = 0) THEN 'reviewed'
            WHEN (COUNT("LearningAPI_capstonetimeline"."id") > 0
                  AND COUNT("LearningAPI_capstonetimeline"."id") FILTER (
-                WHERE ("LearningAPI_proposalstatus"."status" = 'Approved')) = 1) THEN 'approved'
+                                                                        WHERE ("LearningAPI_proposalstatus"."status" = 'Approved')) = 1) THEN 'approved'
            ELSE 'unsubmitted'
        END AS current_status
 FROM "LearningAPI_capstone"
-LEFT OUTER JOIN "LearningAPI_capstonetimeline"
-        ON ("LearningAPI_capstone"."id" = "LearningAPI_capstonetimeline"."capstone_id")
-LEFT OUTER JOIN "LearningAPI_proposalstatus"
-        ON ("LearningAPI_capstonetimeline"."status_id" = "LearningAPI_proposalstatus"."id")
+LEFT OUTER JOIN "LearningAPI_capstonetimeline" ON ("LearningAPI_capstone"."id" = "LearningAPI_capstonetimeline"."capstone_id")
+LEFT OUTER JOIN "LearningAPI_proposalstatus" ON ("LearningAPI_capstonetimeline"."status_id" = "LearningAPI_proposalstatus"."id")
 WHERE "LearningAPI_capstone"."student_id" = 291
-GROUP BY "LearningAPI_capstone"."id"
-;
+GROUP BY "LearningAPI_capstone"."id" ;
 
-SELECT * FROM get_project_average_start_delay(3);
 
-SELECT
-    book.name AS "BookName",
-    book.index AS "BookIndex",
-    project.name AS "ProjectName",
-    project.index AS "ProjectIndex",
-    AVG(student_project.date_created - cohort.start_date) AS "AverageStartDelay"
-FROM
-    "LearningAPI_studentproject" AS student_project
-INNER JOIN
-    "LearningAPI_project" AS project ON student_project.project_id = project.id
-INNER JOIN
-    "LearningAPI_book" AS book ON project.book_id = book.id
-INNER JOIN
-    "LearningAPI_nssusercohort" AS nssusercohort ON student_project.student_id = nssusercohort.nss_user_id
-INNER JOIN
-    "LearningAPI_cohort" AS cohort ON nssusercohort.cohort_id = cohort.id
-INNER JOIN
-    "LearningAPI_course" AS course ON book.course_id = course.id
+SELECT *
+FROM get_project_average_start_delay(1);
+
+
+select *
+from "LearningAPI_course";
+
+
+SELECT book.name AS "BookName",
+       book.index AS "BookIndex",
+       project.name AS "ProjectName",
+       project.index AS "ProjectIndex",
+       AVG(student_project.date_created - cohort.start_date) AS "AverageStartDelay"
+FROM "LearningAPI_studentproject" AS student_project
+INNER JOIN "LearningAPI_project" AS project ON student_project.project_id = project.id
+INNER JOIN "LearningAPI_book" AS book ON project.book_id = book.id
+INNER JOIN "LearningAPI_nssusercohort" AS nssusercohort ON student_project.student_id = nssusercohort.nss_user_id
+INNER JOIN "LearningAPI_cohort" AS cohort ON nssusercohort.cohort_id = cohort.id
+INNER JOIN "LearningAPI_course" AS course ON book.course_id = course.id
 WHERE course.id = 3
-GROUP BY
-    book.index, book.name, project.index, project.name
-ORDER BY
-    book.index, project.index
-;
+GROUP BY book.index,
+         book.name,
+         project.index,
+         project.name
+ORDER BY book.index,
+         project.index ;
+
+
