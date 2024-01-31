@@ -12,7 +12,7 @@ sudo add-apt-repository "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_rele
 wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
 sudo apt-get update -y
 
-packages=("gcc" "git" "curl" "nginx" "certbot" "python3-django" "postgresql-12" "postgresql-contrib-12" "python3-pip" "python3.10-venv")
+packages=("gcc" "git" "curl" "nginx" "certbot" "python3-django" "postgresql" "postgresql-contrib" "python3-pip" "python3.10-venv")
 
 for package in "${packages[@]}"; do
   if ! dpkg-query -W -f='${Status}\n' "$package" | grep -q "ok installed"; then
