@@ -150,7 +150,7 @@ EOF
 # Install project requirements and run migrations
 #####
 export VIRTUAL_ENV="$(pwd)/.venv"
-echo "VIRTUAL_ENV=$VIRTUAL_ENV" >.env
+echo "VIRTUAL_ENV=$VIRTUAL_ENV" >>.env
 echo "PIPENV_VENV_IN_PROJECT=1" >>.env
 echo "LEARNING_GITHUB_CALLBACK=http://localhost:3000/auth/github" >>.env
 
