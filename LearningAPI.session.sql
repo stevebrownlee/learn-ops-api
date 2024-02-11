@@ -283,166 +283,39 @@ ORDER BY book.index,
 
 
 
-DROP FUNCTION IF EXISTS get_student_details(INT);
-
-
-select * from get_student_details(207); -- No assessment
-select * from get_student_details(176); -- In progress
-select * from get_student_details(205); -- Completed assessment
+DROP FUNCTION IF EXISTS get_cohort_student_data(INT);
+select * from get_cohort_student_data(11);
 
 
 
-
-CREATE OR REPLACE FUNCTION get_student_details(student_user_id INT)
+CREATE FUNCTION get_cohort_student_data(selected_cohort_id INT)
 RETURNS TABLE (
-    full_name TEXT,
+    user_id INT,
+    github_handle TEXT,
+    name TEXT,
+    assessment_status_id INT,
     project_id INT,
     project_index INT,
-    latest_project_name TEXT,
+    project_name TEXT,
     book_id INT,
     book_index INT,
-    latest_book_name TEXT,
-    current_cohort_name TEXT,
-    current_cohort_start_date DATE,
-    current_cohort_end_date DATE,
-    assessment_status_id INT,
-    assessment_status TEXT,
-    total_score INT
+    book_name TEXT,
+    score INT
 ) AS $$
 BEGIN
     RETURN QUERY
-    WITH student_info AS (
-        SELECT
-            au.id,
-            au.first_name || ' ' || au.last_name AS full_name
-        FROM auth_user au
-        WHERE au.id = student_user_id
-    ),
-    latest_project AS (
-        SELECT
-            sp.student_id,
-            p.id AS project_id,
-            p.index AS project_index,
-            p.name AS project_name,
-            b.id AS book_id,
-            b.index AS book_index,
-            b.name AS book_name,
-            sp.date_created
-        FROM "LearningAPI_studentproject" sp
-        JOIN "LearningAPI_project" p ON sp.project_id = p.id
-        JOIN "LearningAPI_book" b ON p.book_id = b.id
-        WHERE sp.student_id = student_user_id
-        ORDER BY sp.date_created DESC
-        LIMIT 1
-    ),
-    current_cohort AS (
-        SELECT
-            nuc.nss_user_id,
-            c.name AS cohort_name,
-            c.start_date,
-            c.end_date
-        FROM "LearningAPI_nssusercohort" nuc
-        JOIN "LearningAPI_cohort" c ON nuc.cohort_id = c.id
-        WHERE nuc.nss_user_id = student_user_id
-        ORDER BY nuc.id DESC
-        LIMIT 1
-    ),
-    assessment_status_agg AS (
-        SELECT
-            sa.student_id,
-            sa.assessment_id,
-            sa.status_id,
-            CASE
-                WHEN sa.status_id = 1 THEN 'In Progress'
-                WHEN sa.status_id = 2 THEN 'Ready for Review'
-                WHEN sa.status_id = 3 THEN 'Reviewed and Incomplete'
-                WHEN sa.status_id = 4 THEN 'Reviewed and Complete'
-                ELSE 'Unknown'
-            END AS status
-        FROM "LearningAPI_studentassessment" sa
-        JOIN latest_project lp ON sa.student_id = lp.student_id
-        JOIN "LearningAPI_assessment" a ON sa.assessment_id = a.id AND a.book_id = lp.book_id
-        WHERE sa.student_id = student_user_id
-        ORDER BY sa.date_created DESC
-        LIMIT 1
-    ),
-    score_calc AS (
-        SELECT
-            lr.student_id,
-            SUM(lw.weight) AS total_score
-        FROM "LearningAPI_learningrecord" lr
-        JOIN "LearningAPI_learningweight" lw ON lr.weight_id = lw.id
-        WHERE lr.student_id = student_user_id AND lr.achieved = TRUE
-        GROUP BY lr.student_id
-    )
-    SELECT
-        si.full_name::text,
-        lp.project_id::int AS project_id,
-        lp.project_index::int AS project_index,
-        lp.project_name::text AS latest_project_name,
-        lp.book_id::int AS book_id,
-        lp.book_index::int AS book_index,
-        lp.book_name::text AS latest_book_name,
-        cc.cohort_name::text AS current_cohort_name,
-        cc.start_date::date AS current_cohort_start_date,
-        cc.end_date::date AS current_cohort_end_date,
-        coalesce(asa.status_id::int, 0)::int AS assessment_status_id,
-        coalesce(asa.status::text, 'Not Available')::text AS assessment_status,
-        coalesce(sc.total_score::int, 0)::int AS total_score
-    FROM student_info si
-    LEFT JOIN latest_project lp ON si.id = lp.student_id
-    LEFT JOIN current_cohort cc ON si.id = cc.nss_user_id
-    LEFT JOIN assessment_status_agg asa ON si.id = asa.student_id
-    LEFT JOIN score_calc sc ON si.id = sc.student_id;
-END; $$
-LANGUAGE plpgsql;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-select * from get_student_details(207); -- No assessment
-select * from get_student_details(176); -- In progress
-select * from get_student_details(205); -- Completed assessment
-
-
-
-
 SELECT
-        nu.user_id,
-        nu.github_handle,
+        nu.user_id::int,
+        nu.github_handle::text,
         au."first_name" || ' ' || au."last_name" AS name,
-        sa.status_id AS assessment_status_id,
-        sp."project_id" AS project_id,
-        p.index AS project_index,
-        p."name" AS project_name,
-        b.id AS book_id,
-        b.index AS book_index,
-        b.name AS book_name,
-        lr.total_score AS score
+        sa.status_id::int AS assessment_status_id,
+        sp.project_id::int AS project_id,
+        p.index::int AS project_index,
+        p.name::text AS project_name,
+        b.id::int AS book_id,
+        b.index::int AS book_index,
+        b.name::text AS book_name,
+        lr.total_score::int AS score
     FROM "LearningAPI_nssuser" nu
     JOIN "auth_user" au ON au."id" = nu."user_id"
     JOIN "LearningAPI_nssusercohort" nc ON nc."nss_user_id" = nu."id"
@@ -474,122 +347,10 @@ SELECT
         WHERE lr."achieved" = true
         GROUP BY lr."student_id"
     ) lr ON lr."student_id" = nu."id"
-    WHERE nc."cohort_id" = 11
+    WHERE nc."cohort_id" = selected_cohort_id
     ORDER BY b.index ASC,
         p.index ASC;
+END;
+$$ LANGUAGE plpgsql;
 
-
-
-
-
-DROP FUNCTION IF EXISTS get_cohort_student_details(INT);
-
-select * from get_cohort_student_details(11); -- No assessment
-
-
-
-CREATE OR REPLACE FUNCTION get_cohort_student_details(student_cohort_id INT)
-RETURNS TABLE (
-    full_name TEXT,
-    project_id INT,
-    project_index INT,
-    latest_project_name TEXT,
-    book_id INT,
-    book_index INT,
-    latest_book_name TEXT,
-    current_cohort_name TEXT,
-    current_cohort_start_date DATE,
-    current_cohort_end_date DATE,
-    assessment_status_id INT,
-    assessment_status TEXT,
-    total_score INT
-) AS $$
-BEGIN
-    RETURN QUERY
-    WITH cohort_students AS (
-        SELECT
-            nuc.nss_user_id,
-            c.name AS cohort_name,
-            c.start_date,
-            c.end_date
-        FROM "LearningAPI_nssusercohort" nuc
-        JOIN "LearningAPI_cohort" c ON nuc.cohort_id = c.id
-        WHERE nuc.cohort_id = student_cohort_id
-    ),
-    student_info AS (
-        SELECT
-            au.id,
-            (au.first_name || ' ' || au.last_name)::TEXT AS full_name,
-            cs.cohort_name::TEXT,
-            cs.start_date::DATE,
-            cs.end_date::DATE
-        FROM auth_user au
-        JOIN cohort_students cs ON au.id = cs.nss_user_id
-    ),
-    latest_project AS (
-        SELECT
-            sp.student_id,
-            p.id AS project_id,
-            p.index AS project_index,
-            p.name AS project_name,
-            b.id AS book_id,
-            b.index AS book_index,
-            b.name AS book_name,
-            sp.date_created
-        FROM "LearningAPI_studentproject" sp
-        JOIN "LearningAPI_project" p ON sp.project_id = p.id
-        JOIN "LearningAPI_book" b ON p.book_id = b.id
-        WHERE sp.student_id IN (SELECT nss_user_id FROM cohort_students)
-        ORDER BY sp.date_created DESC
-        LIMIT 1
-    ),
-    assessment_status_agg AS (
-        SELECT
-            DISTINCT ON (sa.student_id) sa.student_id,
-            sa.assessment_id,
-            sa.status_id,
-            CASE
-                WHEN sa.status_id = 1 THEN 'In Progress'
-                WHEN sa.status_id = 2 THEN 'Ready for Review'
-                WHEN sa.status_id = 3 THEN 'Reviewed and Incomplete'
-                WHEN sa.status_id = 4 THEN 'Reviewed and Complete'
-                ELSE 'Unknown'
-            END AS status
-        FROM "LearningAPI_studentassessment" sa
-        JOIN "LearningAPI_assessment" a ON sa.assessment_id = a.id
-        JOIN latest_project lp
-            ON sa.student_id = lp.student_id
-            AND a.book_id = lp.book_id
-        WHERE sa.student_id IN (SELECT nss_user_id FROM cohort_students)
-        ORDER BY sa.student_id, sa.date_created DESC
-    ),
-    score_calc AS (
-        SELECT
-            lr.student_id,
-            SUM(lw.weight) AS total_score
-        FROM "LearningAPI_learningrecord" lr
-        JOIN "LearningAPI_learningweight" lw ON lr.weight_id = lw.id
-        WHERE lr.student_id IN (SELECT nss_user_id FROM cohort_students) AND lr.achieved = TRUE
-        GROUP BY lr.student_id
-    )
-    SELECT
-        si.full_name,
-        lp.project_id::INT,
-        lp.project_index::INT,
-        lp.project_name::TEXT,
-        lp.book_id::INT,
-        lp.book_index::INT,
-        lp.book_name::TEXT,
-        si.cohort_name::TEXT AS current_cohort_name,
-        si.start_date::DATE AS current_cohort_start_date,
-        si.end_date::DATE AS current_cohort_end_date,
-        coalesce(asa.status_id, 0)::INT AS assessment_status_id,
-        coalesce(asa.status, 'Not Available')::TEXT AS assessment_status,
-        coalesce(sc.total_score, 0)::INT AS total_score
-    FROM student_info si
-    LEFT JOIN latest_project lp ON si.id = lp.student_id
-    LEFT JOIN assessment_status_agg asa ON si.id = asa.student_id
-    LEFT JOIN score_calc sc ON si.id = sc.student_id;
-END; $$
-LANGUAGE plpgsql;
 
