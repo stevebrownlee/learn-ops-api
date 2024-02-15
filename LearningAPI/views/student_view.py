@@ -1,9 +1,9 @@
 """Student view module"""
 import os
+import json
 import logging
-
 import requests
-from django.db.models import Q
+from django.db import connection
 from django.http import HttpResponseServerError
 from django.utils.decorators import method_decorator
 from rest_framework import serializers, status
@@ -14,7 +14,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from LearningAPI.decorators import is_instructor
 from LearningAPI.models import Tag
-from LearningAPI.models.coursework import StudentProject, Project
+from LearningAPI.models.coursework import StudentProject, Project, Capstone
 from LearningAPI.models.people import (StudentNote, NssUser, StudentAssessment,
                                        OneOnOneNote, StudentPersonality, Assessment,
                                        StudentAssessmentStatus, StudentTag)
@@ -123,29 +123,91 @@ class StudentViewSet(ModelViewSet):
         Returns:
             Response -- JSON serialized array
         """
+
+        class CapstoneSerializer(serializers.ModelSerializer):
+            """JSON serializer"""
+            class Meta:
+                model = Capstone
+                fields = ( 'id', 'course', 'proposal_url', )
+                depth = 1
+
+
+        class QuickStudent(serializers.Serializer):
+            """JSON serializer"""
+            # notes = serializers.SerializerMethodField()
+            proposals = serializers.SerializerMethodField()
+
+            id = serializers.IntegerField()
+            github_handle = serializers.CharField(max_length=100)
+            name = serializers.CharField(max_length=100)
+            assessment_status_id = serializers.IntegerField()
+            project_id = serializers.IntegerField()
+            project_index = serializers.IntegerField()
+            project_name = serializers.CharField(max_length=100)
+            book_id = serializers.IntegerField()
+            book_index = serializers.IntegerField()
+            book_name = serializers.CharField(max_length=100)
+            score = serializers.IntegerField()
+            notes = serializers.ListField()
+
+            def get_proposals(self, obj):
+                return []
+                records = Capstone.objects.filter(student__user__id=obj['id']).order_by("pk")
+                return CapstoneSerializer(records, many=True).data
+
+
+
+
+
+
+
+
+
+
         cohort = self.request.query_params.get('cohort', None)
-        search_terms = self.request.query_params.get('q', None)
 
-        students = NssUser.objects.filter(user__is_active=True, user__is_staff=False)
-        serializer = SingleStudent(students, many=True)
+        if cohort is None:
+            return Response({
+                'message': 'Student lists can only be requested by cohort'
+            }, status=status.HTTP_400_BAD_REQUEST)
 
-        if search_terms is not None:
-            for letter in list(search_terms):
-                students = students.filter(
-                    Q(user__first_name__icontains=letter)
-                    | Q(user__last_name__icontains=letter)
-                )
+        else:
+            with connection.cursor() as cursor:
+                cursor.execute("""
+                    SELECT
+                        user_id AS id,
+                        github_handle,
+                        name,
+                        assessment_status_id,
+                        project_id,
+                        project_index,
+                        project_name,
+                        book_id,
+                        book_index,
+                        book_name,
+                        score,
+                        student_notes
+                    FROM
+                        get_cohort_student_data(%s)
+                """, [cohort])
+                columns = [col[0] for col in cursor.description]
+                results = cursor.fetchall()
 
-            serializer = SingleStudent(students, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+                students = []
+                for row in results:
+                    student = dict(zip(columns, row))
+                    student['proposals'] = []
+                    student['project_duration'] = 0
+                    student['notes'] = json.loads(student['student_notes'])
+                    students.append(student)
 
-        if cohort is not None:
-            students = students.filter(assigned_cohorts__cohort__id=cohort)
-            serializer = MicroStudents(students, many=True)
+                serializer = QuickStudent(data=students, many=True)
+                if serializer.is_valid():
+                    return Response(serializer.data, status=status.HTTP_200_OK)
+                else:
+                    return Response({'message': 'Error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        page = self.paginate_queryset(serializer.data)
-        paginated_response = self.get_paginated_response(page)
-        return paginated_response
+
 
     @method_decorator(is_instructor())
     @action(methods=['post', 'put'], detail=True)
