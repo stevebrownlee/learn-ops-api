@@ -297,17 +297,19 @@ RETURNS TABLE (
     current_cohort TEXT,
     current_cohort_id INT,
     assessment_status_id INT,
-    project_id INT,
-    project_index INT,
-    project_name TEXT,
-    book_id INT,
-    book_index INT,
-    book_name TEXT,
+    current_project_id INT,
+    current_project_index INT,
+    current_project_name TEXT,
+    current_book_id INT,
+    current_book_index INT,
+    current_book_name TEXT,
     score INT,
-    student_notes TEXT
+    student_notes TEXT,
+    capstone_proposals TEXT
 ) AS $$
 BEGIN
     RETURN QUERY
+
 SELECT
     nu.user_id::int,
     nu.github_handle::text,
@@ -323,20 +325,54 @@ SELECT
     b.index::int AS current_book_index,
     b.name::text AS current_book_name,
     lr.total_score::int AS score,
-    COALESCE(json_agg(json_build_object('note_id', sn.id, 'note', sn.note, 'created_on', sn.created_on)))::text AS student_notes
+    COALESCE(
+        json_agg(
+            json_build_object(
+                'note_id', sn.id,
+                'note', sn.note,
+                'created_on', sn.created_on
+            )
+        )
+    )::text AS student_notes,
+    COALESCE(
+        (
+            SELECT json_agg(
+                json_build_object(
+                    'id', c."id",
+                    'status', ps.status,
+                    'proposal_url', c."proposal_url",
+                    'created_on', sct.date
+                )
+            )
+            FROM "LearningAPI_capstone" c
+            JOIN "LearningAPI_capstonetimeline" sct ON sct.capstone_id = c.id
+            JOIN "LearningAPI_proposalstatus" ps ON ps.id = sct.status_id
+            WHERE c."student_id" = nu."user_id"
+            AND sct.id = (
+                SELECT sct.id
+                FROM "LearningAPI_capstone" c
+                JOIN "LearningAPI_capstonetimeline" sct ON sct.capstone_id = c.id
+                WHERE c.student_id = nu.user_id
+                ORDER BY sct.id DESC
+                LIMIT 1
+            )
+        ), '[]'
+    )::text AS capstone_proposals
 FROM "LearningAPI_nssuser" nu
 JOIN "auth_user" au ON au."id" = nu."user_id"
-JOIN "socialaccount_socialaccount" social ON social.user_id = nu.id
-JOIN "LearningAPI_nssusercohort" nc ON nc."nss_user_id" = nu."id"
-JOIN "LearningAPI_cohort" c ON c."id" = nc."cohort_id"
-LEFT JOIN "LearningAPI_studentnote" sn ON sn."student_id" = nu."id"
-
+LEFT JOIN "LearningAPI_nssusercohort" nc ON nc."nss_user_id" = nu."id"
+LEFT JOIN "LearningAPI_cohort" c ON c."id" = nc."cohort_id"
+JOIN "LearningAPI_studentnote" sn ON sn."student_id" = nu."id"
+LEFT JOIN "socialaccount_socialaccount" social ON social.user_id = nu.id
+LEFT JOIN "LearningAPI_capstone" sc ON sc.student_id = nu."id"
 LEFT JOIN "LearningAPI_studentproject" sp
     ON sp."student_id" = nu."id"
-    AND sp."date_created" = (
-        SELECT MAX("date_created")
+    AND sp.id = (
+        SELECT id
         FROM "LearningAPI_studentproject"
         WHERE "student_id" = nu."id"
+        ORDER BY id DESC
+        LIMIT 1
     )
 LEFT JOIN "LearningAPI_project" p ON p."id" = sp."project_id"
 LEFT JOIN "LearningAPI_book" b ON b."id" = p."book_id"
@@ -362,14 +398,26 @@ WHERE nc."cohort_id" = 11
 AND au.is_active = TRUE
 AND au.is_staff = FALSE
 GROUP BY nu.user_id, nu.github_handle, social.extra_data,
-    student_name, current_cohort, current_cohort_id, assessment_status_id,
-    current_project_id, current_project_index, current_project_name,
-    current_book_id, current_book_index, current_book_name, score
+    student_name, current_cohort, current_cohort_id, assessment_status_id, current_project_id,
+    current_project_index, current_project_name, current_book_id,
+    current_book_index, current_book_name, score
 ORDER BY b.index ASC,
     p.index ASC;
 
 END;
 $$ LANGUAGE plpgsql;
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -384,6 +432,7 @@ SELECT
     social.extra_data::text,
     au."first_name" || ' ' || au."last_name" AS student_name,
     c.name::text AS current_cohort,
+    c.id::int AS current_cohort_id,
     COALESCE(sa.status_id::int, 0) AS assessment_status_id,
     sp.project_id::int AS current_project_id,
     p.index::int AS current_project_index,
@@ -392,20 +441,54 @@ SELECT
     b.index::int AS current_book_index,
     b.name::text AS current_book_name,
     lr.total_score::int AS score,
-    COALESCE(json_agg(json_build_object('note_id', sn.id, 'note', sn.note, 'created_on', sn.created_on)))::text AS student_notes
+    COALESCE(
+        json_agg(
+            json_build_object(
+                'note_id', sn.id,
+                'note', sn.note,
+                'created_on', sn.created_on
+            )
+        )
+    )::text AS student_notes,
+    COALESCE(
+        (
+            SELECT json_agg(
+                json_build_object(
+                    'id', c."id",
+                    'status', ps.status,
+                    'proposal_url', c."proposal_url",
+                    'created_on', sct.date
+                )
+            )
+            FROM "LearningAPI_capstone" c
+            JOIN "LearningAPI_capstonetimeline" sct ON sct.capstone_id = c.id
+            JOIN "LearningAPI_proposalstatus" ps ON ps.id = sct.status_id
+            WHERE c."student_id" = nu."user_id"
+            AND sct.id = (
+                SELECT sct.id
+                FROM "LearningAPI_capstone" c
+                JOIN "LearningAPI_capstonetimeline" sct ON sct.capstone_id = c.id
+                WHERE c.student_id = nu.user_id
+                ORDER BY sct.id DESC
+                LIMIT 1
+            )
+        ), '[]'
+    )::text AS capstone_proposals
 FROM "LearningAPI_nssuser" nu
 JOIN "auth_user" au ON au."id" = nu."user_id"
-JOIN "socialaccount_socialaccount" social ON social.user_id = nu.id
-JOIN "LearningAPI_nssusercohort" nc ON nc."nss_user_id" = nu."id"
-JOIN "LearningAPI_cohort" c ON c."id" = nc."cohort_id"
-LEFT JOIN "LearningAPI_studentnote" sn ON sn."student_id" = nu."id"
-
+LEFT JOIN "LearningAPI_nssusercohort" nc ON nc."nss_user_id" = nu."id"
+LEFT JOIN "LearningAPI_cohort" c ON c."id" = nc."cohort_id"
+JOIN "LearningAPI_studentnote" sn ON sn."student_id" = nu."id"
+LEFT JOIN "socialaccount_socialaccount" social ON social.user_id = nu.id
+LEFT JOIN "LearningAPI_capstone" sc ON sc.student_id = nu."id"
 LEFT JOIN "LearningAPI_studentproject" sp
     ON sp."student_id" = nu."id"
-    AND sp."date_created" = (
-        SELECT MAX("date_created")
+    AND sp.id = (
+        SELECT id
         FROM "LearningAPI_studentproject"
         WHERE "student_id" = nu."id"
+        ORDER BY id DESC
+        LIMIT 1
     )
 LEFT JOIN "LearningAPI_project" p ON p."id" = sp."project_id"
 LEFT JOIN "LearningAPI_book" b ON b."id" = p."book_id"
@@ -431,8 +514,12 @@ WHERE nc."cohort_id" = 11
 AND au.is_active = TRUE
 AND au.is_staff = FALSE
 GROUP BY nu.user_id, nu.github_handle, social.extra_data,
-    student_name, current_cohort, assessment_status_id, current_project_id,
+    student_name, current_cohort, current_cohort_id, assessment_status_id, current_project_id,
     current_project_index, current_project_name, current_book_id,
     current_book_index, current_book_name, score
 ORDER BY b.index ASC,
     p.index ASC;
+
+
+
+

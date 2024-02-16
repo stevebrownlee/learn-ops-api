@@ -134,8 +134,6 @@ class StudentViewSet(ModelViewSet):
 
         class QuickStudent(serializers.Serializer):
             """JSON serializer"""
-            proposals = serializers.SerializerMethodField()
-
             id = serializers.IntegerField()
             github_handle = serializers.CharField(max_length=100)
             name = serializers.CharField(max_length=100)
@@ -150,20 +148,11 @@ class StudentViewSet(ModelViewSet):
             book_name = serializers.CharField(max_length=100)
             score = serializers.IntegerField()
             notes = serializers.ListField()
+            proposals = serializers.ListField()
 
             def get_avatar(self, obj):
                 github = obj.user.socialaccount_set.get(user=obj['id'])
                 return github.extra_data["avatar_url"]
-
-            def get_proposals(self, obj):
-                # return []
-                records = Capstone.objects.filter(student__user__id=obj['id']).order_by("pk")
-                return CapstoneSerializer(records, many=True).data
-
-
-
-
-
 
 
 
@@ -187,14 +176,15 @@ class StudentViewSet(ModelViewSet):
                         current_cohort AS cohort_name,
                         current_cohort_id AS cohort_id,
                         assessment_status_id,
-                        project_id,
-                        project_index,
-                        project_name,
-                        book_id,
-                        book_index,
-                        book_name,
+                        current_project_id AS project_id,
+                        current_project_index AS project_index,
+                        current_project_name AS project_name,
+                        current_book_id AS book_id,
+                        current_book_index AS book_index,
+                        current_book_name AS book_name,
                         score,
-                        student_notes
+                        student_notes,
+                        capstone_proposals
                     FROM
                         get_cohort_student_data(%s)
                 """, [cohort])
@@ -204,7 +194,6 @@ class StudentViewSet(ModelViewSet):
                 students = []
                 for row in results:
                     student = dict(zip(columns, row))
-                    student['proposals'] = []
                     student['project_duration'] = 0
                     student['current_cohort'] = {
                         'id': student['cohort_id'],
@@ -212,6 +201,7 @@ class StudentViewSet(ModelViewSet):
                     }
                     student['avatar'] = json.loads(student['extra_data'])["avatar_url"]
                     student['notes'] = json.loads(student['student_notes'])
+                    student['proposals'] = json.loads(student['capstone_proposals'])
                     students.append(student)
 
                 serializer = QuickStudent(data=students, many=True)
