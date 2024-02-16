@@ -134,12 +134,13 @@ class StudentViewSet(ModelViewSet):
 
         class QuickStudent(serializers.Serializer):
             """JSON serializer"""
-            # notes = serializers.SerializerMethodField()
             proposals = serializers.SerializerMethodField()
 
             id = serializers.IntegerField()
             github_handle = serializers.CharField(max_length=100)
             name = serializers.CharField(max_length=100)
+            current_cohort = serializers.DictField()
+            avatar = serializers.CharField()
             assessment_status_id = serializers.IntegerField()
             project_id = serializers.IntegerField()
             project_index = serializers.IntegerField()
@@ -150,8 +151,12 @@ class StudentViewSet(ModelViewSet):
             score = serializers.IntegerField()
             notes = serializers.ListField()
 
+            def get_avatar(self, obj):
+                github = obj.user.socialaccount_set.get(user=obj['id'])
+                return github.extra_data["avatar_url"]
+
             def get_proposals(self, obj):
-                return []
+                # return []
                 records = Capstone.objects.filter(student__user__id=obj['id']).order_by("pk")
                 return CapstoneSerializer(records, many=True).data
 
@@ -177,7 +182,10 @@ class StudentViewSet(ModelViewSet):
                     SELECT
                         user_id AS id,
                         github_handle,
-                        name,
+                        extra_data,
+                        student_name AS name,
+                        current_cohort AS cohort_name,
+                        current_cohort_id AS cohort_id,
                         assessment_status_id,
                         project_id,
                         project_index,
@@ -198,6 +206,11 @@ class StudentViewSet(ModelViewSet):
                     student = dict(zip(columns, row))
                     student['proposals'] = []
                     student['project_duration'] = 0
+                    student['current_cohort'] = {
+                        'id': student['cohort_id'],
+                        'name': student['cohort_name']
+                    }
+                    student['avatar'] = json.loads(student['extra_data'])["avatar_url"]
                     student['notes'] = json.loads(student['student_notes'])
                     students.append(student)
 
