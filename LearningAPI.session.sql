@@ -341,10 +341,12 @@ SELECT
                     'id', c."id",
                     'status', ps.status,
                     'proposal_url', c."proposal_url",
-                    'created_on', sct.date
+                    'created_on', sct.date,
+                    'course_name', cr.name
                 )
             )
             FROM "LearningAPI_capstone" c
+            JOIN "LearningAPI_course" cr ON c.course_id = cr.id
             JOIN "LearningAPI_capstonetimeline" sct ON sct.capstone_id = c.id
             JOIN "LearningAPI_proposalstatus" ps ON ps.id = sct.status_id
             WHERE c."student_id" = nu."user_id"
@@ -457,21 +459,27 @@ SELECT
                     'id', c."id",
                     'status', ps.status,
                     'proposal_url', c."proposal_url",
-                    'created_on', sct.date
+                    'created_on', tl.date,
+                    'course_name', cr.name
                 )
             )
             FROM "LearningAPI_capstone" c
-            JOIN "LearningAPI_capstonetimeline" sct ON sct.capstone_id = c.id
-            JOIN "LearningAPI_proposalstatus" ps ON ps.id = sct.status_id
+            LEFT JOIN (
+                SELECT DISTINCT ON (
+                    ct.capstone_id, c.course_id
+                ) *
+                FROM "LearningAPI_capstonetimeline" ct
+                JOIN "LearningAPI_capstone" c ON c.id = ct.capstone_id
+                JOIN "LearningAPI_course" cr ON c.course_id = cr.id
+                ORDER BY
+                    ct.capstone_id,
+                    c.course_id,
+                    date DESC
+            ) tl ON tl.capstone_id = c.id
+            LEFT JOIN "LearningAPI_proposalstatus" ps ON ps."id" = tl.status_id
+            LEFT JOIN "LearningAPI_course" cr ON c.course_id = cr.id
             WHERE c."student_id" = nu."user_id"
-            AND sct.id = (
-                SELECT sct.id
-                FROM "LearningAPI_capstone" c
-                JOIN "LearningAPI_capstonetimeline" sct ON sct.capstone_id = c.id
-                WHERE c.student_id = nu.user_id
-                ORDER BY sct.id DESC
-                LIMIT 1
-            )
+
         ), '[]'
     )::text AS capstone_proposals
 FROM "LearningAPI_nssuser" nu
@@ -513,6 +521,7 @@ LEFT JOIN (
 WHERE nc."cohort_id" = 11
 AND au.is_active = TRUE
 AND au.is_staff = FALSE
+AND nu.id = 205
 GROUP BY nu.user_id, nu.github_handle, social.extra_data,
     student_name, current_cohort, current_cohort_id, assessment_status_id, current_project_id,
     current_project_index, current_project_name, current_book_id,

@@ -135,6 +135,7 @@ class StudentViewSet(ModelViewSet):
         class QuickStudent(serializers.Serializer):
             """JSON serializer"""
             id = serializers.IntegerField()
+            proposals = serializers.ListField()
             github_handle = serializers.CharField(max_length=100)
             name = serializers.CharField(max_length=100)
             current_cohort = serializers.DictField()
@@ -148,7 +149,6 @@ class StudentViewSet(ModelViewSet):
             book_name = serializers.CharField(max_length=100)
             score = serializers.IntegerField()
             notes = serializers.ListField()
-            proposals = serializers.ListField()
 
             def get_avatar(self, obj):
                 github = obj.user.socialaccount_set.get(user=obj['id'])
