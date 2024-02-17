@@ -351,11 +351,10 @@ SELECT
                 ) *
                 FROM "LearningAPI_capstonetimeline" ct
                 JOIN "LearningAPI_capstone" c ON c.id = ct.capstone_id
-                JOIN "LearningAPI_course" cr ON c.course_id = cr.id
                 ORDER BY
-                    ct.capstone_id,
                     c.course_id,
-                    date DESC
+                    ct.capstone_id,
+                    date desc
             ) tl ON tl.capstone_id = c.id
             LEFT JOIN "LearningAPI_proposalstatus" ps ON ps."id" = tl.status_id
             LEFT JOIN "LearningAPI_course" cr ON c.course_id = cr.id
@@ -461,6 +460,7 @@ SELECT
                 json_build_object(
                     'id', c."id",
                     'status', ps.status,
+                    'current_status_id', ps.id,
                     'proposal_url', c."proposal_url",
                     'created_on', tl.date,
                     'course_name', cr.name
@@ -473,11 +473,10 @@ SELECT
                 ) *
                 FROM "LearningAPI_capstonetimeline" ct
                 JOIN "LearningAPI_capstone" c ON c.id = ct.capstone_id
-                JOIN "LearningAPI_course" cr ON c.course_id = cr.id
                 ORDER BY
-                    ct.capstone_id,
                     c.course_id,
-                    date DESC
+                    ct.capstone_id,
+                    date desc
             ) tl ON tl.capstone_id = c.id
             LEFT JOIN "LearningAPI_proposalstatus" ps ON ps."id" = tl.status_id
             LEFT JOIN "LearningAPI_course" cr ON c.course_id = cr.id
@@ -524,7 +523,6 @@ LEFT JOIN (
 WHERE nc."cohort_id" = 11
 AND au.is_active = TRUE
 AND au.is_staff = FALSE
-AND nu.id = 205
 GROUP BY nu.user_id, nu.github_handle, social.extra_data,
     student_name, current_cohort, current_cohort_id, assessment_status_id, current_project_id,
     current_project_index, current_project_name, current_book_id,
@@ -535,3 +533,63 @@ ORDER BY b.index ASC,
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SELECT  c."id",
+       ps.status,
+       ps.id,
+       c."proposal_url",
+       tl.date,
+       cr.name
+FROM "LearningAPI_capstone" c
+LEFT JOIN (
+    SELECT DISTINCT ON (
+        ct.capstone_id, c.course_id
+    ) *
+    FROM "LearningAPI_capstonetimeline" ct
+    JOIN "LearningAPI_capstone" c ON c.id = ct.capstone_id
+    ORDER BY
+        c.course_id,
+        ct.capstone_id,
+        date desc
+) tl ON tl.capstone_id = c.id
+LEFT JOIN "LearningAPI_proposalstatus" ps ON ps."id" = tl.status_id
+LEFT JOIN "LearningAPI_course" cr ON c.course_id = cr.id
+JOIN "LearningAPI_nssuser" usr ON c.student_id = usr.id
+WHERE usr.id = 205
+;

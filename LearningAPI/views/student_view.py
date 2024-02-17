@@ -124,14 +124,6 @@ class StudentViewSet(ModelViewSet):
             Response -- JSON serialized array
         """
 
-        class CapstoneSerializer(serializers.ModelSerializer):
-            """JSON serializer"""
-            class Meta:
-                model = Capstone
-                fields = ( 'id', 'course', 'proposal_url', )
-                depth = 1
-
-
         class QuickStudent(serializers.Serializer):
             """JSON serializer"""
             id = serializers.IntegerField()
@@ -209,8 +201,6 @@ class StudentViewSet(ModelViewSet):
                     return Response(serializer.data, status=status.HTTP_200_OK)
                 else:
                     return Response({'message': 'Error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
 
     @method_decorator(is_instructor())
     @action(methods=['post', 'put'], detail=True)
