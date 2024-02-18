@@ -4,8 +4,8 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from allauth.socialaccount.models import SocialAccount
 from LearningAPI.models.people import Cohort, NssUserCohort, NssUser
+from LearningAPI.models.coursework import StudentProject
 from LearningAPI.models.people.student_personality import StudentPersonality
-from LearningAPI.views.student_view import StudentNoteSerializer
 
 
 class Profile(ViewSet):
@@ -105,9 +105,8 @@ class PersonalitySerializer(serializers.ModelSerializer):
 
 class ProfileSerializer(serializers.ModelSerializer):
     """JSON serializer"""
-    feedback = StudentNoteSerializer(many=True)
-    personality = PersonalitySerializer(many=False)
     name = serializers.SerializerMethodField()
+    project = serializers.SerializerMethodField()
     email = serializers.SerializerMethodField()
     github = serializers.SerializerMethodField()
     repos = serializers.SerializerMethodField()
@@ -116,6 +115,21 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def get_staff(self, obj):
         return obj.user.is_staff
+
+    def get_project(self, obj):
+        project = StudentProject.objects.filter(student=obj).last()
+        if project is not None:
+            return {
+                "id": project.project.id,
+                "name": project.project.name,
+                "book_name": project.project.book.name,
+            }
+        else:
+            return {
+                "id": 0,
+                "name": "Unassigned"
+            }
+
 
     def get_github(self, obj):
         github = obj.user.socialaccount_set.get(user=obj.user)
@@ -144,6 +158,5 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = NssUser
-        fields = ('id', 'name', 'email', 'github', 'staff', 'slack_handle',
-                  'current_cohort', 'feedback', 'repos', 'personality',
-                  'assessment_overview', 'capstones',)
+        fields = ('id', 'name', 'project', 'email', 'github', 'staff', 'slack_handle',
+                  'current_cohort', 'repos', 'assessment_overview', 'capstones',)

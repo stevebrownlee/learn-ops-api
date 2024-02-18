@@ -123,33 +123,6 @@ class StudentViewSet(ModelViewSet):
         Returns:
             Response -- JSON serialized array
         """
-
-        class QuickStudent(serializers.Serializer):
-            """JSON serializer"""
-            id = serializers.IntegerField()
-            proposals = serializers.ListField()
-            github_handle = serializers.CharField(max_length=100)
-            name = serializers.CharField(max_length=100)
-            current_cohort = serializers.DictField()
-            avatar = serializers.CharField()
-            assessment_status_id = serializers.IntegerField()
-            project_id = serializers.IntegerField()
-            project_index = serializers.IntegerField()
-            project_name = serializers.CharField(max_length=100)
-            book_id = serializers.IntegerField()
-            book_index = serializers.IntegerField()
-            book_name = serializers.CharField(max_length=100)
-            score = serializers.IntegerField()
-            notes = serializers.ListField()
-
-            def get_avatar(self, obj):
-                github = obj.user.socialaccount_set.get(user=obj['id'])
-                return github.extra_data["avatar_url"]
-
-
-
-
-
         cohort = self.request.query_params.get('cohort', None)
 
         if cohort is None:
@@ -176,7 +149,8 @@ class StudentViewSet(ModelViewSet):
                         current_book_name AS book_name,
                         score,
                         student_notes,
-                        capstone_proposals
+                        capstone_proposals,
+                        project_duration
                     FROM
                         get_cohort_student_data(%s)
                 """, [cohort])
@@ -186,7 +160,6 @@ class StudentViewSet(ModelViewSet):
                 students = []
                 for row in results:
                     student = dict(zip(columns, row))
-                    student['project_duration'] = 0
                     student['current_cohort'] = {
                         'id': student['cohort_id'],
                         'name': student['cohort_name']
@@ -196,7 +169,7 @@ class StudentViewSet(ModelViewSet):
                     student['proposals'] = json.loads(student['capstone_proposals'])
                     students.append(student)
 
-                serializer = QuickStudent(data=students, many=True)
+                serializer = CohortStudentSerializer(data=students, many=True)
                 if serializer.is_valid():
                     return Response(serializer.data, status=status.HTTP_200_OK)
                 else:
@@ -400,6 +373,15 @@ class InstructorNoteSerializer(serializers.ModelSerializer):
         fields = ['id', 'note', 'created_on', 'author']
 
 
+class CoreSkillRecordSerializer(serializers.ModelSerializer):
+    """Serializer for Core Skill Record"""
+
+    class Meta:
+        model = CoreSkillRecord
+        fields = ('id', 'skill', 'level', )
+        depth = 1
+
+
 class LearningRecordEntrySerializer(serializers.ModelSerializer):
     """JSON serializer"""
     instructor = serializers.SerializerMethodField()
@@ -447,6 +429,30 @@ class PersonalitySerializer(serializers.ModelSerializer):
         )
 
 
+class CohortStudentSerializer(serializers.Serializer):
+    """JSON serializer"""
+    id = serializers.IntegerField()
+    github_handle = serializers.CharField(max_length=100)
+    name = serializers.CharField(max_length=100)
+    current_cohort = serializers.DictField()
+    avatar = serializers.CharField()
+    assessment_status_id = serializers.IntegerField()
+    project_id = serializers.IntegerField()
+    project_duration = serializers.IntegerField()
+    project_index = serializers.IntegerField()
+    project_name = serializers.CharField(max_length=100)
+    book_id = serializers.IntegerField()
+    book_index = serializers.IntegerField()
+    book_name = serializers.CharField(max_length=100)
+    score = serializers.IntegerField()
+    notes = serializers.ListField()
+    proposals = serializers.ListField()
+
+    def get_avatar(self, obj):
+        github = obj.user.socialaccount_set.get(user=obj['id'])
+        return github.extra_data["avatar_url"]
+
+
 class StudentSerializer(serializers.ModelSerializer):
     """JSON serializer"""
     feedback = StudentNoteSerializer(many=True)
@@ -454,7 +460,21 @@ class StudentSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
     email = serializers.SerializerMethodField()
     records = serializers.SerializerMethodField()
+    project = serializers.SerializerMethodField()
     core_skill_records = serializers.SerializerMethodField()
+
+    def get_project(self, obj):
+        project = StudentProject.objects.filter(student=obj).last()
+        if project is not None:
+            return {
+                "id": project.project.id,
+                "name": project.project.name
+            }
+        else:
+            return {
+                "id": 0,
+                "name": "Unassigned"
+            }
 
     def get_records(self, obj):
         records = LearningRecord.objects.filter(
@@ -466,7 +486,7 @@ class StudentSerializer(serializers.ModelSerializer):
         return CoreSkillRecordSerializer(records, many=True).data
 
     def get_name(self, obj):
-        return f'{obj.user.first_name} {obj.user.last_name}'
+        return obj.full_name
 
     def get_email(self, obj):
         return obj.user.email
@@ -474,87 +494,7 @@ class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = NssUser
         fields = (
-            'id', 'name', 'email', 'github_handle', 'score', 'core_skill_records',
-            'feedback', 'records', 'notes', 'capstones', 'current_cohort'
+            'id', 'name', 'project', 'email', 'github_handle', 'score',
+            'core_skill_records', 'feedback', 'records', 'notes', 'capstones',
+            'current_cohort'
         )
-
-
-class StudentTagSerializer(serializers.ModelSerializer):
-    """JSON serializer"""
-    class Meta:
-        model = StudentTag
-        fields = ('id', 'tag',)
-        depth = 1
-
-
-class CoreSkillRecordSerializer(serializers.ModelSerializer):
-    """Serializer for Core Skill Record"""
-
-    class Meta:
-        model = CoreSkillRecord
-        fields = ('id', 'skill', 'level', )
-        depth = 1
-
-class StudentNotesSerializer(serializers.ModelSerializer):
-    """Serializer for Core Skill Record"""
-
-    class Meta:
-        model = StudentNote
-        fields = ('id', 'note', 'created_on', 'author')
-
-
-class MicroStudents(serializers.ModelSerializer):
-    """JSON serializer"""
-    tags = StudentTagSerializer(many=True)
-    notes = StudentNotesSerializer(many=True)
-    avatar = serializers.SerializerMethodField()
-
-    def get_avatar(self, obj):
-        github = obj.user.socialaccount_set.get(user=obj.user)
-        return github.extra_data["avatar_url"]
-
-
-    class Meta:
-        model = NssUser
-        fields = ('id', 'name', 'score', 'tags',
-                  'book', 'assessment_status', 'proposals',
-                  'github_handle', 'current_cohort',
-                  'assessment_overview', 'notes', 'avatar',
-                  )
-
-
-class SingleStudent(serializers.ModelSerializer):
-    """JSON serializer"""
-    feedback = StudentNoteSerializer(many=True)
-    name = serializers.SerializerMethodField()
-    email = serializers.SerializerMethodField()
-    github = serializers.SerializerMethodField()
-    repos = serializers.SerializerMethodField()
-    staff = serializers.SerializerMethodField()
-    date_joined = serializers.SerializerMethodField()
-
-    def get_date_joined(self, obj):
-        return obj.user.date_joined
-
-    def get_staff(self, obj):
-        return False
-
-    def get_github(self, obj):
-        github = obj.user.socialaccount_set.get(user=obj.user)
-        return github.extra_data["login"]
-
-    def get_repos(self, obj):
-        github = obj.user.socialaccount_set.get(user=obj.user)
-        return github.extra_data["repos_url"]
-
-    def get_name(self, obj):
-        return f'{obj.user.first_name} {obj.user.last_name}'
-
-    def get_email(self, obj):
-        return obj.user.email
-
-    class Meta:
-        model = NssUser
-        fields = ('id', 'name', 'email', 'github', 'staff', 'slack_handle',
-                  'cohorts', 'feedback', 'repos', 'score', 'date_joined',
-                  'current_cohort', )

@@ -305,7 +305,8 @@ RETURNS TABLE (
     current_book_name TEXT,
     score INT,
     student_notes TEXT,
-    capstone_proposals TEXT
+    capstone_proposals TEXT,
+    project_duration DOUBLE PRECISION
 ) AS $$
 BEGIN
     RETURN QUERY
@@ -361,7 +362,11 @@ SELECT
             WHERE c."student_id" = nu."user_id"
 
         ), '[]'
-    )::text AS capstone_proposals
+    )::text AS capstone_proposals,
+    EXTRACT(YEAR FROM AGE(NOW(), sp.date_created)) * 365 +
+        EXTRACT(MONTH FROM AGE(NOW(), sp.date_created)) * 30 +
+        EXTRACT(DAY FROM AGE(NOW(), sp.date_created))::double precision  AS project_duration
+
 FROM "LearningAPI_nssuser" nu
 JOIN "auth_user" au ON au."id" = nu."user_id"
 LEFT JOIN "LearningAPI_nssusercohort" nc ON nc."nss_user_id" = nu."id"
@@ -398,13 +403,14 @@ LEFT JOIN (
     WHERE lr."achieved" = true
     GROUP BY lr."student_id"
 ) lr ON lr."student_id" = nu."id"
-WHERE nc."cohort_id" = 11
+WHERE nc."cohort_id" = selected_cohort_id
 AND au.is_active = TRUE
 AND au.is_staff = FALSE
 GROUP BY nu.user_id, nu.github_handle, social.extra_data,
-    student_name, current_cohort, current_cohort_id, assessment_status_id, current_project_id,
-    current_project_index, current_project_name, current_book_id,
-    current_book_index, current_book_name, score
+    student_name, current_cohort, current_cohort_id, assessment_status_id,
+    current_project_id, current_project_index, current_project_name,
+    project_duration, current_book_id, current_book_index, current_book_name,
+    score
 ORDER BY b.index ASC,
     p.index ASC;
 
@@ -483,7 +489,12 @@ SELECT
             WHERE c."student_id" = nu."user_id"
 
         ), '[]'
-    )::text AS capstone_proposals
+    )::text AS capstone_proposals,
+    EXTRACT(YEAR FROM AGE(NOW(), sp.date_created)) * 365 +
+        EXTRACT(MONTH FROM AGE(NOW(), sp.date_created)) * 30 +
+        EXTRACT(DAY FROM AGE(NOW(), sp.date_created))::double precision AS project_duration
+
+
 FROM "LearningAPI_nssuser" nu
 JOIN "auth_user" au ON au."id" = nu."user_id"
 LEFT JOIN "LearningAPI_nssusercohort" nc ON nc."nss_user_id" = nu."id"
@@ -524,72 +535,10 @@ WHERE nc."cohort_id" = 11
 AND au.is_active = TRUE
 AND au.is_staff = FALSE
 GROUP BY nu.user_id, nu.github_handle, social.extra_data,
-    student_name, current_cohort, current_cohort_id, assessment_status_id, current_project_id,
-    current_project_index, current_project_name, current_book_id,
+    student_name, current_cohort, current_cohort_id,
+    assessment_status_id, current_project_id, current_project_index,
+    current_project_name, project_duration, current_book_id,
     current_book_index, current_book_name, score
 ORDER BY b.index ASC,
     p.index ASC;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-SELECT  c."id",
-       ps.status,
-       ps.id,
-       c."proposal_url",
-       tl.date,
-       cr.name
-FROM "LearningAPI_capstone" c
-LEFT JOIN (
-    SELECT DISTINCT ON (
-        ct.capstone_id, c.course_id
-    ) *
-    FROM "LearningAPI_capstonetimeline" ct
-    JOIN "LearningAPI_capstone" c ON c.id = ct.capstone_id
-    ORDER BY
-        c.course_id,
-        ct.capstone_id,
-        date desc
-) tl ON tl.capstone_id = c.id
-LEFT JOIN "LearningAPI_proposalstatus" ps ON ps."id" = tl.status_id
-LEFT JOIN "LearningAPI_course" cr ON c.course_id = cr.id
-JOIN "LearningAPI_nssuser" usr ON c.student_id = usr.id
-WHERE usr.id = 205
-;

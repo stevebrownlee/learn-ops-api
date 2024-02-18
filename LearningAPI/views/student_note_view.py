@@ -9,6 +9,8 @@ from LearningAPI.models.people import StudentNote
 
 class StudentNoteViewSet(ModelViewSet):
     """Student note viewset"""
+    queryset = StudentNote.objects.all()
+
 
     def list(self, request):
         studentId = request.query_params.get('studentId', None)
