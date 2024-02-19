@@ -59,13 +59,18 @@ class Migration(migrations.Migration):
                     )
                 )::text AS student_notes,
                 COALESCE(
-                    json_agg(
+                    (
+                    SELECT json_agg(
                         json_build_object(
-                            'id', stg.id,
-                            'name', tag.name
+                            'id', st."id",
+                            'tag', t."name"
                         )
                     )
-                )::text AS student_tags,
+                    FROM "LearningAPI_studenttag" st
+                    LEFT JOIN "LearningAPI_tag" t ON t."id" = st."tag_id"
+                    WHERE st."student_id" = nu."user_id"
+                    )
+                , '[]')::text AS student_tags,
                 COALESCE(
                     (
                         SELECT json_agg(
