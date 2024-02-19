@@ -164,6 +164,7 @@ class StudentViewSet(ModelViewSet):
                         'id': student['cohort_id'],
                         'name': student['cohort_name']
                     }
+                    student['tags'] = []
                     student['avatar'] = json.loads(student['extra_data'])["avatar_url"]
                     student['notes'] = json.loads(student['student_notes'])
                     student['proposals'] = json.loads(student['capstone_proposals'])

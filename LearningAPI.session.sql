@@ -108,13 +108,11 @@ SELECT
             LEFT JOIN "LearningAPI_proposalstatus" ps ON ps."id" = tl.status_id
             LEFT JOIN "LearningAPI_course" cr ON c.course_id = cr.id
             WHERE c."student_id" = nu."user_id"
-
         ), '[]'
     )::text AS capstone_proposals,
     EXTRACT(YEAR FROM AGE(NOW(), sp.date_created)) * 365 +
         EXTRACT(MONTH FROM AGE(NOW(), sp.date_created)) * 30 +
         EXTRACT(DAY FROM AGE(NOW(), sp.date_created))::double precision  AS project_duration
-
 FROM "LearningAPI_nssuser" nu
 JOIN "auth_user" au ON au."id" = nu."user_id"
 LEFT JOIN "LearningAPI_nssusercohort" nc ON nc."nss_user_id" = nu."id"
@@ -161,7 +159,6 @@ GROUP BY nu.user_id, nu.github_handle, social.extra_data,
     score
 ORDER BY b.index ASC,
     p.index ASC;
-
 END;
 $$ LANGUAGE plpgsql;
 
