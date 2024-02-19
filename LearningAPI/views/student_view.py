@@ -448,6 +448,7 @@ class CohortStudentSerializer(serializers.Serializer):
     score = serializers.IntegerField()
     notes = serializers.ListField()
     proposals = serializers.ListField()
+    tags = serializers.ListField()
 
     def get_avatar(self, obj):
         github = obj.user.socialaccount_set.get(user=obj['id'])
