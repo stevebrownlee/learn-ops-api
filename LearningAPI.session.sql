@@ -46,7 +46,7 @@ SELECT
     b.id::int AS current_book_id,
     b.index::int AS current_book_index,
     b.name::text AS current_book_name,
-    lr.total_score::int AS score,
+    COALESCE(lr.total_score, 0)::int AS score,
     COALESCE(
         json_agg(
             json_build_object(
@@ -165,8 +165,8 @@ $$ LANGUAGE plpgsql;
 SELECT
     nu.user_id::int,
     nu.github_handle::text,
-    social.extra_data::text,
     au."first_name" || ' ' || au."last_name" AS student_name,
+    social.extra_data::text,
     c.name::text AS current_cohort,
     c.id::int AS current_cohort_id,
     COALESCE(sa.status_id::int, 0) AS assessment_status_id,
@@ -176,7 +176,7 @@ SELECT
     b.id::int AS current_book_id,
     b.index::int AS current_book_index,
     b.name::text AS current_book_name,
-    lr.total_score::int AS score,
+    COALESCE(lr.total_score, 0)::int AS score,
     COALESCE(
         json_agg(
             json_build_object(

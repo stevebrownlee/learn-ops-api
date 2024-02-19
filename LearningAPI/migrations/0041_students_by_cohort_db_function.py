@@ -47,7 +47,7 @@ class Migration(migrations.Migration):
                 b.id::int AS current_book_id,
                 b.index::int AS current_book_index,
                 b.name::text AS current_book_name,
-                lr.total_score::int AS score,
+                COALESCE(lr.total_score, 0)::int AS score,
                 COALESCE(
                     json_agg(
                         json_build_object(
