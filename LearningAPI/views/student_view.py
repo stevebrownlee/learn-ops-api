@@ -149,6 +149,7 @@ class StudentViewSet(ModelViewSet):
                         current_book_name AS book_name,
                         score,
                         student_notes,
+                        student_tags,
                         capstone_proposals,
                         project_duration
                     FROM
@@ -164,7 +165,7 @@ class StudentViewSet(ModelViewSet):
                         'id': student['cohort_id'],
                         'name': student['cohort_name']
                     }
-                    student['tags'] = []
+                    student['tags'] = json.loads(student['student_tags'])
                     student['avatar'] = json.loads(student['extra_data'])["avatar_url"]
                     student['notes'] = json.loads(student['student_notes'])
                     student['proposals'] = json.loads(student['capstone_proposals'])

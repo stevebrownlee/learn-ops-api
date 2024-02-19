@@ -28,6 +28,7 @@ class Migration(migrations.Migration):
                 current_book_name TEXT,
                 score INT,
                 student_notes TEXT,
+                student_tags TEXT,
                 capstone_proposals TEXT,
                 project_duration DOUBLE PRECISION
             ) AS $$
@@ -58,6 +59,14 @@ class Migration(migrations.Migration):
                     )
                 )::text AS student_notes,
                 COALESCE(
+                    json_agg(
+                        json_build_object(
+                            'id', stg.id,
+                            'name', tag.name
+                        )
+                    )
+                )::text AS student_tags,
+                COALESCE(
                     (
                         SELECT json_agg(
                             json_build_object(
@@ -83,18 +92,18 @@ class Migration(migrations.Migration):
                         LEFT JOIN "LearningAPI_proposalstatus" ps ON ps."id" = tl.status_id
                         LEFT JOIN "LearningAPI_course" cr ON c.course_id = cr.id
                         WHERE c."student_id" = nu."user_id"
-
                     ), '[]'
                 )::text AS capstone_proposals,
                 EXTRACT(YEAR FROM AGE(NOW(), sp.date_created)) * 365 +
                     EXTRACT(MONTH FROM AGE(NOW(), sp.date_created)) * 30 +
                     EXTRACT(DAY FROM AGE(NOW(), sp.date_created))::double precision  AS project_duration
-
             FROM "LearningAPI_nssuser" nu
             JOIN "auth_user" au ON au."id" = nu."user_id"
             LEFT JOIN "LearningAPI_nssusercohort" nc ON nc."nss_user_id" = nu."id"
             LEFT JOIN "LearningAPI_cohort" c ON c."id" = nc."cohort_id"
             LEFT JOIN "LearningAPI_studentnote" sn ON sn."student_id" = nu."id"
+            LEFT JOIN "LearningAPI_studenttag" stg ON stg."student_id" = nu."id"
+            LEFT JOIN "LearningAPI_tag" tag ON stg.tag_id = tag.id
             LEFT JOIN "socialaccount_socialaccount" social ON social.user_id = nu.id
             LEFT JOIN "LearningAPI_capstone" sc ON sc.student_id = nu."id"
             LEFT JOIN "LearningAPI_studentproject" sp
@@ -136,7 +145,6 @@ class Migration(migrations.Migration):
                 score
             ORDER BY b.index ASC,
                 p.index ASC;
-
             END;
             $$ LANGUAGE plpgsql;
             """,

@@ -5,7 +5,8 @@ from .models.people import (
     NssUser, Assessment,
     Cohort, NssUserCohort,
     StudentAssessmentStatus,
-    StudentAssessment, CohortInfo
+    StudentAssessment, CohortInfo,
+    StudentTag
 )
 from .models.coursework import (
     Course, ProposalStatus, Capstone, Book,
@@ -70,6 +71,13 @@ class NssUserCohortAdmin(admin.ModelAdmin):
     """For assigning students to cohorts"""
     list_display = ('nss_user', 'cohort',)
     search_fields = ["nss_user__user__last_name"]
+    search_help_text = "Search by last name"
+
+@admin.register(StudentTag)
+class StudentTagAdmin(admin.ModelAdmin):
+    """For assigning students to cohorts"""
+    list_display = ('student', 'tag',)
+    search_fields = ["student__user__last_name"]
     search_help_text = "Search by last name"
 
 @admin.register(Capstone)

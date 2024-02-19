@@ -53,6 +53,7 @@ RETURNS TABLE (
     current_book_name TEXT,
     score INT,
     student_notes TEXT,
+    student_tags TEXT,
     capstone_proposals TEXT,
     project_duration DOUBLE PRECISION
 ) AS $$
@@ -82,6 +83,19 @@ SELECT
             )
         )
     )::text AS student_notes,
+    COALESCE(
+        (
+          SELECT json_agg(
+              json_build_object(
+                  'id', st."id",
+                  'tag', t."name"
+              )
+           )
+           FROM "LearningAPI_studenttag" st
+           LEFT JOIN "LearningAPI_tag" t ON t."id" = st."tag_id"
+           WHERE st."student_id" = nu."user_id"
+        )
+     , '[]')::text AS student_tags,
     COALESCE(
         (
             SELECT json_agg(
@@ -118,6 +132,8 @@ JOIN "auth_user" au ON au."id" = nu."user_id"
 LEFT JOIN "LearningAPI_nssusercohort" nc ON nc."nss_user_id" = nu."id"
 LEFT JOIN "LearningAPI_cohort" c ON c."id" = nc."cohort_id"
 LEFT JOIN "LearningAPI_studentnote" sn ON sn."student_id" = nu."id"
+LEFT JOIN "LearningAPI_studenttag" stg ON stg."student_id" = nu."id"
+LEFT JOIN "LearningAPI_tag" tag ON stg.tag_id = tag.id
 LEFT JOIN "socialaccount_socialaccount" social ON social.user_id = nu.id
 LEFT JOIN "LearningAPI_capstone" sc ON sc.student_id = nu."id"
 LEFT JOIN "LearningAPI_studentproject" sp
@@ -211,6 +227,19 @@ SELECT
     )::text AS student_notes,
     COALESCE(
         (
+          SELECT json_agg(
+              json_build_object(
+                  'id', st."id",
+                  'tag', t."name"
+              )
+           )
+           FROM "LearningAPI_studenttag" st
+           LEFT JOIN "LearningAPI_tag" t ON t."id" = st."tag_id"
+           WHERE st."student_id" = nu."user_id"
+        )
+     , '[]')::text AS student_tags,
+    COALESCE(
+        (
             SELECT json_agg(
                 json_build_object(
                     'id', c."id",
@@ -247,6 +276,7 @@ JOIN "auth_user" au ON au."id" = nu."user_id"
 LEFT JOIN "LearningAPI_nssusercohort" nc ON nc."nss_user_id" = nu."id"
 LEFT JOIN "LearningAPI_cohort" c ON c."id" = nc."cohort_id"
 LEFT JOIN "LearningAPI_studentnote" sn ON sn."student_id" = nu."id"
+LEFT JOIN "LearningAPI_studenttag" stg ON stg."student_id" = nu."id"
 LEFT JOIN "socialaccount_socialaccount" social ON social.user_id = nu.id
 LEFT JOIN "LearningAPI_capstone" sc ON sc.student_id = nu."id"
 LEFT JOIN "LearningAPI_studentproject" sp
