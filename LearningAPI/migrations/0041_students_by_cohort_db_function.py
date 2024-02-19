@@ -109,7 +109,7 @@ class Migration(migrations.Migration):
             LEFT JOIN "LearningAPI_studentnote" sn ON sn."student_id" = nu."id"
             LEFT JOIN "LearningAPI_studenttag" stg ON stg."student_id" = nu."id"
             LEFT JOIN "LearningAPI_tag" tag ON stg.tag_id = tag.id
-            LEFT JOIN "socialaccount_socialaccount" social ON social.user_id = nu.id
+            LEFT JOIN "socialaccount_socialaccount" social ON social.user_id = nu.user_id
             LEFT JOIN "LearningAPI_capstone" sc ON sc.student_id = nu."id"
             LEFT JOIN "LearningAPI_studentproject" sp
                 ON sp."student_id" = nu."id"
