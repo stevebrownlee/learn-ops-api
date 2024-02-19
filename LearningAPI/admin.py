@@ -119,11 +119,13 @@ class LearningWeightAdmin(admin.ModelAdmin):
 class LearningRecordAdmin(admin.ModelAdmin):
     """Learning records"""
     list_display = ('student', 'weight',)
+    search_fields = ["student__user__last_name"]
 
 @admin.register(LearningRecordEntry)
 class LearningRecordEntryAdmin(admin.ModelAdmin):
     """Learning record entries"""
     list_display = ('record', 'instructor', 'note',)
+    search_fields = ["record__student__user__last_name"]
 
 @admin.register(NssUser)
 class NssUserAdmin(admin.ModelAdmin):

@@ -116,7 +116,16 @@ class CourseViewSet(ViewSet):
         from django.db import connection
 
         with connection.cursor() as cursor:
-            cursor.execute("SELECT * FROM get_project_average_start_delay(%s)", [pk])
+            cursor.execute("""
+                SELECT
+                    BookName,
+                    BookIndex,
+                    ProjectName,
+                    ProjectIndex,
+                    AverageStartDelay
+                FROM
+                    get_project_average_start_delay(%s)
+            """, [pk])
             columns = [col[0] for col in cursor.description]
             results = [
                 dict(zip(columns, row))

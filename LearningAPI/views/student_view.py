@@ -1,9 +1,9 @@
 """Student view module"""
 import os
+import json
 import logging
-
 import requests
-from django.db.models import Q
+from django.db import connection
 from django.http import HttpResponseServerError
 from django.utils.decorators import method_decorator
 from rest_framework import serializers, status
@@ -14,7 +14,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from LearningAPI.decorators import is_instructor
 from LearningAPI.models import Tag
-from LearningAPI.models.coursework import StudentProject, Project
+from LearningAPI.models.coursework import StudentProject, Project, Capstone
 from LearningAPI.models.people import (StudentNote, NssUser, StudentAssessment,
                                        OneOnOneNote, StudentPersonality, Assessment,
                                        StudentAssessmentStatus, StudentTag)
@@ -124,28 +124,56 @@ class StudentViewSet(ModelViewSet):
             Response -- JSON serialized array
         """
         cohort = self.request.query_params.get('cohort', None)
-        search_terms = self.request.query_params.get('q', None)
 
-        students = NssUser.objects.filter(user__is_active=True, user__is_staff=False)
-        serializer = SingleStudent(students, many=True)
+        if cohort is None:
+            return Response({
+                'message': 'Student lists can only be requested by cohort'
+            }, status=status.HTTP_400_BAD_REQUEST)
 
-        if search_terms is not None:
-            for letter in list(search_terms):
-                students = students.filter(
-                    Q(user__first_name__icontains=letter)
-                    | Q(user__last_name__icontains=letter)
-                )
+        else:
+            with connection.cursor() as cursor:
+                cursor.execute("""
+                    SELECT
+                        user_id AS id,
+                        github_handle,
+                        extra_data,
+                        student_name AS name,
+                        current_cohort AS cohort_name,
+                        current_cohort_id AS cohort_id,
+                        assessment_status_id,
+                        current_project_id AS project_id,
+                        current_project_index AS project_index,
+                        current_project_name AS project_name,
+                        current_book_id AS book_id,
+                        current_book_index AS book_index,
+                        current_book_name AS book_name,
+                        score,
+                        student_notes,
+                        capstone_proposals,
+                        project_duration
+                    FROM
+                        get_cohort_student_data(%s)
+                """, [cohort])
+                columns = [col[0] for col in cursor.description]
+                results = cursor.fetchall()
 
-            serializer = SingleStudent(students, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+                students = []
+                for row in results:
+                    student = dict(zip(columns, row))
+                    student['current_cohort'] = {
+                        'id': student['cohort_id'],
+                        'name': student['cohort_name']
+                    }
+                    student['avatar'] = json.loads(student['extra_data'])["avatar_url"]
+                    student['notes'] = json.loads(student['student_notes'])
+                    student['proposals'] = json.loads(student['capstone_proposals'])
+                    students.append(student)
 
-        if cohort is not None:
-            students = students.filter(assigned_cohorts__cohort__id=cohort)
-            serializer = MicroStudents(students, many=True)
-
-        page = self.paginate_queryset(serializer.data)
-        paginated_response = self.get_paginated_response(page)
-        return paginated_response
+                serializer = CohortStudentSerializer(data=students, many=True)
+                if serializer.is_valid():
+                    return Response(serializer.data, status=status.HTTP_200_OK)
+                else:
+                    return Response({'message': 'Error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     @method_decorator(is_instructor())
     @action(methods=['post', 'put'], detail=True)
@@ -345,6 +373,15 @@ class InstructorNoteSerializer(serializers.ModelSerializer):
         fields = ['id', 'note', 'created_on', 'author']
 
 
+class CoreSkillRecordSerializer(serializers.ModelSerializer):
+    """Serializer for Core Skill Record"""
+
+    class Meta:
+        model = CoreSkillRecord
+        fields = ('id', 'skill', 'level', )
+        depth = 1
+
+
 class LearningRecordEntrySerializer(serializers.ModelSerializer):
     """JSON serializer"""
     instructor = serializers.SerializerMethodField()
@@ -392,6 +429,30 @@ class PersonalitySerializer(serializers.ModelSerializer):
         )
 
 
+class CohortStudentSerializer(serializers.Serializer):
+    """JSON serializer"""
+    id = serializers.IntegerField()
+    github_handle = serializers.CharField(max_length=100)
+    name = serializers.CharField(max_length=100)
+    current_cohort = serializers.DictField()
+    avatar = serializers.CharField()
+    assessment_status_id = serializers.IntegerField()
+    project_id = serializers.IntegerField()
+    project_duration = serializers.IntegerField()
+    project_index = serializers.IntegerField()
+    project_name = serializers.CharField(max_length=100)
+    book_id = serializers.IntegerField()
+    book_index = serializers.IntegerField()
+    book_name = serializers.CharField(max_length=100)
+    score = serializers.IntegerField()
+    notes = serializers.ListField()
+    proposals = serializers.ListField()
+
+    def get_avatar(self, obj):
+        github = obj.user.socialaccount_set.get(user=obj['id'])
+        return github.extra_data["avatar_url"]
+
+
 class StudentSerializer(serializers.ModelSerializer):
     """JSON serializer"""
     feedback = StudentNoteSerializer(many=True)
@@ -399,7 +460,21 @@ class StudentSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
     email = serializers.SerializerMethodField()
     records = serializers.SerializerMethodField()
+    project = serializers.SerializerMethodField()
     core_skill_records = serializers.SerializerMethodField()
+
+    def get_project(self, obj):
+        project = StudentProject.objects.filter(student=obj).last()
+        if project is not None:
+            return {
+                "id": project.project.id,
+                "name": project.project.name
+            }
+        else:
+            return {
+                "id": 0,
+                "name": "Unassigned"
+            }
 
     def get_records(self, obj):
         records = LearningRecord.objects.filter(
@@ -411,7 +486,7 @@ class StudentSerializer(serializers.ModelSerializer):
         return CoreSkillRecordSerializer(records, many=True).data
 
     def get_name(self, obj):
-        return f'{obj.user.first_name} {obj.user.last_name}'
+        return obj.full_name
 
     def get_email(self, obj):
         return obj.user.email
@@ -419,87 +494,7 @@ class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = NssUser
         fields = (
-            'id', 'name', 'email', 'github_handle', 'score', 'core_skill_records',
-            'feedback', 'records', 'notes', 'capstones', 'current_cohort'
+            'id', 'name', 'project', 'email', 'github_handle', 'score',
+            'core_skill_records', 'feedback', 'records', 'notes', 'capstones',
+            'current_cohort'
         )
-
-
-class StudentTagSerializer(serializers.ModelSerializer):
-    """JSON serializer"""
-    class Meta:
-        model = StudentTag
-        fields = ('id', 'tag',)
-        depth = 1
-
-
-class CoreSkillRecordSerializer(serializers.ModelSerializer):
-    """Serializer for Core Skill Record"""
-
-    class Meta:
-        model = CoreSkillRecord
-        fields = ('id', 'skill', 'level', )
-        depth = 1
-
-class StudentNotesSerializer(serializers.ModelSerializer):
-    """Serializer for Core Skill Record"""
-
-    class Meta:
-        model = StudentNote
-        fields = ('id', 'note', 'created_on', 'author')
-
-
-class MicroStudents(serializers.ModelSerializer):
-    """JSON serializer"""
-    tags = StudentTagSerializer(many=True)
-    notes = StudentNotesSerializer(many=True)
-    avatar = serializers.SerializerMethodField()
-
-    def get_avatar(self, obj):
-        github = obj.user.socialaccount_set.get(user=obj.user)
-        return github.extra_data["avatar_url"]
-
-
-    class Meta:
-        model = NssUser
-        fields = ('id', 'name', 'score', 'tags',
-                  'book', 'assessment_status', 'proposals',
-                  'github_handle', 'current_cohort',
-                  'assessment_overview', 'notes', 'avatar',
-                  )
-
-
-class SingleStudent(serializers.ModelSerializer):
-    """JSON serializer"""
-    feedback = StudentNoteSerializer(many=True)
-    name = serializers.SerializerMethodField()
-    email = serializers.SerializerMethodField()
-    github = serializers.SerializerMethodField()
-    repos = serializers.SerializerMethodField()
-    staff = serializers.SerializerMethodField()
-    date_joined = serializers.SerializerMethodField()
-
-    def get_date_joined(self, obj):
-        return obj.user.date_joined
-
-    def get_staff(self, obj):
-        return False
-
-    def get_github(self, obj):
-        github = obj.user.socialaccount_set.get(user=obj.user)
-        return github.extra_data["login"]
-
-    def get_repos(self, obj):
-        github = obj.user.socialaccount_set.get(user=obj.user)
-        return github.extra_data["repos_url"]
-
-    def get_name(self, obj):
-        return f'{obj.user.first_name} {obj.user.last_name}'
-
-    def get_email(self, obj):
-        return obj.user.email
-
-    class Meta:
-        model = NssUser
-        fields = ('id', 'name', 'email', 'github', 'staff', 'slack_handle',
-                  'cohorts', 'feedback', 'repos', 'score', 'date_joined',
-                  'current_cohort', )
