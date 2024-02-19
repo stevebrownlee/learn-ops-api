@@ -94,7 +94,7 @@ class Migration(migrations.Migration):
             JOIN "auth_user" au ON au."id" = nu."user_id"
             LEFT JOIN "LearningAPI_nssusercohort" nc ON nc."nss_user_id" = nu."id"
             LEFT JOIN "LearningAPI_cohort" c ON c."id" = nc."cohort_id"
-            JOIN "LearningAPI_studentnote" sn ON sn."student_id" = nu."id"
+            LEFT JOIN "LearningAPI_studentnote" sn ON sn."student_id" = nu."id"
             LEFT JOIN "socialaccount_socialaccount" social ON social.user_id = nu.id
             LEFT JOIN "LearningAPI_capstone" sc ON sc.student_id = nu."id"
             LEFT JOIN "LearningAPI_studentproject" sp

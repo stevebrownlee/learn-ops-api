@@ -1,12 +1,38 @@
-select *
-from pg_catalog.pg_tables;
+
+-- View all tables
+select * from pg_catalog.pg_tables;
+
+
+-- Drop all tables
+DO $$ DECLARE
+    r RECORD;
+BEGIN
+    FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = current_schema()) LOOP
+        EXECUTE 'DROP TABLE IF EXISTS ' || quote_ident(r.tablename) || ' CASCADE';
+    END LOOP;
+END $$;
+DROP FUNCTION IF EXISTS get_cohort_student_data(INT);
+DROP FUNCTION IF EXISTS get_student_details(INT);
+DROP FUNCTION IF EXISTS get_project_average_start_delay(INT);
+ALTER TABLE auth_user ALTER COLUMN last_login DROP NOT NULL;
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 
 
 DROP FUNCTION IF EXISTS get_cohort_student_data(INT);
-select * from get_cohort_student_data(11);
+select * from get_cohort_student_data(29);
 
 
 
@@ -93,7 +119,7 @@ FROM "LearningAPI_nssuser" nu
 JOIN "auth_user" au ON au."id" = nu."user_id"
 LEFT JOIN "LearningAPI_nssusercohort" nc ON nc."nss_user_id" = nu."id"
 LEFT JOIN "LearningAPI_cohort" c ON c."id" = nc."cohort_id"
-JOIN "LearningAPI_studentnote" sn ON sn."student_id" = nu."id"
+LEFT JOIN "LearningAPI_studentnote" sn ON sn."student_id" = nu."id"
 LEFT JOIN "socialaccount_socialaccount" social ON social.user_id = nu.id
 LEFT JOIN "LearningAPI_capstone" sc ON sc.student_id = nu."id"
 LEFT JOIN "LearningAPI_studentproject" sp
@@ -219,13 +245,11 @@ SELECT
     EXTRACT(YEAR FROM AGE(NOW(), sp.date_created)) * 365 +
         EXTRACT(MONTH FROM AGE(NOW(), sp.date_created)) * 30 +
         EXTRACT(DAY FROM AGE(NOW(), sp.date_created))::double precision AS project_duration
-
-
 FROM "LearningAPI_nssuser" nu
 JOIN "auth_user" au ON au."id" = nu."user_id"
 LEFT JOIN "LearningAPI_nssusercohort" nc ON nc."nss_user_id" = nu."id"
 LEFT JOIN "LearningAPI_cohort" c ON c."id" = nc."cohort_id"
-JOIN "LearningAPI_studentnote" sn ON sn."student_id" = nu."id"
+LEFT JOIN "LearningAPI_studentnote" sn ON sn."student_id" = nu."id"
 LEFT JOIN "socialaccount_socialaccount" social ON social.user_id = nu.id
 LEFT JOIN "LearningAPI_capstone" sc ON sc.student_id = nu."id"
 LEFT JOIN "LearningAPI_studentproject" sp
@@ -257,7 +281,7 @@ LEFT JOIN (
     WHERE lr."achieved" = true
     GROUP BY lr."student_id"
 ) lr ON lr."student_id" = nu."id"
-WHERE nc."cohort_id" = 11
+WHERE nc."cohort_id" = 29
 AND au.is_active = TRUE
 AND au.is_staff = FALSE
 GROUP BY nu.user_id, nu.github_handle, social.extra_data,
