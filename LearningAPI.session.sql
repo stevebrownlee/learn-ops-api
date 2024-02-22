@@ -32,7 +32,7 @@ ALTER TABLE auth_user ALTER COLUMN last_login DROP NOT NULL;
 
 
 DROP FUNCTION IF EXISTS get_cohort_student_data(INT);
-select * from get_cohort_student_data(29);
+select * from get_cohort_student_data(27);
 
 
 
@@ -121,7 +121,7 @@ SELECT
             ) tl ON tl.capstone_id = c.id
             LEFT JOIN "LearningAPI_proposalstatus" ps ON ps."id" = tl.status_id
             LEFT JOIN "LearningAPI_course" cr ON c.course_id = cr.id
-            WHERE c."student_id" = nu."user_id"
+            WHERE c."student_id" = nu.id
         ), '[]'
     )::text AS capstone_proposals,
     EXTRACT(YEAR FROM AGE(NOW(), sp.date_created)) * 365 +
@@ -160,7 +160,6 @@ LEFT JOIN "LearningAPI_studentassessment" sa
 LEFT JOIN (
     SELECT lr."student_id", SUM(lw."weight") AS total_score
     FROM "LearningAPI_learningrecord" lr
-    JOIN "LearningAPI_learningrecordentry" lre ON lre."record_id" = lr."id"
     JOIN "LearningAPI_learningweight" lw ON lw."id" = lr."weight_id"
     WHERE lr."achieved" = true
     GROUP BY lr."student_id"
@@ -202,10 +201,10 @@ $$ LANGUAGE plpgsql;
 
 
 SELECT
-    nu.user_id::int,
+    nu.id::int AS user_id,
     nu.github_handle::text,
-    au."first_name" || ' ' || au."last_name" AS student_name,
     social.extra_data::text,
+    au."first_name" || ' ' || au."last_name" AS student_name,
     c.name::text AS current_cohort,
     c.id::int AS current_cohort_id,
     COALESCE(sa.status_id::int, 0) AS assessment_status_id,
@@ -235,7 +234,7 @@ SELECT
            )
            FROM "LearningAPI_studenttag" st
            LEFT JOIN "LearningAPI_tag" t ON t."id" = st."tag_id"
-           WHERE st."student_id" = nu."user_id"
+           WHERE st."student_id" = nu.id
         )
      , '[]')::text AS student_tags,
     COALESCE(
@@ -244,7 +243,6 @@ SELECT
                 json_build_object(
                     'id', c."id",
                     'status', ps.status,
-                    'current_status_id', ps.id,
                     'proposal_url', c."proposal_url",
                     'created_on', tl.date,
                     'course_name', cr.name
@@ -264,19 +262,19 @@ SELECT
             ) tl ON tl.capstone_id = c.id
             LEFT JOIN "LearningAPI_proposalstatus" ps ON ps."id" = tl.status_id
             LEFT JOIN "LearningAPI_course" cr ON c.course_id = cr.id
-            WHERE c."student_id" = nu."user_id"
-
+            WHERE c."student_id" = nu.id
         ), '[]'
     )::text AS capstone_proposals,
     EXTRACT(YEAR FROM AGE(NOW(), sp.date_created)) * 365 +
         EXTRACT(MONTH FROM AGE(NOW(), sp.date_created)) * 30 +
-        EXTRACT(DAY FROM AGE(NOW(), sp.date_created))::double precision AS project_duration
+        EXTRACT(DAY FROM AGE(NOW(), sp.date_created))::double precision  AS project_duration
 FROM "LearningAPI_nssuser" nu
 JOIN "auth_user" au ON au."id" = nu."user_id"
 LEFT JOIN "LearningAPI_nssusercohort" nc ON nc."nss_user_id" = nu."id"
 LEFT JOIN "LearningAPI_cohort" c ON c."id" = nc."cohort_id"
 LEFT JOIN "LearningAPI_studentnote" sn ON sn."student_id" = nu."id"
 LEFT JOIN "LearningAPI_studenttag" stg ON stg."student_id" = nu."id"
+LEFT JOIN "LearningAPI_tag" tag ON stg.tag_id = tag.id
 LEFT JOIN "socialaccount_socialaccount" social ON social.user_id = nu.user_id
 LEFT JOIN "LearningAPI_capstone" sc ON sc.student_id = nu."id"
 LEFT JOIN "LearningAPI_studentproject" sp
@@ -303,19 +301,35 @@ LEFT JOIN "LearningAPI_studentassessment" sa
 LEFT JOIN (
     SELECT lr."student_id", SUM(lw."weight") AS total_score
     FROM "LearningAPI_learningrecord" lr
-    JOIN "LearningAPI_learningrecordentry" lre ON lre."record_id" = lr."id"
     JOIN "LearningAPI_learningweight" lw ON lw."id" = lr."weight_id"
     WHERE lr."achieved" = true
     GROUP BY lr."student_id"
 ) lr ON lr."student_id" = nu."id"
-WHERE nc."cohort_id" = 29
+WHERE nc."cohort_id" = 27
 AND au.is_active = TRUE
 AND au.is_staff = FALSE
-GROUP BY nu.user_id, nu.github_handle, social.extra_data,
-    student_name, current_cohort, current_cohort_id,
-    assessment_status_id, current_project_id, current_project_index,
-    current_project_name, project_duration, current_book_id,
-    current_book_index, current_book_name, score
+GROUP BY nu.id, nu.github_handle, social.extra_data,
+    student_name, current_cohort, current_cohort_id, assessment_status_id,
+    current_project_id, current_project_index, current_project_name,
+    project_duration, current_book_id, current_book_index, current_book_name,
+    score
 ORDER BY b.index ASC,
     p.index ASC;
 
+
+
+
+select * from "LearningAPI_learningrecordentry";
+
+select
+    sum(lw.weight) as score,
+    au."first_name" || ' ' || au."last_name" AS student_name
+from "LearningAPI_learningrecord" lr
+join "LearningAPI_learningweight" lw on lr.weight_id = lw.id
+join "LearningAPI_nssuser" nu on nu.id = lr.student_id
+join "auth_user" au on au.id = nu.user_id
+join "LearningAPI_nssusercohort" uc on uc.nss_user_id = nu.id
+join "LearningAPI_cohort" c on uc.cohort_id = c.id
+where c.id = 29
+group by student_name
+;

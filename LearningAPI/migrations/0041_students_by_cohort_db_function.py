@@ -135,7 +135,6 @@ class Migration(migrations.Migration):
             LEFT JOIN (
                 SELECT lr."student_id", SUM(lw."weight") AS total_score
                 FROM "LearningAPI_learningrecord" lr
-                JOIN "LearningAPI_learningrecordentry" lre ON lre."record_id" = lr."id"
                 JOIN "LearningAPI_learningweight" lw ON lw."id" = lr."weight_id"
                 WHERE lr."achieved" = true
                 GROUP BY lr."student_id"
