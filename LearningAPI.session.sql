@@ -202,9 +202,10 @@ $$ LANGUAGE plpgsql;
 
 SELECT
     nu.id::int AS user_id,
+    au."first_name" || ' ' || au."last_name" AS student_name,
+    COALESCE(lr.total_score, 0)::int AS score,
     nu.github_handle::text,
     social.extra_data::text,
-    au."first_name" || ' ' || au."last_name" AS student_name,
     c.name::text AS current_cohort,
     c.id::int AS current_cohort_id,
     COALESCE(sa.status_id::int, 0) AS assessment_status_id,
@@ -214,7 +215,6 @@ SELECT
     b.id::int AS current_book_id,
     b.index::int AS current_book_index,
     b.name::text AS current_book_name,
-    COALESCE(lr.total_score, 0)::int AS score,
     COALESCE(
         json_agg(
             json_build_object(
@@ -305,7 +305,7 @@ LEFT JOIN (
     WHERE lr."achieved" = true
     GROUP BY lr."student_id"
 ) lr ON lr."student_id" = nu."id"
-WHERE nc."cohort_id" = 27
+WHERE nc."cohort_id" = 28
 AND au.is_active = TRUE
 AND au.is_staff = FALSE
 GROUP BY nu.id, nu.github_handle, social.extra_data,
@@ -318,8 +318,9 @@ ORDER BY b.index ASC,
 
 
 
-
-select * from "LearningAPI_learningrecordentry";
+SELECT *
+    FROM "LearningAPI_learningrecordentry" lr
+order by id desc;
 
 select
     sum(lw.weight) as score,

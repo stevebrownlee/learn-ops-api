@@ -13,3 +13,6 @@ class LearningRecord(models.Model):
 
     def __str__(self) -> str:
         return f'{self.student.user.first_name} {self.student.user.last_name} {self.weight.weight}' # type: ignore
+
+    class Meta:
+        unique_together = (('student', 'weight',),)
