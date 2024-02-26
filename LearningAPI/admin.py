@@ -1,3 +1,4 @@
+from django import forms
 from django.contrib import admin
 
 # Register your models here.
@@ -51,9 +52,23 @@ class BookAdmin(admin.ModelAdmin):
     """For assigning students to cohorts"""
     list_display = ('name', 'course',)
 
+
+class StudentProjectForm(forms.ModelForm):
+    class Meta:
+        model = StudentProject
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super(StudentProjectForm, self).__init__(*args, **kwargs)
+        # Assuming Project model has a relation to Book and then to Course
+        # Adjust 'project__book__course__active=True' to match your model's relationships
+        self.fields['project'].queryset = Project.objects.filter(book__course__active=True)
+
+
 @admin.register(StudentProject)
 class StudentProjectAdmin(admin.ModelAdmin):
     """For assigning students to cohorts"""
+    form = StudentProjectForm
     list_display = ('student', 'project',)
     search_fields = ["student__user__last_name"]
     search_help_text = "Search by last name"
