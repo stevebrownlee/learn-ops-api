@@ -4,6 +4,7 @@ import json
 import logging
 import requests
 from django.db import connection
+from django.db import IntegrityError
 from django.http import HttpResponseServerError
 from django.utils.decorators import method_decorator
 from rest_framework import serializers, status
@@ -215,11 +216,14 @@ class StudentViewSet(ModelViewSet):
                         # 2. Assign all objectives/weights to the student as complete
                         assessment_objectives = latest_assessment.assessment.objectives.all()
                         for objective in assessment_objectives:
-                            LearningRecord.objects.create(
-                                student=student,
-                                weight=objective,
-                                achieved=True,
-                            )
+                            try:
+                                LearningRecord.objects.create(
+                                    student=student,
+                                    weight=objective,
+                                    achieved=True,
+                                )
+                            except IntegrityError:
+                                pass
 
                 except Exception:
                     return Response({'message': 'Updated, but no Slack message sent'}, status=status.HTTP_204_NO_CONTENT)
