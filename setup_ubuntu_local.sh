@@ -7,21 +7,12 @@ set -eu
 # Install required software
 #####
 sudo apt-get update -y
-sudo add-apt-repository universe -y
-sudo add-apt-repository "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -sc)-pgdg main" -y
-wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-sudo apt-get update -y
 
-packages=("gcc" "git" "curl" "nginx" "certbot" "python3-django" "postgresql" "postgresql-contrib" "python3-pip" "python3.10-venv")
-
-for package in "${packages[@]}"; do
-  if ! dpkg-query -W -f='${Status}\n' "$package" | grep -q "ok installed"; then
-    echo "Package $package is not installed. Installing..."
-    sudo apt-get install -y "$package"
-  else
-    echo "Package $package is already installed. Skipping..."
-  fi
-done
+# Check if PostgreSQL is installed
+if ! command -v psql &>/dev/null; then
+    echo "PostgreSQL is not installed"
+    sudo apt install postgresql postgresql-contrib -y
+fi
 
 echo "Checking if systemd is enabled"
 SYSTEMD_PID=$(pidof systemd)
@@ -32,6 +23,7 @@ if [ "${SYSTEMD_PID}" == "" ]; then
 else
     sudo service postgresql start >> /dev/null
 fi
+
 
 #####
 # Get Postgres version
@@ -73,15 +65,58 @@ psql -c "GRANT ALL PRIVILEGES ON SCHEMA public TO $LEARN_OPS_USER;"
 COMMANDS
 
 
-
 #####
-# Create directory to store static files and take ownership
+# Install Pyenv and required Python version
 #####
-API_HOME="${pwd}"
-echo "Creating static file directory"
-sudo mkdir -p /var/www/learning.nss.team
-sudo chown "$LEARN_OPS_USER":www-data /var/www/learning.nss.team
+if command -v pyenv &>/dev/null; then
+    echo "pyenv is installed."
+else
+    # Install dependency packages that are necessary to install pyenv on WSL Ubuntu environment
+    sudo apt install -y curl git build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev libffi-dev liblzma-dev python3-openssl
 
+    # Install pyenv on WSL Ubuntu environment
+    curl https://pyenv.run | bash
+
+    # Add necessary config to shell profile (.zshrc)
+    echo 'export PATH="$HOME/.pyenv/bin:$PATH"
+    eval "$(pyenv init --path)"
+    eval "$(pyenv virtualenv-init -)"' >>$HOME/.zshrc
+
+    # Update path of current subshell execution
+    export PATH="$HOME/.pyenv/bin:$PATH"
+    eval "$(pyenv init --path)"
+    eval "$(pyenv virtualenv-init -)"
+fi
+
+# Check if Python 3.9.1 is installed
+if pyenv versions --bare | grep -q '^3.9.1$'; then
+    echo "Python 3.9.1 is already installed."
+else
+    echo "Python 3.9.1 is not installed. Installing now..."
+    pyenv install 3.9.1
+fi
+
+# Get the global Python version set in pyenv
+global_version=$(pyenv global)
+
+# Check that global version of python is 3.9.1
+if [[ $global_version == '3.9.1' ]]; then
+    echo "Python 3.9.1 is the global version."
+else
+    echo "Python 3.9.1 is not the global version. The global version is $global_version."
+    echo "Setting global version of python to 3.9.1"
+    pyenv global 3.9.1
+fi
+
+
+# Check if Pipenv is installed
+if ! command -v pipenv &>/dev/null; then
+    echo "Pipenv not found. Installing Pipenv..."
+    pip3 install pipenv
+    echo "Pipenv installation complete."
+else
+    echo "Pipenv is already installed."
+fi
 
 
 #####
@@ -149,23 +184,16 @@ EOF
 #####
 # Install project requirements and run migrations
 #####
-export VIRTUAL_ENV="$(pwd)/.venv"
-echo "VIRTUAL_ENV=$VIRTUAL_ENV" >>.env
-echo "PIPENV_VENV_IN_PROJECT=1" >>.env
+pipenv install
+pipenv run migrate
+
+# Load data from backup
+pipenv run bash -c "python3 manage.py flush --no-input \
+    && python3 manage.py loaddata socialaccount \
+    && python3 manage.py loaddata complete_backup \
+    && python3 manage.py loaddata superuser"
+
+rm ./LearningAPI/fixtures/superuser.json -y
+rm ./LearningAPI/fixtures/socialaccount.json -y
+
 echo "LEARNING_GITHUB_CALLBACK=http://localhost:3000/auth/github" >>.env
-
-pip3 install --upgrade pip setuptools
-python3 -m venv $VIRTUAL_ENV
-source $VIRTUAL_ENV/bin/activate
-pip3 install django
-pip3 install wheel
-pip3 install -r requirements.txt
-
-python3 manage.py migrate
-python3 manage.py loaddata socialaccount
-python3 manage.py loaddata complete_backup
-python3 manage.py loaddata superuser
-rm $API_HOME/LearningAPI/fixtures/superuser.json
-python3 manage.py collectstatic --noinput
-
-
