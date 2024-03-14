@@ -16,6 +16,16 @@ Do not do step 5... only steps 1-4.
 
 Once you are done, you will be working in an Ubuntu terminal during all setup and developing on the API.
 
+### If WSL Already Exists
+
+If you already have Postgres installed in Ubuntu, then you need to uninstall it and kill the existing cluser.
+
+```sh
+sudo apt remove postgresql
+sudo pg_ctlcluster {version} main stop
+sudo pg_dropcluster {version} main --stop
+```
+
 ## Project Setup
 
 1. Fork this repo to your own Github account.
