@@ -111,7 +111,7 @@ class ProposalStatusAdmin(admin.ModelAdmin):
 @admin.register(Cohort)
 class CohortAdmin(admin.ModelAdmin):
     """For managing cohort information"""
-    list_display = ('name', 'slack_channel', 'start_date', 'end_date',)
+    list_display = ('name', 'start_date', 'end_date', 'active')
 
 @admin.register(Assessment)
 class AssessmentAdmin(admin.ModelAdmin):

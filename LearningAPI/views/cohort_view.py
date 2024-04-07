@@ -15,7 +15,7 @@ class CohortPermission(permissions.BasePermission):
     """Cohort permissions"""
 
     def has_permission(self, request, view):
-        if view.action in ['create', 'update', 'destroy', 'assign', 'migrate']:
+        if view.action in ['create', 'update', 'destroy', 'assign', 'migrate', 'active']:
             return request.auth.user.is_staff
         elif view.action in ['retrieve', 'list']:
             return True
@@ -156,8 +156,7 @@ class CohortViewSet(ViewSet):
             active = self.request.query_params.get('active', None)
 
             if active == 'true':
-                today = datetime.now().date()
-                cohorts = cohorts.filter(start_date__lte=today, end_date__gte=today)
+                cohorts = cohorts.filter(active=True)
 
             if search_terms is not None:
                 for letter in list(search_terms):
@@ -171,7 +170,7 @@ class CohortViewSet(ViewSet):
                     members__nss_user__user__is_staff=False)),
                 is_instructor=Count('members', filter=Q(
                     members__nss_user__user=request.auth.user)),
-            ).all().order_by('-pk')
+            ).all().order_by('pk')
 
             if limit is not None:
                 cohorts = cohorts.order_by("-start_date")[0:int(limit)]
@@ -181,6 +180,15 @@ class CohortViewSet(ViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as ex:
             return HttpResponseServerError(ex)
+
+    @action(methods=['put', ], detail=True)
+    def active(self, request, pk):
+        if request.method == "PUT":
+            cohort = Cohort.objects.get(pk=pk)
+            cohort.active = request.data.get('active', False)
+            cohort.save()
+
+            return Response(None, status=status.HTTP_204_NO_CONTENT)
 
     @action(methods=['put', ], detail=True)
     def migrate(self, request, pk):
@@ -379,5 +387,5 @@ class CohortSerializer(serializers.ModelSerializer):
             'id', 'name', 'slack_channel', 'start_date', 'end_date',
             'coaches', 'break_start_date', 'break_end_date', 'students',
             'is_instructor', 'courses', 'info', 'student_organization_url',
-            'github_classroom_url', 'attendance_sheet_url',
+            'github_classroom_url', 'attendance_sheet_url', 'active'
         )

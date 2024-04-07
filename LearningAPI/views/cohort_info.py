@@ -96,7 +96,7 @@ class CohortSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cohort
-        fields = ( 'id', 'name' )
+        fields = ( 'id', 'name', 'active' )
 
 
 class CohortInfoSerializer(serializers.ModelSerializer):
