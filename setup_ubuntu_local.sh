@@ -2,11 +2,11 @@
 
 set +o histexpand
 set -eu
-
+source .env
 #####
 # Install required software
 #####
-sudo apt-get update -y
+# sudo apt-get update -y
 
 # Check if PostgreSQL is installed
 if ! command -v psql &>/dev/null; then
@@ -14,13 +14,12 @@ if ! command -v psql &>/dev/null; then
     sudo apt install postgresql postgresql-contrib -y
 fi
 
-echo "Checking if systemd is enabled"
-SYSTEMD_PID=$(pidof systemd)
-
 echo "Restarting Postgresql"
-if [ "${SYSTEMD_PID}" == "" ]; then
+if [ -d /run/systemd/system ]; then
+    echo "Systemd is enabled"
     sudo systemctl start postgresql >> /dev/null
 else
+    echo "Systemd is not enabled"
     sudo service postgresql start >> /dev/null
 fi
 
@@ -109,14 +108,7 @@ else
 fi
 
 
-# Check if Pipenv is installed
-if ! command -v pipenv &>/dev/null; then
-    echo "Pipenv not found. Installing Pipenv..."
-    pip3 install pipenv
-    echo "Pipenv installation complete."
-else
-    echo "Pipenv is already installed."
-fi
+pip3 install pipenv
 
 
 #####
@@ -125,7 +117,7 @@ fi
 export DJANGO_SETTINGS_MODULE="LearningPlatform.settings"
 echo "Creating socialaccount fixture"
 
-sudo tee $API_HOME/LearningAPI/fixtures/socialaccount.json <<EOF
+sudo tee ./LearningAPI/fixtures/socialaccount.json <<EOF
 [
     {
        "model": "sites.site",
@@ -153,9 +145,9 @@ sudo tee $API_HOME/LearningAPI/fixtures/socialaccount.json <<EOF
 EOF
 
 echo "Generating Django password"
-DJANGO_GENERATED_PASSWORD=$(python3 ./djangopass.py "$SUPERPASS" >&1)
+DJANGO_GENERATED_PASSWORD=$(python3 ./djangopass.py "$LEARN_OPS_SUPERUSER_PASSWORD" >&1)
 
-sudo tee $API_HOME/LearningAPI/fixtures/superuser.json <<EOF
+sudo tee ./LearningAPI/fixtures/superuser.json <<EOF
 [
     {
         "model": "auth.user",
@@ -164,7 +156,7 @@ sudo tee $API_HOME/LearningAPI/fixtures/superuser.json <<EOF
             "password": "$DJANGO_GENERATED_PASSWORD",
             "last_login": null,
             "is_superuser": true,
-            "username": "$SUPERUSER",
+            "username": "$LEARN_OPS_SUPERUSER_NAME",
             "first_name": "Admina",
             "last_name": "Straytor",
             "email": "me@me.com",
@@ -184,6 +176,7 @@ EOF
 #####
 # Install project requirements and run migrations
 #####
+pipenv --python 3.9.1
 pipenv install
 pipenv run migrate
 
