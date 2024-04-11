@@ -73,6 +73,8 @@ function generateSuperuserFixture() {
 }
 
 function initializeProject() {
+    pipenv --python 3.9.1
+
     # Install project requirements
     pipenv install
 

@@ -16,9 +16,9 @@ Do not do step 5... only steps 1-4.
 
 Once you are done, you will be working in an Ubuntu terminal during all setup and developing on the API.
 
-### If WSL Already Exists
+### If WSL and Postgres Already Exists
 
-If you already have Postgres installed in Ubuntu, then you need to uninstall it and kill the existing cluser.
+If you already have Postgres installed in Ubuntu, then you need to uninstall it and kill the existing cluster.
 
 ```sh
 sudo apt remove postgresql

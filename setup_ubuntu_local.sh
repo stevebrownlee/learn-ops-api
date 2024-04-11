@@ -14,6 +14,8 @@ if ! command -v psql &>/dev/null; then
     sudo apt install postgresql postgresql-contrib -y
 fi
 
+
+# Check if systemd is running by examining the presence of systemd's runtime directory
 echo "Restarting Postgresql"
 if [ -d /run/systemd/system ]; then
     echo "Systemd is enabled"
@@ -22,7 +24,6 @@ else
     echo "Systemd is not enabled"
     sudo service postgresql start >> /dev/null
 fi
-
 
 #####
 # Get Postgres version
