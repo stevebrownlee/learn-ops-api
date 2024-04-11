@@ -6,7 +6,7 @@ source .env
 #####
 # Install required software
 #####
-# sudo apt-get update -y
+sudo apt-get update -y
 
 # Check if PostgreSQL is installed
 if ! command -v psql &>/dev/null; then
