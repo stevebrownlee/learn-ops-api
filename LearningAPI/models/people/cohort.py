@@ -9,6 +9,7 @@ class Cohort(models.Model):
     end_date = models.DateField(auto_now=False, auto_now_add=False)
     break_start_date = models.DateField(auto_now=False, auto_now_add=False)
     break_end_date = models.DateField(auto_now=False, auto_now_add=False)
+    active = models.BooleanField(default=False)
 
     def __repr__(self) -> str:
         return f'{self.name}'

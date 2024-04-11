@@ -1,3 +1,4 @@
+from django import forms
 from django.contrib import admin
 
 # Register your models here.
@@ -5,7 +6,8 @@ from .models.people import (
     NssUser, Assessment,
     Cohort, NssUserCohort,
     StudentAssessmentStatus,
-    StudentAssessment, CohortInfo
+    StudentAssessment, CohortInfo,
+    StudentTag
 )
 from .models.coursework import (
     Course, ProposalStatus, Capstone, Book,
@@ -50,9 +52,23 @@ class BookAdmin(admin.ModelAdmin):
     """For assigning students to cohorts"""
     list_display = ('name', 'course',)
 
+
+class StudentProjectForm(forms.ModelForm):
+    class Meta:
+        model = StudentProject
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super(StudentProjectForm, self).__init__(*args, **kwargs)
+        # Assuming Project model has a relation to Book and then to Course
+        # Adjust 'project__book__course__active=True' to match your model's relationships
+        self.fields['project'].queryset = Project.objects.filter(book__course__active=True)
+
+
 @admin.register(StudentProject)
 class StudentProjectAdmin(admin.ModelAdmin):
     """For assigning students to cohorts"""
+    form = StudentProjectForm
     list_display = ('student', 'project',)
     search_fields = ["student__user__last_name"]
     search_help_text = "Search by last name"
@@ -72,6 +88,13 @@ class NssUserCohortAdmin(admin.ModelAdmin):
     search_fields = ["nss_user__user__last_name"]
     search_help_text = "Search by last name"
 
+@admin.register(StudentTag)
+class StudentTagAdmin(admin.ModelAdmin):
+    """For assigning students to cohorts"""
+    list_display = ('student', 'tag',)
+    search_fields = ["student__user__last_name"]
+    search_help_text = "Search by last name"
+
 @admin.register(Capstone)
 class CapstoneAdmin(admin.ModelAdmin):
     """For managing capstone proposals"""
@@ -88,7 +111,7 @@ class ProposalStatusAdmin(admin.ModelAdmin):
 @admin.register(Cohort)
 class CohortAdmin(admin.ModelAdmin):
     """For managing cohort information"""
-    list_display = ('name', 'slack_channel', 'start_date', 'end_date',)
+    list_display = ('name', 'start_date', 'end_date', 'active')
 
 @admin.register(Assessment)
 class AssessmentAdmin(admin.ModelAdmin):
@@ -119,11 +142,13 @@ class LearningWeightAdmin(admin.ModelAdmin):
 class LearningRecordAdmin(admin.ModelAdmin):
     """Learning records"""
     list_display = ('student', 'weight',)
+    search_fields = ["student__user__last_name"]
 
 @admin.register(LearningRecordEntry)
 class LearningRecordEntryAdmin(admin.ModelAdmin):
     """Learning record entries"""
     list_display = ('record', 'instructor', 'note',)
+    search_fields = ["record__student__user__last_name"]
 
 @admin.register(NssUser)
 class NssUserAdmin(admin.ModelAdmin):

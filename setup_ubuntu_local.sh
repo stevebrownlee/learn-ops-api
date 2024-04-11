@@ -2,97 +2,26 @@
 
 set +o histexpand
 set -eu
-
-for i in "$@"
-do
-case $i in
-    -h=*|--hosts=*) HOSTS="${i#*=}" ;;
-    -p=*|--password=*) PASSWORD="${i#*=}" ;;
-    -s=*|--secret=*) OAUTHSECRET="${i#*=}" ;;
-    -c=*|--client=*) CLIENT="${i#*=}" ;;
-    -d=*|--django=*) DJANGOSECRET="${i#*=}" ;;
-    -k=*|--slack=*) SLACKTOKEN="${i#*=}" ;;
-    -u=*|--suser=*) SUPERUSER="${i#*=}" ;;
-    -w=*|--supass=*) SUPERPASS="${i#*=}" ;;
-    --default) DEFAULT=YES ;;
-    *) # unknown option ;;
-esac
-done
-
-
-export LEARN_OPS_CLIENT_ID="$CLIENT"
-export LEARN_OPS_SECRET_KEY="$OAUTHSECRET"
-export LEARN_OPS_DB='learnops'
-export LEARN_OPS_USER='learnops'
-export LEARN_OPS_PASSWORD="$PASSWORD"
-export LEARN_OPS_HOST='localhost'
-export LEARN_OPS_PORT=5432
-export LEARN_OPS_DJANGO_SECRET_KEY="$DJANGOSECRET"
-export LEARN_OPS_ALLOWED_HOSTS="$HOSTS"
-export SLACK_BOT_TOKEN="$SLACKTOKEN"
-
-#####
-# Create the Ubuntu user account
-#####
-USER_HOME="/home/$LEARN_OPS_USER"
-if id "$LEARN_OPS_USER" >>/dev/null 2>&1; then
-    echo "User exists"
-else
-    echo "Creating Linux user matching Postgres database"
-    sudo useradd -p "$(openssl passwd -1 "$LEARN_OPS_PASSWORD")" "$LEARN_OPS_USER"
-    sudo mkdir -p "$USER_HOME"
-    sudo usermod -d $USER_HOME $LEARN_OPS_USER
-    sudo chown -R $LEARN_OPS_USER $USER_HOME
-    sudo chsh -s /bin/bash $LEARN_OPS_USER
-fi
-
-
-#####
-# Create shell init file and reload
-#####
-sudo tee $USER_HOME/.bashrc <<EOF
-export LEARN_OPS_CLIENT_ID=$CLIENT
-export LEARN_OPS_SECRET_KEY=$OAUTHSECRET
-export LEARN_OPS_DB=learnops
-export LEARN_OPS_USER=learnops
-export LEARN_OPS_PASSWORD=$PASSWORD
-export LEARN_OPS_HOST=localhost
-export LEARN_OPS_PORT=5432
-export LEARN_OPS_DJANGO_SECRET_KEY=$LEARN_OPS_DJANGO_SECRET_KEY
-export LEARN_OPS_ALLOWED_HOSTS=$HOSTS
-export SLACK_BOT_TOKEN=$SLACKTOKEN
-export PATH=$PATH:/home/learnops/.local/bin
-EOF
-sudo su - learnops -c "bash -c 'source ~/.bashrc'"
-
-
+source .env
 #####
 # Install required software
 #####
 sudo apt-get update -y
-sudo add-apt-repository universe -y
-sudo add-apt-repository "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -sc)-pgdg main" -y
-wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-sudo apt-get update -y
 
-packages=("gcc" "git" "curl" "nginx" "certbot" "python3-django" "postgresql-12" "postgresql-contrib-12" "python3-pip" "python3.10-venv")
+# Check if PostgreSQL is installed
+if ! command -v psql &>/dev/null; then
+    echo "PostgreSQL is not installed"
+    sudo apt install postgresql postgresql-contrib -y
+fi
 
-for package in "${packages[@]}"; do
-  if ! dpkg-query -W -f='${Status}\n' "$package" | grep -q "ok installed"; then
-    echo "Package $package is not installed. Installing..."
-    sudo apt-get install -y "$package"
-  else
-    echo "Package $package is already installed. Skipping..."
-  fi
-done
 
-echo "Checking if systemd is enabled"
-SYSTEMD_PID=$(pidof systemd)
-
+# Check if systemd is running by examining the presence of systemd's runtime directory
 echo "Restarting Postgresql"
-if [ "${SYSTEMD_PID}" == "" ]; then
+if [ -d /run/systemd/system ]; then
+    echo "Systemd is enabled"
     sudo systemctl start postgresql >> /dev/null
 else
+    echo "Systemd is not enabled"
     sudo service postgresql start >> /dev/null
 fi
 
@@ -136,15 +65,51 @@ psql -c "GRANT ALL PRIVILEGES ON SCHEMA public TO $LEARN_OPS_USER;"
 COMMANDS
 
 
-
 #####
-# Create directory to store static files and take ownership
+# Install Pyenv and required Python version
 #####
-API_HOME=/mnt/learnops
-echo "Creating static file directory"
-sudo mkdir -p /var/www/learning.nss.team
-sudo chown "$LEARN_OPS_USER":www-data /var/www/learning.nss.team
+if command -v pyenv &>/dev/null; then
+    echo "pyenv is installed."
+else
+    # Install dependency packages that are necessary to install pyenv on WSL Ubuntu environment
+    sudo apt install -y curl git build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev libffi-dev liblzma-dev python3-openssl
 
+    # Install pyenv on WSL Ubuntu environment
+    curl https://pyenv.run | bash
+
+    # Add necessary config to shell profile (.zshrc)
+    echo 'export PATH="$HOME/.pyenv/bin:$PATH"
+    eval "$(pyenv init --path)"
+    eval "$(pyenv virtualenv-init -)"' >>$HOME/.zshrc
+
+    # Update path of current subshell execution
+    export PATH="$HOME/.pyenv/bin:$PATH"
+    eval "$(pyenv init --path)"
+    eval "$(pyenv virtualenv-init -)"
+fi
+
+# Check if Python 3.9.1 is installed
+if pyenv versions --bare | grep -q '^3.9.1$'; then
+    echo "Python 3.9.1 is already installed."
+else
+    echo "Python 3.9.1 is not installed. Installing now..."
+    pyenv install 3.9.1
+fi
+
+# Get the global Python version set in pyenv
+global_version=$(pyenv global)
+
+# Check that global version of python is 3.9.1
+if [[ $global_version == '3.9.1' ]]; then
+    echo "Python 3.9.1 is the global version."
+else
+    echo "Python 3.9.1 is not the global version. The global version is $global_version."
+    echo "Setting global version of python to 3.9.1"
+    pyenv global 3.9.1
+fi
+
+
+pip3 install pipenv
 
 
 #####
@@ -153,7 +118,7 @@ sudo chown "$LEARN_OPS_USER":www-data /var/www/learning.nss.team
 export DJANGO_SETTINGS_MODULE="LearningPlatform.settings"
 echo "Creating socialaccount fixture"
 
-sudo tee $API_HOME/LearningAPI/fixtures/socialaccount.json <<EOF
+sudo tee ./LearningAPI/fixtures/socialaccount.json <<EOF
 [
     {
        "model": "sites.site",
@@ -181,9 +146,9 @@ sudo tee $API_HOME/LearningAPI/fixtures/socialaccount.json <<EOF
 EOF
 
 echo "Generating Django password"
-DJANGO_GENERATED_PASSWORD=$(python3 ./djangopass.py "$SUPERPASS" >&1)
+DJANGO_GENERATED_PASSWORD=$(python3 ./djangopass.py "$LEARN_OPS_SUPERUSER_PASSWORD" >&1)
 
-sudo tee $API_HOME/LearningAPI/fixtures/superuser.json <<EOF
+sudo tee ./LearningAPI/fixtures/superuser.json <<EOF
 [
     {
         "model": "auth.user",
@@ -192,7 +157,7 @@ sudo tee $API_HOME/LearningAPI/fixtures/superuser.json <<EOF
             "password": "$DJANGO_GENERATED_PASSWORD",
             "last_login": null,
             "is_superuser": true,
-            "username": "$SUPERUSER",
+            "username": "$LEARN_OPS_SUPERUSER_NAME",
             "first_name": "Admina",
             "last_name": "Straytor",
             "email": "me@me.com",
@@ -212,94 +177,17 @@ EOF
 #####
 # Install project requirements and run migrations
 #####
-VENV_DIR="/home/learnops/venv"
-echo "Installing project requirements and migrating"
-sudo su - learnops << EOF
-source /home/learnops/.bashrc
-export PATH=$PATH:/home/learnops/.local/bin
-cd $API_HOME
+pipenv --python 3.9.1
+pipenv install
+pipenv run migrate
 
-pip3 install --upgrade pip setuptools
-python3 -m venv $VENV_DIR
-source $VENV_DIR/bin/activate
-pip3 install django
-pip3 install wheel
-pip3 install -r requirements.txt
+# Load data from backup
+pipenv run bash -c "python3 manage.py flush --no-input \
+    && python3 manage.py loaddata socialaccount \
+    && python3 manage.py loaddata complete_backup \
+    && python3 manage.py loaddata superuser"
 
-python3 manage.py migrate
-python3 manage.py loaddata socialaccount
-python3 manage.py loaddata complete_backup
-python3 manage.py loaddata superuser
-rm $API_HOME/LearningAPI/fixtures/superuser.json
-python3 manage.py collectstatic --noinput
-EOF
+rm ./LearningAPI/fixtures/superuser.json -y
+rm ./LearningAPI/fixtures/socialaccount.json -y
 
-
-#####
-# Create gunicorn service file and start service
-#####
-sudo tee /etc/systemd/system/learning.service <<EOF
-[Unit]
-Description=learnops gunicorn daemon
-After=network.target
-
-[Service]
-Environment="DEBUG=True"
-Environment="DEVELOPMENT_MODE=True"
-Environment="LEARNING_GITHUB_CALLBACK=http://api.learning.local/auth/github"
-Environment="SLACK_BOT_TOKEN=$SLACKTOKEN"
-Environment="LEARN_OPS_DB=$LEARN_OPS_USER"
-Environment="LEARN_OPS_USER=$LEARN_OPS_USER"
-Environment="LEARN_OPS_PASSWORD=$PASSWORD"
-Environment="LEARN_OPS_HOST=localhost"
-Environment="LEARN_OPS_PORT=5432"
-Environment="LEARN_OPS_CLIENT_ID=$LEARN_OPS_CLIENT_ID"
-Environment="LEARN_OPS_SECRET_KEY=$LEARN_OPS_SECRET_KEY"
-Environment="LEARN_OPS_DJANGO_SECRET_KEY=$LEARN_OPS_DJANGO_SECRET_KEY"
-Environment="LEARN_OPS_ALLOWED_HOSTS=$LEARN_OPS_ALLOWED_HOSTS"
-User=$LEARN_OPS_USER
-Group=www-data
-WorkingDirectory=$API_HOME
-ExecStart=$VENV_DIR/bin/gunicorn -w 3 --bind 127.0.0.1:8000 --log-file /mnt/learnops/logs/learning.log --access-logfile /mnt/learnops/logs/learning-access.log LearningPlatform.wsgi
-PrivateTmp=true
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-sudo systemctl enable learning
-sudo systemctl daemon-reload
-if [ "${SYSTEMD_PID}" == "" ]; then
-    sudo systemctl start learning >> /dev/null
-else
-    sudo service learning start >> /dev/null
-fi
-
-
-#####
-# Create nginx reverse proxy for API
-#####
-sudo tee /etc/nginx/sites-available/api <<EOF
-server {
-    listen 80;
-    server_name api.learning.local;
-
-    location / {
-        proxy_pass http://localhost:8000;
-        proxy_set_header Host \$host;
-        proxy_set_header X-Real-IP \$remote_addr;
-        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-        proxy_redirect off;
-    }
-
-    location /static/ {
-        autoindex off;
-        root /var/www/learning.nss.team/;
-    }
-}
-EOF
-
-if [ ! -f /etc/nginx/sites-enabled/api ]; then
-    sudo ln -s /etc/nginx/sites-available/api /etc/nginx/sites-enabled/api
-fi
-sudo systemctl restart nginx
+echo "LEARNING_GITHUB_CALLBACK=http://localhost:3000/auth/github" >>.env

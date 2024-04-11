@@ -17,6 +17,7 @@ pip-selfcheck.json
 learningenv
 .secrets
 socialaccount.json
+superuser.json
 db.local.json
 debug.log
 .ubuntusetup

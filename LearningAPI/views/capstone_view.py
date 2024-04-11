@@ -45,7 +45,7 @@ class CapstoneViewSet(ViewSet):
         try:
             Capstone.objects.get(student=student, course=course)
 
-            return Response({'message': 'You have already submittted a proposal for this course. If you made updates, just let your instructional team know via Slack'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': 'You have already submitted a proposal for this course. If you made updates, just let your instructional team know via Slack'}, status=status.HTTP_400_BAD_REQUEST)
         except Capstone.DoesNotExist:
             proposal = Capstone()
             proposal.course = course

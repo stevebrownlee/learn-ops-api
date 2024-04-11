@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PYTHON_VERSION=3.9
+PYTHON_VERSION=3.9.1
 
 function installPyenv() {
     if [ $(brew list | grep -c pyenv) != 1 ]; then
