@@ -18,33 +18,7 @@
 set +o histexpand
 set -eu
 
-for i in "$@"
-do
-case $i in
-    -h=*|--hosts=*) HOSTS="${i#*=}" ;;
-    -p=*|--password=*) PASSWORD="${i#*=}" ;;
-    -s=*|--secret=*) OAUTHSECRET="${i#*=}" ;;
-    -c=*|--client=*) CLIENT="${i#*=}" ;;
-    -d=*|--django=*) DJANGOSECRET="${i#*=}" ;;
-    -k=*|--slack=*) SLACKTOKEN="${i#*=}" ;;
-    -u=*|--suser=*) SUPERUSER="${i#*=}" ;;
-    -w=*|--supass=*) SUPERPASS="${i#*=}" ;;
-    --default) DEFAULT=YES ;;
-    *) # unknown option ;;
-esac
-done
-
-
-export LEARN_OPS_CLIENT_ID="$CLIENT"
-export LEARN_OPS_SECRET_KEY="$OAUTHSECRET"
-export LEARN_OPS_DB=learnops
-export LEARN_OPS_USER=learnops
-export LEARN_OPS_PASSWORD="$PASSWORD"
-export LEARN_OPS_HOST=localhost
-export LEARN_OPS_PORT=5432
-export LEARN_OPS_DJANGO_SECRET_KEY="$DJANGOSECRET"
-export LEARN_OPS_ALLOWED_HOSTS="$HOSTS"
-export SLACK_BOT_TOKEN="$SLACKTOKEN"
+source .env
 
 #####
 # Create the Ubuntu user account
@@ -60,26 +34,6 @@ else
     sudo chown -R $LEARN_OPS_USER $USER_HOME
     sudo chsh -s /bin/bash $LEARN_OPS_USER
 fi
-
-
-#####
-# Create shell init file and reload
-#####
-sudo tee $USER_HOME/.bashrc <<EOF
-export LEARN_OPS_CLIENT_ID=$CLIENT
-export LEARN_OPS_SECRET_KEY=$OAUTHSECRET
-export LEARN_OPS_DB=learnops
-export LEARN_OPS_USER=learnops
-export LEARN_OPS_PASSWORD=$PASSWORD
-export LEARN_OPS_HOST=localhost
-export LEARN_OPS_PORT=5432
-export LEARN_OPS_DJANGO_SECRET_KEY=$LEARN_OPS_DJANGO_SECRET_KEY
-export LEARN_OPS_ALLOWED_HOSTS=$HOSTS
-export SLACK_BOT_TOKEN=$SLACKTOKEN
-export PATH=$PATH:/home/learnops/.local/bin
-EOF
-sudo su - learnops -c "bash -c 'source ~/.bashrc'"
-
 
 #####
 # Install required software
@@ -212,7 +166,7 @@ sudo tee $API_HOME/LearningAPI/fixtures/socialaccount.json <<EOF
 EOF
 
 echo "Generating Django password"
-DJANGO_GENERATED_PASSWORD=$(python3 ./djangopass.py "$SUPERPASS" >&1)
+DJANGO_GENERATED_PASSWORD=$(python3 ./djangopass.py "$LEARN_OPS_SUPERUSER_PASSWORD" >&1)
 
 sudo tee $API_HOME/LearningAPI/fixtures/superuser.json <<EOF
 [
@@ -223,7 +177,7 @@ sudo tee $API_HOME/LearningAPI/fixtures/superuser.json <<EOF
             "password": "$DJANGO_GENERATED_PASSWORD",
             "last_login": null,
             "is_superuser": true,
-            "username": "$SUPERUSER",
+            "username": "$LEARN_OPS_SUPERUSER_NAME",
             "first_name": "Admina",
             "last_name": "Straytor",
             "email": "me@me.com",
@@ -286,8 +240,8 @@ Environment="LEARNING_GITHUB_CALLBACK=https://learning.nss.team/auth/github"
 Environment="SLACK_BOT_TOKEN=${SLACKTOKEN}"
 Environment="LEARN_OPS_DB=${LEARN_OPS_USER}"
 Environment="LEARN_OPS_USER=${LEARN_OPS_USER}"
-Environment="LEARN_OPS_PASSWORD=${PASSWORD}"
-Environment="LEARN_OPS_HOST=localhost"
+Environment="LEARN_OPS_PASSWORD=${LEARN_OPS_PASSWORD}"
+Environment="LEARN_OPS_HOST=${LEARN_OPS_HOST}"
 Environment="LEARN_OPS_PORT=5432"
 Environment="LEARN_OPS_CLIENT_ID=${LEARN_OPS_CLIENT_ID}"
 Environment="LEARN_OPS_SECRET_KEY=${LEARN_OPS_SECRET_KEY}"
