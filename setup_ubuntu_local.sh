@@ -3,6 +3,32 @@
 set +o histexpand
 set -eu
 source .env
+
+# If changes need to be made to user's config file, detect the correct one
+[[ $0 == *bash ]] && config_file=".bashrc" || config_file=".zshrc"
+
+manage_service() {
+    local service=$1
+    local action=$2 # start, stop, or restart
+    local service_command=""
+
+    # Detect the init system
+    if [[ $(/sbin/init --version) =~ upstart ]]; then
+        service_command="sudo service $service $action"
+    elif [[ $(systemctl) =~ -\.mount ]]; then
+        service_command="sudo systemctl $action $service"
+    elif [[ -f /etc/init.d/postgresql ]]; then
+        service_command="sudo /etc/init.d/$service $action"
+    else
+        echo "Init system not supported!"
+        return 1
+    fi
+
+    # Execute the service command
+    echo "Executing: $service_command"
+    $service_command
+}
+
 #####
 # Install required software
 #####
@@ -14,44 +40,28 @@ if ! command -v psql &>/dev/null; then
     sudo apt install postgresql postgresql-contrib -y
 fi
 
-
 # Check if systemd is running by examining the presence of systemd's runtime directory
 echo "Restarting Postgresql"
-if [ -d /run/systemd/system ]; then
-    echo "Systemd is enabled"
-    sudo systemctl start postgresql >> /dev/null
-else
-    echo "Systemd is not enabled"
-    sudo service postgresql start >> /dev/null
-fi
+manage_service postgresql start
 
 #####
 # Get Postgres version
 #####
 echo "Checking version of Postgres"
-VERSION=$( $(sudo find /usr -wholename '*/bin/postgres') -V | (grep -E -oah -m 1 '[0-9]{1,}') | head -1)
+VERSION=$($(sudo find /usr -wholename '*/bin/postgres') -V | (grep -E -oah -m 1 '[0-9]{1,}') | head -1)
 echo "Found version $VERSION"
-
-
 
 #####
 # Replace `peer` with `md5` in the pg_hba file to enable peer authentication
+# and restart the postgres service to enable the changes
 #####
 sudo sed -i -e 's/peer/trust/g' /etc/postgresql/"$VERSION"/main/pg_hba.conf
-
-
-#####
-# Check for systemd
-#####
-pidof systemd && sudo systemctl restart postgresql || sudo service postgresql restart
-
+manage_service postgresql restart
 
 #####
 # Create the role in the database
 #####
 echo "Creating Postgresql role and database"
-
-set -e
 
 sudo su - postgres <<COMMANDS
 psql -c "DROP DATABASE IF EXISTS $LEARN_OPS_DB WITH (FORCE);"
@@ -64,13 +74,30 @@ psql -c "GRANT ALL PRIVILEGES ON DATABASE $LEARN_OPS_DB TO $LEARN_OPS_USER;"
 psql -c "GRANT ALL PRIVILEGES ON SCHEMA public TO $LEARN_OPS_USER;"
 COMMANDS
 
-
 #####
 # Install Pyenv and required Python version
 #####
 if command -v pyenv &>/dev/null; then
     echo "pyenv is installed."
 else
+    echo "Installing pyenv..."
+
+    directory_path="$HOME/.pyenv"
+    if [ -d "$directory_path" ]; then
+        # Directory exists, now delete it
+        echo "Directory exists. Deleting $directory_path..."
+        rm -rf "$directory_path"
+
+        # Check if deletion was successful
+        if [ ! -d "$directory_path" ]; then
+            echo "Directory successfully deleted."
+        else
+            echo "Failed to delete directory."
+        fi
+    else
+        echo "Directory does not exist."
+    fi
+
     # Install dependency packages that are necessary to install pyenv on WSL Ubuntu environment
     sudo apt install -y curl git build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev libffi-dev liblzma-dev python3-openssl
 
@@ -80,7 +107,7 @@ else
     # Add necessary config to shell profile (.zshrc)
     echo 'export PATH="$HOME/.pyenv/bin:$PATH"
     eval "$(pyenv init --path)"
-    eval "$(pyenv virtualenv-init -)"' >>$HOME/.zshrc
+    eval "$(pyenv virtualenv-init -)"' >>$HOME/$config_file
 
     # Update path of current subshell execution
     export PATH="$HOME/.pyenv/bin:$PATH"
@@ -108,9 +135,8 @@ else
     pyenv global 3.9.1
 fi
 
-
-pip3 install pipenv
-
+# Install pipenv for managing virtual environment
+pip3 install pipenv django
 
 #####
 # Create socialaccount.json fixture
@@ -173,7 +199,6 @@ sudo tee ./LearningAPI/fixtures/superuser.json <<EOF
 ]
 EOF
 
-
 #####
 # Install project requirements and run migrations
 #####
@@ -187,7 +212,7 @@ pipenv run bash -c "python3 manage.py flush --no-input \
     && python3 manage.py loaddata complete_backup \
     && python3 manage.py loaddata superuser"
 
-rm ./LearningAPI/fixtures/superuser.json -y
-rm ./LearningAPI/fixtures/socialaccount.json -y
+sudo rm -f ./LearningAPI/fixtures/superuser.json
+sudo rm -f ./LearningAPI/fixtures/socialaccount.json
 
 echo "LEARNING_GITHUB_CALLBACK=http://localhost:3000/auth/github" >>.env
