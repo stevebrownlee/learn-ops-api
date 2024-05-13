@@ -69,7 +69,7 @@ class StudentProjectForm(forms.ModelForm):
 class StudentProjectAdmin(admin.ModelAdmin):
     """For assigning students to cohorts"""
     form = StudentProjectForm
-    list_display = ('student', 'project',)
+    list_display = ('student', 'project', 'date_created')
     search_fields = ["student__user__last_name"]
     search_help_text = "Search by last name"
 
