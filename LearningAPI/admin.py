@@ -62,7 +62,10 @@ class StudentProjectForm(forms.ModelForm):
         super(StudentProjectForm, self).__init__(*args, **kwargs)
         # Assuming Project model has a relation to Book and then to Course
         # Adjust 'project__book__course__active=True' to match your model's relationships
-        self.fields['project'].queryset = Project.objects.filter(book__course__active=True)
+        projects = Project.objects.filter(book__course__active=True)
+        self.fields['project'].queryset = projects
+        project_choices = [(project.id, f"{project.book.course.name} - {project.name}") for project in projects]
+        self.fields['project'].choices = project_choices
 
 
 @admin.register(StudentProject)
