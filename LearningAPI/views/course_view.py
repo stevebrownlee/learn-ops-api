@@ -142,7 +142,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ('id', 'name', 'index')
+        fields = ('id', 'name', 'index', 'active', 'is_group_project', )
 
 
 class AssessmentSerializer(serializers.ModelSerializer):
@@ -153,7 +153,13 @@ class AssessmentSerializer(serializers.ModelSerializer):
 
 class BookSerializer(serializers.ModelSerializer):
     """JSON serializer"""
-    projects = ProjectSerializer(many=True)
+    projects = serializers.SerializerMethodField()
+
+    def get_projects(self, obj):
+        projects = Project.objects.filter(book=obj, active=True).order_by("index")
+        return ProjectSerializer(projects, many=True).data
+
+    # projects = ProjectSerializer(many=True)
     assessments = AssessmentSerializer(many=True)
 
     class Meta:

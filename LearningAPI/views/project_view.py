@@ -20,6 +20,8 @@ class ProjectViewSet(ViewSet):
         project = Project()
         project.name = request.data["name"]
         project.index = request.data["index"]
+        project.active = True
+        project.is_group_project = request.data["is_group_project"]
         project.book = Book.objects.get(pk=request.data["book"])
         project.implementation_url = request.data["implementation_url"]
 
@@ -55,7 +57,9 @@ class ProjectViewSet(ViewSet):
         try:
             project = Project.objects.get(pk=pk)
             project.name = request.data["name"]
+            project.active = request.data["active"]
             project.index = request.data["index"]
+            project.is_group_project = request.data["is_group_project"]
             project.implementation_url = url
 
             project.save()
@@ -149,4 +153,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ('id', 'name', 'book', 'course', 'index')
+        fields = (
+            'id', 'name', 'book', 'course',
+            'index', 'active', 'is_group_project',
+        )

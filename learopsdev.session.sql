@@ -20,7 +20,8 @@ ALTER TABLE auth_user ALTER COLUMN last_login DROP NOT NULL;
 
 
 
-
+select * FROM "LearningAPI_nssuser";
+select * FROM "LearningAPI_cohort";
 
 
 
@@ -32,16 +33,17 @@ ALTER TABLE auth_user ALTER COLUMN last_login DROP NOT NULL;
 
 
 DROP FUNCTION IF EXISTS get_cohort_student_data(INT);
-select * from get_cohort_student_data(27);
+select * from get_cohort_student_data(28);
 
 
 
 CREATE FUNCTION get_cohort_student_data(selected_cohort_id INT)
 RETURNS TABLE (
     user_id INT,
+    student_name TEXT,
+    score INT,
     github_handle TEXT,
     extra_data TEXT,
-    student_name TEXT,
     current_cohort TEXT,
     current_cohort_id INT,
     assessment_status_id INT,
@@ -51,7 +53,6 @@ RETURNS TABLE (
     current_book_id INT,
     current_book_index INT,
     current_book_name TEXT,
-    score INT,
     student_notes TEXT,
     student_tags TEXT,
     capstone_proposals TEXT,
@@ -59,11 +60,14 @@ RETURNS TABLE (
 ) AS $$
 BEGIN
     RETURN QUERY
+
+
 SELECT
     nu.id::int AS user_id,
+    au."first_name" || ' ' || au."last_name" AS student_name,
+    COALESCE(lr.total_score, 0)::int AS score,
     nu.github_handle::text,
     social.extra_data::text,
-    au."first_name" || ' ' || au."last_name" AS student_name,
     c.name::text AS current_cohort,
     c.id::int AS current_cohort_id,
     COALESCE(sa.status_id::int, 0) AS assessment_status_id,
@@ -73,7 +77,6 @@ SELECT
     b.id::int AS current_book_id,
     b.index::int AS current_book_index,
     b.name::text AS current_book_name,
-    COALESCE(lr.total_score, 0)::int AS score,
     COALESCE(
         json_agg(
             json_build_object(
@@ -124,9 +127,20 @@ SELECT
             WHERE c."student_id" = nu.id
         ), '[]'
     )::text AS capstone_proposals,
-    EXTRACT(YEAR FROM AGE(NOW(), sp.date_created)) * 365 +
-        EXTRACT(MONTH FROM AGE(NOW(), sp.date_created)) * 30 +
-        EXTRACT(DAY FROM AGE(NOW(), sp.date_created))::double precision  AS project_duration
+    CASE
+        WHEN sa.id IS NOT NULL AND sa.assessment_id = la.id  THEN
+            (
+                EXTRACT(YEAR FROM AGE(NOW(), sa.date_created)) * 365 +
+                EXTRACT(MONTH FROM AGE(NOW(), sa.date_created)) * 30 +
+                EXTRACT(DAY FROM AGE(NOW(), sa.date_created))
+            )::double precision
+        ELSE
+            (
+                EXTRACT(YEAR FROM AGE(NOW(), sp.date_created)) * 365 +
+                EXTRACT(MONTH FROM AGE(NOW(), sp.date_created)) * 30 +
+                EXTRACT(DAY FROM AGE(NOW(), sp.date_created))
+            )::double precision
+    END AS project_duration
 FROM "LearningAPI_nssuser" nu
 JOIN "auth_user" au ON au."id" = nu."user_id"
 LEFT JOIN "LearningAPI_nssusercohort" nc ON nc."nss_user_id" = nu."id"
@@ -151,10 +165,12 @@ LEFT JOIN "LearningAPI_assessment" la
     ON b.id = la.book_id
 LEFT JOIN "LearningAPI_studentassessment" sa
     ON sa."student_id" = nu."id"
+    AND sa."assessment_id" = la."id"
     AND sa."date_created" = (
         SELECT MAX("date_created")
         FROM "LearningAPI_studentassessment"
         WHERE "student_id" = nu."id"
+        AND "assessment_id" = la."id"
     )
     AND sa.assessment_id = la.id
 LEFT JOIN (
@@ -174,6 +190,9 @@ GROUP BY nu.id, nu.github_handle, social.extra_data,
     score
 ORDER BY b.index ASC,
     p.index ASC;
+
+
+
 END;
 $$ LANGUAGE plpgsql;
 
@@ -265,9 +284,18 @@ SELECT
             WHERE c."student_id" = nu.id
         ), '[]'
     )::text AS capstone_proposals,
-    EXTRACT(YEAR FROM AGE(NOW(), sp.date_created)) * 365 +
-        EXTRACT(MONTH FROM AGE(NOW(), sp.date_created)) * 30 +
-        EXTRACT(DAY FROM AGE(NOW(), sp.date_created))::double precision  AS project_duration
+
+    CASE
+        WHEN sa.id IS NOT NULL AND sa.assessment_id = la.id  THEN
+            EXTRACT(YEAR FROM AGE(NOW(), sa.date_created)) * 365 +
+            EXTRACT(MONTH FROM AGE(NOW(), sa.date_created)) * 30 +
+            EXTRACT(DAY FROM AGE(NOW(), sa.date_created))::double precision
+        ELSE
+            EXTRACT(YEAR FROM AGE(NOW(), sp.date_created)) * 365 +
+            EXTRACT(MONTH FROM AGE(NOW(), sp.date_created)) * 30 +
+            EXTRACT(DAY FROM AGE(NOW(), sp.date_created))::double precision
+    END AS project_duration
+
 FROM "LearningAPI_nssuser" nu
 JOIN "auth_user" au ON au."id" = nu."user_id"
 LEFT JOIN "LearningAPI_nssusercohort" nc ON nc."nss_user_id" = nu."id"
@@ -292,10 +320,12 @@ LEFT JOIN "LearningAPI_assessment" la
     ON b.id = la.book_id
 LEFT JOIN "LearningAPI_studentassessment" sa
     ON sa."student_id" = nu."id"
+    AND sa."assessment_id" = la."id"
     AND sa."date_created" = (
         SELECT MAX("date_created")
         FROM "LearningAPI_studentassessment"
         WHERE "student_id" = nu."id"
+        AND "assessment_id" = la."id"
     )
     AND sa.assessment_id = la.id
 LEFT JOIN (
