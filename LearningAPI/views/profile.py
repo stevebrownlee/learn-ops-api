@@ -42,11 +42,21 @@ class Profile(ViewSet):
             nss_user.save()
 
             if cohort is not None:
-                coh = Cohort.objects.get(pk=cohort)
+                # First time authenticating with Github, so add user to cohort
+                cohort_assignment = Cohort.objects.get(pk=cohort)
                 usercohort = NssUserCohort()
-                usercohort.cohort = coh
+                usercohort.cohort = cohort_assignment
                 usercohort.nss_user = nss_user
                 usercohort.save()
+
+                # Assign student to first project in cohort's course
+                cohort_first_course = cohort_assignment.courses.get(index=0)
+                course_first_book = cohort_first_course.course.books.get(index=0)
+                book_first_project = course_first_book.projects.get(index=0)
+                student_project = StudentProject()
+                student_project.student = nss_user
+                student_project.project = book_first_project
+                student_project.save()
 
         try:
             personality = StudentPersonality.objects.get(student=nss_user)
