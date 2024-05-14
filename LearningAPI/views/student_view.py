@@ -3,6 +3,8 @@ import os
 import json
 import logging
 import requests
+from django.contrib.auth.models import User
+from django.conf import settings
 from django.db import connection
 from django.db import IntegrityError
 from django.http import HttpResponseServerError
@@ -107,8 +109,43 @@ class StudentViewSet(ModelViewSet):
             Response -- 200, 404, or 500 status code
         """
         try:
+            # Check if there is a "soft" query string parameter
+            soft_delete = request.query_params.get('soft', None)
+
             student = NssUser.objects.get(pk=pk)
-            student.delete()
+            django_user = User.objects.get(pk=student.user.id)
+
+            # Delete all personality records
+            StudentPersonality.objects.filter(student=student).delete()
+
+            # Delete all student assessments
+            StudentAssessment.objects.filter(student=student).delete()
+
+            # Delete all student projects
+            StudentProject.objects.filter(student=student).delete()
+
+            # Delete all student tags
+            StudentTag.objects.filter(student=student).delete()
+
+            # Delete all learning records
+            LearningRecord.objects.filter(student=student).delete()
+
+            # Delete all core skill records
+            CoreSkillRecord.objects.filter(student=student).delete()
+
+            # Delete all capstones
+            Capstone.objects.filter(student=student).delete()
+
+            # Delete student cohorts
+            student.assigned_cohorts.all().delete()
+
+            if soft_delete is None:
+                # Delete all student notes
+                StudentNote.objects.filter(student=student).delete()
+
+                # Delete the student
+                student.delete()
+                django_user.delete()
 
             return Response(None, status=status.HTTP_204_NO_CONTENT)
 
