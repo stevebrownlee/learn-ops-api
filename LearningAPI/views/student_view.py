@@ -162,6 +162,11 @@ class StudentViewSet(ModelViewSet):
             Response -- JSON serialized array
         """
         cohort = self.request.query_params.get('cohort', None)
+        lastname = self.request.query_params.get('lastname_like', None)
+
+        if lastname is not None:
+            students = NssUser.objects.filter(user__last_name__icontains=lastname)
+            return Response([{ 'name': student.full_name, 'id': student.id} for student in students], status=status.HTTP_200_OK)
 
         if cohort is None:
             return Response({

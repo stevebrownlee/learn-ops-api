@@ -94,9 +94,14 @@ class CohortInfoViewSet(ViewSet):
 class CohortSerializer(serializers.ModelSerializer):
     """JSON serializer"""
 
+    students = serializers.SerializerMethodField()
+
+    def get_students(self, obj):
+        return obj.members.count()
+
     class Meta:
         model = Cohort
-        fields = ( 'id', 'name', 'active' )
+        fields = ( 'id', 'name', 'active', 'students' )
 
 
 class CohortInfoSerializer(serializers.ModelSerializer):
