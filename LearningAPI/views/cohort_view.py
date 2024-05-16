@@ -268,7 +268,6 @@ class CohortViewSet(ViewSet):
             user_type = request.query_params.get("userType", None)
 
             try:
-
                 if user_type is not None and user_type == "instructor":
                     try:
                         member = NssUser.objects.get(user=request.auth.user)
@@ -298,6 +297,17 @@ class CohortViewSet(ViewSet):
                 relationship.cohort = cohort
                 relationship.nss_user = member
                 relationship.save()
+
+                if user_type is None:
+                    # Assign student to first project in cohort's course
+                    cohort_first_course = cohort.courses.get(index=0)
+                    course_first_book = cohort_first_course.course.books.get(index=0)
+                    book_first_project = course_first_book.projects.get(index=0)
+
+                    student_project = StudentProject()
+                    student_project.student = member
+                    student_project.project = book_first_project
+                    student_project.save()
 
             except Cohort.DoesNotExist as ex:
                 return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)

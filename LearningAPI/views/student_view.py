@@ -165,7 +165,9 @@ class StudentViewSet(ModelViewSet):
         lastname = self.request.query_params.get('lastname_like', None)
 
         if lastname is not None:
-            students = NssUser.objects.filter(user__last_name__icontains=lastname)
+            # Get students by last name and are not assigned to a cohort
+
+            students = NssUser.objects.filter(user__last_name__icontains=lastname, assigned_cohorts=None)
             return Response([{ 'name': student.full_name, 'id': student.id} for student in students], status=status.HTTP_200_OK)
 
         if cohort is None:
