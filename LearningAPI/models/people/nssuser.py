@@ -1,14 +1,10 @@
 """NssUser database model"""
 import statistics
-import datetime
 import logging
 
 from django.db import models
 from django.conf import settings
-from django.db.models import Sum, F, OuterRef, Subquery
-from LearningAPI.models.coursework import (
-    CapstoneTimeline, StudentProject, CohortCourse, Project
-)
+from django.db.models import Sum
 
 
 class NssUser(models.Model):

@@ -64,27 +64,19 @@ Several environment variables need to be set up by you to make the setup process
 * The superuser variables will be your credentials for logging into the Django admin panel where you can view and update data in a web interface.
 * The `LEARN_OPS_PASSWORD` variable is the password for a database user that will be created your local database. Make it something simple.
 
-## Installations
+### Installations
 
 Once your environment variables are established, you will run a bash script to install all the software needed for the API to run, create the database tables needed, and seed the database with some data.
-
-### Mac Users
 
 In your terminal, be in the project directory, and run the following command.
 
 ```sh
-./setup_mac.sh
+./setup.sh
 ```
 
-### Windows Users
+Once this script is complete, you will have the Postgres database, and some starter data seeded in it.
 
-In your Ubuntu terminal, be in the project directory, and run the following command.
-
-```sh
-./setup_ubuntu_local.sh
-```
-
-## API Account Setup
+## Using the API
 
 Go back to VSCode and start a Django debugger _(recommend [creating a launcher profile](https://code.visualstudio.com/docs/python/tutorial-django#_create-a-debugger-launch-profile) for yourself)_. If the setup was successful, you will see the following output in the VSCode integrated terminal.
 
