@@ -33,7 +33,7 @@ select * FROM "LearningAPI_cohort";
 
 
 DROP FUNCTION IF EXISTS get_cohort_student_data(INT);
-select * from get_cohort_student_data(28);
+select * from get_cohort_student_data(27);
 
 
 
@@ -105,6 +105,7 @@ SELECT
                 json_build_object(
                     'id', c."id",
                     'status', ps.status,
+                    'current_status_id', ps.id,
                     'proposal_url', c."proposal_url",
                     'created_on', tl.date,
                     'course_name', cr.name
@@ -262,6 +263,7 @@ SELECT
                 json_build_object(
                     'id', c."id",
                     'status', ps.status,
+                    'current_status_id', ps.id,
                     'proposal_url', c."proposal_url",
                     'created_on', tl.date,
                     'course_name', cr.name
@@ -335,7 +337,7 @@ LEFT JOIN (
     WHERE lr."achieved" = true
     GROUP BY lr."student_id"
 ) lr ON lr."student_id" = nu."id"
-WHERE nc."cohort_id" = 28
+WHERE nc."cohort_id" = 27
 AND au.is_active = TRUE
 AND au.is_staff = FALSE
 GROUP BY nu.id, nu.github_handle, social.extra_data,
