@@ -4,7 +4,6 @@ import json
 import logging
 import requests
 from django.contrib.auth.models import User
-from django.conf import settings
 from django.db import connection
 from django.db import IntegrityError
 from django.http import HttpResponseServerError
@@ -221,19 +220,6 @@ class StudentViewSet(ModelViewSet):
                     return Response(serializer.data, status=status.HTTP_200_OK)
                 else:
                     return Response({'message': 'Error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-    @action(methods=['put'], detail=True)
-    def selfassess(self, request, pk):
-        if request.method == "PUT":
-            auth_student = NssUser.objects.get(user=request.auth.user)
-
-            if auth_student.user.id == pk:
-                assessment_status = StudentAssessmentStatus.objects.get(pk=request.data['statusId'])
-                # What is the next assessment for this student?
-                # Create relationship between student and assessment
-                # Update status to statusId
-
-
 
     @method_decorator(is_instructor())
     @action(methods=['post', 'put'], detail=True)
