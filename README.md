@@ -76,6 +76,10 @@ In your terminal, be in the project directory, and run the following command.
 
 Once this script is complete, you will have the Postgres database, and some starter data seeded in it.
 
+## Start Virtual Environment
+
+In the project directory, run `pipenv shell` to activate the VE for the project.
+
 ## Using the API
 
 Go back to VSCode and start a Django debugger _(recommend [creating a launcher profile](https://code.visualstudio.com/docs/python/tutorial-django#_create-a-debugger-launch-profile) for yourself)_. If the setup was successful, you will see the following output in the VSCode integrated terminal.
