@@ -1,6 +1,5 @@
 from django.utils.decorators import method_decorator
 from django.http import HttpResponseServerError
-from django.db.models import Avg, F, Func, FloatField, fields, ExpressionWrapper
 
 from rest_framework import serializers, status
 from rest_framework.decorators import action
@@ -10,7 +9,6 @@ from rest_framework.viewsets import ViewSet
 from LearningAPI.decorators import is_instructor
 from LearningAPI.models.coursework import (
     Course, Book, Project, CohortCourse,
-    StudentProject
 )
 from LearningAPI.models.people import Assessment
 

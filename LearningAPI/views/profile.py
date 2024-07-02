@@ -133,6 +133,7 @@ class ProfileSerializer(serializers.ModelSerializer):
                 "id": project.project.id,
                 "name": project.project.name,
                 "book_name": project.project.book.name,
+                "book_id": project.project.book.id,
             }
         else:
             return {

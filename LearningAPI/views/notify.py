@@ -4,6 +4,33 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from LearningAPI.models.people import NssUser
 
+def slack_notify(message, channel):
+    """
+    Sends a notification message to a Slack channel.
+
+    Args:
+        message (str): The message to send.
+        channel (str): The Slack channel to send the message to.
+
+    Raises:
+        requests.exceptions.Timeout: If the request to the Slack API times out.
+    """
+
+    headers = {
+        "Content-Type": "application/x-www-form-urlencoded"
+    }
+
+    requests.post(
+        "https://slack.com/api/chat.postMessage",
+        data={
+            "text": message,
+            "token": os.getenv("SLACK_BOT_TOKEN"),
+            "channel": channel
+        },
+        headers=headers,
+        timeout=10
+    )
+
 @api_view(['POST'])
 def notify(request):
     """
@@ -28,20 +55,6 @@ def notify(request):
     slack_channel = student.assigned_cohorts.order_by("-id").first().cohort.slack_channel
 
     message = request.data.get("message")
-
-    headers = {
-        "Content-Type": "application/x-www-form-urlencoded"
-    }
-
-    requests.post(
-        "https://slack.com/api/chat.postMessage",
-        data={
-            "text": message,
-            "token": os.getenv("SLACK_BOT_TOKEN"),
-            "channel": slack_channel
-        },
-        headers=headers,
-        timeout=10
-    )
+    slack_notify(message, slack_channel)
 
     return Response({ 'message': 'Notification sent to Slack!'}, status=200)

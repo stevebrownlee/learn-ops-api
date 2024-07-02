@@ -14,6 +14,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
+from LearningAPI.utils import GithubRequest
 from LearningAPI.decorators import is_instructor
 from LearningAPI.models import Tag
 from LearningAPI.models.coursework import StudentProject, Project, Capstone
@@ -22,6 +23,7 @@ from LearningAPI.models.people import (StudentNote, NssUser, StudentAssessment,
                                        StudentAssessmentStatus, StudentTag)
 from LearningAPI.models.skill import (CoreSkillRecord, LearningRecord,
                                       LearningRecordEntry)
+from LearningAPI.views.notify import slack_notify
 from .personality import myers_briggs_persona
 
 
@@ -283,14 +285,51 @@ class StudentViewSet(ModelViewSet):
                 except Assessment.DoesNotExist:
                     return Response({'message': 'There is no assessment for this book.'}, status=status.HTTP_404_NOT_FOUND)
 
-                student_assessment = StudentAssessment()
-                student_assessment.student = NssUser.objects.get(pk=pk)
-                student_assessment.instructor = NssUser.objects.get(
-                    user=request.auth.user)
-                student_assessment.status = StudentAssessmentStatus.objects.get(
-                    status="In Progress")
-                student_assessment.assessment = assessment
-                student_assessment.save()
+                student = NssUser.objects.get(pk=pk)
+                # student_assessment = StudentAssessment()
+                # student_assessment.student = student
+                # student_assessment.instructor = NssUser.objects.get(
+                #     user=request.auth.user)
+                # student_assessment.status = StudentAssessmentStatus.objects.get(
+                #     status="In Progress")
+                # student_assessment.assessment = assessment
+                # student_assessment.save()
+
+                gh_request = GithubRequest()
+                full_url = assessment.source_url
+
+                # Split the full URL on '/' and get the last two items
+                ( org, repo, ) = full_url.split('/')[-2:]
+
+                # Construct request body for creating the repository
+                student_org_name = student.current_cohort["github_org"].split("/")[-1]
+
+                # Replace all spaces in the assessment name with hyphens
+                hyphenated_assessment_name = assessment.name.replace(" ", "-")
+                repo_name = f"{hyphenated_assessment_name}-{student.github_handle}"
+
+                request_body = {
+                    "owner": student_org_name,
+                    "name": repo_name,
+                    "description": "This is your self-assessment repository",
+                    "include_all_branches": False,
+                    "private": False
+                }
+
+                # Create the repository
+                response = gh_request.post(url=f'https://api.github.com/repos/{org}/{repo}/generate',data=request_body)
+
+                # Assign the student write permissions to the repository
+                request_body = { "permission":"write" }
+                response = gh_request.put(
+                    url=f'https://api.github.com/repos/{student_org_name}/{repo_name}/collaborators/{student.github_handle}',
+                    data=request_body
+                )
+
+                slack_notify(
+                    f"""🐙 Your self-assessment repository has been created. Visit the URL below and clone the project to your machine.\n\n
+https://github.com/orgs/{student_org_name}/repositories/{repo_name}""", student.slack_handle)
+
             except Exception as ex:
                 return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
