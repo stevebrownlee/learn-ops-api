@@ -326,9 +326,19 @@ class StudentViewSet(ModelViewSet):
                     data=request_body
                 )
 
+                # Send message to student
+                created_repo_url = f'https://github.com/orgs/{student_org_name}/repositories/{repo_name}'
                 slack_notify(
-                    f"""🐙 Your self-assessment repository has been created. Visit the URL below and clone the project to your machine.\n\n
-https://github.com/orgs/{student_org_name}/repositories/{repo_name}""", student.slack_handle)
+                    f"🐙 Your self-assessment repository has been created. Visit the URL below and clone the project to your machine.\n\n{created_repo_url}",
+                    student.slack_handle
+                )
+
+                # Send message to instructors
+                slack_channel = student.assigned_cohorts.order_by("-id").first().cohort.slack_channel
+                slack_notify(
+                    f"{student.full_name} has started their self-assessment for {assessment.name}.\n\n{created_repo_url}",
+                    slack_channel
+                )
 
             except Exception as ex:
                 return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
