@@ -223,7 +223,6 @@ class StudentViewSet(ModelViewSet):
                 else:
                     return Response({'message': 'Error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    @method_decorator(is_instructor())
     @action(methods=['post', 'put'], detail=True)
     def assess(self, request, pk):
         """POST when a student starts working on book assessment. PUT to change status."""
@@ -286,14 +285,14 @@ class StudentViewSet(ModelViewSet):
                     return Response({'message': 'There is no assessment for this book.'}, status=status.HTTP_404_NOT_FOUND)
 
                 student = NssUser.objects.get(pk=pk)
-                # student_assessment = StudentAssessment()
-                # student_assessment.student = student
-                # student_assessment.instructor = NssUser.objects.get(
-                #     user=request.auth.user)
-                # student_assessment.status = StudentAssessmentStatus.objects.get(
-                #     status="In Progress")
-                # student_assessment.assessment = assessment
-                # student_assessment.save()
+
+                # Create the student assessment record
+                student_assessment = StudentAssessment()
+                student_assessment.student = student
+                student_assessment.instructor = NssUser.objects.get(user=request.auth.user)
+                student_assessment.status = StudentAssessmentStatus.objects.get(status="In Progress")
+                student_assessment.assessment = assessment
+                student_assessment.save()
 
                 gh_request = GithubRequest()
                 full_url = assessment.source_url
@@ -340,6 +339,12 @@ class StudentViewSet(ModelViewSet):
                     slack_channel
                 )
 
+
+                student_assessment.url = created_repo_url
+                student_assessment.save()
+
+            except IntegrityError:
+                return Response({'message': 'Conflict: Student is already assigned to that assessment'}, status=status.HTTP_409_CONFLICT)
             except Exception as ex:
                 return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
