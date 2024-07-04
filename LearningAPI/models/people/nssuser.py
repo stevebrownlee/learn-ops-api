@@ -62,7 +62,8 @@ class NssUser(models.Model):
                 "name": assessment.assessment.name,
                 "status": assessment.status.status,
                 "book": assessment.assessment.assigned_book,
-                "reviewed_by": assessment.instructor.user.first_name
+                "reviewed_by": assessment.instructor.user.first_name,
+                "github_url": assessment.url
             })
         return assessment_list
 
@@ -83,6 +84,7 @@ class NssUser(models.Model):
                 "zoom_url": assignment.cohort.info.zoom_url,
                 "start": assignment.cohort.start_date,
                 "end": assignment.cohort.end_date,
+                "ic": assignment.cohort.slack_channel,
                 "github_org": assignment.cohort.info.student_organization_url,
                 "courses": assignment.cohort.courses.order_by('index').values('course__name', 'course__id', 'active'),
             }
@@ -95,5 +97,6 @@ class NssUser(models.Model):
                 "id": assignment.cohort.id,
                 "start": assignment.cohort.start_date,
                 "end": assignment.cohort.end_date,
+                "ic": assignment.cohort.slack_channel,
                 "courses": assignment.cohort.courses.order_by('index').values('course__name', 'course__id', 'active'),
             }

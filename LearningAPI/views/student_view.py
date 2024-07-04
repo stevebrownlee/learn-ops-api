@@ -20,7 +20,8 @@ from LearningAPI.models import Tag
 from LearningAPI.models.coursework import StudentProject, Project, Capstone
 from LearningAPI.models.people import (StudentNote, NssUser, StudentAssessment,
                                        OneOnOneNote, StudentPersonality, Assessment,
-                                       StudentAssessmentStatus, StudentTag)
+                                       StudentAssessmentStatus, StudentTag, Cohort
+                                    )
 from LearningAPI.models.skill import (CoreSkillRecord, LearningRecord,
                                       LearningRecordEntry)
 from LearningAPI.views.notify import slack_notify
@@ -237,24 +238,22 @@ class StudentViewSet(ModelViewSet):
                 latest_assessment.save()
 
                 try:
+                    if latest_assessment.status.status == 'Ready for Review':
+                        slack_notify(
+                            message="🎉 Congratulations! You've completed your self-assessment. Your coaching team will review your work and provide feedback soon.",
+                            channel=student.slack_handle
+                        )
+
+                        slack_notify(
+                            message=f'{student.full_name} in {student.current_cohort["name"]} has completed their self-assessment for {latest_assessment.assessment.name}.\n\nReview it at {latest_assessment.url}',
+                            channel=student.current_cohort["ic"]
+                        )
+
                     if latest_assessment.status.status == 'Reviewed and Complete':
                         # 1. Send message to student
-                        headers = {
-                            "Content-Type": "application/x-www-form-urlencoded"
-                        }
-                        channel_payload = {
-                            "text": request.data.get(
-                                "text",
-                                f':fox-yay-woo-hoo: Self-Assessment Review Complete\n\n\n:white_check_mark: Your coaching team just marked {latest_assessment.assessment.name} as completed.\n\nVisit https://learning.nss.team to view your messages.'),
-                            "token": os.getenv("SLACK_BOT_TOKEN"),
-                            "channel": latest_assessment.student.slack_handle
-                        }
-
-                        requests.post(
-                            "https://slack.com/api/chat.postMessage",
-                            data=channel_payload,
-                            headers=headers,
-                            timeout=10
+                        slack_notify(
+                            message=f':fox-yay-woo-hoo: Self-Assessment Review Complete\n\n\n:white_check_mark: Your coaching team just marked {latest_assessment.assessment.name} as completed.\n\nVisit https://learning.nss.team to view your messages.',
+                            channel=latest_assessment.student.slack_handle
                         )
 
                         # 2. Assign all objectives/weights to the student as complete
@@ -279,12 +278,25 @@ class StudentViewSet(ModelViewSet):
         elif request.method == "POST":
             try:
                 try:
-                    assessment = Assessment.objects.get(
-                        book__id=int(request.data['bookId']))
+                    student = NssUser.objects.get(pk=pk)
+                    assessment = Assessment.objects.get(book__id=int(request.data['bookId']))
                 except Assessment.DoesNotExist:
                     return Response({'message': 'There is no assessment for this book.'}, status=status.HTTP_404_NOT_FOUND)
 
-                student = NssUser.objects.get(pk=pk)
+                try:
+                    StudentAssessment.objects.get(student=student, assessment=assessment)
+
+                    return Response(
+                        {
+                            'message': f'Conflict: {student.full_name} is already assigned to the {assessment.name} assessment'
+                        },
+                        status=status.HTTP_409_CONFLICT,
+                        headers={'Location': f'/students/{pk}/assess'}
+                    )
+                except StudentAssessment.DoesNotExist:
+                    pass
+
+
 
                 # Create the student assessment record
                 student_assessment = StudentAssessment()
@@ -344,7 +356,13 @@ class StudentViewSet(ModelViewSet):
                 student_assessment.save()
 
             except IntegrityError:
-                return Response({'message': 'Conflict: Student is already assigned to that assessment'}, status=status.HTTP_409_CONFLICT)
+                return Response(
+                    {
+                        'message': 'Conflict: Student is already assigned to that assessment'
+                    },
+                    status=status.HTTP_409_CONFLICT,
+                    headers={'Location': f'/students/{pk}/assess'}
+                )
             except Exception as ex:
                 return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
