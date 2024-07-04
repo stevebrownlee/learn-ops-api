@@ -250,13 +250,12 @@ class StudentViewSet(ModelViewSet):
                         )
 
                     if latest_assessment.status.status == 'Reviewed and Complete':
-                        # 1. Send message to student
                         slack_notify(
                             message=f':fox-yay-woo-hoo: Self-Assessment Review Complete\n\n\n:white_check_mark: Your coaching team just marked {latest_assessment.assessment.name} as completed.\n\nVisit https://learning.nss.team to view your messages.',
                             channel=latest_assessment.student.slack_handle
                         )
 
-                        # 2. Assign all objectives/weights to the student as complete
+                        # Assign all objectives/weights to the student as complete
                         assessment_objectives = latest_assessment.assessment.objectives.all()
                         for objective in assessment_objectives:
                             try:
@@ -280,23 +279,20 @@ class StudentViewSet(ModelViewSet):
                 try:
                     student = NssUser.objects.get(pk=pk)
                     assessment = Assessment.objects.get(book__id=int(request.data['bookId']))
+
                 except Assessment.DoesNotExist:
                     return Response({'message': 'There is no assessment for this book.'}, status=status.HTTP_404_NOT_FOUND)
 
                 try:
-                    StudentAssessment.objects.get(student=student, assessment=assessment)
-
+                    existing_assessment = StudentAssessment.objects.get(student=student, assessment=assessment)
+                    assessment_uri = request.build_absolute_uri(f'/assessments/{existing_assessment.id}')
                     return Response(
-                        {
-                            'message': f'Conflict: {student.full_name} is already assigned to the {assessment.name} assessment'
-                        },
+                        { 'message': f'Conflict: {student.full_name} is already assigned to the {assessment.name} assessment' },
                         status=status.HTTP_409_CONFLICT,
-                        headers={'Location': f'/students/{pk}/assess'}
+                        headers={'Location': assessment_uri}
                     )
                 except StudentAssessment.DoesNotExist:
                     pass
-
-
 
                 # Create the student assessment record
                 student_assessment = StudentAssessment()
@@ -336,6 +332,13 @@ class StudentViewSet(ModelViewSet):
                     url=f'https://api.github.com/repos/{student_org_name}/{repo_name}/collaborators/{student.github_handle}',
                     data=request_body
                 )
+                if response.status_code != 204:
+                    return Response(
+                        {
+                            'message': 'Error: Student was not added as a collaborator to the assessment repository.'
+                        },
+                        status=status.HTTP_502_BAD_GATEWAY
+                    )
 
                 # Send message to student
                 created_repo_url = f'https://github.com/orgs/{student_org_name}/repositories/{repo_name}'
@@ -347,22 +350,14 @@ class StudentViewSet(ModelViewSet):
                 # Send message to instructors
                 slack_channel = student.assigned_cohorts.order_by("-id").first().cohort.slack_channel
                 slack_notify(
-                    f"{student.full_name} has started their self-assessment for {assessment.name}.\n\n{created_repo_url}",
+                    f"{student.full_name} has started the self-assessment for {assessment.name}.\n\n{created_repo_url}",
                     slack_channel
                 )
 
-
+                # Update the student assessment record with the Github repo URL
                 student_assessment.url = created_repo_url
                 student_assessment.save()
 
-            except IntegrityError:
-                return Response(
-                    {
-                        'message': 'Conflict: Student is already assigned to that assessment'
-                    },
-                    status=status.HTTP_409_CONFLICT,
-                    headers={'Location': f'/students/{pk}/assess'}
-                )
             except Exception as ex:
                 return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

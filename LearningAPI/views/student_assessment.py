@@ -118,7 +118,7 @@ class StudentAssessmentView(ViewSet):
         try:
             assessment = StudentAssessment.objects.get(pk=pk)
 
-            if request.auth.user == assessment.student or request.auth.user.is_staff:
+            if request.auth.user.id == assessment.student.user.id or request.auth.user.is_staff:
                 serializer = StudentAssessmentSerializer(assessment)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:
