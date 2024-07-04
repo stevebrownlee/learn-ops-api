@@ -188,6 +188,7 @@ class StudentViewSet(ModelViewSet):
                         current_cohort AS cohort_name,
                         current_cohort_id AS cohort_id,
                         assessment_status_id,
+                        assessment_url,
                         current_project_id AS project_id,
                         current_project_index AS project_index,
                         current_project_name AS project_name,
@@ -219,10 +220,11 @@ class StudentViewSet(ModelViewSet):
                     students.append(student)
 
                 serializer = CohortStudentSerializer(data=students, many=True)
+
                 if serializer.is_valid():
                     return Response(serializer.data, status=status.HTTP_200_OK)
                 else:
-                    return Response({'message': 'Error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                    return Response({'message': serializer.error_messages}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     @action(methods=['post', 'put'], detail=True)
     def assess(self, request, pk):
@@ -341,7 +343,7 @@ class StudentViewSet(ModelViewSet):
                     )
 
                 # Send message to student
-                created_repo_url = f'https://github.com/orgs/{student_org_name}/repositories/{repo_name}'
+                created_repo_url = f'https://github.com/{student_org_name}/{repo_name}'
                 slack_notify(
                     f"🐙 Your self-assessment repository has been created. Visit the URL below and clone the project to your machine.\n\n{created_repo_url}",
                     student.slack_handle
@@ -350,7 +352,7 @@ class StudentViewSet(ModelViewSet):
                 # Send message to instructors
                 slack_channel = student.assigned_cohorts.order_by("-id").first().cohort.slack_channel
                 slack_notify(
-                    f"{student.full_name} has started the self-assessment for {assessment.name}.\n\n{created_repo_url}",
+                    f"📝 {student.full_name} has started the self-assessment for {assessment.name}.",
                     slack_channel
                 )
 
@@ -553,6 +555,7 @@ class CohortStudentSerializer(serializers.Serializer):
     current_cohort = serializers.DictField()
     avatar = serializers.CharField()
     assessment_status_id = serializers.IntegerField()
+    assessment_url = serializers.CharField(max_length=256, allow_blank=True, allow_null=True)
     project_id = serializers.IntegerField()
     project_duration = serializers.IntegerField()
     project_index = serializers.IntegerField()
