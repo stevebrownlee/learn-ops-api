@@ -320,7 +320,7 @@ class StudentViewSet(ModelViewSet):
                 request_body = {
                     "owner": student_org_name,
                     "name": repo_name,
-                    "description": "This is your self-assessment repository",
+                    "description": f"This is your self-assessment repository for the {assessment.book.name} book",
                     "include_all_branches": False,
                     "private": False
                 }
