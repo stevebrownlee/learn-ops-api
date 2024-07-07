@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 import os
 import logging
 from logging.handlers import RotatingFileHandler
-from django.core.management.utils import get_random_secret_key
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -66,6 +65,10 @@ CORS_ORIGIN_WHITELIST = (
     'http://localhost:5002',
     'http://127.0.0.1:5002',
     'https://learning.nss.team',
+)
+
+CORS_EXPOSE_HEADERS = (
+    'Location',
 )
 
 MIDDLEWARE = [

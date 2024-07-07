@@ -1,0 +1,352 @@
+Table "LearningAPI_assessment" [headercolor: #27ae60] {
+  "id" int [pk, not null, increment]
+  "name" varchar(55) [not null]
+  "source_url" varchar [not null]
+  "book_id" bool [ref: > LearningAPI_book.id]
+  "type" varchar(255) [not null]
+}
+
+Table "LearningAPI_CoreSkill" [headercolor: #9b771b] {
+  id int [pk]
+  label varchar
+}
+
+Table "LearningAPI_CoreSkillRecord" [headercolor: #9b771b] {
+  id int [pk]
+  student_id int [ref: < LearningAPI_nssuser.id]
+  core_skill_id int [ref: < LearningAPI_CoreSkill.id]
+  current_level int
+}
+
+Table "LearningAPI_CoreSkillRecordEntry" [headercolor: #9b771b] {
+  id int [pk]
+  core_skill_record_id int [ref: < LearningAPI_CoreSkillRecord.id]
+  note varchar
+  recorded_on date
+  instructor_id int [ref: < LearningAPI_nssuser.id]
+}
+
+Table "LearningAPI_learningrecord" [headercolor: #9b771b] {
+  id int [pk]
+  student_id int [ref: < LearningAPI_nssuser.id]
+  weight_id int [ref: < LearningAPI_learningweight.id]
+  achieved boolean
+  created_on date
+}
+
+Table "LearningAPI_learningweight" [headercolor: #9b771b] {
+  id int [pk]
+  label varchar
+  weight int
+  tier int
+}
+
+Table "LearningAPI_learningrecordentry" [headercolor: #9b771b] {
+  id int [pk]
+  record_id int [ref: < LearningAPI_learningrecord.id]
+  note varchar
+  recorded_on date
+  instructor_id int [ref: < LearningAPI_nssuser.id]
+}
+
+Table "LearningAPI_opportunity" {
+  id int [pk]
+  cohort_id int [ref: > LearningAPI_cohort.id]
+  portion enum
+  start_date date
+  senior_instructor_id int [ref: > LearningAPI_nssuser.id]
+  message varchar
+}
+
+Table "LearningAPI_opportunityuser" {
+  id int [pk]
+  opportunity_id int [ref: > LearningAPI_opportunity.id]
+  graduate_id int [ref: > LearningAPI_nssuser.id]
+  date_created date
+}
+
+Table "LearningAPI_cohort" [headercolor: #c0392b] {
+  "id" int [pk, not null, increment]
+  "name" varchar(55) [not null]
+  "slack_channel" varchar(55) [not null]
+  "start_date" date [not null]
+  "end_date" date [not null]
+  "break_start_date" date [not null]
+  "break_end_date" date [not null]
+  "active" bool [not null]
+}
+
+Table "LearningAPI_cohortinfo" [headercolor: #c0392b] {
+  "id" int [pk, not null, increment]
+  "cohort_id" int [ref: - LearningAPI_cohort.id]
+  "attendance_sheet_url" varchar(255)
+  "github_classroom_url" varchar(255)
+  "student_organization_url" varchar(255)
+  "server_course_url" varchar(255)
+  "client_course_url" varchar(255)
+  "zoom_url" varchar(255)
+}
+
+Table "LearningAPI_course" [headercolor: #27ae60] {
+  "id" int [pk, not null, increment]
+  "name" varchar(75) [not null]
+  "active" bool [not null]
+}
+
+Table "LearningAPI_lightningexercise" [headercolor: #27ae60] {
+  "id" int [pk, not null, increment]
+  "name" varchar(75) [not null]
+  "description" text [not null]
+}
+
+Table "LearningAPI_project" [headercolor: #27ae60] {
+  "id" int [pk, not null, increment]
+  "name" varchar(55) [not null]
+  "implementation_url" varchar(256) [not null]
+  "book_id" int [ref: < LearningAPI_book.id]
+  "index" int [not null]
+  "active" bool [not null]
+  "is_group_project" bool [not null]
+}
+
+Table "LearningAPI_proposalstatus" [headercolor: #16a085] {
+  "id" int [pk, not null, increment]
+  "status" varchar(55) [not null]
+}
+
+Table "LearningAPI_tag" [headercolor: #3498db] {
+  "id" int [pk, not null, increment]
+  "name" varchar(25) [not null]
+}
+
+Table "LearningAPI_taxonomylevel" [headercolor: #f39c12] {
+  "id" int [pk, not null, increment]
+  "level_name" varchar(20) [not null]
+}
+
+Table "auth_user" [headercolor: #8e44ad] {
+  "id" int [pk, not null, increment]
+  "password" varchar(128) [not null]
+  "last_login" timestamp
+  "is_superuser" bool [not null]
+  "username" varchar(150) [unique, not null]
+  "first_name" varchar(150) [not null]
+  "last_name" varchar(150) [not null]
+  "email" varchar(254) [not null]
+  "is_staff" bool [not null]
+  "is_active" bool [not null]
+  "date_joined" timestamp [not null]
+}
+
+Table "LearningAPI_book" [headercolor: #27ae60] {
+  "id" int [pk, not null, increment]
+  "name" varchar(75) [not null]
+  "course_id" int4 [not null, ref: < LearningAPI_course.id]
+  "index" int [not null]
+
+  Indexes {
+    course_id [type: btree, name: "LearningAPI_book_course_id_b8c297d0"]
+  }
+}
+
+Table "LearningAPI_learningobjective" [headercolor: #f39c12] {
+  "id" int [pk, not null, increment]
+  "swbat" varchar(255) [not null]
+  "bloom_level_id" int4 [not null, ref: < LearningAPI_taxonomylevel.id]
+}
+
+Table "LearningAPI_lightningtag" [headercolor: #3498db] {
+  "id" int [pk, not null, increment]
+  "exercise_id" int4 [not null, ref: < LearningAPI_lightningexercise.id]
+  "tag_id" int4 [not null, ref: < LearningAPI_tag.id]
+
+  Indexes {
+    exercise_id [type: btree, name: "LearningAPI_lightningtag_exercise_id_99600ae2"]
+    tag_id [type: btree, name: "LearningAPI_lightningtag_tag_id_70934ca7"]
+  }
+}
+
+Table "LearningAPI_studentpersonality" [headercolor: #8e44ad] {
+  "id" int [pk, not null, increment]
+  "student_id" int4 [unique, not null, ref: - LearningAPI_nssuser.id]
+  "briggs_myers_type" varchar(6)
+  "bfi_extraversion" int
+  "bfi_agreeableness" int
+  "bfi_conscientiousness" int
+  "bfi_neuroticism" int
+  "bfi_openness" int
+}
+
+Table "LearningAPI_nssuser" [headercolor: #8e44ad] {
+  "id" int [pk, not null, increment]
+  "slack_handle" varchar(55)
+  "github_handle" varchar(55)
+  "user_id" int4 [unique, not null, ref: - auth_user.id]
+}
+
+Table "LearningAPI_studenttag" [headercolor: #3498db] {
+  "id" int [pk, not null, increment]
+  "tag_id" int [ref: < LearningAPI_tag.id]
+  "nss_user_id" int [ref: < LearningAPI_nssuser.id]
+}
+
+Table "LearningAPI_oneononenote" [headercolor: #8e44ad] {
+  "id" int [pk, not null, increment]
+  "student_id" int4 [unique, not null, ref: - LearningAPI_nssuser.id]
+  "coach_id" int4 [unique, not null, ref: - LearningAPI_nssuser.id]
+  "session_date" date [not null]
+  "notes" blob [not null]
+}
+
+Table "LearningAPI_nssusercohort" [headercolor: #c0392b] {
+  "id" int [pk, not null, increment]
+  "cohort_id" int4 [not null, ref: < LearningAPI_cohort.id]
+  "nss_user_id" int4 [not null, ref: < LearningAPI_nssuser.id]
+
+  Indexes {
+    cohort_id [type: btree, name: "LearningAPI_nssusercohort_cohort_id_cbb74e71"]
+    nss_user_id [type: btree, name: "LearningAPI_nssusercohort_nss_user_id_ffc406c5"]
+  }
+}
+
+Table "LearningAPI_objectivetag" [headercolor: #3498db] {
+  "id" int [pk, not null, increment]
+  "tag_id" int4 [not null, ref: < LearningAPI_tag.id]
+  "objective_id" int4 [not null, ref: < LearningAPI_learningobjective.id]
+
+  Indexes {
+    objective_id [type: btree, name: "LearningAPI_objectivetag_objective_id_9c6962db"]
+    tag_id [type: btree, name: "LearningAPI_objectivetag_tag_id_d6447bcd"]
+  }
+}
+
+Table "LearningAPI_projectnote" {
+  "id" int [pk, not null, increment]
+  "note" text [not null]
+  "project_id" int4 [not null, ref: < LearningAPI_project.id]
+  "user_id" int4 [not null, ref: < LearningAPI_nssuser.id]
+
+  Indexes {
+    project_id [type: btree, name: "LearningAPI_projectnote_project_id_e4a18638"]
+    user_id [type: btree, name: "LearningAPI_projectnote_user_id_11d28d62"]
+  }
+}
+
+Table "LearningAPI_projecttag" [headercolor: #3498db] {
+  "id" int [pk, not null, increment]
+  "project_id" int4 [not null, ref: < LearningAPI_project.id]
+  "tag_id" int4 [not null, ref: < LearningAPI_tag.id]
+
+  Indexes {
+    project_id [type: btree, name: "LearningAPI_projecttag_project_id_899548a4"]
+    tag_id [type: btree, name: "LearningAPI_projecttag_tag_id_47e629cc"]
+  }
+}
+
+Table "LearningAPI_studentproject" [headercolor: #27ae60] {
+  "id" int [pk, not null, increment]
+  "project_id" int4 [not null, ref: > LearningAPI_project.id]
+  "student_id" int4 [not null, ref: < LearningAPI_nssuser.id]
+  "date_created" date
+}
+
+Table "LearningAPI_studentassessment" [headercolor: #27ae60] {
+  "id" int [pk, not null, increment]
+  "assessment_id" int4 [not null, ref: > LearningAPI_assessment.id]
+  "student_id" int4 [not null, ref: > LearningAPI_nssuser.id]
+  "status" int4 [not null]
+  "instructor_id" int4 [not null, ref: > LearningAPI_nssuser.id]
+  "url" varchar [not null]
+  "date_created" date
+}
+
+Table "authtoken_token" [headercolor: #8e44ad] {
+  "key" varchar(40) [pk, not null]
+  "created" timestamp [not null]
+  "user_id" int4 [unique, not null, ref: < auth_user.id]
+}
+
+Table "LearningAPI_assessmentobjective" [headercolor: #f39c12] {
+  "id" int [pk, not null, increment]
+  "assessment_id" int4 [not null, ref: < LearningAPI_assessment.id]
+  "objective_id" int4 [not null, ref: < LearningAPI_learningobjective.id]
+
+  Indexes {
+    assessment_id [type: btree, name: "LearningAPI_assessmentobjective_assessment_id_21164f42"]
+    objective_id [type: btree, name: "LearningAPI_assessmentobjective_objective_id_d27a427c"]
+  }
+}
+
+Table "LearningAPI_capstone" [headercolor: #16a085] {
+  "id" int [pk, not null, increment]
+  "proposal_url" varchar(256) [not null]
+  "description" varchar(256) [not null]
+  "course_id" int4 [not null, ref: < LearningAPI_course.id]
+  "student_id" int4 [not null, ref: < LearningAPI_nssuser.id]
+
+  Indexes {
+    course_id [type: btree, name: "LearningAPI_capstone_course_id_001ef78d"]
+    student_id [type: btree, name: "LearningAPI_capstone_student_id_44c8466f"]
+  }
+}
+
+Table "LearningAPI_capstonetimeline" [headercolor: #16a085] {
+  "id" int [pk, not null, increment]
+  "date" date [not null]
+  "capstone_id" int4 [not null, ref: < LearningAPI_capstone.id]
+  "status_id" int4 [not null, ref: < LearningAPI_proposalstatus.id]
+
+  Indexes {
+    capstone_id [type: btree, name: "LearningAPI_capstonetimeline_capstone_id_b186c422"]
+    status_id [type: btree, name: "LearningAPI_capstonetimeline_status_id_ac1666eb"]
+  }
+}
+
+Table "LearningAPI_chapternote" {
+  "id" int [pk, not null, increment]
+  "markdown_text" text [not null]
+  "public" bool [not null]
+  "date" date [not null]
+  "chapter_id" int4 [not null]
+  "user_id" int4 [not null, ref: < LearningAPI_nssuser.id]
+
+  Indexes {
+    chapter_id [type: btree, name: "LearningAPI_chapternote_chapter_id_457e9ee9"]
+    user_id [type: btree, name: "LearningAPI_chapternote_user_id_33381fec"]
+  }
+}
+
+Table "LearningAPI_chapterobjective" [headercolor: #f39c12] {
+  "id" int [pk, not null, increment]
+  "chapter_id" int4 [not null]
+  "objective_id" int4 [not null, ref: < LearningAPI_learningobjective.id]
+
+  Indexes {
+    chapter_id [type: btree, name: "LearningAPI_chapterobjective_chapter_id_5f709746"]
+    objective_id [type: btree, name: "LearningAPI_chapterobjective_objective_id_de647179"]
+  }
+}
+
+Table "LearningAPI_favoritenote" {
+  "id" int [pk, not null, increment]
+  "note_id" int4 [not null, ref: < LearningAPI_chapternote.id]
+  "user_id" int4 [not null, ref: < LearningAPI_nssuser.id]
+
+  Indexes {
+    note_id [type: btree, name: "LearningAPI_favoritenote_note_id_01e665ee"]
+    user_id [type: btree, name: "LearningAPI_favoritenote_user_id_0683f7cb"]
+  }
+}
+
+Table "LearningAPI_studentmentor" [headercolor: #8e44ad] {
+  "id" int [pk, not null, increment]
+  "capstone_id" int4 [not null, ref: < LearningAPI_capstone.id]
+  "mentor_id" int4 [not null, ref: < LearningAPI_nssuser.id]
+  "student_id" int4 [not null, ref: < LearningAPI_nssuser.id]
+
+  Indexes {
+    capstone_id [type: btree, name: "LearningAPI_studentmentor_capstone_id_e34d1547"]
+    mentor_id [type: btree, name: "LearningAPI_studentmentor_mentor_id_82dc078c"]
+    student_id [type: btree, name: "LearningAPI_studentmentor_student_id_5c3151aa"]
+  }
+}

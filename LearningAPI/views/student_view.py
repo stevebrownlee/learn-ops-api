@@ -4,7 +4,6 @@ import json
 import logging
 import requests
 from django.contrib.auth.models import User
-from django.conf import settings
 from django.db import connection
 from django.db import IntegrityError
 from django.http import HttpResponseServerError
@@ -15,14 +14,17 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
+from LearningAPI.utils import GithubRequest
 from LearningAPI.decorators import is_instructor
 from LearningAPI.models import Tag
 from LearningAPI.models.coursework import StudentProject, Project, Capstone
 from LearningAPI.models.people import (StudentNote, NssUser, StudentAssessment,
                                        OneOnOneNote, StudentPersonality, Assessment,
-                                       StudentAssessmentStatus, StudentTag)
+                                       StudentAssessmentStatus, StudentTag
+                                    )
 from LearningAPI.models.skill import (CoreSkillRecord, LearningRecord,
                                       LearningRecordEntry)
+from LearningAPI.views.notify import slack_notify
 from .personality import myers_briggs_persona
 
 
@@ -186,6 +188,7 @@ class StudentViewSet(ModelViewSet):
                         current_cohort AS cohort_name,
                         current_cohort_id AS cohort_id,
                         assessment_status_id,
+                        assessment_url,
                         current_project_id AS project_id,
                         current_project_index AS project_index,
                         current_project_name AS project_name,
@@ -217,25 +220,12 @@ class StudentViewSet(ModelViewSet):
                     students.append(student)
 
                 serializer = CohortStudentSerializer(data=students, many=True)
+
                 if serializer.is_valid():
                     return Response(serializer.data, status=status.HTTP_200_OK)
                 else:
-                    return Response({'message': 'Error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                    return Response({'message': serializer.error_messages}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    @action(methods=['put'], detail=True)
-    def selfassess(self, request, pk):
-        if request.method == "PUT":
-            auth_student = NssUser.objects.get(user=request.auth.user)
-
-            if auth_student.user.id == pk:
-                assessment_status = StudentAssessmentStatus.objects.get(pk=request.data['statusId'])
-                # What is the next assessment for this student?
-                # Create relationship between student and assessment
-                # Update status to statusId
-
-
-
-    @method_decorator(is_instructor())
     @action(methods=['post', 'put'], detail=True)
     def assess(self, request, pk):
         """POST when a student starts working on book assessment. PUT to change status."""
@@ -250,37 +240,40 @@ class StudentViewSet(ModelViewSet):
                 latest_assessment.save()
 
                 try:
-                    if latest_assessment.status.status == 'Reviewed and Complete':
-                        # 1. Send message to student
-                        headers = {
-                            "Content-Type": "application/x-www-form-urlencoded"
-                        }
-                        channel_payload = {
-                            "text": request.data.get(
-                                "text",
-                                f':fox-yay-woo-hoo: Self-Assessment Review Complete\n\n\n:white_check_mark: Your coaching team just marked {latest_assessment.assessment.name} as completed.\n\nVisit https://learning.nss.team to view your messages.'),
-                            "token": os.getenv("SLACK_BOT_TOKEN"),
-                            "channel": latest_assessment.student.slack_handle
-                        }
-
-                        requests.post(
-                            "https://slack.com/api/chat.postMessage",
-                            data=channel_payload,
-                            headers=headers,
-                            timeout=10
+                    if latest_assessment.status.status == 'Ready for Review':
+                        slack_notify(
+                            message="🎉 Congratulations! You've completed your self-assessment. Your coaching team will review your work and provide feedback soon.",
+                            channel=student.slack_handle
                         )
 
-                        # 2. Assign all objectives/weights to the student as complete
+                        slack_notify(
+                            message=f'{student.full_name} in {student.current_cohort["name"]} has completed their self-assessment for {latest_assessment.assessment.name}.\n\nReview it at {latest_assessment.url}',
+                            channel=student.current_cohort["ic"]
+                        )
+
+                    if latest_assessment.status.status == 'Reviewed and Complete':
+                        slack_notify(
+                            message=f':fox-yay-woo-hoo: Self-Assessment Review Complete\n\n\n:white_check_mark: Your coaching team just marked {latest_assessment.assessment.name} as completed.\n\nVisit https://learning.nss.team to view your latest messages and statuses.',
+                            channel=latest_assessment.student.slack_handle
+                        )
+
+                        # Assign all objectives/weights to the student as complete
                         assessment_objectives = latest_assessment.assessment.objectives.all()
                         for objective in assessment_objectives:
                             try:
-                                LearningRecord.objects.create(
+                                achieved_record = LearningRecord.objects.create(
                                     student=student,
                                     weight=objective,
                                     achieved=True,
                                 )
-                            except IntegrityError:
-                                pass
+                                LearningRecordEntry.objects.create(
+                                    record=achieved_record,
+                                    note=request.data.get("instructorNotes", ""),
+                                    instructor=NssUser.objects.get(user=request.auth.user)
+                                )
+                            except IntegrityError as ex:
+                                logger = logging.getLogger("LearningPlatform")
+                                logger.exception(getattr(ex, 'message', repr(ex)))
 
                 except Exception:
                     return Response({'message': 'Updated, but no Slack message sent'}, status=status.HTTP_204_NO_CONTENT)
@@ -292,19 +285,87 @@ class StudentViewSet(ModelViewSet):
         elif request.method == "POST":
             try:
                 try:
-                    assessment = Assessment.objects.get(
-                        book__id=int(request.data['bookId']))
+                    student = NssUser.objects.get(pk=pk)
+                    assessment = Assessment.objects.get(book__id=int(request.data['bookId']))
+
                 except Assessment.DoesNotExist:
                     return Response({'message': 'There is no assessment for this book.'}, status=status.HTTP_404_NOT_FOUND)
 
+                try:
+                    existing_assessment = StudentAssessment.objects.get(student=student, assessment=assessment)
+                    assessment_uri = request.build_absolute_uri(f'/assessments/{existing_assessment.id}')
+                    return Response(
+                        { 'message': f'Conflict: {student.full_name} is already assigned to the {assessment.name} assessment' },
+                        status=status.HTTP_409_CONFLICT,
+                        headers={'Location': assessment_uri}
+                    )
+                except StudentAssessment.DoesNotExist:
+                    pass
+
+                # Create the student assessment record
                 student_assessment = StudentAssessment()
-                student_assessment.student = NssUser.objects.get(pk=pk)
-                student_assessment.instructor = NssUser.objects.get(
-                    user=request.auth.user)
-                student_assessment.status = StudentAssessmentStatus.objects.get(
-                    status="In Progress")
+                student_assessment.student = student
+                student_assessment.instructor = NssUser.objects.get(user=request.auth.user)
+                student_assessment.status = StudentAssessmentStatus.objects.get(status="In Progress")
                 student_assessment.assessment = assessment
                 student_assessment.save()
+
+                gh_request = GithubRequest()
+                full_url = assessment.source_url
+
+                # Split the full URL on '/' and get the last two items
+                ( org, repo, ) = full_url.split('/')[-2:]
+
+                # Construct request body for creating the repository
+                student_org_name = student.current_cohort["github_org"].split("/")[-1]
+
+                # Replace all spaces in the assessment name with hyphens
+                hyphenated_assessment_name = assessment.name.replace(" ", "-")
+                repo_name = f"{hyphenated_assessment_name}-{student.github_handle}"
+
+                request_body = {
+                    "owner": student_org_name,
+                    "name": repo_name,
+                    "description": f"This is your self-assessment repository for the {assessment.book.name} book",
+                    "include_all_branches": False,
+                    "private": False
+                }
+
+                # Create the repository
+                response = gh_request.post(url=f'https://api.github.com/repos/{org}/{repo}/generate',data=request_body)
+
+                # Assign the student write permissions to the repository
+                request_body = { "permission":"write" }
+                response = gh_request.put(
+                    url=f'https://api.github.com/repos/{student_org_name}/{repo_name}/collaborators/{student.github_handle}',
+                    data=request_body
+                )
+                if response.status_code != 204:
+                    return Response(
+                        {
+                            'message': 'Error: Student was not added as a collaborator to the assessment repository.'
+                        },
+                        status=status.HTTP_502_BAD_GATEWAY
+                    )
+
+                # Send message to student
+                created_repo_url = f'https://github.com/{student_org_name}/{repo_name}'
+                slack_notify(
+                    f"🐙 Your self-assessment repository has been created. Visit the URL below and clone the project to your machine.\n\n{created_repo_url}",
+                    student.slack_handle
+                )
+
+                # Send message to instructors
+                slack_channel = student.assigned_cohorts.order_by("-id").first().cohort.slack_channel
+                slack_notify(
+                    f"📝 {student.full_name} has started the self-assessment for {assessment.name}.",
+                    slack_channel
+                )
+
+                # Update the student assessment record with the Github repo URL
+                student_assessment.url = created_repo_url
+                student_assessment.save()
+
             except Exception as ex:
                 return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -500,6 +561,7 @@ class CohortStudentSerializer(serializers.Serializer):
     current_cohort = serializers.DictField()
     avatar = serializers.CharField()
     assessment_status_id = serializers.IntegerField()
+    assessment_url = serializers.CharField(max_length=256, allow_blank=True, allow_null=True)
     project_id = serializers.IntegerField()
     project_duration = serializers.IntegerField()
     project_index = serializers.IntegerField()
