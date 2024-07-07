@@ -20,7 +20,7 @@ from LearningAPI.models import Tag
 from LearningAPI.models.coursework import StudentProject, Project, Capstone
 from LearningAPI.models.people import (StudentNote, NssUser, StudentAssessment,
                                        OneOnOneNote, StudentPersonality, Assessment,
-                                       StudentAssessmentStatus, StudentTag, Cohort
+                                       StudentAssessmentStatus, StudentTag
                                     )
 from LearningAPI.models.skill import (CoreSkillRecord, LearningRecord,
                                       LearningRecordEntry)
@@ -253,7 +253,7 @@ class StudentViewSet(ModelViewSet):
 
                     if latest_assessment.status.status == 'Reviewed and Complete':
                         slack_notify(
-                            message=f':fox-yay-woo-hoo: Self-Assessment Review Complete\n\n\n:white_check_mark: Your coaching team just marked {latest_assessment.assessment.name} as completed.\n\nVisit https://learning.nss.team to view your messages.',
+                            message=f':fox-yay-woo-hoo: Self-Assessment Review Complete\n\n\n:white_check_mark: Your coaching team just marked {latest_assessment.assessment.name} as completed.\n\nVisit https://learning.nss.team to view your latest messages and statuses.',
                             channel=latest_assessment.student.slack_handle
                         )
 
@@ -261,13 +261,19 @@ class StudentViewSet(ModelViewSet):
                         assessment_objectives = latest_assessment.assessment.objectives.all()
                         for objective in assessment_objectives:
                             try:
-                                LearningRecord.objects.create(
+                                achieved_record = LearningRecord.objects.create(
                                     student=student,
                                     weight=objective,
                                     achieved=True,
                                 )
-                            except IntegrityError:
-                                pass
+                                LearningRecordEntry.objects.create(
+                                    record=achieved_record,
+                                    note=request.data.get("instructorNotes", ""),
+                                    instructor=NssUser.objects.get(user=request.auth.user)
+                                )
+                            except IntegrityError as ex:
+                                logger = logging.getLogger("LearningPlatform")
+                                logger.exception(getattr(ex, 'message', repr(ex)))
 
                 except Exception:
                     return Response({'message': 'Updated, but no Slack message sent'}, status=status.HTTP_204_NO_CONTENT)
