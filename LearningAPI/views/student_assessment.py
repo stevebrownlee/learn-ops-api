@@ -96,7 +96,7 @@ class StudentAssessmentView(ViewSet):
         """Listing all assessments"""
         if "studentId" in request.query_params:
             student = NssUser.objects.get(pk=request.query_params["studentId"])
-            student_assessments = StudentAssessment.objects.filter(student=student)
+            student_assessments = StudentAssessment.objects.filter(student=student).order_by('-date_created')
 
             try:
                 serializer = StudentAssessmentSerializer(student_assessments, many=True)
@@ -104,10 +104,7 @@ class StudentAssessmentView(ViewSet):
             except Exception as ex:
                 return Response({"reason": ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
 
-        else:
-            assessments = Assessment.objects.all()
-            serializer = AssessmentSerializer(assessments, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({'message': 'Please provide a studentId query parameter'}, status=status.HTTP_400_BAD_REQUEST)
 
     def retrieve(self, request, pk=None):
         """Handle GET requests for single item
@@ -130,68 +127,6 @@ class StudentAssessmentView(ViewSet):
             return Response(
                 {"message": "That student assessment does not exist."},
                 status=status.HTTP_404_NOT_FOUND)
-
-        except Exception as ex:
-            return HttpResponseServerError(ex)
-
-    def update(self, request, pk=None):
-        """Handle PUT requests
-
-        Returns:
-            Response -- Empty body with 204 status code
-        """
-        try:
-            assessment = StudentAssessment.objects.get(pk=pk)
-            assessment_status = StudentAssessmentStatus.objects.get(pk=request.data["status"])
-
-            # Only allow student owner of assessment or an instructor to modify
-            if request.auth.user == assessment.student.user or request.auth.user.is_staff:
-
-                # Return 400 if no status change
-                if assessment.status == assessment_status:
-                    return Response({ "message": "No change in status"}, status=status.HTTP_400_BAD_REQUEST)
-
-                # Student cannot change status to reviewed
-                if request.auth.user == assessment.student.user and assessment_status.status not in ("In Progress", "Ready for Review", ):
-                    return Response(None, status=status.HTTP_401_UNAUTHORIZED)
-
-                # If an instructor changed the status, record the instructor
-                if request.auth.user.is_staff:
-                    assessment.instructor = NssUser.objects.get(user=request.auth.user)
-
-                # Set new status and save
-                assessment.status = assessment_status
-                assessment.save()
-
-                # Send message to student
-                try:
-                    if assessment.status.status == 'Reviewed and Complete':
-                        headers = {
-                            "Content-Type": "application/x-www-form-urlencoded"
-                        }
-                        channel_payload = {
-                            "text": request.data.get(
-                                "text",
-                                f':fox-yay-woo-hoo: Self-Assessment Review Complete\n\n\n:white_check_mark: Your coaching team just marked {assessment.assessment.name} as completed.\n\nVisit https://learning.nss.team to view your messages.'),
-                            "token": os.getenv("SLACK_BOT_TOKEN"),
-                            "channel": assessment.student.slack_handle
-                        }
-
-                        requests.post(
-                            "https://slack.com/api/chat.postMessage",
-                            data=channel_payload,
-                            headers=headers
-                        )
-                except Exception:
-                    pass
-
-
-                return Response(None, status=status.HTTP_204_NO_CONTENT)
-            else:
-                return Response(None, status=status.HTTP_401_UNAUTHORIZED)
-
-        except StudentAssessment.DoesNotExist:
-            return Response(None, status=status.HTTP_404_NOT_FOUND)
 
         except Exception as ex:
             return HttpResponseServerError(ex)
@@ -228,19 +163,12 @@ class AssessmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Assessment
-        fields = ('id', 'name', 'source_url', 'assigned_book', 'course', 'objectives' )
+        fields = ('id', 'name', 'objectives' )
 
 class StudentAssessmentSerializer(serializers.ModelSerializer):
     """JSON serializer"""
-    assessment = serializers.SerializerMethodField()
+    assessment = AssessmentSerializer(many=False)
     status = serializers.SerializerMethodField()
-
-    def get_assessment(self, obj):
-        """Return just the name of the assessment"""
-        return {
-            "id": obj.assessment.id,
-            "name": obj.assessment.name
-        }
 
     def get_status(self, obj):
         """Return the status of assessment"""
