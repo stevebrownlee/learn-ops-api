@@ -61,17 +61,6 @@ class GithubRequest(object):
     def sleep_with_countdown(self, countdown_seconds):
         ticks = countdown_seconds * 2
         for count in range(ticks, -1, -1):
-            remaining = str(int(0.5 + count / 2)).rjust(2)
-            spinner = ['-', '/', '|', '\\'][count % 4]
-
-            progress = '=' * (ticks - count)
-            if count:
-                progress = progress[:-1] + '>'
-
-            print(
-                f'[bright_white]  {spinner} [{progress.ljust(ticks)}] {remaining}[/bright_white]', end='\r')
-
             if count:
                 time.sleep(0.5)
 
-        print()
