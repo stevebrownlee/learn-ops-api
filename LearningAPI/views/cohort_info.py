@@ -1,12 +1,9 @@
-from django.db.models import Count, Q
-from django.db import IntegrityError
+"""View module for handling requests about cohort info"""
 from django.http import HttpResponseServerError
 from rest_framework import serializers, status
-from rest_framework import permissions
-from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
-from LearningAPI.models.people import Cohort, NssUser, CohortInfo
+from LearningAPI.models.people import Cohort, CohortInfo
 
 
 class CohortInfoViewSet(ViewSet):

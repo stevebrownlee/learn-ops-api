@@ -4,7 +4,14 @@ select * from pg_catalog.pg_tables;
 
 
 select * from "auth_user" order by id desc;
+select * from "socialaccount_socialaccount" order by id desc;
 select * from "authtoken_token" where user_id = 470;
+select * from "LearningAPI_nssuser" where user_id = 470;
+select * from "LearningAPI_nssusercohort" where nss_user_id = 468;
+update "LearningAPI_nssusercohort"
+    set is_github_org_member = FALSE
+     where nss_user_id = 468;
+
 
 -- Drop all tables
 DO $$ DECLARE

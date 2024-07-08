@@ -1,5 +1,6 @@
 """View module for handling requests about park areas"""
 import logging
+from rest_framework.decorators import action
 from rest_framework import serializers, status
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
@@ -8,11 +9,32 @@ from allauth.socialaccount.models import SocialAccount
 from LearningAPI.utils import GithubRequest
 from LearningAPI.models.people import Cohort, NssUserCohort, NssUser
 from LearningAPI.models.coursework import StudentProject
-from LearningAPI.models.people.student_personality import StudentPersonality
 
 
 class Profile(ViewSet):
     """Person can see profile information"""
+
+    @action(detail=False, methods=['put'])
+    def change(self, request):
+        """Handle PUT requests to profile resource
+
+        Returns:
+            Response -- None
+        """
+        first = request.data.get("firstName", None)
+        last = request.data.get("lastName", None)
+
+        if first is not None and last is not None:
+            request.auth.user.first_name = first
+            request.auth.user.last_name = last
+
+            request.auth.user.save()
+
+            return Response(None, status=status.HTTP_204_NO_CONTENT)
+
+        return Response({'message': 'You must provide a \'firstName\' and \'lastName\' in the request body'}, status=status.HTTP_400_BAD_REQUEST)
+
+
 
     def list(self, request):
         """Handle GET requests to profile resource
@@ -20,7 +42,6 @@ class Profile(ViewSet):
         Returns:
             Response -- JSON representation of user info
         """
-        personality = {}
         cohort = self.request.query_params.get('cohort', None)
         mimic = self.request.query_params.get('mimic', None)
 
@@ -74,7 +95,9 @@ class Profile(ViewSet):
 
 
         if not request.auth.user.is_staff or mimic:
+            # Check to see if the learner has accepted the invitation to join the cohort Github organization
             student_cohort = nss_user.assigned_cohorts.first()
+
             if not student_cohort.is_github_org_member:
                 # Send a request to the Github API to check the membership status of the user for the cohort Github organization
                 gh_request = GithubRequest()
@@ -90,7 +113,13 @@ class Profile(ViewSet):
                 github_org_membership_status = "active"
 
 
-            serializer = ProfileSerializer(nss_user, context={'request': request, 'github_status': github_org_membership_status})
+            serializer = ProfileSerializer(
+                nss_user,
+                context={
+                    'request': request,
+                    'github_status': github_org_membership_status
+                }
+            )
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             # Create custom JSON response for instructors
