@@ -1,8 +1,11 @@
 """View module for handling requests about park areas"""
+import logging
 from rest_framework import serializers, status
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from allauth.socialaccount.models import SocialAccount
+
+from LearningAPI.utils import GithubRequest
 from LearningAPI.models.people import Cohort, NssUserCohort, NssUser
 from LearningAPI.models.coursework import StudentProject
 from LearningAPI.models.people.student_personality import StudentPersonality
@@ -49,6 +52,16 @@ class Profile(ViewSet):
                 usercohort.nss_user = nss_user
                 usercohort.save()
 
+                # Add student's github account as a member of the cohort Github organization
+                gh_request = GithubRequest()
+                student_org_name = cohort_assignment.info.student_organization_url.split("/")[-1]
+                request_url = f'https://api.github.com/orgs/{student_org_name}/memberships/{person.extra_data["login"]}'
+                data = {"role": "member"}
+                response = gh_request.put(request_url, data)
+                if response.status_code != 200:
+                    logger = logging.getLogger("LearningPlatform")
+                    logger.warning("Error adding %s to %s organization", person.extra_data['login'], student_org_name)
+
                 # Assign student to first project in cohort's course
                 cohort_first_course = cohort_assignment.courses.get(index=0)
                 course_first_book = cohort_first_course.course.books.get(index=0)
@@ -58,24 +71,29 @@ class Profile(ViewSet):
                 student_project.project = book_first_project
                 student_project.save()
 
-        try:
-            personality = StudentPersonality.objects.get(student=nss_user)
-        except StudentPersonality.DoesNotExist:
-            personality = StudentPersonality()
-            personality.briggs_myers_type = ""
-            personality.bfi_extraversion = 0
-            personality.bfi_agreeableness = 0
-            personality.bfi_conscientiousness = 0
-            personality.bfi_neuroticism = 0
-            personality.bfi_openness = 0
-            personality.student = nss_user
-            personality.save()
+
 
         if not request.auth.user.is_staff or mimic:
-            serializer = ProfileSerializer(nss_user, context={'request': request})
+            student_cohort = nss_user.assigned_cohorts.first()
+            if not student_cohort.is_github_org_member:
+                # Send a request to the Github API to check the membership status of the user for the cohort Github organization
+                gh_request = GithubRequest()
+                student_org_name = student_cohort.cohort.info.student_organization_url.split("/")[-1]
+                request_url = f'https://api.github.com/orgs/{student_org_name}/memberships/{person.extra_data["login"]}'
+                response = gh_request.get(request_url).json()
+                github_org_membership_status = response.get("state", None)
+
+                if github_org_membership_status == "active":
+                    student_cohort.is_github_org_member = True
+                    student_cohort.save()
+            else:
+                github_org_membership_status = "active"
+
+
+            serializer = ProfileSerializer(nss_user, context={'request': request, 'github_status': github_org_membership_status})
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
-
+            # Create custom JSON response for instructors
             profile = {}
             profile["person"] = {}
             profile["person"]["first_name"] = request.auth.user.first_name
@@ -91,26 +109,7 @@ class Profile(ViewSet):
             else:
                 profile["person"]["active_cohort"] = 0
 
-
         return Response(profile)
-
-
-class PersonalitySerializer(serializers.ModelSerializer):
-    """Serializer for a student's personality info"""
-    briggs_myers_type = serializers.SerializerMethodField()
-
-    def get_briggs_myers_type(self, obj):
-        if obj.briggs_myers_type != '':
-            return obj.briggs_myers_type
-
-        return ""
-    class Meta:
-        model = StudentPersonality
-        fields = (
-            'briggs_myers_type', 'bfi_extraversion',
-            'bfi_agreeableness', 'bfi_conscientiousness',
-            'bfi_neuroticism', 'bfi_openness',
-        )
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -122,6 +121,10 @@ class ProfileSerializer(serializers.ModelSerializer):
     repos = serializers.SerializerMethodField()
     staff = serializers.SerializerMethodField()
     capstones = serializers.SerializerMethodField()
+    github_org_status = serializers.SerializerMethodField()
+
+    def get_github_org_status(self, obj):
+        return self.context['github_status']
 
     def get_staff(self, obj):
         return obj.user.is_staff
@@ -140,7 +143,6 @@ class ProfileSerializer(serializers.ModelSerializer):
                 "id": 0,
                 "name": "Unassigned"
             }
-
 
     def get_github(self, obj):
         github = obj.user.socialaccount_set.get(user=obj.user)
@@ -170,4 +172,5 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = NssUser
         fields = ('id', 'name', 'project', 'email', 'github', 'staff', 'slack_handle',
-                  'current_cohort', 'repos', 'assessment_overview', 'capstones',)
+                  'current_cohort', 'repos', 'assessment_overview', 'capstones',
+                  'github_org_status')

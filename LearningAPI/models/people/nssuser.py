@@ -9,8 +9,8 @@ from django.db.models import Sum
 
 class NssUser(models.Model):
     """Model for NSS-specific user information beyond Django user"""
-    user = models.OneToOneField(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
     # This field will hold the user's Slack Member Id
     slack_handle = models.CharField(max_length=55, null=True, blank=True)
     github_handle = models.CharField(max_length=55, null=True, blank=True)

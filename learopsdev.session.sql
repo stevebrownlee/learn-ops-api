@@ -3,6 +3,9 @@
 select * from pg_catalog.pg_tables;
 
 
+select * from "auth_user" order by id desc;
+select * from "authtoken_token" where user_id = 470;
+
 -- Drop all tables
 DO $$ DECLARE
     r RECORD;
