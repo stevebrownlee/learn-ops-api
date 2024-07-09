@@ -130,6 +130,7 @@ class StudentViewSet(ModelViewSet):
             StudentTag.objects.filter(student=student).delete()
 
             # Delete all learning records
+            LearningRecordEntry.objects.filter(record__student=student).delete()
             LearningRecord.objects.filter(student=student).delete()
 
             # Delete all core skill records

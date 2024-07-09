@@ -39,17 +39,20 @@ class CohortViewSet(ViewSet):
         if client_side is None or server_side is None:
             return Response({"reason": "Please choose both courses for this cohort."}, status=status.HTTP_400_BAD_REQUEST)
 
-        cohort = Cohort()
-        cohort.name = request.data["name"]
-        cohort.slack_channel = request.data["slackChannel"]
-        cohort.start_date = request.data["startDate"]
-        cohort.end_date = request.data["endDate"]
-        cohort.break_start_date = '2022-01-01'
-        cohort.break_end_date = '2022-01-01'
 
         try:
+            cohort = Cohort()
+            cohort.name = request.data["name"]
+            cohort.slack_channel = request.data["slackChannel"]
+            cohort.start_date = request.data["startDate"]
+            cohort.end_date = request.data["endDate"]
+            cohort.break_start_date = '2022-01-01'
+            cohort.break_end_date = '2022-01-01'
             cohort.save()
+        except IntegrityError as ex:
+            return Response({"message": ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
 
+        try:
             # Assign client side course
             cohort_course_client = CohortCourse()
             course_instance = Course.objects.get(pk=client_side)
@@ -58,7 +61,10 @@ class CohortViewSet(ViewSet):
             cohort_course_client.active = True
             cohort_course_client.index = 0
             cohort_course_client.save()
+        except IntegrityError:
+            pass
 
+        try:
             # Assign server side course
             cohort_course_server = CohortCourse()
             course_instance = Course.objects.get(pk=server_side)
@@ -67,18 +73,20 @@ class CohortViewSet(ViewSet):
             cohort_course_server.active = False
             cohort_course_server.index = 1
             cohort_course_server.save()
+        except IntegrityError:
+            pass
 
-            serializer = CohortSerializer(cohort, context={'request': request})
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-
+        try:
+            # Create matching cohort info
+            cohort_info = CohortInfo()
+            cohort_info.cohort = cohort
+            cohort_info.student_organization_url = request.data.get('orgURL', None)
+            cohort_info.save()
         except IntegrityError as ex:
-            if "cohort_name_key" in ex.args[0]:
-                return Response({"reason": "Duplicate cohort name."}, status=status.HTTP_400_BAD_REQUEST)
-            else:
-                return Response({"reason": "Duplicate cohort Slack channel."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
 
-        except Exception as ex:
-            return Response({"reason": ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
+        serializer = CohortSerializer(cohort, context={'request': request})
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def retrieve(self, request, pk=None):
         """Handle GET requests for single item
@@ -111,8 +119,6 @@ class CohortViewSet(ViewSet):
             cohort.slack_channel = request.data["slack_channel"]
             cohort.start_date = request.data["start_date"]
             cohort.end_date = request.data["end_date"]
-            cohort.break_start_date = request.data["break_start_date"]
-            cohort.break_end_date = request.data["break_end_date"]
 
             cohort.save()
         except Cohort.DoesNotExist:
@@ -165,12 +171,13 @@ class CohortViewSet(ViewSet):
                 serializer = MiniCohortSerializer(cohorts, many=True, context={'request': request})
                 return Response(serializer.data, status=status.HTTP_200_OK)
 
-            cohorts = cohorts.annotate(
-                students=Count('members', filter=Q(
-                    members__nss_user__user__is_staff=False)),
-                is_instructor=Count('members', filter=Q(
-                    members__nss_user__user=request.auth.user)),
-            ).all().order_by('pk')
+            cohorts = cohorts\
+                .annotate(
+                    students=Count('members', filter=Q(members__nss_user__user__is_staff=False)),
+                    is_instructor=Count('members', filter=Q(members__nss_user__user=request.auth.user))
+                )\
+                .all()\
+                .order_by('pk')
 
             if limit is not None:
                 cohorts = cohorts.order_by("-start_date")[0:int(limit)]
@@ -185,7 +192,7 @@ class CohortViewSet(ViewSet):
     def active(self, request, pk):
         if request.method == "PUT":
             cohort = Cohort.objects.get(pk=pk)
-            cohort.active = request.data.get('active', False)
+            cohort.active = request.data.get('active', True)
             cohort.save()
 
             return Response(None, status=status.HTTP_204_NO_CONTENT)
@@ -200,7 +207,9 @@ class CohortViewSet(ViewSet):
         if request.method == "PUT":
             try:
                 client_side_course = CohortCourse.objects.get(
-                cohort__id=pk, active=True)
+                    cohort__id=pk,
+                    active=True
+                )
             except CohortCourse.DoesNotExist:
                 return Response({
                     'reason': 'Could not find an active client side course for this cohort'
@@ -208,7 +217,9 @@ class CohortViewSet(ViewSet):
 
             try:
                 server_side_course = CohortCourse.objects.get(
-                    cohort__id=pk, active=False)
+                    cohort__id=pk,
+                    active=False
+                )
             except CohortCourse.DoesNotExist:
                 return Response({
                     'reason': 'Could not find an inactive server side course for this cohort'
@@ -217,7 +228,10 @@ class CohortViewSet(ViewSet):
             # Get first project of server side course
             try:
                 first_project = Project.objects.get(
-                    book__course=server_side_course.course, book__index=0, index=0)
+                    book__course=server_side_course.course,
+                    book__index=0,
+                    index=0
+                )
             except Project.DoesNotExist:
                 return Response({
                     'reason': 'Could not find a singular project in the first book of server side'
@@ -232,7 +246,10 @@ class CohortViewSet(ViewSet):
                 }, status=status.HTTP_404_NOT_FOUND)
 
             cohort_students = NssUser.objects.filter(
-                user__is_active=True, user__is_staff=False, assigned_cohorts__cohort=cohort)
+                user__is_active=True,
+                user__is_staff=False,
+                assigned_cohorts__cohort=cohort
+            )
 
             # Create record in student project
             for student in cohort_students:
@@ -266,6 +283,7 @@ class CohortViewSet(ViewSet):
             cohort = None
             member = None
             user_type = request.query_params.get("userType", None)
+            cohort = Cohort.objects.get(pk=pk)
 
             try:
                 if user_type is not None and user_type == "instructor":
@@ -284,7 +302,6 @@ class CohortViewSet(ViewSet):
                     user_id = int(request.data["person_id"])
                     member = NssUser.objects.get(pk=user_id)
 
-                cohort = Cohort.objects.get(pk=pk)
                 NssUserCohort.objects.get(cohort=cohort, nss_user=member)
 
                 return Response(
@@ -299,10 +316,12 @@ class CohortViewSet(ViewSet):
                 relationship.save()
 
                 if user_type is None:
-                    # Assign student to first project in cohort's course
-                    cohort_first_course = cohort.courses.get(index=0)
-                    course_first_book = cohort_first_course.course.books.get(index=0)
-                    book_first_project = course_first_book.projects.get(index=0)
+                    # Assign student to first project in cohort's active course
+                    book_first_project = Project.objects.get(
+                        index=0,
+                        book__course=cohort.courses.get(active=True).course,
+                        book__index=0
+                    )
 
                     student_project = StudentProject()
                     student_project.student = member
@@ -343,12 +362,21 @@ class CohortViewSet(ViewSet):
                 return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
             except NssUserCohort.DoesNotExist as ex:
-                return Response({'message': "Student is not assigned to that cohort."}, status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    {'message': "Student is not assigned to that cohort."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
 
             except Exception as ex:
-                return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                return Response(
+                    {'message': ex.args[0]},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
 
-        return Response({'message': 'Unsupported HTTP method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        return Response(
+            {'message': 'Unsupported HTTP method'},
+            status=status.HTTP_405_METHOD_NOT_ALLOWED
+        )
 
 class MiniCohortSerializer(serializers.ModelSerializer):
     """JSON serializer"""
@@ -376,13 +404,13 @@ class CohortSerializer(serializers.ModelSerializer):
     def get_student_organization_url(self, obj):
         try:
             return obj.info.student_organization_url
-        except Exception as ex:
+        except Exception:
             return ""
 
     def get_github_classroom_url(self, obj):
         try:
             return obj.info.github_classroom_url
-        except Exception as ex:
+        except Exception:
             return ""
 
     def get_attendance_sheet_url(self, obj):
