@@ -1,14 +1,12 @@
-from datetime import datetime
 from django.db.models import Count, Q
 from django.db import IntegrityError
 from django.http import HttpResponseServerError
-from rest_framework import serializers, status
-from rest_framework import permissions
+from rest_framework import serializers, status, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
-from ..models.people import Cohort, NssUser, NssUserCohort, CohortInfo
-from ..models.coursework import CohortCourse, Course, Project, StudentProject
+from LearningAPI.models.people import Cohort, NssUser, NssUserCohort, CohortInfo
+from LearningAPI.models.coursework import CohortCourse, Course, Project, StudentProject
 
 
 class CohortPermission(permissions.BasePermission):
