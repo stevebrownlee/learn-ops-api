@@ -295,6 +295,7 @@ class StudentViewSet(ModelViewSet):
                 try:
                     existing_assessment = StudentAssessment.objects.get(student=student, assessment=assessment)
                     assessment_uri = request.build_absolute_uri(f'/assessments/{existing_assessment.id}')
+
                     return Response(
                         { 'message': f'Conflict: {student.full_name} is already assigned to the {assessment.name} assessment' },
                         status=status.HTTP_409_CONFLICT,
