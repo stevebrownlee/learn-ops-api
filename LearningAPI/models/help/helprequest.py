@@ -14,6 +14,7 @@ class HelpRequest(models.Model):
     exception_message = models.TextField(blank=True, null=True)
     stack_trace = models.TextField(blank=True, null=True)
     loom_url = models.URLField(blank=True, null=True)
+    llm_prompt = models.TextField(blank=True, null=True)
     is_resolved = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)

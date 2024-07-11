@@ -53,6 +53,7 @@ router.register(r'cohortinfo', views.CohortInfoViewSet, 'info')
 urlpatterns = [
     path('', include(router.urls)),
     path('records/entries/<int:entry_id>', views.LearningRecordViewSet.as_view({'delete': 'entries'}), name="entries"),
+    path('queries/popular', views.popular_queries, name='popular-queries'),
 
     path('accounts', views.register_user),
     path('notify', views.notify, name='notify'),

@@ -23,6 +23,7 @@ requests = "*"
 "backports.weakref" = "*"
 wheel = "*"
 openai = "*"
+nltk = "*"
 
 [requires]
 python_version = "3.9.1"
