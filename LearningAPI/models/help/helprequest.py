@@ -18,6 +18,3 @@ class HelpRequest(models.Model):
     is_resolved = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self) -> str:
-        return self.title

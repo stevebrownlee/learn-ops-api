@@ -8,16 +8,12 @@ from LearningAPI.models.help import RequestQuery
 def popular_queries(request):
     try:
         # Query for popular searches with helpful_request_id
-        popular_searches = RequestQuery.objects.filter(helpful_request__isnull=False) \
-            .values('query') \
-            .annotate(count=Count('query')) \
-            .order_by('-count')[:10]
+        popular_searches = RequestQuery.objects.get_common_patterns()
 
         # Format the result
         result = [
             {
-                "query": item['query'],
-                "count": item['count']
+                "query_token": item,
             }
             for item in popular_searches
         ]

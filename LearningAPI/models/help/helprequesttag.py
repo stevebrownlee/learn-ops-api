@@ -5,7 +5,8 @@ class HelpRequestTag(models.Model):
     tag = models.ForeignKey('HelpTag', on_delete=models.CASCADE, related_name='help_requests')
 
     class Meta:
-        unique_together = ['help_request', 'help_tag']
+        unique_together = ['help_request', 'tag']
 
     def __str__(self):
+        # pylint: disable=no-member
         return f"{self.help_request.title} - {self.tag.name}"

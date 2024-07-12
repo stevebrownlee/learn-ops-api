@@ -10,6 +10,7 @@ class HelpRequestResponse(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
+        # pylint: disable=no-member
         return f"Response to {self.help_request.title} by {self.author.username}"
 
     class Meta:
