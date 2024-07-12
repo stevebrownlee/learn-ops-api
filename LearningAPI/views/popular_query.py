@@ -8,7 +8,7 @@ from LearningAPI.models.help import RequestQuery
 def popular_queries(request):
     try:
         # Query for popular searches with helpful_request_id
-        popular_searches = RequestQuery.objects.get_common_patterns()
+        popular_searches = RequestQuery.objects.get_common_patterns(50)
 
         # Format the result
         result = [
