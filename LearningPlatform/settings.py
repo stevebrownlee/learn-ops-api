@@ -14,6 +14,10 @@ import os
 import logging
 from logging.handlers import RotatingFileHandler
 
+# Import jobs app settings
+from LearningServices.settings import *
+
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -52,6 +56,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.github',
     'corsheaders',
+    'django_rq',
+    'LearningServices',
     'LearningAPI',
 ]
 
@@ -128,6 +134,7 @@ DATABASES = {
         'PORT': os.getenv("LEARN_OPS_PORT"),
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators

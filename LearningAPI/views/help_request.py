@@ -2,10 +2,31 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
 from django.db.models import Q
-from LearningAPI.models.help import HelpRequest, RequestQuery
+from LearningAPI.models.help import HelpRequest, RequestQuery, HelpCategory
+from LearningAPI.models.people import NssUser
+
 
 class HelpRequestViewSet(ViewSet):
     """HelpRequest view set"""
+
+    def create(self, request):
+        """Handle POST operations
+
+        Returns:
+            Response -- JSON serialized help request instance
+        """
+        help_request = HelpRequest()
+        help_request.title = request.data['title']
+        help_request.content = request.data['content']
+        help_request.github_url = request.data['github_url']
+        help_request.category = HelpCategory.objects.get(pk=request.data['category'])
+        help_request.author = NssUser.objects.get(user=request.auth.user)
+
+        help_request.save()
+
+        serializer = HelpRequestSerializer(help_request, context={'request': request})
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def list(self, request):
         """Handle GET requests for help requests

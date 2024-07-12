@@ -1,23 +1,25 @@
+import json
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from django.db.models import Count
-from LearningAPI.models.help import RequestQuery
+from LearningAPI.utils import get_redis_connection
+
 
 @api_view(['GET'])
 def popular_queries(request):
     try:
-        # Query for popular searches with helpful_request_id
-        popular_searches = RequestQuery.objects.get_common_patterns(50)
+        redis_cache = get_redis_connection()
 
-        # Format the result
-        result = [
-            {
-                "query_token": item,
-            }
-            for item in popular_searches
-        ]
+        # Fetch the cached results
+        cached_results = redis_cache.get('search_results')
 
-        return Response(result, status=status.HTTP_200_OK)
+        # Check if results exist in the cache
+        if cached_results:
+            return Response(json.loads(cached_results), status=status.HTTP_200_OK)
+        else:
+            # Return a default value or handle the cache miss
+            return Response({'message': 'No cached results available'}, status=status.HTTP_404_NOT_FOUND)
+
+
     except Exception as ex:
         return Response({'error': str(ex)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
