@@ -1,23 +1,8 @@
 import json
 import time
 import os
-import redis
 import requests
 from requests.exceptions import ConnectionError
-from django.conf import settings
-from rq import Queue
-from rq.connections import Connection
-
-def get_redis_connection():
-    return redis.Redis(
-        host=settings.REDIS_CONFIG['HOST'],
-        port=settings.REDIS_CONFIG['PORT'],
-        db=settings.REDIS_CONFIG['DB']
-    )
-
-def get_rq_queue(name='popular_queries'):
-    connection = get_redis_connection()
-    return Queue(name, connection=connection)
 
 
 class GithubRequest(object):

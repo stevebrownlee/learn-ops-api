@@ -2,16 +2,16 @@ import json
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from LearningAPI.utils import get_redis_connection
+from LearningServices.utils import get_redis_connection
 
 
 @api_view(['GET'])
 def popular_queries(request):
     try:
-        redis_cache = get_redis_connection()
+        redis_connection = get_redis_connection()
 
         # Fetch the cached results
-        cached_results = redis_cache.get('search_results')
+        cached_results = redis_connection.get('search_results')
 
         # Check if results exist in the cache
         if cached_results:
