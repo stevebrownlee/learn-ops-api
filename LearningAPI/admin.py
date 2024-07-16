@@ -87,8 +87,9 @@ class CapstoneTimelineAdmin(admin.ModelAdmin):
 @admin.register(NssUserCohort)
 class NssUserCohortAdmin(admin.ModelAdmin):
     """For assigning students to cohorts"""
-    list_display = ('nss_user', 'cohort',)
+    list_display = ('nss_user', 'cohort', 'is_github_org_member')
     search_fields = ["nss_user__user__last_name"]
+    ordering = ('-pk',)
     search_help_text = "Search by last name"
 
 @admin.register(StudentTag)
