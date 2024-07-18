@@ -22,11 +22,7 @@ django-allauth = "0.54.0"
 requests = "*"
 "backports.weakref" = "*"
 wheel = "*"
-openai = "*"
-nltk = "*"
 redis = "*"
-rq = "*"
-django-rq = "*"
 
 [requires]
 python_version = "3.9.1"

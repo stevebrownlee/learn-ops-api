@@ -1,14 +1,14 @@
 import json
+import redis
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from LearningServices.utils import get_redis_connection
 
 
 @api_view(['GET'])
 def popular_queries(request):
     try:
-        redis_connection = get_redis_connection()
+        redis_connection = redis.StrictRedis(host='localhost', port=6379, db=0)
 
         # Fetch the cached results
         cached_results = redis_connection.get('search_results')

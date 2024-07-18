@@ -14,9 +14,6 @@ import os
 import logging
 from logging.handlers import RotatingFileHandler
 
-# Import jobs app settings
-from LearningServices.settings import *
-
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -56,8 +53,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.github',
     'corsheaders',
-    'django_rq',
-    'LearningServices',
     'LearningAPI',
 ]
 
@@ -135,6 +130,21 @@ DATABASES = {
     }
 }
 
+REDIS_CONFIG = {
+    'HOST': '127.0.0.1',
+    'PORT': 6379,
+    'DB': 0,
+    'DEFAULT_TIMEOUT': 360,
+}
+
+RQ_QUEUES = {
+    'popular_queries': {
+        'HOST': REDIS_CONFIG['HOST'],
+        'PORT': REDIS_CONFIG['PORT'],
+        'DB': REDIS_CONFIG['DB'],
+        'DEFAULT_TIMEOUT': REDIS_CONFIG['DEFAULT_TIMEOUT'],
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
