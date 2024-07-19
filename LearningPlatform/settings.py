@@ -14,6 +14,7 @@ import os
 import logging
 from logging.handlers import RotatingFileHandler
 
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -126,6 +127,22 @@ DATABASES = {
         'PASSWORD': os.getenv("LEARN_OPS_PASSWORD"),
         'HOST': os.getenv("LEARN_OPS_HOST"),
         'PORT': os.getenv("LEARN_OPS_PORT"),
+    }
+}
+
+REDIS_CONFIG = {
+    'HOST': '127.0.0.1',
+    'PORT': 6379,
+    'DB': 0,
+    'DEFAULT_TIMEOUT': 360,
+}
+
+RQ_QUEUES = {
+    'popular_queries': {
+        'HOST': REDIS_CONFIG['HOST'],
+        'PORT': REDIS_CONFIG['PORT'],
+        'DB': REDIS_CONFIG['DB'],
+        'DEFAULT_TIMEOUT': REDIS_CONFIG['DEFAULT_TIMEOUT'],
     }
 }
 

@@ -27,3 +27,4 @@ setup
 learning.service
 logs/
 .env
+.env*

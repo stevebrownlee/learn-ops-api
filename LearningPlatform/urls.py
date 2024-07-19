@@ -48,11 +48,14 @@ router.register(r'studenttags', views.StudentTagViewSet, 'studenttag')
 router.register(r'notes', views.StudentNoteViewSet, 'note')
 router.register(r'personalities', views.PersonalityView, 'person')
 router.register(r'cohortinfo', views.CohortInfoViewSet, 'info')
+router.register(r'helprequests', views.HelpRequestViewSet, 'help')
+router.register(r'helpqueries', views.RequestQueryViewSet, 'queries')
 
 
 urlpatterns = [
     path('', include(router.urls)),
     path('records/entries/<int:entry_id>', views.LearningRecordViewSet.as_view({'delete': 'entries'}), name="entries"),
+    path('queries/popular', views.popular_queries, name='popular-queries'),
 
     path('accounts', views.register_user),
     path('notify', views.notify, name='notify'),
