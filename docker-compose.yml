@@ -1,0 +1,29 @@
+services:
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./certs:/etc/letsencrypt
+    command: certonly --webroot --webroot-path=/var/www/learning.nss.team --email steve@stevebrownlee.com --agree-tos --non-interactive --domains -d learning.nss.team
+  nginx:
+    image: nginx:latest
+    container_name: ng01
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - .:/api
+      - ./config/nginx/conf.d:/etc/nginx/conf.d
+      - ./certs:/etc/nginx/ssl
+    depends_on:
+      - certbot
+  apihost:
+    build: .
+    container_name: learningapi
+    command: gunicorn -w 3 -b 0.0.0.0:8000 LearningPlatform.wsgi
+    volumes:
+      - .:/api
+    env_file:
+      - .env
+    depends_on:
+      - nginx
+
