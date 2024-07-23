@@ -207,6 +207,9 @@ class StudentViewSet(ModelViewSet):
                 columns = [col[0] for col in cursor.description]
                 results = cursor.fetchall()
 
+                logger = logging.getLogger("LearningPlatform")
+                logger.debug("Number of student records retrieved for cohort %s is %s", cohort, len(results))
+
                 students = []
                 for row in results:
                     student = dict(zip(columns, row))
