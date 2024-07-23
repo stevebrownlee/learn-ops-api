@@ -563,25 +563,28 @@ class CohortStudentSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     github_handle = serializers.CharField(max_length=100)
     name = serializers.CharField(max_length=100)
-    current_cohort = serializers.DictField()
-    avatar = serializers.CharField()
-    assessment_status_id = serializers.IntegerField()
+    current_cohort = serializers.DictField(allow_blank=True, allow_null=True)
+    avatar = serializers.CharField(allow_blank=True, allow_null=True)
+    assessment_status_id = serializers.IntegerField(allow_blank=True, allow_null=True)
     assessment_url = serializers.CharField(max_length=256, allow_blank=True, allow_null=True)
-    project_id = serializers.IntegerField()
-    project_duration = serializers.IntegerField()
-    project_index = serializers.IntegerField()
+    project_id = serializers.IntegerField(allow_blank=True, allow_null=True)
+    project_duration = serializers.IntegerField(allow_blank=True, allow_null=True)
+    project_index = serializers.IntegerField(allow_blank=True, allow_null=True)
     project_name = serializers.CharField(max_length=100)
-    book_id = serializers.IntegerField()
-    book_index = serializers.IntegerField()
+    book_id = serializers.IntegerField(allow_blank=True, allow_null=True)
+    book_index = serializers.IntegerField(allow_blank=True, allow_null=True)
     book_name = serializers.CharField(max_length=100)
-    score = serializers.IntegerField()
+    score = serializers.IntegerField(allow_blank=True, allow_null=True)
     notes = serializers.ListField(allow_empty=True, required=False)
     proposals = serializers.ListField(allow_empty=True, required=False)
     tags = serializers.ListField(allow_empty=True, required=False)
 
     def get_avatar(self, obj):
-        github = obj.user.socialaccount_set.get(user=obj['id'])
-        return github.extra_data["avatar_url"]
+        try:
+            github = obj.user.socialaccount_set.get(user=obj['id'])
+            return github.extra_data["avatar_url"]
+        except Exception:
+            return ""
 
 
 class StudentSerializer(serializers.ModelSerializer):
