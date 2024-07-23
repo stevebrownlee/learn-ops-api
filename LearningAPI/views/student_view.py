@@ -563,7 +563,7 @@ class CohortStudentSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     github_handle = serializers.CharField(max_length=100)
     name = serializers.CharField(max_length=100)
-    current_cohort = serializers.DictField(allow_blank=True, allow_null=True)
+    current_cohort = serializers.DictField()
     avatar = serializers.CharField(allow_blank=True, allow_null=True)
     assessment_status_id = serializers.IntegerField(allow_blank=True, allow_null=True)
     assessment_url = serializers.CharField(max_length=256, allow_blank=True, allow_null=True)
