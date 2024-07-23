@@ -17,7 +17,7 @@ from rest_framework.viewsets import ModelViewSet
 from LearningAPI.utils import GithubRequest
 from LearningAPI.decorators import is_instructor
 from LearningAPI.models import Tag
-from LearningAPI.models.coursework import StudentProject, Project, Capstone
+from LearningAPI.models.coursework import StudentProject, Project, Capstone, CapstoneTimeline
 from LearningAPI.models.people import (StudentNote, NssUser, StudentAssessment,
                                        OneOnOneNote, StudentPersonality, Assessment,
                                        StudentAssessmentStatus, StudentTag
@@ -135,6 +135,9 @@ class StudentViewSet(ModelViewSet):
 
             # Delete all core skill records
             CoreSkillRecord.objects.filter(student=student).delete()
+
+            # Delete all CapstoneTimeline related to student
+            CapstoneTimeline.objects.filter(capstone__student=student).delete()
 
             # Delete all capstones
             Capstone.objects.filter(student=student).delete()
