@@ -209,7 +209,6 @@ class StudentViewSet(ModelViewSet):
 
                 logger = logging.getLogger("LearningPlatform")
                 logger.debug("Number of student records retrieved for cohort %s is %s", cohort, len(results))
-                logger.debug(json.dumps(results))
 
                 students = []
                 for row in results:
@@ -576,9 +575,9 @@ class CohortStudentSerializer(serializers.Serializer):
     book_index = serializers.IntegerField()
     book_name = serializers.CharField(max_length=100)
     score = serializers.IntegerField()
-    notes = serializers.ListField()
-    proposals = serializers.ListField()
-    tags = serializers.ListField()
+    notes = serializers.ListField(allow_empty=True, required=False, allow_blank=True, allow_null=True)
+    proposals = serializers.ListField(allow_empty=True, required=False, allow_blank=True, allow_null=True)
+    tags = serializers.ListField(allow_empty=True, required=False, allow_blank=True, allow_null=True)
 
     def get_avatar(self, obj):
         github = obj.user.socialaccount_set.get(user=obj['id'])
