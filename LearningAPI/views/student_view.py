@@ -209,6 +209,7 @@ class StudentViewSet(ModelViewSet):
 
                 logger = logging.getLogger("LearningPlatform")
                 logger.debug("Number of student records retrieved for cohort %s is %s", cohort, len(results))
+                logger.debug(json.dumps(results))
 
                 students = []
                 for row in results:
