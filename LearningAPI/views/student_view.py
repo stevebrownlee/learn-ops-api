@@ -225,7 +225,11 @@ class StudentViewSet(ModelViewSet):
 
                 serializer = CohortStudentSerializer(data=students, many=True)
 
-                return Response(serializer.data, status=status.HTTP_200_OK)
+                if serializer.is_valid():
+                    return Response(serializer.data, status=status.HTTP_200_OK)
+                else:
+                    return Response(serializer.data, status=status.HTTP_200_OK)
+                    # return Response({'message': serializer.error_messages}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     @action(methods=['post', 'put'], detail=True)
     def assess(self, request, pk):
@@ -557,8 +561,8 @@ class PersonalitySerializer(serializers.ModelSerializer):
 
 class CohortStudentSerializer(serializers.Serializer):
     """JSON serializer"""
-    github_handle = serializers.CharField(max_length=100)
     id = serializers.IntegerField()
+    github_handle = serializers.CharField(max_length=100)
     name = serializers.CharField(max_length=100)
     current_cohort = serializers.DictField()
     avatar = serializers.CharField(allow_blank=True, allow_null=True)
