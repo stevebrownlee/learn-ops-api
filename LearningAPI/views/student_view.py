@@ -575,9 +575,9 @@ class CohortStudentSerializer(serializers.Serializer):
     book_index = serializers.IntegerField()
     book_name = serializers.CharField(max_length=100)
     score = serializers.IntegerField()
-    notes = serializers.ListField(allow_empty=True, required=False, allow_blank=True, allow_null=True)
-    proposals = serializers.ListField(allow_empty=True, required=False, allow_blank=True, allow_null=True)
-    tags = serializers.ListField(allow_empty=True, required=False, allow_blank=True, allow_null=True)
+    notes = serializers.ListField(allow_empty=True, required=False)
+    proposals = serializers.ListField(allow_empty=True, required=False)
+    tags = serializers.ListField(allow_empty=True, required=False)
 
     def get_avatar(self, obj):
         github = obj.user.socialaccount_set.get(user=obj['id'])
