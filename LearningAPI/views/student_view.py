@@ -231,6 +231,8 @@ class StudentViewSet(ModelViewSet):
                 if serializer.is_valid():
                     return Response(serializer.data, status=status.HTTP_200_OK)
                 else:
+                    logger.debug("Serializer for students by cohort failed")
+                    logger.debug(serializer.errors)
                     return Response(serializer.data, status=status.HTTP_200_OK)
                     # return Response({'message': serializer.error_messages}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
