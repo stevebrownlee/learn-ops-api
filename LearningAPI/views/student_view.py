@@ -229,6 +229,7 @@ class StudentViewSet(ModelViewSet):
                 serializer = CohortStudentSerializer(data=students, many=True)
 
                 if serializer.is_valid():
+                    logger.debug("Serializer for students by cohort succeeded")
                     return Response(serializer.data, status=status.HTTP_200_OK)
                 else:
                     logger.debug("Serializer for students by cohort failed")
