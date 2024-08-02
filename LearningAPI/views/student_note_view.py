@@ -1,10 +1,9 @@
 """Student view module"""
-from django.http import HttpResponseServerError
 from rest_framework import serializers, status
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from LearningAPI.models.people import NssUser
-from LearningAPI.models.people import StudentNote
+from LearningAPI.models.people import StudentNote, StudentNoteType
 
 
 class StudentNoteViewSet(ModelViewSet):
@@ -37,14 +36,25 @@ class StudentNoteViewSet(ModelViewSet):
         coach = NssUser.objects.get(user=request.auth.user)
 
         note_text = request.data.get('note', None)
+        note_type = request.data.get('type', None)
+
+        if note_type is None:
+            return Response({"reason": 'You did not provide a note type.'}, status=status.HTTP_400_BAD_REQUEST)
+
         if note_text is None:
             return Response({"reason": 'You did not provide any note text.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            student_note_type = StudentNoteType.objects.get(pk=note_type)
+        except StudentNoteType.DoesNotExist:
+            return Response({"reason": 'Invalid note type.'}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             note = StudentNote()
             note.student = student
             note.coach = coach
             note.note = note_text
+            note.note_type = student_note_type
             note.save()
 
             serializer = StudentNoteSerializer(note)
@@ -54,8 +64,15 @@ class StudentNoteViewSet(ModelViewSet):
             return Response({"reason": ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+class StudentNoteTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StudentNoteType
+        fields = ('id', 'label',)
+
 class StudentNoteSerializer(serializers.ModelSerializer):
     """JSON serializer"""
+
+    note_type = StudentNoteTypeSerializer(many=False)
     class Meta:
         model = StudentNote
-        fields = ('id', 'note', 'author', 'created_on',)
+        fields = ('id', 'note', 'author', 'note_type', 'created_on',)

@@ -92,7 +92,9 @@ BEGIN
                 json_build_object(
                     'note_id', sn.id,
                     'note', sn.note,
-                    'created_on', sn.created_on
+                    'created_on', sn.created_on,
+                    'note_type_id', sn.note_type_id,
+                    'note_label', COALESCE(snt.label, '')
                 )
             )
         )::text AS student_notes,
@@ -157,6 +159,7 @@ BEGIN
     LEFT JOIN "LearningAPI_nssusercohort" nc ON nc."nss_user_id" = nu."id"
     LEFT JOIN "LearningAPI_cohort" c ON c."id" = nc."cohort_id"
     LEFT JOIN "LearningAPI_studentnote" sn ON sn."student_id" = nu."id"
+    LEFT JOIN "LearningAPI_studentnotetype" snt ON sn."note_type_id" = snt."id"
     LEFT JOIN "LearningAPI_studenttag" stg ON stg."student_id" = nu."id"
     LEFT JOIN "LearningAPI_tag" tag ON stg.tag_id = tag.id
     LEFT JOIN "socialaccount_socialaccount" social ON social.user_id = nu.user_id
@@ -248,7 +251,9 @@ SELECT
             json_build_object(
                 'note_id', sn.id,
                 'note', sn.note,
-                'created_on', sn.created_on
+                'created_on', sn.created_on,
+                'note_type_id', sn.note_type_id,
+                'note_label', COALESCE(snt.label, '')
             )
         )
     )::text AS student_notes,
@@ -311,6 +316,7 @@ JOIN "auth_user" au ON au."id" = nu."user_id"
 LEFT JOIN "LearningAPI_nssusercohort" nc ON nc."nss_user_id" = nu."id"
 LEFT JOIN "LearningAPI_cohort" c ON c."id" = nc."cohort_id"
 LEFT JOIN "LearningAPI_studentnote" sn ON sn."student_id" = nu."id"
+LEFT JOIN "LearningAPI_studentnotetype" snt ON sn."note_type_id" = snt."id"
 LEFT JOIN "LearningAPI_studenttag" stg ON stg."student_id" = nu."id"
 LEFT JOIN "LearningAPI_tag" tag ON stg.tag_id = tag.id
 LEFT JOIN "socialaccount_socialaccount" social ON social.user_id = nu.user_id
@@ -374,3 +380,9 @@ join "LearningAPI_cohort" c on uc.cohort_id = c.id
 where c.id = 29
 group by student_name
 ;
+
+
+
+
+
+select * from "LearningAPI_studentnote" order by id desc;
