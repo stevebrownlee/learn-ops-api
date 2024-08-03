@@ -1,0 +1,30 @@
+[
+    {
+        "model": "LearningAPI.studentnotetype",
+        "pk": 1,
+        "fields": {
+            "label": "Assessment Review"
+        }
+    },
+    {
+        "model": "LearningAPI.studentnotetype",
+        "pk": 2,
+        "fields": {
+            "label": "General Progress"
+        }
+    },
+    {
+        "model": "LearningAPI.studentnotetype",
+        "pk": 3,
+        "fields": {
+            "label": "Mental Health"
+        }
+    },
+    {
+        "model": "LearningAPI.studentnotetype",
+        "pk": 4,
+        "fields": {
+            "label": "Behavioral Issue"
+        }
+    }
+]
