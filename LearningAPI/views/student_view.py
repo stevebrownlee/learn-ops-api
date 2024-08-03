@@ -17,7 +17,7 @@ from rest_framework.viewsets import ModelViewSet
 from LearningAPI.utils import GithubRequest
 from LearningAPI.decorators import is_instructor
 from LearningAPI.models import Tag
-from LearningAPI.models.coursework import StudentProject, Project, Capstone
+from LearningAPI.models.coursework import StudentProject, Project, Capstone, CapstoneTimeline
 from LearningAPI.models.people import (StudentNote, NssUser, StudentAssessment,
                                        OneOnOneNote, StudentPersonality, Assessment,
                                        StudentAssessmentStatus, StudentTag
@@ -136,6 +136,9 @@ class StudentViewSet(ModelViewSet):
             # Delete all core skill records
             CoreSkillRecord.objects.filter(student=student).delete()
 
+            # Delete all CapstoneTimeline related to student
+            CapstoneTimeline.objects.filter(capstone__student=student).delete()
+
             # Delete all capstones
             Capstone.objects.filter(student=student).delete()
 
@@ -207,6 +210,9 @@ class StudentViewSet(ModelViewSet):
                 columns = [col[0] for col in cursor.description]
                 results = cursor.fetchall()
 
+                logger = logging.getLogger("LearningPlatform")
+                logger.debug("Number of student records retrieved for cohort %s is %s", cohort, len(results))
+
                 students = []
                 for row in results:
                     student = dict(zip(columns, row))
@@ -223,9 +229,13 @@ class StudentViewSet(ModelViewSet):
                 serializer = CohortStudentSerializer(data=students, many=True)
 
                 if serializer.is_valid():
+                    logger.debug("Serializer for students by cohort succeeded")
                     return Response(serializer.data, status=status.HTTP_200_OK)
                 else:
-                    return Response({'message': serializer.error_messages}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                    logger.debug("Serializer for students by cohort failed")
+                    logger.debug(serializer.errors)
+                    return Response(serializer.data, status=status.HTTP_200_OK)
+                    # return Response({'message': serializer.error_messages}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     @action(methods=['post', 'put'], detail=True)
     def assess(self, request, pk):
@@ -561,24 +571,27 @@ class CohortStudentSerializer(serializers.Serializer):
     github_handle = serializers.CharField(max_length=100)
     name = serializers.CharField(max_length=100)
     current_cohort = serializers.DictField()
-    avatar = serializers.CharField()
-    assessment_status_id = serializers.IntegerField()
+    avatar = serializers.CharField(allow_blank=True, allow_null=True)
+    assessment_status_id = serializers.IntegerField(allow_null=True)
     assessment_url = serializers.CharField(max_length=256, allow_blank=True, allow_null=True)
-    project_id = serializers.IntegerField()
-    project_duration = serializers.IntegerField()
-    project_index = serializers.IntegerField()
+    project_id = serializers.IntegerField(allow_null=True)
+    project_duration = serializers.IntegerField(allow_null=True)
+    project_index = serializers.IntegerField(allow_null=True)
     project_name = serializers.CharField(max_length=100)
-    book_id = serializers.IntegerField()
-    book_index = serializers.IntegerField()
+    book_id = serializers.IntegerField(allow_null=True)
+    book_index = serializers.IntegerField(allow_null=True)
     book_name = serializers.CharField(max_length=100)
-    score = serializers.IntegerField()
-    notes = serializers.ListField()
-    proposals = serializers.ListField()
-    tags = serializers.ListField()
+    score = serializers.IntegerField(allow_null=True)
+    notes = serializers.ListField(allow_empty=True, required=False)
+    proposals = serializers.ListField(allow_empty=True, required=False)
+    tags = serializers.ListField(allow_empty=True, required=False)
 
     def get_avatar(self, obj):
-        github = obj.user.socialaccount_set.get(user=obj['id'])
-        return github.extra_data["avatar_url"]
+        try:
+            github = obj.user.socialaccount_set.get(user=obj['id'])
+            return github.extra_data["avatar_url"]
+        except Exception:
+            return ""
 
 
 class StudentSerializer(serializers.ModelSerializer):

@@ -7,6 +7,12 @@ class StudentNote(models.Model):
     student = models.ForeignKey(
         "NssUser", on_delete=models.CASCADE, related_name="notes")
     coach = models.ForeignKey(NssUser, on_delete=models.CASCADE)
+    note_type = models.ForeignKey(
+        "StudentNoteType",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+    )
 
     note = models.TextField()
     created_on = models.DateTimeField(auto_now=True)

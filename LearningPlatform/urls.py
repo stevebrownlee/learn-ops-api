@@ -46,6 +46,7 @@ router.register(r'coreskillrecords', views.CoreSkillRecordViewSet, 'coreskillrec
 router.register(r'tags', views.TagViewSet, 'tag')
 router.register(r'studenttags', views.StudentTagViewSet, 'studenttag')
 router.register(r'notes', views.StudentNoteViewSet, 'note')
+router.register(r'notetypes', views.StudentNoteTypeViewSet, 'notetypes')
 router.register(r'personalities', views.PersonalityView, 'person')
 router.register(r'cohortinfo', views.CohortInfoViewSet, 'info')
 
