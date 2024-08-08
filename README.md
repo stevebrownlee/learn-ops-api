@@ -6,6 +6,14 @@ This project is the API for the Learning Platform. It is a Django project using 
 
 ## Prerequisites
 
+### Learning Platform Request Collection
+
+1. Install Postman
+1. Open Postman app
+1. Click File > Import from the navbar
+2. Drag the `LearnOps.postman_collection.json` file into the dialog
+4. Requests will be imported and should appear on the left.
+
 ### Windows Developer Prerequisites
 
 If you are a Windows user, you will need to install WSL and Ubuntu.
