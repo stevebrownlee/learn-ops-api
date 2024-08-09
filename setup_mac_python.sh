@@ -3,6 +3,9 @@
 PYTHON_VERSION=3.9.1
 
 function installPyenv() {
+    # If changes need to be made to user's config file, detect the correct one
+    [[ "$SHELL" == *"bash"* ]] && config_file=".bashrc" || config_file=".zshrc"
+
     if [ $(brew list | grep -c pyenv) != 1 ]; then
         echo "Installing Pyenv"
         brew install pyenv
@@ -23,8 +26,8 @@ export PATH=$HOME/.local/bin:$HOME/.pyenv/bin:$PATH
 if command -v pyenv 1>/dev/null 2>&1; then
     export PATH=$(pyenv root)/shims:$PATH
     eval "$(pyenv init -)"\n
-fi" >>$HOME/.zshrc
-        source $HOME/.zshrc
+fi" >>$HOME/$config_file
+        source $HOME/$config_file
     fi
 }
 
