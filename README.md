@@ -102,9 +102,14 @@ In your terminal, be in the project directory, and run the following command.
 
 Once this script is complete, you will have the Postgres database, and some starter data seeded in it.
 
+
 ## Start Virtual Environment
 
-In the project directory, run `pipenv shell` to activate the VE for the project.
+The setup script installs Python 3.9.1, so your last step is to start the virtual environment for the project with the correct version.
+
+```sh
+pipenv --python 3.9.1 shell
+```
 
 ## Using the API
 
