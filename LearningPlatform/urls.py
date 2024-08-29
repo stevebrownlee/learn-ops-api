@@ -49,6 +49,7 @@ router.register(r'notes', views.StudentNoteViewSet, 'note')
 router.register(r'notetypes', views.StudentNoteTypeViewSet, 'notetypes')
 router.register(r'personalities', views.PersonalityView, 'person')
 router.register(r'cohortinfo', views.CohortInfoViewSet, 'info')
+router.register(r'teams', views.TeamMakerView, 'team_maker')
 
 
 urlpatterns = [

@@ -22,6 +22,8 @@ class ProjectViewSet(ViewSet):
         project.index = request.data["index"]
         project.active = True
         project.is_group_project = request.data["is_group_project"]
+        project.api_template_url = request.data["api_template_url"]
+        project.client_template_url = request.data["client_template_url"]
         project.book = Book.objects.get(pk=request.data["book"])
         project.implementation_url = request.data["implementation_url"]
 
@@ -156,4 +158,5 @@ class ProjectSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'name', 'book', 'course',
             'index', 'active', 'is_group_project',
+            'api_template_url', 'client_template_url',
         )

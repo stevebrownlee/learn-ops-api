@@ -29,3 +29,4 @@ from .student_note_view import StudentNoteViewSet
 from .personality_view import PersonalityView
 from .book_assessment import BookAssessmentView
 from .student_note_type_view import StudentNoteTypeViewSet
+from .team_maker_view import TeamMakerView
