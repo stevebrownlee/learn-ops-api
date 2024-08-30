@@ -54,15 +54,15 @@ class ProjectViewSet(ViewSet):
         Returns:
             Response -- Empty body with 204 status code
         """
-        url = request.data.get("implementation_url", "")
-
         try:
             project = Project.objects.get(pk=pk)
             project.name = request.data["name"]
             project.active = request.data["active"]
             project.index = request.data["index"]
             project.is_group_project = request.data["is_group_project"]
-            project.implementation_url = url
+            project.api_template_url = request.data.get("api_template_url", "")
+            project.client_template_url = request.data.get("client_template_url", "")
+            project.implementation_url = request.data.get("implementation_url", "")
 
             project.save()
         except Project.DoesNotExist:

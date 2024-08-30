@@ -23,7 +23,6 @@ class TeamMakerView(ViewSet):
         Returns:
             Response -- JSON serialized instance
         """
-        slack = SlackAPI()
 
         cohort_id = request.data.get('cohort', None)
         student_list = request.data.get('students', None)
@@ -36,12 +35,12 @@ class TeamMakerView(ViewSet):
         team = StudentTeam()
         team.group_name = ""
         team.cohort = cohort
-        team.sprint_team = True if group_project_id is not None else False
+        team.sprint_team = group_project_id is not None
 
         # Create the Slack channel and add students to it and store the channel ID in the team
-        slack_channel = slack.create_channel(f"{team_prefix}-{team_index}")
-        created_channel_id = slack_channel.create(student_list)
-        team.slack_channel = created_channel_id
+        slack = SlackAPI()
+        channel_name = f"{team_prefix}-{cohort.name.replace(' ', '-').lower()}-{team_index}"
+        team.slack_channel = slack.create_channel(channel_name, student_list)
         team.save()
 
         # Assign the students to the team. Use a for loop with enumerate to get the index of the student
@@ -63,8 +62,8 @@ class TeamMakerView(ViewSet):
             student_org_name = cohort.info.student_organization_url.split("/")[-1]
 
             # Replace all spaces in the assessment name with hyphens
-            random_suffix = ''.join(random.choice(string.ascii_lowercase) for i in range(5))
-            repo_name = f'{project.name.replace(" ", "-")}-{random_suffix}'
+            random_suffix = ''.join(random.choice(string.ascii_lowercase) for i in range(6))
+            repo_name = f'{project.name.replace(" ", "-")}-client-{random_suffix}'
 
             # Create the client repository for the group project
             gh_request = GithubRequest()
@@ -84,12 +83,39 @@ class TeamMakerView(ViewSet):
                     student=student
                 )
 
-            # Send message to student
+            # Send message to project team's Slack channel with the repository URL
             created_repo_url = f'https://github.com/{student_org_name}/{repo_name}'
             slack.send_message(
                 text=f"🐙 Your client repository has been created. Visit the URL below and clone the project to your machine.\n\n{created_repo_url}",
                 channel=team.slack_channel
             )
+
+
+            # Create the API repository for the group project if it exists
+            if project.api_template_url:
+                api_repo_name = f'{project.name.replace(" ", "-")}-api-{random_suffix}'
+
+                gh_request.create_repository(
+                    source_url=project.api_template_url,
+                    student_org_url=cohort.info.student_organization_url,
+                    repo_name=api_repo_name,
+                    project_name=project.name
+                )
+
+                # Grant write permissions to the students
+                for student in team.students.all():
+                    gh_request.assign_student_permissions(
+                        student_org_name=student_org_name,
+                        repo_name=api_repo_name,
+                        student=student
+                    )
+
+                # Send message to project team's Slack channel with the repository URL
+                created_repo_url = f'https://github.com/{student_org_name}/{api_repo_name}'
+                slack.send_message(
+                    text=f"🐙 Your API repository has been created. Visit the URL below and clone the project to your machine.\n\n{created_repo_url}",
+                    channel=team.slack_channel
+                )
 
         serialized_team = StudentTeamSerializer(team, many=False).data
 

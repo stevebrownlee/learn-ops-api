@@ -9,13 +9,9 @@ from LearningAPI.models.people import NssUser
 
 class SlackAPI(object):
     """ This class is used to create a Slack channel for a student team """
-    def __init__(self, name):
+    def __init__(self):
         self.headers = {
             "Content-Type": "application/x-www-form-urlencoded"
-        }
-        self.channel_payload = {
-            "name": name,
-            "token": os.getenv("SLACK_BOT_TOKEN")
         }
 
     def send_message(self, channel, text):
@@ -32,14 +28,22 @@ class SlackAPI(object):
         response = requests.post(
             url="https://slack.com/api/chat.postMessage",
             data=channel_payload,
-            headers=headers
+            headers=headers,
+            timeout=10
         )
         return response.json()
 
 
-    def create_channel(self, members):
+    def create_channel(self, name, members):
+        """Create a Slack channel for a student team"""
+
+        channel_payload = {
+            "name": name,
+            "token": os.getenv("SLACK_BOT_TOKEN")
+        }
+
         # Create a Slack channel with the given name
-        res = requests.post("https://slack.com/api/conversations.create", timeout=10, data=self.channel_payload, headers=self.headers)
+        res = requests.post("https://slack.com/api/conversations.create", timeout=10, data=channel_payload, headers=self.headers)
         channel_res = res.json()
 
         # Create a set of Slack IDs for the members to be added to the channel
@@ -134,18 +138,18 @@ class GithubRequest(object):
 
 
     def get(self, url):
-        return self.request_with_retry(lambda: requests.get(url=url, headers=self.headers))
+        return self.request_with_retry(lambda: requests.get(url=url, headers=self.headers, timeout=10))
 
     def put(self, url, data):
         json_data = json.dumps(data)
 
-        return self.request_with_retry(lambda: requests.put(url=url, data=json_data, headers=self.headers))
+        return self.request_with_retry(lambda: requests.put(url=url, data=json_data, headers=self.headers, timeout=10))
 
     def post(self, url, data):
         json_data = json.dumps(data)
 
         try:
-            result = self.request_with_retry(lambda: requests.post(url=url, data=json_data, headers=self.headers))
+            result = self.request_with_retry(lambda: requests.post(url=url, data=json_data, headers=self.headers, timeout=10))
             return result
 
         except TimeoutError:
