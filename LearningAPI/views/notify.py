@@ -1,35 +1,7 @@
-import os
-import requests
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from LearningAPI.models.people import NssUser
-
-def slack_notify(message, channel):
-    """
-    Sends a notification message to a Slack channel.
-
-    Args:
-        message (str): The message to send.
-        channel (str): The Slack channel to send the message to.
-
-    Raises:
-        requests.exceptions.Timeout: If the request to the Slack API times out.
-    """
-
-    headers = {
-        "Content-Type": "application/x-www-form-urlencoded"
-    }
-
-    requests.post(
-        "https://slack.com/api/chat.postMessage",
-        data={
-            "text": message,
-            "token": os.getenv("SLACK_BOT_TOKEN"),
-            "channel": channel
-        },
-        headers=headers,
-        timeout=10
-    )
+from LearningAPI.utils import SlackAPI
 
 @api_view(['POST'])
 def notify(request):
@@ -51,10 +23,20 @@ def notify(request):
         requests.exceptions.Timeout: If the request to the Slack API times out.
     """
 
-    student = NssUser.objects.get(user=request.auth.user)
-    slack_channel = student.assigned_cohorts.order_by("-id").first().cohort.slack_channel
+    instructors = request.data.get("instructors", None)
+    student_channel = request.data.get("studentChannel", None)
+    message = request.data.get("message", None)
 
-    message = request.data.get("message")
-    slack_notify(message, slack_channel)
+    if instructors:
+        # Get the cohort's instrutor Slack channel
+        target_user = NssUser.objects.get(user=request.auth.user)
+        slack_channel = target_user.assigned_cohorts.order_by("-id").first().cohort.slack_channel
+        SlackAPI().send_message( text=message, channel=slack_channel )
+        return Response({ 'message': 'Notification sent to instructor channel'}, status=200)
 
-    return Response({ 'message': 'Notification sent to Slack!'}, status=200)
+    elif student_channel is not None:
+        slack_channel = target_user.assigned_cohorts.order_by("-id").first().cohort.slack_channel
+        SlackAPI().send_message( text=message, channel=student_channel )
+        return Response({ 'message': 'Notification sent to student'}, status=200)
+
+    return Response({ 'message': 'Invalid request'}, status=400)

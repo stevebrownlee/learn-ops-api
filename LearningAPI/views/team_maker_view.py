@@ -1,14 +1,12 @@
-import logging
+import random, string
 
 from rest_framework import serializers, status
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
+
 from LearningAPI.models.people import StudentTeam, GroupProjectRepository, NSSUserTeam, Cohort
 from LearningAPI.models.coursework import Project
-
-from LearningAPI.utils import GithubRequest, SlackChannel
-from LearningAPI.views.notify import slack_notify
-import random, string
+from LearningAPI.utils import GithubRequest, SlackAPI
 
 
 class StudentTeamSerializer(serializers.ModelSerializer):
@@ -25,6 +23,8 @@ class TeamMakerView(ViewSet):
         Returns:
             Response -- JSON serialized instance
         """
+        slack = SlackAPI()
+
         cohort_id = request.data.get('cohort', None)
         student_list = request.data.get('students', None)
         group_project_id = request.data.get('groupProject', None)
@@ -39,7 +39,7 @@ class TeamMakerView(ViewSet):
         team.sprint_team = True if group_project_id is not None else False
 
         # Create the Slack channel and add students to it and store the channel ID in the team
-        slack_channel = SlackChannel(f"{team_prefix}-{team_index}")
+        slack_channel = slack.create_channel(f"{team_prefix}-{team_index}")
         created_channel_id = slack_channel.create(student_list)
         team.slack_channel = created_channel_id
         team.save()
@@ -59,48 +59,36 @@ class TeamMakerView(ViewSet):
             group_project_repo.project = project
             group_project_repo.save()
 
-            # Create the Github repository for the group project
-            gh_request = GithubRequest()
-            client_full_url = project.client_template_url
-
-            # Split the full URL on '/' and get the last two items
-            ( org, repo, ) = client_full_url.split('/')[-2:]
-
-            # Construct request body for creating the repository
+            # Get student Github organization name
             student_org_name = cohort.info.student_organization_url.split("/")[-1]
 
             # Replace all spaces in the assessment name with hyphens
             random_suffix = ''.join(random.choice(string.ascii_lowercase) for i in range(5))
             repo_name = f'{project.name.replace(" ", "-")}-{random_suffix}'
 
-            request_body = {
-                "owner": student_org_name,
-                "name": repo_name,
-                "description": f"This is your client-side repository for the {project.name} sprint(s).",
-                "include_all_branches": False,
-                "private": False
-            }
+            # Create the client repository for the group project
+            gh_request = GithubRequest()
 
-            # Create the repository
-            response = gh_request.post(url=f'https://api.github.com/repos/{org}/{repo}/generate',data=request_body)
+            gh_request.create_repository(
+                source_url=project.client_template_url,
+                student_org_url=cohort.info.student_organization_url,
+                repo_name=repo_name,
+                project_name=project.name
+            )
 
-            # Assign the student write permissions to the repository
-            request_body = { "permission":"write" }
-
+            # Grant write permissions to the students
             for student in team.students.all():
-                response = gh_request.put(
-                    url=f'https://api.github.com/repos/{student_org_name}/{repo_name}/collaborators/{student.github_handle}',
-                    data=request_body
+                gh_request.assign_student_permissions(
+                    student_org_name=student_org_name,
+                    repo_name=repo_name,
+                    student=student
                 )
-                if response.status_code != 204:
-                    logger = logging.getLogger("LearningPlatform")
-                    logger.exception(f"Error: {student.full_name} was not added as a collaborator to the assessment repository.")
 
             # Send message to student
             created_repo_url = f'https://github.com/{student_org_name}/{repo_name}'
-            slack_notify(
-                f"🐙 Your client repository has been created. Visit the URL below and clone the project to your machine.\n\n{created_repo_url}",
-                team.slack_channel
+            slack.send_message(
+                text=f"🐙 Your client repository has been created. Visit the URL below and clone the project to your machine.\n\n{created_repo_url}",
+                channel=team.slack_channel
             )
 
         serialized_team = StudentTeamSerializer(team, many=False).data

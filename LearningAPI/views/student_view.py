@@ -14,17 +14,15 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from LearningAPI.utils import GithubRequest
+from LearningAPI.utils import GithubRequest, SlackAPI
 from LearningAPI.decorators import is_instructor
 from LearningAPI.models import Tag
 from LearningAPI.models.coursework import StudentProject, Project, Capstone, CapstoneTimeline
 from LearningAPI.models.people import (StudentNote, NssUser, StudentAssessment,
                                        OneOnOneNote, StudentPersonality, Assessment,
-                                       StudentAssessmentStatus, StudentTag
-                                    )
+                                       StudentAssessmentStatus, StudentTag)
 from LearningAPI.models.skill import (CoreSkillRecord, LearningRecord,
                                       LearningRecordEntry)
-from LearningAPI.views.notify import slack_notify
 from .personality import myers_briggs_persona
 
 
@@ -241,6 +239,8 @@ class StudentViewSet(ModelViewSet):
     def assess(self, request, pk):
         """POST when a student starts working on book assessment. PUT to change status."""
 
+        slack = SlackAPI()
+
         if request.method == "PUT":
             student = NssUser.objects.get(pk=pk)
             assessment_status = StudentAssessmentStatus.objects.get(pk=request.data['statusId'])
@@ -252,18 +252,18 @@ class StudentViewSet(ModelViewSet):
 
                 try:
                     if latest_assessment.status.status == 'Ready for Review':
-                        slack_notify(
+                        slack.send_message(
                             message="🎉 Congratulations! You've completed your self-assessment. Your coaching team will review your work and provide feedback soon.",
                             channel=student.slack_handle
                         )
 
-                        slack_notify(
+                        slack.send_message(
                             message=f'{student.full_name} in {student.current_cohort["name"]} has completed their self-assessment for {latest_assessment.assessment.name}.\n\nReview it at {latest_assessment.url}',
                             channel=student.current_cohort["ic"]
                         )
 
                     if latest_assessment.status.status == 'Reviewed and Complete':
-                        slack_notify(
+                        slack.send_message(
                             message=f':fox-yay-woo-hoo: Self-Assessment Review Complete\n\n\n:white_check_mark: Your coaching team just marked {latest_assessment.assessment.name} as completed.\n\nVisit https://learning.nss.team to view your latest messages and statuses.',
                             channel=latest_assessment.student.slack_handle
                         )
@@ -362,14 +362,14 @@ class StudentViewSet(ModelViewSet):
 
                 # Send message to student
                 created_repo_url = f'https://github.com/{student_org_name}/{repo_name}'
-                slack_notify(
+                slack.send_message(
                     f"🐙 Your self-assessment repository has been created. Visit the URL below and clone the project to your machine.\n\n{created_repo_url}",
                     student.slack_handle
                 )
 
                 # Send message to instructors
                 slack_channel = student.assigned_cohorts.order_by("-id").first().cohort.slack_channel
-                slack_notify(
+                slack.send_message(
                     f"📝 {student.full_name} has started the self-assessment for {assessment.name}.",
                     slack_channel
                 )
