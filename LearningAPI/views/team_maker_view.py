@@ -10,6 +10,11 @@ from LearningAPI.utils import GithubRequest, SlackAPI
 
 
 class StudentTeamSerializer(serializers.ModelSerializer):
+    students = serializers.SerializerMethodField()
+
+    def get_students(self, obj):
+        return [{'id': student.id, 'name': student.name} for student in obj.students.all() if not student.user.is_staff]
+
     class Meta:
         model = StudentTeam
         fields = ( 'group_name', 'cohort', 'sprint_team', 'students' )
@@ -17,6 +22,18 @@ class StudentTeamSerializer(serializers.ModelSerializer):
 
 class TeamMakerView(ViewSet):
     """Team Maker"""
+    def list(self, request):
+        cohort_id = request.query_params.get('cohort', None)
+
+        try:
+            cohort = Cohort.objects.get(pk=cohort_id)
+            teams = StudentTeam.objects.filter(cohort=cohort).order_by('-pk')
+
+            response = StudentTeamSerializer(teams, many=True).data
+            return Response(response, status=status.HTTP_200_OK)
+        except Cohort.DoesNotExist as ex:
+            return Response({'message': str(ex)}, status=status.HTTP_404_NOT_FOUND)
+
     def create(self, request):
         """Handle POST operations
 
@@ -120,3 +137,18 @@ class TeamMakerView(ViewSet):
         serialized_team = StudentTeamSerializer(team, many=False).data
 
         return Response(serialized_team, status=status.HTTP_201_CREATED)
+
+    def destroy(self, request, pk=None):
+
+        if pk is None:
+            return Response({'message': 'No cohort ID provided'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            cohort = Cohort.objects.get(pk=pk)
+            NSSUserTeam.objects.filter(team__cohort=cohort).delete()
+            GroupProjectRepository.objects.filter(team__cohort=cohort).delete()
+            StudentTeam.objects.filter(cohort=cohort).delete()
+
+            return Response(None, status=status.HTTP_204_NO_CONTENT)
+        except Cohort.DoesNotExist as ex:
+            return Response({'message': str(ex)}, status=status.HTTP_404_NOT_FOUND)

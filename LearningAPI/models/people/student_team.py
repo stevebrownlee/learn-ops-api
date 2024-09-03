@@ -7,5 +7,3 @@ class StudentTeam(models.Model):
     sprint_team = models.BooleanField(default=False)
     slack_channel = models.CharField(max_length=55, default="")
     students = models.ManyToManyField("NSSUser", through="NSSUserTeam")
-
-

@@ -16,9 +16,6 @@ class SlackAPI(object):
 
     def send_message(self, channel, text):
         # Configure the config for the Slack message
-        headers = {
-            "Content-Type": "application/x-www-form-urlencoded"
-        }
         channel_payload = {
             "text": text,
             "token": os.getenv("SLACK_BOT_TOKEN"),
@@ -28,7 +25,7 @@ class SlackAPI(object):
         response = requests.post(
             url="https://slack.com/api/chat.postMessage",
             data=channel_payload,
-            headers=headers,
+            headers=self.headers,
             timeout=10
         )
         return response.json()
@@ -43,7 +40,12 @@ class SlackAPI(object):
         }
 
         # Create a Slack channel with the given name
-        res = requests.post("https://slack.com/api/conversations.create", timeout=10, data=channel_payload, headers=self.headers)
+        res = requests.post(
+            "https://slack.com/api/conversations.create",
+            timeout=10,
+            data=channel_payload,
+            headers=self.headers
+        )
         channel_res = res.json()
 
         # Create a set of Slack IDs for the members to be added to the channel
@@ -61,7 +63,12 @@ class SlackAPI(object):
         }
 
         # Invite students and instructors to the channel
-        requests.post("https://slack.com/api/conversations.invite", timeout=10, data=invitation_payload, headers=self.headers)
+        requests.post(
+            "https://slack.com/api/conversations.invite",
+            timeout=10,
+            data=invitation_payload,
+            headers=self.headers
+        )
 
         # Return the channel ID for the team
         return channel_res["channel"]["id"]
@@ -132,7 +139,10 @@ class GithubRequest(object):
 
         if response.status_code != 204:
             logger = logging.getLogger("LearningPlatform")
-            logger.exception(f"Error: {student.full_name} was not added as a collaborator to the assessment repository.")
+            logger.exception(
+                "Error: %s was not added as a collaborator to the assessment repository.",
+                student.full_name
+            )
 
         return response
 
