@@ -6,6 +6,14 @@ This project is the API for the Learning Platform. It is a Django project using 
 
 ## Prerequisites
 
+### Learning Platform Request Collection
+
+1. Install Postman
+1. Open Postman app
+1. Click File > Import from the navbar
+2. Drag the `LearnOps.postman_collection.json` file into the dialog
+4. Requests will be imported and should appear on the left.
+
 ### Windows Developer Prerequisites
 
 If you are a Windows user, you will need to install WSL and Ubuntu.
@@ -94,9 +102,14 @@ In your terminal, be in the project directory, and run the following command.
 
 Once this script is complete, you will have the Postgres database, and some starter data seeded in it.
 
+
 ## Start Virtual Environment
 
-In the project directory, run `pipenv shell` to activate the VE for the project.
+The setup script installs Python 3.9.1, so your last step is to start the virtual environment for the project with the correct version.
+
+```sh
+pipenv --python 3.9.1 shell
+```
 
 ## Using the API
 

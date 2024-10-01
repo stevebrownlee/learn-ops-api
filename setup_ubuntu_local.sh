@@ -5,7 +5,7 @@ set -eu
 source .env
 
 # If changes need to be made to user's config file, detect the correct one
-[[ $0 == *bash ]] && config_file=".bashrc" || config_file=".zshrc"
+[[ "$SHELL" == *"bash"* ]] && config_file=".bashrc" || config_file=".zshrc"
 
 manage_service() {
     local service=$1
@@ -73,6 +73,17 @@ psql -c "ALTER ROLE $LEARN_OPS_USER SET timezone TO 'UTC';"
 psql -c "GRANT ALL PRIVILEGES ON DATABASE $LEARN_OPS_DB TO $LEARN_OPS_USER;"
 psql -c "GRANT ALL PRIVILEGES ON SCHEMA public TO $LEARN_OPS_USER;"
 COMMANDS
+
+# Install Node - Needs to be below zsh set up because of the shell environment
+if ! command -v nvm &> /dev/null; then
+  echo -e "Installing Node Version Manager..."
+
+  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+  source ~/.zshrc &>zsh-reload.log
+fi
+
+nvm install --lts
+nvm use --lts
 
 #####
 # Install Pyenv and required Python version
@@ -216,3 +227,11 @@ sudo rm -f ./LearningAPI/fixtures/superuser.json
 sudo rm -f ./LearningAPI/fixtures/socialaccount.json
 
 echo "LEARNING_GITHUB_CALLBACK=http://localhost:3000/auth/github" >>.env
+
+code --install-extension ms-python.python --force
+code --install-extension ms-python.vscode-pylance --force
+code --install-extension njpwerner.autodocstring --force
+code --install-extension streetsidesoftware.code-spell-checker --force
+code --install-extension ms-vscode-remote.remote-wsl --force
+code --install-extension ms-python.pylint --force
+code --install-extension ms-python.black-formatter --force
