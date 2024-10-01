@@ -3,6 +3,7 @@ import random, string
 from rest_framework import serializers, status
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
+from rest_framework.decorators import action
 
 from LearningAPI.models.people import StudentTeam, GroupProjectRepository, NSSUserTeam, Cohort
 from LearningAPI.models.coursework import Project
@@ -85,12 +86,15 @@ class TeamMakerView(ViewSet):
             # Create the client repository for the group project
             gh_request = GithubRequest()
 
-            gh_request.create_repository(
+            response = gh_request.create_repository(
                 source_url=project.client_template_url,
                 student_org_url=cohort.info.student_organization_url,
                 repo_name=repo_name,
                 project_name=project.name
             )
+
+            if response.status_code != 201:
+                return Response({'message': 'Failed to create repository'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
             # Grant write permissions to the students
             for student in team.students.all():
@@ -138,17 +142,36 @@ class TeamMakerView(ViewSet):
 
         return Response(serialized_team, status=status.HTTP_201_CREATED)
 
-    def destroy(self, request, pk=None):
+    @action(detail=False, methods=['delete'])
+    def reset(self, request):
+        cohort_id = request.query_params.get('cohort', None)
 
-        if pk is None:
+        if cohort_id is None:
             return Response({'message': 'No cohort ID provided'}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            cohort = Cohort.objects.get(pk=pk)
-            NSSUserTeam.objects.filter(team__cohort=cohort).delete()
-            GroupProjectRepository.objects.filter(team__cohort=cohort).delete()
-            StudentTeam.objects.filter(cohort=cohort).delete()
-
+            cohort = Cohort.objects.get(pk=cohort_id)
+            self._delete_cohort_teams(cohort)
             return Response(None, status=status.HTTP_204_NO_CONTENT)
         except Cohort.DoesNotExist as ex:
             return Response({'message': str(ex)}, status=status.HTTP_404_NOT_FOUND)
+
+    def _delete_cohort_teams(self, cohort):
+        NSSUserTeam.objects.filter(team__cohort=cohort).delete()
+        GroupProjectRepository.objects.filter(team__cohort=cohort).delete()
+        StudentTeam.objects.filter(cohort=cohort).delete()
+
+    # def destroy(self, request, pk=None):
+
+    #     if pk is None:
+    #         return Response({'message': 'No cohort ID provided'}, status=status.HTTP_400_BAD_REQUEST)
+
+    #     try:
+    #         cohort = Cohort.objects.get(pk=pk)
+    #         NSSUserTeam.objects.filter(team__cohort=cohort).delete()
+    #         GroupProjectRepository.objects.filter(team__cohort=cohort).delete()
+    #         StudentTeam.objects.filter(cohort=cohort).delete()
+
+    #         return Response(None, status=status.HTTP_204_NO_CONTENT)
+    #     except Cohort.DoesNotExist as ex:
+    #         return Response({'message': str(ex)}, status=status.HTTP_404_NOT_FOUND)
