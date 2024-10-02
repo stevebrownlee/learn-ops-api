@@ -63,8 +63,10 @@ class TeamMakerView(ViewSet):
         team.sprint_team = group_project_id is not None
 
         # Create the Slack channel and add students to it and store the channel ID in the team
+        # The cohort name will always end in a number. Split on the space and get the last item
         slack = SlackAPI()
-        channel_name = f"{team_prefix}-{cohort.name.replace(' ', '-').lower()}-{team_index}"
+        random_team_suffix = ''.join(random.choice(string.ascii_lowercase) for i in range(6))
+        channel_name = f"{team_prefix}-{cohort.name.split(' ')[-1]}-{random_team_suffix}"
         team.slack_channel = slack.create_channel(channel_name, student_list)
         team.save()
 
@@ -169,27 +171,23 @@ class TeamMakerView(ViewSet):
 
         try:
             cohort = Cohort.objects.get(pk=cohort_id)
+            self._delete_slack_channels(cohort)
             self._delete_cohort_teams(cohort)
             return Response(None, status=status.HTTP_204_NO_CONTENT)
         except Cohort.DoesNotExist as ex:
             return Response({'message': str(ex)}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as ex:
+            return Response({'message': str(ex)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def _delete_cohort_teams(self, cohort):
         NSSUserTeam.objects.filter(team__cohort=cohort).delete()
         GroupProjectRepository.objects.filter(team__cohort=cohort).delete()
         StudentTeam.objects.filter(cohort=cohort).delete()
 
-    # def destroy(self, request, pk=None):
+    def _delete_slack_channels(self, cohort):
+        current_teams = StudentTeam.objects.filter(cohort=cohort)
 
-    #     if pk is None:
-    #         return Response({'message': 'No cohort ID provided'}, status=status.HTTP_400_BAD_REQUEST)
+        for team in current_teams:
+            slack = SlackAPI()
+            slack.delete_channel(team.slack_channel)
 
-    #     try:
-    #         cohort = Cohort.objects.get(pk=pk)
-    #         NSSUserTeam.objects.filter(team__cohort=cohort).delete()
-    #         GroupProjectRepository.objects.filter(team__cohort=cohort).delete()
-    #         StudentTeam.objects.filter(cohort=cohort).delete()
-
-    #         return Response(None, status=status.HTTP_204_NO_CONTENT)
-    #     except Cohort.DoesNotExist as ex:
-    #         return Response({'message': str(ex)}, status=status.HTTP_404_NOT_FOUND)

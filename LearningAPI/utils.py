@@ -1,8 +1,4 @@
-import json
-import time
-import os
-import logging
-import requests
+import json, random, string, time, os, logging, requests
 from requests.exceptions import ConnectionError
 
 from LearningAPI.models.people import NssUser
@@ -31,9 +27,24 @@ class SlackAPI(object):
         return response.json()
 
 
+    def delete_channel(self, channel_id):
+        channel_payload = {
+            "channel": channel_id,
+            "token": os.getenv("SLACK_BOT_TOKEN")
+        }
+
+        # Create a Slack channel with the given name
+        res = requests.post(
+            "https://slack.com/api/conversations.archive",
+            timeout=10,
+            data=channel_payload,
+            headers=self.headers
+        )
+        channel_res = res.json()
+        return channel_res['ok']
+
     def create_channel(self, name, members):
         """Create a Slack channel for a student team"""
-
         channel_payload = {
             "name": name,
             "token": os.getenv("SLACK_BOT_TOKEN")
