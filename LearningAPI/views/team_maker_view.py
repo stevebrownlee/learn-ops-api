@@ -10,15 +10,22 @@ from LearningAPI.models.coursework import Project
 from LearningAPI.utils import GithubRequest, SlackAPI
 
 
+class TeamRepoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GroupProjectRepository
+        fields = ( 'id', 'project', 'repository' )
+
+
 class StudentTeamSerializer(serializers.ModelSerializer):
     students = serializers.SerializerMethodField()
+    repositories = TeamRepoSerializer(many=True)
 
     def get_students(self, obj):
         return [{'id': student.id, 'name': student.name} for student in obj.students.all() if not student.user.is_staff]
 
     class Meta:
         model = StudentTeam
-        fields = ( 'group_name', 'cohort', 'sprint_team', 'students' )
+        fields = ( 'group_name', 'cohort', 'sprint_team', 'students', 'repositories' )
 
 
 class TeamMakerView(ViewSet):
@@ -71,10 +78,6 @@ class TeamMakerView(ViewSet):
         # Create group project repository if group project is not None
         if group_project_id is not None:
             project = Project.objects.get(pk=group_project_id)
-            group_project_repo = GroupProjectRepository()
-            group_project_repo.team_id = team.id
-            group_project_repo.project = project
-            group_project_repo.save()
 
             # Get student Github organization name
             student_org_name = cohort.info.student_organization_url.split("/")[-1]
@@ -104,6 +107,14 @@ class TeamMakerView(ViewSet):
                     student=student
                 )
 
+            # Save the team's client-side repository URL to the database
+            group_project_repo = GroupProjectRepository()
+            group_project_repo.team_id = team.id
+            group_project_repo.project = project
+            group_project_repo.repository = f'https://github.com/{student_org_name}/{repo_name}'
+            group_project_repo.save()
+
+
             # Send message to project team's Slack channel with the repository URL
             created_repo_url = f'https://github.com/{student_org_name}/{repo_name}'
             slack.send_message(
@@ -130,6 +141,13 @@ class TeamMakerView(ViewSet):
                         repo_name=api_repo_name,
                         student=student
                     )
+
+                # Save the team's API repository URL to the database
+                group_project_repo = GroupProjectRepository()
+                group_project_repo.team_id = team.id
+                group_project_repo.project = project
+                group_project_repo.repository = f'https://github.com/{student_org_name}/{api_repo_name}'
+                group_project_repo.save()
 
                 # Send message to project team's Slack channel with the repository URL
                 created_repo_url = f'https://github.com/{student_org_name}/{api_repo_name}'

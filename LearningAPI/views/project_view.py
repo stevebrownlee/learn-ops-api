@@ -99,6 +99,7 @@ class ProjectViewSet(ViewSet):
         """
         book_id = request.query_params.get("bookId", None)
         course_id = request.query_params.get("courseId", None)
+        group_projects = request.query_params.get("group", "false")
 
         try:
             projects = Project.objects.all().order_by('book__index', 'index')
@@ -108,6 +109,9 @@ class ProjectViewSet(ViewSet):
 
             if book_id is not None:
                 projects = projects.filter(book__id=book_id)
+
+            if group_projects == "true":
+                projects = projects.filter(is_group_project=True)
 
             serializer = ProjectSerializer(projects, many=True, context={'request': request})
             return Response(serializer.data, status=status.HTTP_200_OK)

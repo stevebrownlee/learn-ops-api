@@ -3,8 +3,9 @@ from django.core.exceptions import ValidationError
 
 class GroupProjectRepository(models.Model):
     """ This class stores the repository URLs for a group project """
-    team = models.ForeignKey("StudentTeam", on_delete=models.CASCADE)
+    team = models.ForeignKey("StudentTeam", on_delete=models.CASCADE, related_name="repositories")
     project = models.ForeignKey("Project", on_delete=models.CASCADE)
+    repository = models.CharField(max_length=255, default="")
 
     def clean(self):
         super().clean()

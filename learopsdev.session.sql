@@ -8,12 +8,8 @@ SELECT * from "socialaccount_socialaccount" order by id desc;
 SELECT * from "authtoken_token" where user_id = 470;
 SELECT * from "LearningAPI_nssuser" where user_id = 470;
 SELECT * from "LearningAPI_nssusercohort" where nss_user_id = 468;
-
-DELETE FROM "LearningAPI_cohort";
-DELETE FROM "LearningAPI_nssuserteam";
-DELETE FROM "LearningAPI_groupprojectrepository";
-DELETE FROM "LearningAPI_studentteam";
 SELECT * from "LearningAPI_studentteam";
+SELECT * FROM "LearningAPI_cohort";
 
 DROP FUNCTION IF EXISTS get_student_details(INT);
 DROP FUNCTION IF EXISTS get_project_average_start_delay(INT);
