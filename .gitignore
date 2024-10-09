@@ -26,4 +26,4 @@ prod_backup*.sql
 setup
 learning.service
 logs/
-.env
+*.env
