@@ -1,49 +1,22 @@
 
 -- View all tables
-select * from pg_catalog.pg_tables;
+SELECT * from pg_catalog.pg_tables;
 
 
-select * from "auth_user" order by id desc;
-select * from "socialaccount_socialaccount" order by id desc;
-select * from "authtoken_token" where user_id = 470;
-select * from "LearningAPI_nssuser" where user_id = 470;
-select * from "LearningAPI_nssusercohort" where nss_user_id = 468;
-update "LearningAPI_nssusercohort"
-    set is_github_org_member = FALSE
-     where nss_user_id = 468;
+SELECT * from "auth_user" order by id desc;
+SELECT * from "socialaccount_socialaccount" order by id desc;
+SELECT * from "authtoken_token" where user_id = 470;
+SELECT * from "LearningAPI_nssuser" where user_id = 470;
+SELECT * from "LearningAPI_nssusercohort" where nss_user_id = 468;
+SELECT * from "LearningAPI_studentteam";
+SELECT * FROM "LearningAPI_cohort";
 
-
--- Drop all tables
-DO $$ DECLARE
-    r RECORD;
-BEGIN
-    FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = current_schema()) LOOP
-        EXECUTE 'DROP TABLE IF EXISTS ' || quote_ident(r.tablename) || ' CASCADE';
-    END LOOP;
-END $$;
-DROP FUNCTION IF EXISTS get_cohort_student_data(INT);
 DROP FUNCTION IF EXISTS get_student_details(INT);
 DROP FUNCTION IF EXISTS get_project_average_start_delay(INT);
-ALTER TABLE auth_user ALTER COLUMN last_login DROP NOT NULL;
-
-
-
-
-
-select * FROM "LearningAPI_nssuser";
-select * FROM "LearningAPI_cohort";
-
-
-
-
-
-
-
-
 
 
 DROP FUNCTION IF EXISTS get_cohort_student_data(INT);
-select * from get_cohort_student_data(29);
+SELECT * from get_cohort_student_data(29);
 
 
 
@@ -368,7 +341,7 @@ SELECT *
     FROM "LearningAPI_learningrecordentry" lr
 order by id desc;
 
-select
+SELECT
     sum(lw.weight) as score,
     au."first_name" || ' ' || au."last_name" AS student_name
 from "LearningAPI_learningrecord" lr
@@ -385,4 +358,4 @@ group by student_name
 
 
 
-select * from "LearningAPI_studentnote" order by id desc;
+SELECT * from "LearningAPI_studentnote" order by id desc;

@@ -209,6 +209,27 @@ Table "LearningAPI_nssusercohort" [headercolor: #c0392b] {
   }
 }
 
+Table "LearningAPI_studentteam" [headercolor: #e00ead] {
+  "id" int [pk, not null, increment]
+  "cohort_id" int4 [not null, ref: < LearningAPI_cohort.id]
+  "group_name" varchar
+  "sprint_team" bool [not null, default: False]
+  "project_id"  int4 [ref: < LearningAPI_project.id]
+}
+
+Table "LearningAPI_groupprojectrepository" [headercolor: #e00ead] {
+  "id" int [pk, not null, increment]
+  "team_id" int4 [not null, ref: < LearningAPI_team.id]
+  "repo_url" varchar [not null]
+}
+
+Table "LearningAPI_nssuserteam" [headercolor: #e00ead] {
+  "id" int [pk, not null, increment]
+  "team_id" int4 [not null, ref: < LearningAPI_team.id]
+  "nss_user_id" int4 [not null, ref: < LearningAPI_nssuser.id]
+}
+
+
 Table "LearningAPI_objectivetag" [headercolor: #3498db] {
   "id" int [pk, not null, increment]
   "tag_id" int4 [not null, ref: < LearningAPI_tag.id]

@@ -16,8 +16,6 @@ from .profile import Profile
 from .github_login import GithubLogin
 from .student_assessment import StudentAssessmentView
 from .assessment_status import AssessmentStatusView
-from .slack import SlackChannel
-from .slack_message import SlackMessage
 from .core_skill_view import CoreSkillViewSet
 from .core_skill_record_view import CoreSkillRecordViewSet
 from .student_personality_view import StudentPersonalityViewSet
@@ -29,3 +27,4 @@ from .student_note_view import StudentNoteViewSet
 from .personality_view import PersonalityView
 from .book_assessment import BookAssessmentView
 from .student_note_type_view import StudentNoteTypeViewSet
+from .team_maker_view import TeamMakerView
