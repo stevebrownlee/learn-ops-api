@@ -26,6 +26,10 @@ class NssUser(models.Model):
         return f'{self.user.first_name} {self.user.last_name}'
 
     @property
+    def name(self):
+        return f'{self.user.first_name} {self.user.last_name}'
+
+    @property
     def score(self):
         """Return total learning score"""
 

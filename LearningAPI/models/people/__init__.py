@@ -13,3 +13,6 @@ from .student_note import StudentNote
 from .student_personality import StudentPersonality
 from .student_tag import StudentTag
 from .student_note_type import StudentNoteType
+from .student_team import StudentTeam
+from .nssuser_team import NSSUserTeam
+from .group_project_repo import GroupProjectRepository
