@@ -253,18 +253,18 @@ class StudentViewSet(ModelViewSet):
                 try:
                     if latest_assessment.status.status == 'Ready for Review':
                         slack.send_message(
-                            message="🎉 Congratulations! You've completed your self-assessment. Your coaching team will review your work and provide feedback soon.",
+                            text="🎉 Congratulations! You've completed your self-assessment. Your coaching team will review your work and provide feedback soon.",
                             channel=student.slack_handle
                         )
 
                         slack.send_message(
-                            message=f'{student.full_name} in {student.current_cohort["name"]} has completed their self-assessment for {latest_assessment.assessment.name}.\n\nReview it at {latest_assessment.url}',
+                            text=f'{student.full_name} in {student.current_cohort["name"]} has completed their self-assessment for {latest_assessment.assessment.name}.\n\nReview it at {latest_assessment.url}',
                             channel=student.current_cohort["ic"]
                         )
 
                     if latest_assessment.status.status == 'Reviewed and Complete':
                         slack.send_message(
-                            message=f':fox-yay-woo-hoo: Self-Assessment Review Complete\n\n\n:white_check_mark: Your coaching team just marked {latest_assessment.assessment.name} as completed.\n\nVisit https://learning.nss.team to view your latest messages and statuses.',
+                            text=f':fox-yay-woo-hoo: Self-Assessment Review Complete\n\n\n:white_check_mark: Your coaching team just marked {latest_assessment.assessment.name} as completed.\n\nVisit https://learning.nss.team to view your latest messages and statuses.',
                             channel=latest_assessment.student.slack_handle
                         )
 
