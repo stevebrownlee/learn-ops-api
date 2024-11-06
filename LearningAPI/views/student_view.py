@@ -355,7 +355,6 @@ class StudentViewSet(ModelViewSet):
                     url=f'https://api.github.com/repos/{student_org_name}/{repo_name}/collaborators/{student.github_handle}',
                     data=request_body
                 )
-                logger.debug(response.json())
 
                 if response.status_code != 204:
                     logger.debug("Error: Student was not added as a collaborator to the assessment repository")
