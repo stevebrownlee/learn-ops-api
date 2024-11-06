@@ -240,6 +240,7 @@ class StudentViewSet(ModelViewSet):
         """POST when a student starts working on book assessment. PUT to change status."""
 
         slack = SlackAPI()
+        logger = logging.getLogger("LearningPlatform")
 
         if request.method == "PUT":
             student = NssUser.objects.get(pk=pk)
@@ -283,7 +284,6 @@ class StudentViewSet(ModelViewSet):
                                     instructor=NssUser.objects.get(user=request.auth.user)
                                 )
                             except IntegrityError as ex:
-                                logger = logging.getLogger("LearningPlatform")
                                 logger.exception(getattr(ex, 'message', repr(ex)))
 
                 except Exception:
@@ -344,15 +344,21 @@ class StudentViewSet(ModelViewSet):
                 }
 
                 # Create the repository
+                logger.debug("Generating repository for student assessment")
                 response = gh_request.post(url=f'https://api.github.com/repos/{org}/{repo}/generate',data=request_body)
+                logger.debug(response.json())
 
                 # Assign the student write permissions to the repository
+                logger.debug("Adding student as a collaborator to the repository")
                 request_body = { "permission":"write" }
                 response = gh_request.put(
                     url=f'https://api.github.com/repos/{student_org_name}/{repo_name}/collaborators/{student.github_handle}',
                     data=request_body
                 )
+                logger.debug(response.json())
+
                 if response.status_code != 204:
+                    logger.debug("Error: Student was not added as a collaborator to the assessment repository")
                     return Response(
                         {
                             'message': 'Error: Student was not added as a collaborator to the assessment repository.'
@@ -363,15 +369,15 @@ class StudentViewSet(ModelViewSet):
                 # Send message to student
                 created_repo_url = f'https://github.com/{student_org_name}/{repo_name}'
                 slack.send_message(
-                    f"🐙 Your self-assessment repository has been created. Visit the URL below and clone the project to your machine.\n\n{created_repo_url}",
-                    student.slack_handle
+                    text=f"🐙 Your self-assessment repository has been created. Visit the URL below and clone the project to your machine.\n\n{created_repo_url}",
+                    channel=student.slack_handle
                 )
 
                 # Send message to instructors
                 slack_channel = student.assigned_cohorts.order_by("-id").first().cohort.slack_channel
                 slack.send_message(
-                    f"📝 {student.full_name} has started the self-assessment for {assessment.name}.",
-                    slack_channel
+                    text=f"📝 {student.full_name} has started the self-assessment for {assessment.name}.",
+                    channel=slack_channel
                 )
 
                 # Update the student assessment record with the Github repo URL
