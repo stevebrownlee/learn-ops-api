@@ -20,7 +20,7 @@ from LearningAPI.models import Tag
 from LearningAPI.models.coursework import StudentProject, Project, Capstone, CapstoneTimeline
 from LearningAPI.models.people import (StudentNote, NssUser, StudentAssessment,
                                        OneOnOneNote, StudentPersonality, Assessment,
-                                       StudentAssessmentStatus, StudentTag)
+                                       StudentAssessmentStatus, StudentTag, StudentInterview)
 from LearningAPI.models.skill import (CoreSkillRecord, LearningRecord,
                                       LearningRecordEntry)
 from .personality import myers_briggs_persona
@@ -590,6 +590,10 @@ class CohortStudentSerializer(serializers.Serializer):
     notes = serializers.ListField(allow_empty=True, required=False)
     proposals = serializers.ListField(allow_empty=True, required=False)
     tags = serializers.ListField(allow_empty=True, required=False)
+    interview_count = serializers.SerializerMethodField()
+
+    def get_interview_count(self, obj):
+        return StudentInterview.objects.filter(student_id = obj['id']).count()
 
     def get_avatar(self, obj):
         try:
