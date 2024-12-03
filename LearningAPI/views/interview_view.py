@@ -1,14 +1,12 @@
-from django.http import HttpResponseServerError
 from rest_framework import serializers, status
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
-from LearningAPI.models.coursework import Course
 from LearningAPI.models.people import StudentInterview, NssUser
 
 
 class InterviewViewSet(ViewSet):
-    """Book view set"""
+    """Interview view set"""
 
     permission_classes = (IsAdminUser,)
 
@@ -30,7 +28,7 @@ class InterviewViewSet(ViewSet):
             return Response({"reason": ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
 
 class InterviewSerializer(serializers.ModelSerializer):
-    """JSON serializer"""
+    """JSON serializer for interview objects"""
 
     class Meta:
         model = StudentInterview
