@@ -89,7 +89,7 @@ class GithubRequest(object):
     def __init__(self):
         self.headers = {
             "Content-Type": "application/json",
-            "Accept": "Accept: application/vnd.github+json",
+            "Accept": "application/vnd.github+json",
             "User-Agent": "nss/ticket-migrator",
             "X-GitHub-Api-Version": "2022-11-28",
             "Authorization": f'Bearer {os.getenv("GITHUB_TOKEN")}'

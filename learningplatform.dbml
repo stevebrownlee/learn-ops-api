@@ -1,3 +1,59 @@
+Table "LearningAPI_nssuser" [headercolor: #8e44ad] {
+  "id" int [pk, not null, increment]
+  "slack_handle" varchar(55)
+  "github_handle" varchar(55)
+  "user_id" int4 [unique, not null, ref: - auth_user.id]
+}
+
+Table "LearningAPI_requestquery" [headercolor: #FFD700] {
+  "id" int [pk, not null, increment]
+  "query" text
+  "searcher_id" int [not null, ref: > LearningAPI_nssuser.id]
+  "helpful_request_id" int
+}
+
+Table "LearningAPI_helpcategory" [headercolor: #FFD700] {
+  "id" int [pk, not null, increment]
+  "name" varchar(50) [not null, unique]
+}
+
+Table "LearningAPI_helprequest" [headercolor: #FFD700] {
+  "id" int [pk, not null, increment]
+  "author_id" int [not null, ref: > LearningAPI_nssuser.id]
+  "category_id" int [not null, ref: > LearningAPI_helpcategory.id]
+  "title" varchar(255) [not null]
+  "content" text [not null]
+  "github_url" varchar(255) [not null]
+  "exception_message" text
+  "stack_trace" text
+  "llm_prompt" text
+  "loom_url" varchar(255)
+  "is_resolved" boolean [not null, default: false]
+  "created_at" timestamp [not null]
+  "updated_at" timestamp [not null]
+}
+
+Table "LearningAPI_helprequestresponse" [headercolor: #FFD700] {
+  "id" int [pk, not null, increment]
+  "help_request_id" int [not null, ref: > LearningAPI_helprequest.id]
+  "author_id" int [not null, ref: > LearningAPI_nssuser.id]
+  "content" text [not null]
+  "is_solution" boolean [not null, default: false]
+  "created_at" timestamp [not null]
+  "updated_at" timestamp [not null]
+}
+
+Table "LearningAPI_helptag" [headercolor: #FFD700] {
+  "id" int [pk, not null, increment]
+  "name" varchar(50) [not null, unique]
+}
+
+Table "LearningAPI_helprequesttag" [headercolor: #FFD700] {
+  "id" int [pk, not null, increment]
+  "help_request_id" int [not null, ref: > LearningAPI_helprequest.id]
+  "help_tag_id" int [not null, ref: > LearningAPI_helptag.id]
+}
+
 Table "LearningAPI_assessment" [headercolor: #27ae60] {
   "id" int [pk, not null, increment]
   "name" varchar(55) [not null]
@@ -177,12 +233,6 @@ Table "LearningAPI_studentpersonality" [headercolor: #8e44ad] {
   "bfi_openness" int
 }
 
-Table "LearningAPI_nssuser" [headercolor: #8e44ad] {
-  "id" int [pk, not null, increment]
-  "slack_handle" varchar(55)
-  "github_handle" varchar(55)
-  "user_id" int4 [unique, not null, ref: - auth_user.id]
-}
 
 Table "LearningAPI_studenttag" [headercolor: #3498db] {
   "id" int [pk, not null, increment]

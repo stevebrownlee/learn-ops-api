@@ -1,0 +1,1458 @@
+[
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 1,
+        "fields": {
+            "author": 145,
+            "category": 3,
+            "title": "Cannot read property 'name' of undefined",
+            "content": "I'm trying to access a property of an object, but I'm getting this error. What does it mean?",
+            "github_url": "https://github.com/user/repo1",
+            "exception_message": "TypeError: Cannot read property 'name' of undefined",
+            "stack_trace": "at Object.<anonymous> (/home/user/project/script.js:10:20)",
+            "is_resolved": false,
+            "created_at": "2023-07-10T14:30:00Z",
+            "updated_at": "2023-07-10T14:30:00Z"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 2,
+        "fields": {
+            "author": 222,
+            "category": 1,
+            "title": "Cannot read property 'length' of null",
+            "content": "I'm trying to get the length of an array, but it's throwing this error.",
+            "github_url": "https://github.com/user/repo2",
+            "exception_message": "TypeError: Cannot read property 'length' of null",
+            "stack_trace": "at Object.<anonymous> (/home/user/project/script.js:15:25)",
+            "is_resolved": false,
+            "created_at": "2023-07-11T09:45:00Z",
+            "updated_at": "2023-07-11T09:45:00Z"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 3,
+        "fields": {
+            "author": 78,
+            "category": 2,
+            "title": "Cannot read property 'map' of undefined",
+            "content": "I'm trying to use the map function on an array, but it's giving me this error.",
+            "github_url": "https://github.com/user/repo3",
+            "exception_message": "TypeError: Cannot read property 'map' of undefined",
+            "stack_trace": "at Object.<anonymous> (/home/user/project/script.js:22:18)",
+            "is_resolved": false,
+            "created_at": "2023-07-12T11:20:00Z",
+            "updated_at": "2023-07-12T11:20:00Z"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 4,
+        "fields": {
+            "author": 301,
+            "category": 4,
+            "title": "Cannot read property 'forEach' of null",
+            "content": "I'm trying to loop through an array using forEach, but I'm getting this error.",
+            "github_url": "https://github.com/user/repo4",
+            "exception_message": "TypeError: Cannot read property 'forEach' of null",
+            "stack_trace": "at Object.<anonymous> (/home/user/project/script.js:30:15)",
+            "is_resolved": false,
+            "created_at": "2023-07-13T16:10:00Z",
+            "updated_at": "2023-07-13T16:10:00Z"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 5,
+        "fields": {
+            "author": 155,
+            "category": 5,
+            "title": "Cannot read property 'id' of undefined",
+            "content": "I'm trying to access the id of an object, but it's throwing this error.",
+            "github_url": "https://github.com/user/repo5",
+            "exception_message": "TypeError: Cannot read property 'id' of undefined",
+            "stack_trace": "at Object.<anonymous> (/home/user/project/script.js:8:22)",
+            "is_resolved": false,
+            "created_at": "2023-07-14T10:05:00Z",
+            "updated_at": "2023-07-14T10:05:00Z"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 6,
+        "fields": {
+            "author": 189,
+            "category": 1,
+            "title": "Cannot read property 'push' of undefined",
+            "content": "I'm trying to add an element to an array using push, but I'm getting this error.",
+            "github_url": "https://github.com/user/repo6",
+            "exception_message": "TypeError: Cannot read property 'push' of undefined",
+            "stack_trace": "at Object.<anonymous> (/home/user/project/script.js:12:18)",
+            "is_resolved": false,
+            "created_at": "2023-07-15T13:40:00Z",
+            "updated_at": "2023-07-15T13:40:00Z"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 7,
+        "fields": {
+            "author": 256,
+            "category": 3,
+            "title": "Cannot read property 'slice' of null",
+            "content": "I'm trying to use the slice method on an array, but it's giving me this error.",
+            "github_url": "https://github.com/user/repo7",
+            "exception_message": "TypeError: Cannot read property 'slice' of null",
+            "stack_trace": "at Object.<anonymous> (/home/user/project/script.js:20:25)",
+            "is_resolved": false,
+            "created_at": "2023-07-16T08:55:00Z",
+            "updated_at": "2023-07-16T08:55:00Z"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 8,
+        "fields": {
+            "author": 111,
+            "category": 2,
+            "title": "Cannot read property 'filter' of undefined",
+            "content": "I'm trying to filter an array, but I'm getting this error. What am I doing wrong?",
+            "github_url": "https://github.com/user/repo8",
+            "exception_message": "TypeError: Cannot read property 'filter' of undefined",
+            "stack_trace": "at Object.<anonymous> (/home/user/project/script.js:25:20)",
+            "is_resolved": false,
+            "created_at": "2023-07-17T11:30:00Z",
+            "updated_at": "2023-07-17T11:30:00Z"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 9,
+        "fields": {
+            "author": 333,
+            "category": 4,
+            "title": "Cannot read property 'addEventListener' of null",
+            "content": "I'm trying to add an event listener to an element, but it's throwing this error.",
+            "github_url": "https://github.com/user/repo9",
+            "exception_message": "TypeError: Cannot read property 'addEventListener' of null",
+            "stack_trace": "at Object.<anonymous> (/home/user/project/script.js:18:28)",
+            "is_resolved": false,
+            "created_at": "2023-07-18T14:15:00Z",
+            "updated_at": "2023-07-18T14:15:00Z"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 10,
+        "fields": {
+            "author": 198,
+            "category": 5,
+            "title": "Cannot read property 'style' of undefined",
+            "content": "I'm trying to change the style of an element, but I'm getting this error.",
+            "github_url": "https://github.com/user/repo10",
+            "exception_message": "TypeError: Cannot read property 'style' of undefined",
+            "stack_trace": "at Object.<anonymous> (/home/user/project/script.js:32:15)",
+            "is_resolved": false,
+            "created_at": "2023-07-19T09:20:00Z",
+            "updated_at": "2023-07-19T09:20:00Z"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 11,
+        "fields": {
+            "author": 245,
+            "category": 1,
+            "title": "TypeError: x.map is not a function",
+            "content": "I'm trying to use .map() on my data, but I'm getting this error. What's wrong?",
+            "github_url": "https://github.com/user/repo11",
+            "exception_message": "TypeError: x.map is not a function",
+            "stack_trace": "at Array.map (<anonymous>)\nat Object.<anonymous> (/home/user/project/script.js:15:10)",
+            "is_resolved": false,
+            "created_at": "2023-07-20T10:30:00Z",
+            "updated_at": "2023-07-20T10:30:00Z"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 12,
+        "fields": {
+            "author": 122,
+            "category": 3,
+            "title": "TypeError: data.map is not a function",
+            "content": "I'm trying to map over my data array, but it's giving me this error.",
+            "github_url": "https://github.com/user/repo12",
+            "exception_message": "TypeError: data.map is not a function",
+            "stack_trace": "at Array.map (<anonymous>)\nat Object.<anonymous> (/home/user/project/script.js:22:15)",
+            "is_resolved": false,
+            "created_at": "2023-07-21T13:45:00Z",
+            "updated_at": "2023-07-21T13:45:00Z"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 13,
+        "fields": {
+            "author": 387,
+            "category": 2,
+            "title": "TypeError: undefined is not a function (near '...x.map...')",
+            "content": "I'm getting this error when trying to use .map(). What does it mean?",
+            "github_url": "https://github.com/user/repo13",
+            "exception_message": "TypeError: undefined is not a function (near '...x.map...')",
+            "stack_trace": "at Object.<anonymous> (/home/user/project/script.js:28:20)",
+            "is_resolved": false,
+            "created_at": "2023-07-22T11:10:00Z",
+            "updated_at": "2023-07-22T11:10:00Z"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 14,
+        "fields": {
+            "author": 156,
+            "category": 4,
+            "title": "TypeError: array.map is not a function",
+            "content": "I'm trying to use .map() on an array, but it's not working. What could be wrong?",
+            "github_url": "https://github.com/user/repo14",
+            "exception_message": "TypeError: array.map is not a function",
+            "stack_trace": "at Array.map (<anonymous>)\nat Object.<anonymous> (/home/user/project/script.js:18:12)",
+            "is_resolved": false,
+            "created_at": "2023-07-23T15:20:00Z",
+            "updated_at": "2023-07-23T15:20:00Z"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 15,
+        "fields": {
+            "author": 299,
+            "category": 5,
+            "title": "TypeError: Cannot read property 'map' of null",
+            "content": "I'm getting this error when trying to map over my data. What's happening?",
+            "github_url": "https://github.com/user/repo15",
+            "exception_message": "TypeError: Cannot read property 'map' of null",
+            "stack_trace": "at Array.map (<anonymous>)\nat Object.<anonymous> (/home/user/project/script.js:25:18)",
+            "is_resolved": false,
+            "created_at": "2023-07-24T09:30:00Z",
+            "updated_at": "2023-07-24T09:30:00Z"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 16,
+        "fields": {
+            "author": 178,
+            "category": 1,
+            "title": "TypeError: Object doesn't support property or method 'map'",
+            "content": "I'm trying to use .map() but getting this error. What am I doing wrong?",
+            "github_url": "https://github.com/user/repo16",
+            "exception_message": "TypeError: Object doesn't support property or method 'map'",
+            "stack_trace": "at Object.<anonymous> (/home/user/project/script.js:30:22)",
+            "is_resolved": false,
+            "created_at": "2023-07-25T14:40:00Z",
+            "updated_at": "2023-07-25T14:40:00Z"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 17,
+        "fields": {
+            "author": 345,
+            "category": 3,
+            "title": "TypeError: items.map is not a function",
+            "content": "I'm trying to map over my items array, but it's throwing this error. Help!",
+            "github_url": "https://github.com/user/repo17",
+            "exception_message": "TypeError: items.map is not a function",
+            "stack_trace": "at Array.map (<anonymous>)\nat Object.<anonymous> (/home/user/project/script.js:12:15)",
+            "is_resolved": false,
+            "created_at": "2023-07-26T10:50:00Z",
+            "updated_at": "2023-07-26T10:50:00Z"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 18,
+        "fields": {
+            "author": 211,
+            "category": 2,
+            "title": "TypeError: null is not an object (evaluating 'x.map')",
+            "content": "I'm getting this error when trying to use .map(). What does it mean?",
+            "github_url": "https://github.com/user/repo18",
+            "exception_message": "TypeError: null is not an object (evaluating 'x.map')",
+            "stack_trace": "at Object.<anonymous> (/home/user/project/script.js:20:18)",
+            "is_resolved": false,
+            "created_at": "2023-07-27T16:00:00Z",
+            "updated_at": "2023-07-27T16:00:00Z"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 19,
+        "fields": {
+            "author": 287,
+            "category": 2,
+            "title": "ReferenceError: x is not defined",
+            "content": "I'm trying to use a variable in my code, but I'm getting this error. What does it mean?",
+            "github_url": "https://github.com/user/repo41",
+            "exception_message": "ReferenceError: x is not defined",
+            "stack_trace": "at Object.<anonymous> (/home/user/project/script.js:15:5)",
+            "is_resolved": false,
+            "created_at": "2023-08-19T09:30:00Z",
+            "updated_at": "2023-08-19T09:30:00Z"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 20,
+        "fields": {
+            "author": 356,
+            "category": 3,
+            "title": "SyntaxError: Unexpected token '}'",
+            "content": "I'm getting a syntax error in my code, but I can't figure out what's wrong.",
+            "github_url": "https://github.com/user/repo42",
+            "exception_message": "SyntaxError: Unexpected token '}'",
+            "stack_trace": "at Object.<anonymous> (/home/user/project/script.js:22:1)",
+            "is_resolved": false,
+            "created_at": "2023-08-20T14:15:00Z",
+            "updated_at": "2023-08-20T14:15:00Z"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 21,
+        "fields": {
+            "author": 129,
+            "category": 1,
+            "title": "TypeError: Cannot set property 'innerHTML' of null",
+            "content": "I'm trying to change the content of an HTML element, but I'm getting this error.",
+            "github_url": "https://github.com/user/repo43",
+            "exception_message": "TypeError: Cannot set property 'innerHTML' of null",
+            "stack_trace": "at Object.<anonymous> (/home/user/project/script.js:8:28)",
+            "is_resolved": false,
+            "created_at": "2023-08-21T11:45:00Z",
+            "updated_at": "2023-08-21T11:45:00Z"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 22,
+        "fields": {
+            "author": 398,
+            "category": 4,
+            "title": "Uncaught (in promise) TypeError: Failed to fetch",
+            "content": "I'm trying to make an API call using fetch, but I'm getting this error. What could be wrong?",
+            "github_url": "https://github.com/user/repo44",
+            "exception_message": "Uncaught (in promise) TypeError: Failed to fetch",
+            "stack_trace": "at async Object.<anonymous> (/home/user/project/script.js:30:20)",
+            "is_resolved": false,
+            "created_at": "2023-08-22T16:20:00Z",
+            "updated_at": "2023-08-22T16:20:00Z"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 23,
+        "fields": {
+            "author": 245,
+            "category": 5,
+            "title": "RangeError: Maximum call stack size exceeded",
+            "content": "My function seems to be calling itself infinitely. How can I fix this?",
+            "github_url": "https://github.com/user/repo45",
+            "exception_message": "RangeError: Maximum call stack size exceeded",
+            "stack_trace": "at factorial (/home/user/project/script.js:5:16)\nat factorial (/home/user/project/script.js:5:16)\nat factorial (/home/user/project/script.js:5:16)",
+            "is_resolved": false,
+            "created_at": "2023-08-23T10:05:00Z",
+            "updated_at": "2023-08-23T10:05:00Z"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 24,
+        "fields": {
+            "author": 173,
+            "category": 2,
+            "title": "Uncaught TypeError: Cannot read property 'length' of undefined",
+            "content": "I'm trying to get the length of an array, but it's giving me this error. What could be wrong?",
+            "github_url": "https://github.com/user/repo46",
+            "exception_message": "Uncaught TypeError: Cannot read property 'length' of undefined",
+            "stack_trace": "at Object.<anonymous> (/home/user/project/script.js:12:25)",
+            "is_resolved": false,
+            "created_at": "2023-08-24T13:40:00Z",
+            "updated_at": "2023-08-24T13:40:00Z"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 25,
+        "fields": {
+            "author": 309,
+            "category": 3,
+            "title": "TypeError: 'undefined' is not an object (evaluating 'obj.property')",
+            "content": "I'm trying to access a property of an object, but I'm getting this error. How can I fix it?",
+            "github_url": "https://github.com/user/repo47",
+            "exception_message": "TypeError: 'undefined' is not an object (evaluating 'obj.property')",
+            "stack_trace": "at Object.<anonymous> (/home/user/project/script.js:18:10)",
+            "is_resolved": false,
+            "created_at": "2023-08-25T09:15:00Z",
+            "updated_at": "2023-08-25T09:15:00Z"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 26,
+        "fields": {
+            "author": 252,
+            "category": 4,
+            "title": "Uncaught SyntaxError: Unexpected identifier",
+            "content": "I'm getting a syntax error in my JavaScript code, but I can't figure out where the problem is.",
+            "github_url": "https://github.com/user/repo48",
+            "exception_message": "Uncaught SyntaxError: Unexpected identifier",
+            "stack_trace": "at Object.<anonymous> (/home/user/project/script.js:7:15)",
+            "is_resolved": false,
+            "created_at": "2023-08-26T11:50:00Z",
+            "updated_at": "2023-08-26T11:50:00Z"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 27,
+        "fields": {
+            "author": 187,
+            "category": 5,
+            "title": "TypeError: Cannot use 'in' operator to search for 'length' in undefined",
+            "content": "I'm trying to check if an array has any elements, but I'm getting this error. What does it mean?",
+            "github_url": "https://github.com/user/repo49",
+            "exception_message": "TypeError: Cannot use 'in' operator to search for 'length' in undefined",
+            "stack_trace": "at Object.<anonymous> (/home/user/project/script.js:22:18)",
+            "is_resolved": false,
+            "created_at": "2023-08-27T14:25:00Z",
+            "updated_at": "2023-08-27T14:25:00Z"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 28,
+        "fields": {
+            "author": 335,
+            "category": 1,
+            "title": "ReferenceError: assignment to undeclared variable x",
+            "content": "I'm trying to assign a value to a variable, but I'm getting this error. What am I doing wrong?",
+            "github_url": "https://github.com/user/repo50",
+            "exception_message": "ReferenceError: assignment to undeclared variable x",
+            "stack_trace": "at Object.<anonymous> (/home/user/project/script.js:15:1)",
+            "is_resolved": false,
+            "created_at": "2023-08-28T10:00:00Z",
+            "updated_at": "2023-08-28T10:00:00Z"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 29,
+        "fields": {
+            "author": 206,
+            "category": 1,
+            "title": "Getting a TypeError: Cannot read properties of undefined in my JS code",
+            "content": "I'm getting a TypeError in my JavaScript code when trying to access properties of an undefined object.",
+            "github_url": "https://github.com/example/repo/issues/29",
+            "exception_message": "TypeError: Cannot read properties of undefined",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": false,
+            "created_at": "2024-07-09T22:45:08.977155",
+            "updated_at": "2024-07-11T22:45:08.977166"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 30,
+        "fields": {
+            "author": 284,
+            "category": 1,
+            "title": "TypeError: Cannot read properties of undefined - need help!",
+            "content": "I'm getting a TypeError in my JavaScript code when trying to access properties of an undefined object.",
+            "github_url": "https://github.com/example/repo/issues/30",
+            "exception_message": "TypeError: Cannot read properties of undefined",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": false,
+            "created_at": "2024-07-09T22:45:08.977173",
+            "updated_at": "2024-07-11T22:45:08.977178"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 31,
+        "fields": {
+            "author": 345,
+            "category": 1,
+            "title": "Why am I getting 'Cannot read properties of undefined'?",
+            "content": "I'm getting a TypeError in my JavaScript code when trying to access properties of an undefined object.",
+            "github_url": "https://github.com/example/repo/issues/31",
+            "exception_message": "TypeError: Cannot read properties of undefined",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": false,
+            "created_at": "2024-07-08T22:45:08.977184",
+            "updated_at": "2024-07-11T22:45:08.977189"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 32,
+        "fields": {
+            "author": 279,
+            "category": 2,
+            "title": "JS Error: Cannot read properties of undefined",
+            "content": "I'm getting a TypeError in my JavaScript code when trying to access properties of an undefined object.",
+            "github_url": "https://github.com/example/repo/issues/32",
+            "exception_message": "TypeError: Cannot read properties of undefined",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": false,
+            "created_at": "2024-07-08T22:45:08.977195",
+            "updated_at": "2024-07-11T22:45:08.977200"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 33,
+        "fields": {
+            "author": 227,
+            "category": 1,
+            "title": "Help! TypeError: Cannot read properties of undefined",
+            "content": "I'm getting a TypeError in my JavaScript code when trying to access properties of an undefined object.",
+            "github_url": "https://github.com/example/repo/issues/33",
+            "exception_message": "TypeError: Cannot read properties of undefined",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": false,
+            "created_at": "2024-07-07T22:45:08.977206",
+            "updated_at": "2024-07-11T22:45:08.977211"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 34,
+        "fields": {
+            "author": 336,
+            "category": 2,
+            "title": "Facing issue with 'Cannot read properties of undefined'",
+            "content": "I'm getting a TypeError in my JavaScript code when trying to access properties of an undefined object.",
+            "github_url": "https://github.com/example/repo/issues/34",
+            "exception_message": "TypeError: Cannot read properties of undefined",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": false,
+            "created_at": "2024-07-07T22:45:08.977217",
+            "updated_at": "2024-07-11T22:45:08.977222"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 35,
+        "fields": {
+            "author": 84,
+            "category": 2,
+            "title": "Stuck with 'TypeError: Cannot read properties of undefined'",
+            "content": "I'm getting a TypeError in my JavaScript code when trying to access properties of an undefined object.",
+            "github_url": "https://github.com/example/repo/issues/35",
+            "exception_message": "TypeError: Cannot read properties of undefined",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": false,
+            "created_at": "2024-07-06T22:45:08.977228",
+            "updated_at": "2024-07-11T22:45:08.977233"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 36,
+        "fields": {
+            "author": 122,
+            "category": 2,
+            "title": "Cannot read properties of undefined error in JavaScript",
+            "content": "I'm getting a TypeError in my JavaScript code when trying to access properties of an undefined object.",
+            "github_url": "https://github.com/example/repo/issues/36",
+            "exception_message": "TypeError: Cannot read properties of undefined",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": false,
+            "created_at": "2024-07-08T22:45:08.977242",
+            "updated_at": "2024-07-11T22:45:08.977248"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 37,
+        "fields": {
+            "author": 338,
+            "category": 2,
+            "title": "TypeError in JS: Cannot read properties of undefined",
+            "content": "I'm getting a TypeError in my JavaScript code when trying to access properties of an undefined object.",
+            "github_url": "https://github.com/example/repo/issues/37",
+            "exception_message": "TypeError: Cannot read properties of undefined",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": false,
+            "created_at": "2024-07-09T22:45:08.977254",
+            "updated_at": "2024-07-11T22:45:08.977259"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 38,
+        "fields": {
+            "author": 34,
+            "category": 2,
+            "title": "Need assistance with 'Cannot read properties of undefined' error",
+            "content": "I'm getting a TypeError in my JavaScript code when trying to access properties of an undefined object.",
+            "github_url": "https://github.com/example/repo/issues/38",
+            "exception_message": "TypeError: Cannot read properties of undefined",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": false,
+            "created_at": "2024-07-09T22:45:08.977265",
+            "updated_at": "2024-07-11T22:45:08.977270"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 39,
+        "fields": {
+            "author": 100,
+            "category": 3,
+            "title": "Getting a TypeError: Cannot read properties of undefined in my JS code",
+            "content": "I'm getting a TypeError in my JavaScript code when trying to access properties of an undefined object.",
+            "github_url": "https://github.com/example/repo/issues/29",
+            "exception_message": "TypeError: Cannot read properties of undefined",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": true,
+            "created_at": "2024-07-07T22:47:43.255405",
+            "updated_at": "2024-07-11T22:47:43.255415"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 40,
+        "fields": {
+            "author": 128,
+            "category": 3,
+            "title": "TypeError: Cannot read properties of undefined - need help!",
+            "content": "I'm getting a TypeError in my JavaScript code when trying to access properties of an undefined object.",
+            "github_url": "https://github.com/example/repo/issues/30",
+            "exception_message": "TypeError: Cannot read properties of undefined",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": true,
+            "created_at": "2024-07-04T22:47:43.255422",
+            "updated_at": "2024-07-11T22:47:43.255425"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 41,
+        "fields": {
+            "author": 21,
+            "category": 2,
+            "title": "Why am I getting 'Cannot read properties of undefined'?",
+            "content": "I'm getting a TypeError in my JavaScript code when trying to access properties of an undefined object.",
+            "github_url": "https://github.com/example/repo/issues/31",
+            "exception_message": "TypeError: Cannot read properties of undefined",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": false,
+            "created_at": "2024-07-08T22:47:43.255432",
+            "updated_at": "2024-07-11T22:47:43.255438"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 42,
+        "fields": {
+            "author": 279,
+            "category": 2,
+            "title": "JS Error: Cannot read properties of undefined",
+            "content": "I'm getting a TypeError in my JavaScript code when trying to access properties of an undefined object.",
+            "github_url": "https://github.com/example/repo/issues/32",
+            "exception_message": "TypeError: Cannot read properties of undefined",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": false,
+            "created_at": "2024-07-08T22:47:43.255445",
+            "updated_at": "2024-07-11T22:47:43.255450"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 43,
+        "fields": {
+            "author": 227,
+            "category": 1,
+            "title": "Help! TypeError: Cannot read properties of undefined",
+            "content": "I'm getting a TypeError in my JavaScript code when trying to access properties of an undefined object.",
+            "github_url": "https://github.com/example/repo/issues/33",
+            "exception_message": "TypeError: Cannot read properties of undefined",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": true,
+            "created_at": "2024-07-07T22:47:43.255455",
+            "updated_at": "2024-07-11T22:47:43.255461"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 44,
+        "fields": {
+            "author": 336,
+            "category": 2,
+            "title": "Facing issue with 'Cannot read properties of undefined'",
+            "content": "I'm getting a TypeError in my JavaScript code when trying to access properties of an undefined object.",
+            "github_url": "https://github.com/example/repo/issues/34",
+            "exception_message": "TypeError: Cannot read properties of undefined",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": false,
+            "created_at": "2024-07-07T22:47:43.255467",
+            "updated_at": "2024-07-11T22:47:43.255472"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 45,
+        "fields": {
+            "author": 84,
+            "category": 3,
+            "title": "Stuck with 'TypeError: Cannot read properties of undefined'",
+            "content": "I'm getting a TypeError in my JavaScript code when trying to access properties of an undefined object.",
+            "github_url": "https://github.com/example/repo/issues/35",
+            "exception_message": "TypeError: Cannot read properties of undefined",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": false,
+            "created_at": "2024-07-06T22:47:43.255478",
+            "updated_at": "2024-07-11T22:47:43.255483"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 46,
+        "fields": {
+            "author": 122,
+            "category": 5,
+            "title": "Cannot read properties of undefined error in JavaScript",
+            "content": "I'm getting a TypeError in my JavaScript code when trying to access properties of an undefined object.",
+            "github_url": "https://github.com/example/repo/issues/36",
+            "exception_message": "TypeError: Cannot read properties of undefined",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": false,
+            "created_at": "2024-07-08T22:47:43.255490",
+            "updated_at": "2024-07-11T22:47:43.255492"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 47,
+        "fields": {
+            "author": 338,
+            "category": 2,
+            "title": "TypeError in JS: Cannot read properties of undefined",
+            "content": "I'm getting a TypeError in my JavaScript code when trying to access properties of an undefined object.",
+            "github_url": "https://github.com/example/repo/issues/37",
+            "exception_message": "TypeError: Cannot read properties of undefined",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": false,
+            "created_at": "2024-07-09T22:47:43.255497",
+            "updated_at": "2024-07-11T22:47:43.255503"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 48,
+        "fields": {
+            "author": 34,
+            "category": 5,
+            "title": "Need assistance with 'Cannot read properties of undefined' error",
+            "content": "I'm getting a TypeError in my JavaScript code when trying to access properties of an undefined object.",
+            "github_url": "https://github.com/example/repo/issues/38",
+            "exception_message": "TypeError: Cannot read properties of undefined",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": false,
+            "created_at": "2024-07-09T22:47:43.255508",
+            "updated_at": "2024-07-11T22:47:43.255513"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 49,
+        "fields": {
+            "author": 300,
+            "category": 1,
+            "title": "Getting a TypeError: Cannot read properties of undefined in my JS code",
+            "content": "I'm getting a TypeError in my JavaScript code when trying to access properties of an undefined object.",
+            "github_url": "https://github.com/example/repo/issues/39",
+            "exception_message": "TypeError: Cannot read properties of undefined",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": true,
+            "created_at": "2024-07-07T22:47:43.255405",
+            "updated_at": "2024-07-11T22:47:43.255415"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 50,
+        "fields": {
+            "author": 56,
+            "category": 4,
+            "title": "TypeError: Cannot read properties of undefined - need help!",
+            "content": "I'm getting a TypeError in my JavaScript code when trying to access properties of an undefined object.",
+            "github_url": "https://github.com/example/repo/issues/40",
+            "exception_message": "TypeError: Cannot read properties of undefined",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": true,
+            "created_at": "2024-07-04T22:47:43.255422",
+            "updated_at": "2024-07-11T22:47:43.255425"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 51,
+        "fields": {
+            "author": 234,
+            "category": 5,
+            "title": "Why am I getting 'Cannot read properties of undefined'?",
+            "content": "I'm getting a TypeError in my JavaScript code when trying to access properties of an undefined object.",
+            "github_url": "https://github.com/example/repo/issues/41",
+            "exception_message": "TypeError: Cannot read properties of undefined",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": false,
+            "created_at": "2024-07-01T22:47:43.255490",
+            "updated_at": "2024-07-11T22:47:43.255492"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 52,
+        "fields": {
+            "author": 23,
+            "category": 4,
+            "title": "JS Error: Cannot read properties of undefined",
+            "content": "I'm getting a TypeError in my JavaScript code when trying to access properties of an undefined object.",
+            "github_url": "https://github.com/example/repo/issues/42",
+            "exception_message": "TypeError: Cannot read properties of undefined",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": false,
+            "created_at": "2024-07-05T22:47:43.255495",
+            "updated_at": "2024-07-11T22:47:43.255497"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 53,
+        "fields": {
+            "author": 222,
+            "category": 2,
+            "title": "Help! TypeError: Cannot read properties of undefined",
+            "content": "I'm getting a TypeError in my JavaScript code when trying to access properties of an undefined object.",
+            "github_url": "https://github.com/example/repo/issues/43",
+            "exception_message": "TypeError: Cannot read properties of undefined",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": true,
+            "created_at": "2024-07-02T22:47:43.255501",
+            "updated_at": "2024-07-11T22:47:43.255503"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 54,
+        "fields": {
+            "author": 333,
+            "category": 1,
+            "title": "Facing issue with 'Cannot read properties of undefined'",
+            "content": "I'm getting a TypeError in my JavaScript code when trying to access properties of an undefined object.",
+            "github_url": "",
+            "exception_message": "TypeError: Cannot read properties of undefined",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": true,
+            "created_at": "2024-07-02T22:47:43.255501",
+            "updated_at": "2024-07-11T22:47:43.255503"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 55,
+        "fields": {
+            "author": 131,
+            "category": 3,
+            "title": "TypeError: map is not a function",
+            "content": "I'm getting a TypeError in my JavaScript code when trying to use the map method on an object that is not an array.",
+            "github_url": "https://github.com/example/repo/issues/55",
+            "exception_message": "TypeError: map is not a function",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": true,
+            "created_at": "2024-07-10T22:53:58.731795",
+            "updated_at": "2024-07-11T22:53:58.731810"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 56,
+        "fields": {
+            "author": 53,
+            "category": 5,
+            "title": "Getting 'filter is not a function' error",
+            "content": "My JavaScript code throws 'filter is not a function' when I try to filter an array-like object.",
+            "github_url": "https://github.com/example/repo/issues/56",
+            "exception_message": "Getting 'filter is not a function' error",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": false,
+            "created_at": "2024-07-06T22:53:58.731820",
+            "updated_at": "2024-07-11T22:53:58.731825"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 57,
+        "fields": {
+            "author": 21,
+            "category": 5,
+            "title": "TypeError: reduce is not a function",
+            "content": "I encountered 'reduce is not a function' in my JS code, need assistance.",
+            "github_url": "https://github.com/example/repo/issues/57",
+            "exception_message": "TypeError: reduce is not a function",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": true,
+            "created_at": "2024-07-08T22:53:58.731843",
+            "updated_at": "2024-07-11T22:53:58.731849"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 58,
+        "fields": {
+            "author": 221,
+            "category": 2,
+            "title": "push is not a function - need help!",
+            "content": "Trying to push to an array but getting 'push is not a function' error.",
+            "github_url": "https://github.com/example/repo/issues/58",
+            "exception_message": "push is not a function - need help!",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": false,
+            "created_at": "2024-07-06T22:53:58.731853",
+            "updated_at": "2024-07-11T22:53:58.731857"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 59,
+        "fields": {
+            "author": 56,
+            "category": 4,
+            "title": "TypeError: pop is not a function",
+            "content": "When I call pop on my array, I get 'pop is not a function'.",
+            "github_url": "https://github.com/example/repo/issues/59",
+            "exception_message": "TypeError: pop is not a function",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": true,
+            "created_at": "2024-07-04T22:53:58.731863",
+            "updated_at": "2024-07-11T22:53:58.731868"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 60,
+        "fields": {
+            "author": 44,
+            "category": 1,
+            "title": "Facing issue with 'sort is not a function'",
+            "content": "My code is breaking with 'sort is not a function' when trying to sort an array.",
+            "github_url": "https://github.com/example/repo/issues/60",
+            "exception_message": "Facing issue with 'sort is not a function'",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": false,
+            "created_at": "2024-07-08T22:53:58.731874",
+            "updated_at": "2024-07-11T22:53:58.731879"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 61,
+        "fields": {
+            "author": 214,
+            "category": 2,
+            "title": "unshift is not a function in my JS code",
+            "content": "I'm using unshift but getting 'unshift is not a function' in my JavaScript.",
+            "github_url": "https://github.com/example/repo/issues/61",
+            "exception_message": "unshift is not a function in my JS code",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": true,
+            "created_at": "2024-07-07T22:53:58.731882",
+            "updated_at": "2024-07-11T22:53:58.731884"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 62,
+        "fields": {
+            "author": 290,
+            "category": 1,
+            "title": "TypeError: splice is not a function",
+            "content": "Getting 'splice is not a function' when trying to modify an array.",
+            "github_url": "https://github.com/example/repo/issues/62",
+            "exception_message": "TypeError: splice is not a function",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": false,
+            "created_at": "2024-07-02T22:53:58.731884",
+            "updated_at": "2024-07-11T22:53:58.731890"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 63,
+        "fields": {
+            "author": 101,
+            "category": 3,
+            "title": "Need help with 'forEach is not a function'",
+            "content": "My code says 'forEach is not a function' when I attempt to loop over an array.",
+            "github_url": "https://github.com/example/repo/issues/63",
+            "exception_message": "Need help with 'forEach is not a function'",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": false,
+            "created_at": "2024-07-04T22:53:58.731897",
+            "updated_at": "2024-07-11T22:53:58.731901"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 64,
+        "fields": {
+            "author": 43,
+            "category": 3,
+            "title": "TypeError: find is not a function",
+            "content": "TypeError: find is not a function when trying to search an array.",
+            "github_url": "https://github.com/example/repo/issues/64",
+            "exception_message": "TypeError: find is not a function",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": false,
+            "created_at": "2024-07-03T22:53:58.731908",
+            "updated_at": "2024-07-11T22:53:58.731913"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 65,
+        "fields": {
+            "author": 289,
+            "category": 3,
+            "title": "SyntaxError: Unexpected token",
+            "content": "I'm encountering a SyntaxError: Unexpected token in my JavaScript code.",
+            "github_url": "https://github.com/example/repo/issues/65",
+            "exception_message": "SyntaxError: Unexpected token",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": false,
+            "created_at": "2024-07-02T00:10:16.204456",
+            "updated_at": "2024-07-12T00:10:16.204470"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 66,
+        "fields": {
+            "author": 152,
+            "category": 1,
+            "title": "ReferenceError: foo is not defined",
+            "content": "My code throws ReferenceError: foo is not defined when I try to access a variable.",
+            "github_url": "https://github.com/example/repo/issues/66",
+            "exception_message": "ReferenceError: foo is not defined",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": false,
+            "created_at": "2024-07-05T00:10:16.204477",
+            "updated_at": "2024-07-12T00:10:16.204482"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 67,
+        "fields": {
+            "author": 122,
+            "category": 4,
+            "title": "Uncaught TypeError: Assignment to constant variable",
+            "content": "Getting an Uncaught TypeError: Assignment to constant variable when trying to reassign a const.",
+            "github_url": "https://github.com/example/repo/issues/67",
+            "exception_message": "Uncaught TypeError: Assignment to constant variable",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": true,
+            "created_at": "2024-07-03T00:10:16.204487",
+            "updated_at": "2024-07-12T00:10:16.204492"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 68,
+        "fields": {
+            "author": 312,
+            "category": 2,
+            "title": "Uncaught RangeError: Maximum call stack size exceeded",
+            "content": "Encountering Uncaught RangeError: Maximum call stack size exceeded in a recursive function.",
+            "github_url": "https://github.com/example/repo/issues/68",
+            "exception_message": "Uncaught RangeError: Maximum call stack size exceeded",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": false,
+            "created_at": "2024-07-01T00:10:16.204498",
+            "updated_at": "2024-07-12T00:10:16.204503"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 69,
+        "fields": {
+            "author": 288,
+            "category": 3,
+            "title": "ReferenceError: Cannot access 'foo' before initialization",
+            "content": "Seeing ReferenceError: Cannot access 'foo' before initialization in my code.",
+            "github_url": "https://github.com/example/repo/issues/69",
+            "exception_message": "ReferenceError: Cannot access 'foo' before initialization",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": true,
+            "created_at": "2024-07-09T00:10:16.204509",
+            "updated_at": "2024-07-12T00:10:16.204514"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 70,
+        "fields": {
+            "author": 186,
+            "category": 2,
+            "title": "TypeError: Cannot set property 'foo' of null",
+            "content": "TypeError: Cannot set property 'foo' of null is being thrown in my script.",
+            "github_url": "https://github.com/example/repo/issues/70",
+            "exception_message": "TypeError: Cannot set property 'foo' of null",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": false,
+            "created_at": "2024-07-08T00:10:16.204519",
+            "updated_at": "2024-07-12T00:10:16.204523"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 71,
+        "fields": {
+            "author": 145,
+            "category": 1,
+            "title": "Unexpected end of input",
+            "content": "Getting Unexpected end of input error while parsing JSON.",
+            "github_url": "https://github.com/example/repo/issues/71",
+            "exception_message": "Unexpected end of input",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": true,
+            "created_at": "2024-07-07T00:10:16.204528",
+            "updated_at": "2024-07-12T00:10:16.204533"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 72,
+        "fields": {
+            "author": 68,
+            "category": 2,
+            "title": "Invalid left-hand side in assignment",
+            "content": "My code has Invalid left-hand side in assignment when trying to assign a value.",
+            "github_url": "https://github.com/example/repo/issues/72",
+            "exception_message": "Invalid left-hand side in assignment",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": true,
+            "created_at": "2024-07-02T00:10:16.204541",
+            "updated_at": "2024-07-12T00:10:16.204552"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 73,
+        "fields": {
+            "author": 95,
+            "category": 4,
+            "title": "Unexpected token in JSON",
+            "content": "Unexpected token in JSON error appears while parsing JSON data.",
+            "github_url": "https://github.com/example/repo/issues/73",
+            "exception_message": "Unexpected token in JSON",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": true,
+            "created_at": "2024-07-04T00:10:16.204559",
+            "updated_at": "2024-07-12T00:10:16.204564"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 74,
+        "fields": {
+            "author": 139,
+            "category": 3,
+            "title": "SyntaxError: Unexpected identifier",
+            "content": "Seeing SyntaxError: Unexpected identifier in my JavaScript code.",
+            "github_url": "https://github.com/example/repo/issues/74",
+            "exception_message": "SyntaxError: Unexpected identifier",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": false,
+            "created_at": "2024-07-04T00:10:16.204567",
+            "updated_at": "2024-07-12T00:10:16.204570"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 75,
+        "fields": {
+            "author": 253,
+            "category": 4,
+            "title": "SyntaxError: Unexpected token",
+            "content": "I'm encountering a SyntaxError: Unexpected token in my JavaScript code.",
+            "github_url": "https://github.com/example/repo/issues/75",
+            "exception_message": "SyntaxError: Unexpected token",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": false,
+            "created_at": "2024-07-07T00:12:09.141362",
+            "updated_at": "2024-07-12T00:12:09.141376"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 76,
+        "fields": {
+            "author": 370,
+            "category": 1,
+            "title": "ReferenceError: foo is not defined",
+            "content": "My code throws ReferenceError: foo is not defined when I try to access a variable.",
+            "github_url": "https://github.com/example/repo/issues/76",
+            "exception_message": "ReferenceError: foo is not defined",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": false,
+            "created_at": "2024-07-08T00:12:09.141388",
+            "updated_at": "2024-07-12T00:12:09.141393"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 77,
+        "fields": {
+            "author": 222,
+            "category": 3,
+            "title": "Uncaught TypeError: Assignment to constant variable",
+            "content": "Getting an Uncaught TypeError: Assignment to constant variable when trying to reassign a const.",
+            "github_url": "https://github.com/example/repo/issues/77",
+            "exception_message": "Uncaught TypeError: Assignment to constant variable",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": false,
+            "created_at": "2024-07-07T00:12:09.141406",
+            "updated_at": "2024-07-12T00:12:09.141412"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 78,
+        "fields": {
+            "author": 65,
+            "category": 3,
+            "title": "Uncaught RangeError: Maximum call stack size exceeded",
+            "content": "Encountering Uncaught RangeError: Maximum call stack size exceeded in a recursive function.",
+            "github_url": "https://github.com/example/repo/issues/78",
+            "exception_message": "Uncaught RangeError: Maximum call stack size exceeded",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": true,
+            "created_at": "2024-07-09T00:12:09.141417",
+            "updated_at": "2024-07-12T00:12:09.141421"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 79,
+        "fields": {
+            "author": 283,
+            "category": 1,
+            "title": "ReferenceError: Cannot access 'foo' before initialization",
+            "content": "Seeing ReferenceError: Cannot access 'foo' before initialization in my code.",
+            "github_url": "https://github.com/example/repo/issues/79",
+            "exception_message": "ReferenceError: Cannot access 'foo' before initialization",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": true,
+            "created_at": "2024-07-08T00:12:09.141425",
+            "updated_at": "2024-07-12T00:12:09.141429"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 80,
+        "fields": {
+            "author": 392,
+            "category": 2,
+            "title": "TypeError: Cannot set property 'foo' of null",
+            "content": "TypeError: Cannot set property 'foo' of null is being thrown in my script.",
+            "github_url": "https://github.com/example/repo/issues/80",
+            "exception_message": "TypeError: Cannot set property 'foo' of null",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": false,
+            "created_at": "2024-07-08T00:12:09.141434",
+            "updated_at": "2024-07-12T00:12:09.141438"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 81,
+        "fields": {
+            "author": 67,
+            "category": 2,
+            "title": "Unexpected end of input",
+            "content": "Getting Unexpected end of input error while parsing JSON.",
+            "github_url": "https://github.com/example/repo/issues/81",
+            "exception_message": "Unexpected end of input",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": false,
+            "created_at": "2024-07-07T00:12:09.141429",
+            "updated_at": "2024-07-12T00:12:09.141441"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 82,
+        "fields": {
+            "author": 84,
+            "category": 1,
+            "title": "Invalid left-hand side in assignment",
+            "content": "My code has Invalid left-hand side in assignment when trying to assign a value.",
+            "github_url": "https://github.com/example/repo/issues/82",
+            "exception_message": "Invalid left-hand side in assignment",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": true,
+            "created_at": "2024-07-08T00:12:09.141432",
+            "updated_at": "2024-07-12T00:12:09.141435"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 83,
+        "fields": {
+            "author": 267,
+            "category": 3,
+            "title": "Unexpected token in JSON",
+            "content": "Unexpected token in JSON error appears while parsing JSON data.",
+            "github_url": "https://github.com/example/repo/issues/83",
+            "exception_message": "Unexpected token in JSON",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": false,
+            "created_at": "2024-07-04T00:12:09.141440",
+            "updated_at": "2024-07-12T00:12:09.141442"
+        }
+    },
+    {
+        "model": "LearningAPI.helprequest",
+        "pk": 84,
+        "fields": {
+            "author": 45,
+            "category": 5,
+            "title": "SyntaxError: Unexpected identifier",
+            "content": "Seeing SyntaxError: Unexpected identifier in my JavaScript code.",
+            "github_url": "https://github.com/example/repo/issues/84",
+            "exception_message": "SyntaxError: Unexpected identifier",
+            "stack_trace": "at Object.<anonymous> (index.js:10:15)",
+            "loom_url": "",
+            "llm_prompt": "",
+            "is_resolved": false,
+            "created_at": "2024-07-04T00:12:09.141446",
+            "updated_at": "2024-07-12T00:12:09.141448"
+        }
+    }
+]

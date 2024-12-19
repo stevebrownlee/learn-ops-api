@@ -8,7 +8,7 @@ from allauth.socialaccount.models import SocialAccount
 
 from LearningAPI.utils import GithubRequest
 from LearningAPI.models.people import Cohort, NssUserCohort, NssUser
-from LearningAPI.models.coursework import StudentProject
+from LearningAPI.models.coursework import StudentProject, Project
 
 
 class Profile(ViewSet):
@@ -33,8 +33,6 @@ class Profile(ViewSet):
             return Response(None, status=status.HTTP_204_NO_CONTENT)
 
         return Response({'message': 'You must provide a \'firstName\' and \'lastName\' in the request body'}, status=status.HTTP_400_BAD_REQUEST)
-
-
 
     def list(self, request):
         """Handle GET requests to profile resource
@@ -84,12 +82,14 @@ class Profile(ViewSet):
                     logger.warning("Error adding %s to %s organization", person.extra_data['login'], student_org_name)
 
                 # Assign student to first project in cohort's course
-                cohort_first_course = cohort_assignment.courses.get(index=0)
-                course_first_book = cohort_first_course.course.books.get(index=0)
-                book_first_project = course_first_book.projects.get(index=0)
+                course_first_project = Project.objects.get(
+                    index=0,
+                    book__index=0,
+                    cohort_assignment__courses__index=0,
+                )
                 student_project = StudentProject()
                 student_project.student = nss_user
-                student_project.project = book_first_project
+                student_project.project = course_first_project
                 student_project.save()
 
 
