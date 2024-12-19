@@ -22,6 +22,8 @@ class ProjectViewSet(ViewSet):
         project.index = request.data["index"]
         project.active = True
         project.is_group_project = request.data["is_group_project"]
+        project.api_template_url = request.data["api_template_url"]
+        project.client_template_url = request.data["client_template_url"]
         project.book = Book.objects.get(pk=request.data["book"])
         project.implementation_url = request.data["implementation_url"]
 
@@ -52,15 +54,15 @@ class ProjectViewSet(ViewSet):
         Returns:
             Response -- Empty body with 204 status code
         """
-        url = request.data.get("implementation_url", "")
-
         try:
             project = Project.objects.get(pk=pk)
             project.name = request.data["name"]
             project.active = request.data["active"]
             project.index = request.data["index"]
             project.is_group_project = request.data["is_group_project"]
-            project.implementation_url = url
+            project.api_template_url = request.data.get("api_template_url", "")
+            project.client_template_url = request.data.get("client_template_url", "")
+            project.implementation_url = request.data.get("implementation_url", "")
 
             project.save()
         except Project.DoesNotExist:
@@ -97,6 +99,7 @@ class ProjectViewSet(ViewSet):
         """
         book_id = request.query_params.get("bookId", None)
         course_id = request.query_params.get("courseId", None)
+        group_projects = request.query_params.get("group", "false")
 
         try:
             projects = Project.objects.all().order_by('book__index', 'index')
@@ -106,6 +109,9 @@ class ProjectViewSet(ViewSet):
 
             if book_id is not None:
                 projects = projects.filter(book__id=book_id)
+
+            if group_projects == "true":
+                projects = projects.filter(is_group_project=True)
 
             serializer = ProjectSerializer(projects, many=True, context={'request': request})
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -156,4 +162,5 @@ class ProjectSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'name', 'book', 'course',
             'index', 'active', 'is_group_project',
+            'api_template_url', 'client_template_url',
         )

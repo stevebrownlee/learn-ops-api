@@ -4,7 +4,17 @@
 
 This project is the API for the Learning Platform. It is a Django project using the Django REST Framework application. It integrates with the Github OAuth platform to create accounts and perform authorization for the companion [Learning Platform React client](https://github.com/stevebrownlee/learn-ops-client).
 
-## Prerequisites for Windows Users
+## Prerequisites
+
+### Learning Platform Request Collection
+
+1. Install Postman
+1. Open Postman app
+1. Click File > Import from the navbar
+2. Drag the `LearnOps.postman_collection.json` file into the dialog
+4. Requests will be imported and should appear on the left.
+
+### Windows Developer Prerequisites
 
 If you are a Windows user, you will need to install WSL and Ubuntu.
 
@@ -16,7 +26,7 @@ Do not do step 5... only steps 1-4.
 
 Once you are done, you will be working in an Ubuntu terminal during all setup and developing on the API.
 
-### If WSL and Postgres Already Exists
+#### If WSL and Postgres Already Exists
 
 If you already have Postgres installed in Ubuntu, then you need to uninstall it and kill the existing cluster.
 
@@ -26,11 +36,20 @@ sudo pg_ctlcluster {version} main stop
 sudo pg_dropcluster {version} main --stop
 ```
 
-## Project Setup
+### All Developer Prerequisites
 
-1. Fork this repo to your own Github account.
-2. Clone it.
-3. `cd` into the project directory.
+#### Git
+
+Make sure you have `git` installed so you can clone and work on the project.
+
+#### SSH Key
+
+If you are setting this project up on a new WSL Linux installation, you need to create a new SSH key for that OS.
+
+1. Set up an SSH key pair for Linux/Mac
+2. Add the public SSH key to your Github account
+3. Make sure SSH agent is running
+4. Use `ssh-add` to add your new private key to the shell session
 
 ### Github OAuth App
 
@@ -48,6 +67,13 @@ This application uses Github for authorization instead of user accounts in Djang
 10. Click the **Register Application** button
 11. Click the **Generate a new client secret** button
 12. **DO NOT CLOSE TAB. CLIENT AND SECRET NEEDED BELOW.**
+
+
+## Getting Started
+
+1. Fork this repo to your own Github account. Set your fork as remote origin. Set this repository as remote upstream.
+2. Clone your fork to your directory of choice.
+3. `cd` into the project directory that gets created.
 
 ### Environment Variables
 
@@ -76,9 +102,14 @@ In your terminal, be in the project directory, and run the following command.
 
 Once this script is complete, you will have the Postgres database, and some starter data seeded in it.
 
+
 ## Start Virtual Environment
 
-In the project directory, run `pipenv shell` to activate the VE for the project.
+The setup script installs Python 3.9.1, so your last step is to start the virtual environment for the project with the correct version.
+
+```sh
+pipenv --python 3.9.1 shell
+```
 
 ## Using the API
 

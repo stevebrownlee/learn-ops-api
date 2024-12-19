@@ -1,49 +1,22 @@
 
 -- View all tables
-select * from pg_catalog.pg_tables;
+SELECT * from pg_catalog.pg_tables;
 
 
-select * from "auth_user" order by id desc;
-select * from "socialaccount_socialaccount" order by id desc;
-select * from "authtoken_token" where user_id = 470;
-select * from "LearningAPI_nssuser" where user_id = 470;
-select * from "LearningAPI_nssusercohort" where nss_user_id = 468;
-update "LearningAPI_nssusercohort"
-    set is_github_org_member = FALSE
-     where nss_user_id = 468;
+SELECT * from "auth_user" order by id desc;
+SELECT * from "socialaccount_socialaccount" order by id desc;
+SELECT * from "authtoken_token" where user_id = 470;
+SELECT * from "LearningAPI_nssuser" where user_id = 470;
+SELECT * from "LearningAPI_nssusercohort" where nss_user_id = 468;
+SELECT * from "LearningAPI_studentteam";
+SELECT * FROM "LearningAPI_cohort";
 
-
--- Drop all tables
-DO $$ DECLARE
-    r RECORD;
-BEGIN
-    FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = current_schema()) LOOP
-        EXECUTE 'DROP TABLE IF EXISTS ' || quote_ident(r.tablename) || ' CASCADE';
-    END LOOP;
-END $$;
-DROP FUNCTION IF EXISTS get_cohort_student_data(INT);
 DROP FUNCTION IF EXISTS get_student_details(INT);
 DROP FUNCTION IF EXISTS get_project_average_start_delay(INT);
-ALTER TABLE auth_user ALTER COLUMN last_login DROP NOT NULL;
-
-
-
-
-
-select * FROM "LearningAPI_nssuser";
-select * FROM "LearningAPI_cohort";
-
-
-
-
-
-
-
-
 
 
 DROP FUNCTION IF EXISTS get_cohort_student_data(INT);
-select * from get_cohort_student_data(29);
+SELECT * from get_cohort_student_data(29);
 
 
 
@@ -92,7 +65,9 @@ BEGIN
                 json_build_object(
                     'note_id', sn.id,
                     'note', sn.note,
-                    'created_on', sn.created_on
+                    'created_on', sn.created_on,
+                    'note_type_id', sn.note_type_id,
+                    'note_label', COALESCE(snt.label, '')
                 )
             )
         )::text AS student_notes,
@@ -157,6 +132,7 @@ BEGIN
     LEFT JOIN "LearningAPI_nssusercohort" nc ON nc."nss_user_id" = nu."id"
     LEFT JOIN "LearningAPI_cohort" c ON c."id" = nc."cohort_id"
     LEFT JOIN "LearningAPI_studentnote" sn ON sn."student_id" = nu."id"
+    LEFT JOIN "LearningAPI_studentnotetype" snt ON sn."note_type_id" = snt."id"
     LEFT JOIN "LearningAPI_studenttag" stg ON stg."student_id" = nu."id"
     LEFT JOIN "LearningAPI_tag" tag ON stg.tag_id = tag.id
     LEFT JOIN "socialaccount_socialaccount" social ON social.user_id = nu.user_id
@@ -248,7 +224,9 @@ SELECT
             json_build_object(
                 'note_id', sn.id,
                 'note', sn.note,
-                'created_on', sn.created_on
+                'created_on', sn.created_on,
+                'note_type_id', sn.note_type_id,
+                'note_label', COALESCE(snt.label, '')
             )
         )
     )::text AS student_notes,
@@ -311,6 +289,7 @@ JOIN "auth_user" au ON au."id" = nu."user_id"
 LEFT JOIN "LearningAPI_nssusercohort" nc ON nc."nss_user_id" = nu."id"
 LEFT JOIN "LearningAPI_cohort" c ON c."id" = nc."cohort_id"
 LEFT JOIN "LearningAPI_studentnote" sn ON sn."student_id" = nu."id"
+LEFT JOIN "LearningAPI_studentnotetype" snt ON sn."note_type_id" = snt."id"
 LEFT JOIN "LearningAPI_studenttag" stg ON stg."student_id" = nu."id"
 LEFT JOIN "LearningAPI_tag" tag ON stg.tag_id = tag.id
 LEFT JOIN "socialaccount_socialaccount" social ON social.user_id = nu.user_id
@@ -362,7 +341,7 @@ SELECT *
     FROM "LearningAPI_learningrecordentry" lr
 order by id desc;
 
-select
+SELECT
     sum(lw.weight) as score,
     au."first_name" || ' ' || au."last_name" AS student_name
 from "LearningAPI_learningrecord" lr
@@ -374,3 +353,9 @@ join "LearningAPI_cohort" c on uc.cohort_id = c.id
 where c.id = 29
 group by student_name
 ;
+
+
+
+
+
+SELECT * from "LearningAPI_studentnote" order by id desc;
