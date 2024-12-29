@@ -1,11 +1,11 @@
 import json
 import logging
-import redis
+import valkey
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from LearningAPI.models.help import RequestQuery
 
-redis_client = redis.StrictRedis(host='localhost', port=6379, db=0)
+valkey_client = valkey.Valkey(host='localhost', port=6379, db=0)
 logger = logging.getLogger("LearningPlatform")
 
 @receiver(post_save, sender=RequestQuery)
@@ -17,7 +17,7 @@ def trigger_process_queries(sender, instance, created, **kwargs):
                 .values_list('query', flat=True))
             message = json.dumps({'queries': queries})
 
-            redis_client.publish('channel_help_query', message)
+            valkey_client.publish('channel_help_query', message)
 
             logger.debug('Published message to channel_help_query')
 

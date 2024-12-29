@@ -22,7 +22,7 @@ django-allauth = "0.54.0"
 requests = "*"
 "backports.weakref" = "*"
 wheel = "*"
-redis = "*"
+valkey = "*"
 
 [requires]
 python_version = "3.9.1"

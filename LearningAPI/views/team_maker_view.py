@@ -1,4 +1,4 @@
-import random, string, json, redis
+import random, string, json, valkey
 
 from rest_framework import serializers, status
 from rest_framework.viewsets import ViewSet
@@ -10,7 +10,7 @@ from LearningAPI.models.coursework import Project
 from LearningAPI.utils import GithubRequest, SlackAPI
 
 
-redis_client = redis.StrictRedis(host='localhost', port=6379, db=0)
+valkey_client = valkey.Valkey(host='localhost', port=6379, db=0)
 
 class TeamRepoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -50,7 +50,6 @@ class TeamMakerView(ViewSet):
         Returns:
             Response -- JSON serialized instance
         """
-
         cohort_id = request.data.get('cohort', None)
         student_list = request.data.get('students', None)
         group_project_id = request.data.get('groupProject', None)
@@ -130,7 +129,6 @@ class TeamMakerView(ViewSet):
                 channel=team.slack_channel
             )
 
-
             # Create the API repository for the group project if it exists
             if project.api_template_url:
                 api_repo_name = f'{project.name.replace(" ", "-")}-api-{random_suffix}'
@@ -172,7 +170,7 @@ class TeamMakerView(ViewSet):
             'source_repo': project.client_template_url,
             'all_target_repositories': issue_target_repos
         })
-        redis_client.publish('channel_migrate_issue_tickets', message)
+        valkey_client.publish('channel_migrate_issue_tickets', message)
 
         return Response(serialized_team, status=status.HTTP_201_CREATED)
 
