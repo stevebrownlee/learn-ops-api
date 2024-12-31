@@ -1,5 +1,7 @@
 import random, string, json, valkey
 
+from django.conf import settings
+
 from rest_framework import serializers, status
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
@@ -10,7 +12,11 @@ from LearningAPI.models.coursework import Project
 from LearningAPI.utils import GithubRequest, SlackAPI
 
 
-valkey_client = valkey.Valkey(host='localhost', port=6379, db=0)
+valkey_client = valkey.Valkey(
+    host=settings.VALKEY_CONFIG['HOST'],
+    port=settings.VALKEY_CONFIG['PORT'],
+    db=settings.VALKEY_CONFIG['DB'],
+)
 
 class TeamRepoSerializer(serializers.ModelSerializer):
     class Meta:

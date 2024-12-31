@@ -130,20 +130,10 @@ DATABASES = {
     }
 }
 
-REDIS_CONFIG = {
-    'HOST': '127.0.0.1',
-    'PORT': 6379,
-    'DB': 0,
-    'DEFAULT_TIMEOUT': 360,
-}
-
-RQ_QUEUES = {
-    'popular_queries': {
-        'HOST': REDIS_CONFIG['HOST'],
-        'PORT': REDIS_CONFIG['PORT'],
-        'DB': REDIS_CONFIG['DB'],
-        'DEFAULT_TIMEOUT': REDIS_CONFIG['DEFAULT_TIMEOUT'],
-    }
+VALKEY_CONFIG = {
+    'HOST': os.getenv("VALKEY_HOST","localhost"),
+    'PORT': os.getenv("VALKEY_PORT", 6379),
+    'DB': os.getenv("VALKEY_DB", 0),
 }
 
 # Password validation

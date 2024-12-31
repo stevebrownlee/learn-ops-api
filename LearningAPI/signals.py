@@ -1,11 +1,16 @@
 import json
 import logging
 import valkey
+from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from LearningAPI.models.help import RequestQuery
 
-valkey_client = valkey.Valkey(host='localhost', port=6379, db=0)
+valkey_client = valkey.Valkey(
+    host=settings.VALKEY_CONFIG['HOST'],
+    port=settings.VALKEY_CONFIG['PORT'],
+    db=settings.VALKEY_CONFIG['DB'],
+)
 logger = logging.getLogger("LearningPlatform")
 
 @receiver(post_save, sender=RequestQuery)
