@@ -1,0 +1,1487 @@
+[
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 1,
+        "fields": {
+            "query": "cannot read property of undefined",
+            "searcher": 156,
+            "helpful_request": 1
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 2,
+        "fields": {
+            "query": "TypeError: is not a function",
+            "searcher": 245,
+            "helpful_request": 11
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 3,
+        "fields": {
+            "query": "how to use map function in javascript",
+            "searcher": 301,
+            "helpful_request": null
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 4,
+        "fields": {
+            "query": "canot read properties of undefined error",
+            "searcher": 189,
+            "helpful_request": 4
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 5,
+        "fields": {
+            "query": "array filter is not a function",
+            "searcher": 278,
+            "helpful_request": 5
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 6,
+        "fields": {
+            "query": "TypeError: Cannot read property 'length' of undefined",
+            "searcher": 322,
+            "helpful_request": 2
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 7,
+        "fields": {
+            "query": "map is not a function javascript",
+            "searcher": 178,
+            "helpful_request": 12
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 8,
+        "fields": {
+            "query": "how to fix cannot read properties of null",
+            "searcher": 256,
+            "helpful_request": 3
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 9,
+        "fields": {
+            "query": "addEventListener is not a function",
+            "searcher": 199,
+            "helpful_request": 9
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 10,
+        "fields": {
+            "query": "TypeError: Object doesn't support property or method 'map'",
+            "searcher": 345,
+            "helpful_request": 16
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 11,
+        "fields": {
+            "query": "Uncaught TypeError: Cannot read property 'push' of undefined",
+            "searcher": 287,
+            "helpful_request": 6
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 12,
+        "fields": {
+            "query": "filter is not a function javascript error",
+            "searcher": 156,
+            "helpful_request": 8
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 13,
+        "fields": {
+            "query": "how to fix TypeError: x is not a function",
+            "searcher": 399,
+            "helpful_request": null
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 14,
+        "fields": {
+            "query": "cannot read property 'slice' of null",
+            "searcher": 245,
+            "helpful_request": 7
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 15,
+        "fields": {
+            "query": "TypeError: Object doesn't support property or method 'forEach'",
+            "searcher": 312,
+            "helpful_request": 4
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 16,
+        "fields": {
+            "query": "How to fix SyntaxError: Unexpected token?",
+            "searcher": 389,
+            "helpful_request": 75
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 17,
+        "fields": {
+            "query": "What does ReferenceError: foo is not defined mean?",
+            "searcher": 228,
+            "helpful_request": 79
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 18,
+        "fields": {
+            "query": "Uncaught TypeError: Assignment to constant variable solution",
+            "searcher": 75,
+            "helpful_request": 78
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 19,
+        "fields": {
+            "query": "Uncaught RangeError: Maximum call stack size exceeded fix",
+            "searcher": 123,
+            "helpful_request": 68
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 20,
+        "fields": {
+            "query": "ReferenceError: Cannot access 'foo' before initialization error",
+            "searcher": 73,
+            "helpful_request": 83
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 21,
+        "fields": {
+            "query": "TypeError: Cannot set property 'foo' of null resolution",
+            "searcher": 199,
+            "helpful_request": 79
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 22,
+        "fields": {
+            "query": "Fix Unexpected end of input error in JSON",
+            "searcher": 20,
+            "helpful_request": 68
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 23,
+        "fields": {
+            "query": "What is Invalid left-hand side in assignment?",
+            "searcher": 332,
+            "helpful_request": null
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 24,
+        "fields": {
+            "query": "How to handle Unexpected token in JSON error?",
+            "searcher": 210,
+            "helpful_request": null
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 25,
+        "fields": {
+            "query": "Fixing SyntaxError: Unexpected identifier",
+            "searcher": 215,
+            "helpful_request": 74
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 26,
+        "fields": {
+            "query": "How to fix SyntaxError: Unexpected token?",
+            "searcher": 39,
+            "helpful_request": 70
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 27,
+        "fields": {
+            "query": "What does ReferenceError: foo is not defined mean?",
+            "searcher": 171,
+            "helpful_request": 66
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 28,
+        "fields": {
+            "query": "Uncaught TypeError: Assignment to constant variable solution",
+            "searcher": 231,
+            "helpful_request": 66
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 29,
+        "fields": {
+            "query": "Uncaught RangeError: Maximum call stack size exceeded fix",
+            "searcher": 40,
+            "helpful_request": 77
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 30,
+        "fields": {
+            "query": "ReferenceError: Cannot access 'foo' before initialization error",
+            "searcher": 95,
+            "helpful_request": 84
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 31,
+        "fields": {
+            "query": "TypeError: Cannot set property 'foo' of null resolution",
+            "searcher": 22,
+            "helpful_request": 68
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 32,
+        "fields": {
+            "query": "Fix Unexpected end of input error in JSON",
+            "searcher": 279,
+            "helpful_request": 74
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 33,
+        "fields": {
+            "query": "What is Invalid left-hand side in assignment?",
+            "searcher": 239,
+            "helpful_request": 66
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 34,
+        "fields": {
+            "query": "How to handle Unexpected token in JSON error?",
+            "searcher": 89,
+            "helpful_request": 68
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 35,
+        "fields": {
+            "query": "Fixing SyntaxError: Unexpected identifier",
+            "searcher": 337,
+            "helpful_request": 83
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 36,
+        "fields": {
+            "query": "How to fix SyntaxError: Unexpected token?",
+            "searcher": 31,
+            "helpful_request": 65
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 37,
+        "fields": {
+            "query": "What does ReferenceError: foo is not defined mean?",
+            "searcher": 256,
+            "helpful_request": 75
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 38,
+        "fields": {
+            "query": "Uncaught TypeError: Assignment to constant variable solution",
+            "searcher": 37,
+            "helpful_request": 77
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 39,
+        "fields": {
+            "query": "Uncaught RangeError: Maximum call stack size exceeded fix",
+            "searcher": 293,
+            "helpful_request": 73
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 40,
+        "fields": {
+            "query": "ReferenceError: Cannot access 'foo' before initialization error",
+            "searcher": 111,
+            "helpful_request": 76
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 41,
+        "fields": {
+            "query": "TypeError: Cannot set property 'foo' of null resolution",
+            "searcher": 356,
+            "helpful_request": 81
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 42,
+        "fields": {
+            "query": "Fix Unexpected end of input error in JSON",
+            "searcher": 380,
+            "helpful_request": 72
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 43,
+        "fields": {
+            "query": "What is Invalid left-hand side in assignment?",
+            "searcher": 356,
+            "helpful_request": 75
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 44,
+        "fields": {
+            "query": "How to handle Unexpected token in JSON error?",
+            "searcher": 67,
+            "helpful_request": 80
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 45,
+        "fields": {
+            "query": "Fixing SyntaxError: Unexpected identifier",
+            "searcher": 328,
+            "helpful_request": 72
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 46,
+        "fields": {
+            "query": "How to fix SyntaxError: Unexpected token?",
+            "searcher": 38,
+            "helpful_request": 66
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 47,
+        "fields": {
+            "query": "What does ReferenceError: foo is not defined mean?",
+            "searcher": 128,
+            "helpful_request": 73
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 48,
+        "fields": {
+            "query": "Uncaught TypeError: Assignment to constant variable solution",
+            "searcher": 275,
+            "helpful_request": 66
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 49,
+        "fields": {
+            "query": "Uncaught RangeError: Maximum call stack size exceeded fix",
+            "searcher": 194,
+            "helpful_request": 71
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 50,
+        "fields": {
+            "query": "ReferenceError: Cannot access 'foo' before initialization error",
+            "searcher": 59,
+            "helpful_request": 78
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 51,
+        "fields": {
+            "query": "TypeError: Cannot set property 'foo' of null resolution",
+            "searcher": 133,
+            "helpful_request": 70
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 52,
+        "fields": {
+            "query": "Fix Unexpected end of input error in JSON",
+            "searcher": 250,
+            "helpful_request": 84
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 53,
+        "fields": {
+            "query": "What is Invalid left-hand side in assignment?",
+            "searcher": 190,
+            "helpful_request": 70
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 54,
+        "fields": {
+            "query": "How to handle Unexpected token in JSON error?",
+            "searcher": 59,
+            "helpful_request": 68
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 55,
+        "fields": {
+            "query": "Fixing SyntaxError: Unexpected identifier",
+            "searcher": 297,
+            "helpful_request": 74
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 56,
+        "fields": {
+            "query": "How to fix SyntaxError: Unexpected token?",
+            "searcher": 273,
+            "helpful_request": 65
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 57,
+        "fields": {
+            "query": "What does ReferenceError: foo is not defined mean?",
+            "searcher": 162,
+            "helpful_request": 69
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 58,
+        "fields": {
+            "query": "Uncaught TypeError: Assignment to constant variable solution",
+            "searcher": 207,
+            "helpful_request": 73
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 59,
+        "fields": {
+            "query": "Uncaught RangeError: Maximum call stack size exceeded fix",
+            "searcher": 130,
+            "helpful_request": 82
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 60,
+        "fields": {
+            "query": "ReferenceError: Cannot access 'foo' before initialization error",
+            "searcher": 142,
+            "helpful_request": 83
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 61,
+        "fields": {
+            "query": "TypeError: Cannot set property 'foo' of null resolution",
+            "searcher": 368,
+            "helpful_request": 81
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 62,
+        "fields": {
+            "query": "Fix Unexpected end of input error in JSON",
+            "searcher": 202,
+            "helpful_request": null
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 63,
+        "fields": {
+            "query": "What is Invalid left-hand side in assignment?",
+            "searcher": 398,
+            "helpful_request": 82
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 64,
+        "fields": {
+            "query": "How to handle Unexpected token in JSON error?",
+            "searcher": 315,
+            "helpful_request": 68
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 65,
+        "fields": {
+            "query": "Fixing SyntaxError: Unexpected identifier",
+            "searcher": 172,
+            "helpful_request": 83
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 66,
+        "fields": {
+            "query": "How to fix SyntaxError: Unexpected token?",
+            "searcher": 69,
+            "helpful_request": 84
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 67,
+        "fields": {
+            "query": "What does ReferenceError: foo is not defined mean?",
+            "searcher": 239,
+            "helpful_request": 74
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 68,
+        "fields": {
+            "query": "Uncaught TypeError: Assignment to constant variable solution",
+            "searcher": 93,
+            "helpful_request": 73
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 69,
+        "fields": {
+            "query": "Uncaught RangeError: Maximum call stack size exceeded fix",
+            "searcher": 307,
+            "helpful_request": 81
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 70,
+        "fields": {
+            "query": "ReferenceError: Cannot access 'foo' before initialization error",
+            "searcher": 64,
+            "helpful_request": 69
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 71,
+        "fields": {
+            "query": "TypeError: Cannot set property 'foo' of null resolution",
+            "searcher": 395,
+            "helpful_request": 72
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 72,
+        "fields": {
+            "query": "Fix Unexpected end of input error in JSON",
+            "searcher": 328,
+            "helpful_request": 65
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 73,
+        "fields": {
+            "query": "What is Invalid left-hand side in assignment?",
+            "searcher": 234,
+            "helpful_request": 68
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 74,
+        "fields": {
+            "query": "How to handle Unexpected token in JSON error?",
+            "searcher": 305,
+            "helpful_request": 65
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 75,
+        "fields": {
+            "query": "Fixing SyntaxError: Unexpected identifier",
+            "searcher": 208,
+            "helpful_request": 82
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 76,
+        "fields": {
+            "query": "How to fix SyntaxError: Unexpected token?",
+            "searcher": 212,
+            "helpful_request": 65
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 77,
+        "fields": {
+            "query": "What does ReferenceError: foo is not defined mean?",
+            "searcher": 171,
+            "helpful_request": null
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 78,
+        "fields": {
+            "query": "Uncaught TypeError: Assignment to constant variable solution",
+            "searcher": 209,
+            "helpful_request": 65
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 79,
+        "fields": {
+            "query": "Uncaught RangeError: Maximum call stack size exceeded fix",
+            "searcher": 196,
+            "helpful_request": 68
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 80,
+        "fields": {
+            "query": "ReferenceError: Cannot access 'foo' before initialization error",
+            "searcher": 348,
+            "helpful_request": 65
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 81,
+        "fields": {
+            "query": "TypeError: Cannot set property 'foo' of null resolution",
+            "searcher": 342,
+            "helpful_request": 65
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 82,
+        "fields": {
+            "query": "Fix Unexpected end of input error in JSON",
+            "searcher": 281,
+            "helpful_request": 83
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 83,
+        "fields": {
+            "query": "What is Invalid left-hand side in assignment?",
+            "searcher": 128,
+            "helpful_request": 74
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 84,
+        "fields": {
+            "query": "How to handle Unexpected token in JSON error?",
+            "searcher": 377,
+            "helpful_request": 71
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 85,
+        "fields": {
+            "query": "Fixing SyntaxError: Unexpected identifier",
+            "searcher": 132,
+            "helpful_request": 79
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 86,
+        "fields": {
+            "query": "How to fix SyntaxError: Unexpected token?",
+            "searcher": 24,
+            "helpful_request": 65
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 87,
+        "fields": {
+            "query": "What does ReferenceError: foo is not defined mean?",
+            "searcher": 191,
+            "helpful_request": 75
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 88,
+        "fields": {
+            "query": "Uncaught TypeError: Assignment to constant variable solution",
+            "searcher": 247,
+            "helpful_request": 66
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 89,
+        "fields": {
+            "query": "Uncaught RangeError: Maximum call stack size exceeded fix",
+            "searcher": 146,
+            "helpful_request": 68
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 90,
+        "fields": {
+            "query": "ReferenceError: Cannot access 'foo' before initialization error",
+            "searcher": 361,
+            "helpful_request": 66
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 91,
+        "fields": {
+            "query": "TypeError: Cannot set property 'foo' of null resolution",
+            "searcher": 105,
+            "helpful_request": 83
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 92,
+        "fields": {
+            "query": "Fix Unexpected end of input error in JSON",
+            "searcher": 312,
+            "helpful_request": 70
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 93,
+        "fields": {
+            "query": "What is Invalid left-hand side in assignment?",
+            "searcher": 84,
+            "helpful_request": 84
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 94,
+        "fields": {
+            "query": "How to handle Unexpected token in JSON error?",
+            "searcher": 396,
+            "helpful_request": 81
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 95,
+        "fields": {
+            "query": "Fixing SyntaxError: Unexpected identifier",
+            "searcher": 110,
+            "helpful_request": 72
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 96,
+        "fields": {
+            "query": "How to fix SyntaxError: Unexpected token?",
+            "searcher": 76,
+            "helpful_request": 84
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 97,
+        "fields": {
+            "query": "What does ReferenceError: foo is not defined mean?",
+            "searcher": 124,
+            "helpful_request": 72
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 98,
+        "fields": {
+            "query": "Uncaught TypeError: Assignment to constant variable solution",
+            "searcher": 233,
+            "helpful_request": 80
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 99,
+        "fields": {
+            "query": "Uncaught RangeError: Maximum call stack size exceeded fix",
+            "searcher": 335,
+            "helpful_request": 81
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 100,
+        "fields": {
+            "query": "ReferenceError: Cannot access 'foo' before initialization error",
+            "searcher": 30,
+            "helpful_request": 65
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 101,
+        "fields": {
+            "query": "TypeError: Cannot set property 'foo' of null resolution",
+            "searcher": 359,
+            "helpful_request": 73
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 102,
+        "fields": {
+            "query": "Fix Unexpected end of input error in JSON",
+            "searcher": 181,
+            "helpful_request": 83
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 103,
+        "fields": {
+            "query": "What is Invalid left-hand side in assignment?",
+            "searcher": 244,
+            "helpful_request": 76
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 104,
+        "fields": {
+            "query": "How to handle Unexpected token in JSON error?",
+            "searcher": 235,
+            "helpful_request": 75
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 105,
+        "fields": {
+            "query": "Fixing SyntaxError: Unexpected identifier",
+            "searcher": 208,
+            "helpful_request": 77
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 106,
+        "fields": {
+            "query": "Why am I getting 'Cannot access property name of undefined'?",
+            "searcher": 287,
+            "helpful_request": 70
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 107,
+        "fields": {
+            "query": "Error: Cannot access property length of undefined in my code",
+            "searcher": 296,
+            "helpful_request": 77
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 108,
+        "fields": {
+            "query": "Fix for 'Cannot access property value of undefined' JavaScript error",
+            "searcher": 63,
+            "helpful_request": 77
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 109,
+        "fields": {
+            "query": "Cannot access property id of undefined - how to resolve?",
+            "searcher": 383,
+            "helpful_request": null
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 110,
+        "fields": {
+            "query": "Getting 'Cannot access property status of undefined' error",
+            "searcher": 206,
+            "helpful_request": 72
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 111,
+        "fields": {
+            "query": "Cannot read property title of undefined in my script",
+            "searcher": 372,
+            "helpful_request": null
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 112,
+        "fields": {
+            "query": "JavaScript error: Cannot access property data of undefined",
+            "searcher": 208,
+            "helpful_request": 82
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 113,
+        "fields": {
+            "query": "Why does it say 'Cannot access property type of undefined'?",
+            "searcher": 366,
+            "helpful_request": 77
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 114,
+        "fields": {
+            "query": "Issue with 'Cannot access property message of undefined'",
+            "searcher": 209,
+            "helpful_request": 82
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 115,
+        "fields": {
+            "query": "Cannot access property user of undefined - need help!",
+            "searcher": 131,
+            "helpful_request": null
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 116,
+        "fields": {
+            "query": "Can't access property class of undefined in JavaScript",
+            "searcher": 211,
+            "helpful_request": 72
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 117,
+        "fields": {
+            "query": "Facing 'Cannot access property content of undefined' error",
+            "searcher": 28,
+            "helpful_request": 82
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 118,
+        "fields": {
+            "query": "Cannot access property style of undefined in my project",
+            "searcher": 367,
+            "helpful_request": 73
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 119,
+        "fields": {
+            "query": "Help with 'Cannot access property src of undefined' error",
+            "searcher": 169,
+            "helpful_request": 77
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 120,
+        "fields": {
+            "query": "Why 'Cannot access property href of undefined' in code?",
+            "searcher": 396,
+            "helpful_request": 70
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 121,
+        "fields": {
+            "query": "Error: Cannot access property email of undefined in my app",
+            "searcher": 299,
+            "helpful_request": 69
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 122,
+        "fields": {
+            "query": "Fixing 'Cannot access property password of undefined' error",
+            "searcher": 317,
+            "helpful_request": 65
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 123,
+        "fields": {
+            "query": "Cannot access property age of undefined - what to do?",
+            "searcher": 147,
+            "helpful_request": 84
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 124,
+        "fields": {
+            "query": "Why 'Cannot access property gender of undefined' issue?",
+            "searcher": 248,
+            "helpful_request": 81
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 125,
+        "fields": {
+            "query": "Error handling for 'Cannot access property location of undefined'",
+            "searcher": 361,
+            "helpful_request": 80
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 126,
+        "fields": {
+            "query": "Why am I getting 'Cannot access property name of undefined'?",
+            "searcher": 336,
+            "helpful_request": 79
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 127,
+        "fields": {
+            "query": "Error: Cannot access property length of undefined in my code",
+            "searcher": 193,
+            "helpful_request": 67
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 128,
+        "fields": {
+            "query": "Fix for 'Cannot access property value of undefined' JavaScript error",
+            "searcher": 397,
+            "helpful_request": 79
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 129,
+        "fields": {
+            "query": "Cannot access property id of undefined - how to resolve?",
+            "searcher": 257,
+            "helpful_request": 73
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 130,
+        "fields": {
+            "query": "Getting 'Cannot access property status of undefined' error",
+            "searcher": 314,
+            "helpful_request": 71
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 131,
+        "fields": {
+            "query": "Cannot read property title of undefined in my script",
+            "searcher": 367,
+            "helpful_request": 66
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 132,
+        "fields": {
+            "query": "JavaScript error: Cannot access property data of undefined",
+            "searcher": 306,
+            "helpful_request": 69
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 133,
+        "fields": {
+            "query": "Why does it say 'Cannot access property type of undefined'?",
+            "searcher": 306,
+            "helpful_request": 72
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 134,
+        "fields": {
+            "query": "Issue with 'Cannot access property message of undefined'",
+            "searcher": 268,
+            "helpful_request": 79
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 135,
+        "fields": {
+            "query": "Cannot access property user of undefined - need help!",
+            "searcher": 303,
+            "helpful_request": 71
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 136,
+        "fields": {
+            "query": "Can't access property class of undefined in JavaScript",
+            "searcher": 357,
+            "helpful_request": 84
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 137,
+        "fields": {
+            "query": "Facing 'Cannot access property content of undefined' error",
+            "searcher": 268,
+            "helpful_request": 79
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 138,
+        "fields": {
+            "query": "Cannot access property style of undefined in my project",
+            "searcher": 174,
+            "helpful_request": 74
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 139,
+        "fields": {
+            "query": "Help with 'Cannot access property src of undefined' error",
+            "searcher": 169,
+            "helpful_request": 81
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 140,
+        "fields": {
+            "query": "Why 'Cannot access property href of undefined' in code?",
+            "searcher": 361,
+            "helpful_request": null
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 141,
+        "fields": {
+            "query": "Error: Cannot access property email of undefined in my app",
+            "searcher": 36,
+            "helpful_request": 76
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 142,
+        "fields": {
+            "query": "Fixing 'Cannot access property password of undefined' error",
+            "searcher": 384,
+            "helpful_request": 77
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 143,
+        "fields": {
+            "query": "Cannot access property age of undefined - what to do?",
+            "searcher": 258,
+            "helpful_request": 75
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 144,
+        "fields": {
+            "query": "Why 'Cannot access property gender of undefined' issue?",
+            "searcher": 65,
+            "helpful_request": 71
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 145,
+        "fields": {
+            "query": "Error handling for 'Cannot access property location of undefined'",
+            "searcher": 23,
+            "helpful_request": null
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 146,
+        "fields": {
+            "query": "Why am I getting 'Cannot access property name of undefined'?",
+            "searcher": 336,
+            "helpful_request": 79
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 147,
+        "fields": {
+            "query": "Error: Cannot access property length of undefined in my code",
+            "searcher": 193,
+            "helpful_request": 67
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 148,
+        "fields": {
+            "query": "Fix for 'Cannot access property value of undefined' JavaScript error",
+            "searcher": 397,
+            "helpful_request": 79
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 149,
+        "fields": {
+            "query": "Cannot access property id of undefined - how to resolve?",
+            "searcher": 257,
+            "helpful_request": 73
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 150,
+        "fields": {
+            "query": "Getting 'Cannot access property status of undefined' error",
+            "searcher": 314,
+            "helpful_request": 71
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 151,
+        "fields": {
+            "query": "Cannot read property title of undefined in my script",
+            "searcher": 367,
+            "helpful_request": 66
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 152,
+        "fields": {
+            "query": "JavaScript error: Cannot access property data of undefined",
+            "searcher": 306,
+            "helpful_request": 69
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 153,
+        "fields": {
+            "query": "Why does it say 'Cannot access property type of undefined'?",
+            "searcher": 306,
+            "helpful_request": 72
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 154,
+        "fields": {
+            "query": "Issue with 'Cannot access property message of undefined'",
+            "searcher": 268,
+            "helpful_request": 79
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 155,
+        "fields": {
+            "query": "Cannot access property user of undefined - need help!",
+            "searcher": 303,
+            "helpful_request": 71
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 156,
+        "fields": {
+            "query": "Can't access property class of undefined in JavaScript",
+            "searcher": 357,
+            "helpful_request": 84
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 157,
+        "fields": {
+            "query": "Facing 'Cannot access property content of undefined' error",
+            "searcher": 268,
+            "helpful_request": 79
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 158,
+        "fields": {
+            "query": "Cannot access property style of undefined in my project",
+            "searcher": 174,
+            "helpful_request": 74
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 159,
+        "fields": {
+            "query": "Help with 'Cannot access property src of undefined' error",
+            "searcher": 169,
+            "helpful_request": 81
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 160,
+        "fields": {
+            "query": "Why 'Cannot access property href of undefined' in code?",
+            "searcher": 361,
+            "helpful_request": null
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 161,
+        "fields": {
+            "query": "Error: Cannot access property email of undefined in my app",
+            "searcher": 36,
+            "helpful_request": 76
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 162,
+        "fields": {
+            "query": "Fixing 'Cannot access property password of undefined' error",
+            "searcher": 384,
+            "helpful_request": 77
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 163,
+        "fields": {
+            "query": "Cannot access property age of undefined - what to do?",
+            "searcher": 258,
+            "helpful_request": 75
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 164,
+        "fields": {
+            "query": "Why 'Cannot access property gender of undefined' issue?",
+            "searcher": 65,
+            "helpful_request": 71
+        }
+    },
+    {
+        "model": "LearningAPI.requestquery",
+        "pk": 165,
+        "fields": {
+            "query": "Error handling for 'Cannot access property location of undefined'",
+            "searcher": 23,
+            "helpful_request": null
+        }
+    }
+]

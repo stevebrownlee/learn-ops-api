@@ -14,6 +14,7 @@ import os
 import logging
 from logging.handlers import RotatingFileHandler
 
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -127,6 +128,12 @@ DATABASES = {
         'HOST': os.getenv("LEARN_OPS_HOST"),
         'PORT': os.getenv("LEARN_OPS_PORT"),
     }
+}
+
+VALKEY_CONFIG = {
+    'HOST': os.getenv("VALKEY_HOST","localhost"),
+    'PORT': os.getenv("VALKEY_PORT", 6379),
+    'DB': os.getenv("VALKEY_DB", 0),
 }
 
 # Password validation

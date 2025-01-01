@@ -1,4 +1,6 @@
-import random, string
+import random, string, json, valkey
+
+from django.conf import settings
 
 from rest_framework import serializers, status
 from rest_framework.viewsets import ViewSet
@@ -9,6 +11,12 @@ from LearningAPI.models.people import StudentTeam, GroupProjectRepository, NSSUs
 from LearningAPI.models.coursework import Project
 from LearningAPI.utils import GithubRequest, SlackAPI
 
+
+valkey_client = valkey.Valkey(
+    host=settings.VALKEY_CONFIG['HOST'],
+    port=settings.VALKEY_CONFIG['PORT'],
+    db=settings.VALKEY_CONFIG['DB'],
+)
 
 class TeamRepoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -48,12 +56,13 @@ class TeamMakerView(ViewSet):
         Returns:
             Response -- JSON serialized instance
         """
-
         cohort_id = request.data.get('cohort', None)
         student_list = request.data.get('students', None)
         group_project_id = request.data.get('groupProject', None)
         team_prefix = request.data.get('weeklyPrefix', None)
         team_index = request.data.get('teamIndex', None)
+
+        issue_target_repos = []
 
         # Create the student team in the database
         cohort = Cohort.objects.get(pk=cohort_id)
@@ -101,6 +110,7 @@ class TeamMakerView(ViewSet):
             if response.status_code != 201:
                 return Response({'message': 'Failed to create repository'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
             # Grant write permissions to the students
             for student in team.students.all():
                 gh_request.assign_student_permissions(
@@ -116,6 +126,7 @@ class TeamMakerView(ViewSet):
             group_project_repo.repository = f'https://github.com/{student_org_name}/{repo_name}'
             group_project_repo.save()
 
+            issue_target_repos.append(f'{student_org_name}/{repo_name}')
 
             # Send message to project team's Slack channel with the repository URL
             created_repo_url = f'https://github.com/{student_org_name}/{repo_name}'
@@ -123,7 +134,6 @@ class TeamMakerView(ViewSet):
                 text=f"🐙 Your client repository has been created. Visit the URL below and clone the project to your machine.\n\n{created_repo_url}",
                 channel=team.slack_channel
             )
-
 
             # Create the API repository for the group project if it exists
             if project.api_template_url:
@@ -159,6 +169,14 @@ class TeamMakerView(ViewSet):
                 )
 
         serialized_team = StudentTeamSerializer(team, many=False).data
+
+        # Publish a message to the channel_migrate_issue_tickets channel on redis to start migrating tickets
+        message = json.dumps({
+            'notification_channel': cohort.slack_channel,
+            'source_repo': project.client_template_url,
+            'all_target_repositories': issue_target_repos
+        })
+        valkey_client.publish('channel_migrate_issue_tickets', message)
 
         return Response(serialized_team, status=status.HTTP_201_CREATED)
 

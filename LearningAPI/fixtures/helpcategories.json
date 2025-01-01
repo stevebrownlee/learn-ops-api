@@ -1,0 +1,37 @@
+[
+    {
+      "model": "LearningAPI.helpcategory",
+      "pk": 1,
+      "fields": {
+        "name": "JavaScript"
+      }
+    },
+    {
+      "model": "LearningAPI.helpcategory",
+      "pk": 2,
+      "fields": {
+        "name": "C#"
+      }
+    },
+    {
+      "model": "LearningAPI.helpcategory",
+      "pk": 3,
+      "fields": {
+        "name": "Python"
+      }
+    },
+    {
+      "model": "LearningAPI.helpcategory",
+      "pk": 4,
+      "fields": {
+        "name": "Cloud"
+      }
+    },
+    {
+      "model": "LearningAPI.helpcategory",
+      "pk": 5,
+      "fields": {
+        "name": "Other"
+      }
+    }
+  ]
