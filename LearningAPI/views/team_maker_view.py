@@ -173,7 +173,7 @@ class TeamMakerView(ViewSet):
         # Publish a message to the channel_migrate_issue_tickets channel on redis to start migrating tickets
         message = json.dumps({
             'notification_channel': cohort.slack_channel,
-            'source_repo': project.client_template_url,
+            'source_repo': project.client_template_url.split('/')[-2],
             'all_target_repositories': issue_target_repos
         })
         valkey_client.publish('channel_migrate_issue_tickets', message)
