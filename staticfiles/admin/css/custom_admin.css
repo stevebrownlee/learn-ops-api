@@ -1,0 +1,14 @@
+#nav-sidebar {
+    width: 15rem !important;
+    transform: none !important;
+    visibility: visible !important;
+    height: 100vh;
+}
+
+.main > #content-start {
+    margin-left: 0.6rem !important;
+}
+
+#nav-sidebar {
+    padding: 0.5rem
+}

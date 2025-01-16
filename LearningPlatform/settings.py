@@ -11,9 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
-import logging
-from logging.handlers import RotatingFileHandler
-
+from pathlib import Path
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -97,10 +95,14 @@ REST_FRAMEWORK = {
 ROOT_URLCONF = 'LearningPlatform.urls'
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            BASE_DIR / 'templates',  # Add this line
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -112,6 +114,16 @@ TEMPLATES = [
         },
     },
 ]
+
+ADMIN_REORDER = (
+    # Your custom apps first
+    {'app': 'LearningAPI', 'label': 'Learning Platform API'},
+
+    # Then the default Django apps
+    {'app': 'auth', 'label': 'Authentication'},
+    {'app': 'authtoken', 'label': 'Auth Token'},
+    {'app': 'oauth2_provider', 'label': 'Authorization'},
+)
 
 WSGI_APPLICATION = 'LearningPlatform.wsgi.application'
 
@@ -212,7 +224,9 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
-
 STATIC_URL = '/static/'
-STATIC_ROOT = "/var/www/learning.nss.team/static"
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 SITE_ID = 1
