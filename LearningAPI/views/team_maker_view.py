@@ -60,7 +60,6 @@ class TeamMakerView(ViewSet):
         student_list = request.data.get('students', None)
         group_project_id = request.data.get('groupProject', None)
         team_prefix = request.data.get('weeklyPrefix', None)
-        team_index = request.data.get('teamIndex', None)
 
         issue_target_repos = []
 
@@ -112,7 +111,7 @@ class TeamMakerView(ViewSet):
 
 
             # Grant write permissions to the students
-            for student in team.students.all():
+            for student in team.students.all(): # pylint: disable=E1101
                 gh_request.assign_student_permissions(
                     student_org_name=student_org_name,
                     repo_name=repo_name,
