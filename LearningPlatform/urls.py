@@ -27,8 +27,6 @@ router.register(r'bookassessments', views.BookAssessmentView, 'bookassessment')
 router.register(r'books', views.BookViewSet, 'book')
 router.register(r'capstones', views.CapstoneViewSet, 'capstone')
 router.register(r'cohortinfo', views.CohortInfoViewSet, 'info')
-router.register(r'helprequests', views.HelpRequestViewSet, 'help')
-router.register(r'helpqueries', views.RequestQueryViewSet, 'queries')
 router.register(r'cohorts', views.CohortViewSet, 'cohort')
 router.register(r'coreskillrecords', views.CoreSkillRecordViewSet, 'coreskillrecord')
 router.register(r'coreskills', views.CoreSkillViewSet, 'coreskill')
@@ -50,12 +48,14 @@ router.register(r'tags', views.TagViewSet, 'tag')
 router.register(r'teams', views.TeamMakerView, 'team_maker')
 router.register(r'timelines', views.TimelineView, 'timeline')
 router.register(r'weights', views.LearningWeightViewSet, 'weight')
+router.register(r'helprequest', HelpRequestViewSet, 'helprequest')
+
+
 
 
 urlpatterns = [
     path('', include(router.urls)),
     path('records/entries/<int:entry_id>', views.LearningRecordViewSet.as_view({'delete': 'entries'}), name="entries"),
-    path('queries/popular', views.popular_queries, name='popular-queries'),
 
     path('accounts', views.register_user),
     path('notify', views.notify, name='notify'),
