@@ -1,1 +1,1 @@
-from .HelpRequest import HelpRequest
+from .helprequest import HelpRequest

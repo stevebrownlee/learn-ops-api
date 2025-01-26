@@ -48,13 +48,15 @@ router.register(r'tags', views.TagViewSet, 'tag')
 router.register(r'teams', views.TeamMakerView, 'team_maker')
 router.register(r'timelines', views.TimelineView, 'timeline')
 router.register(r'weights', views.LearningWeightViewSet, 'weight')
-router.register(r'helprequest', HelpRequestViewSet, 'helprequest')
-
-
+router.register(r'helprequest', views.HelpRequestViewSet, 'helprequests')
 
 
 urlpatterns = [
     path('', include(router.urls)),
+
+    path('answers/<int:request_id>', views.stream_response, name='stream_response'),
+    path('answers/<int:request_id>/ack', views.acknowledge_chunk, name='acknowledge_chunk'),
+
     path('records/entries/<int:entry_id>', views.LearningRecordViewSet.as_view({'delete': 'entries'}), name="entries"),
 
     path('accounts', views.register_user),
