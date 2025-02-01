@@ -23,6 +23,7 @@ requests = "*"
 "backports.weakref" = "*"
 wheel = "*"
 valkey = "*"
+structlog = "*"
 
 [requires]
 python_version = "3.9.1"
