@@ -21,7 +21,7 @@ valkey = Valkey(
 
 def event_stream(request_id: int) -> Generator[str, None, None]:
     """Generate stream of events from Valkey"""
-    timeout = getattr(settings, 'STREAM_TIMEOUT', 300)  # 5 minutes default
+    timeout = getattr(settings, 'STREAM_TIMEOUT', 600)  # 5 minutes default
     start_time = time.time()
     pubsub = None
 
@@ -44,12 +44,10 @@ def event_stream(request_id: int) -> Generator[str, None, None]:
             if message['type'] == 'message':
                 try:
                     data = json.loads(message['data'])
-                    sequence_number = data.get('sequence_number')
                     is_final = data.get('is_final', False)
 
                     log.info("chunk_received",
                         request_id=request_id,
-                        sequence_number=sequence_number,
                         is_final=is_final
                     )
 
@@ -74,14 +72,14 @@ def event_stream(request_id: int) -> Generator[str, None, None]:
                 request_id=request_id,
                 timeout=timeout
             )
-            yield f"data: {json.dumps({'error': 'Stream timeout', 'is_final': True})}\n\n"
+            yield f"data: {json.dumps({'error': 'Stream timeout', 'sequence_number': -1, 'is_final': True})}\n\n"
 
     except Exception as e:
         log.error("stream_error",
             request_id=request_id,
             error=str(e)
         )
-        yield f"data: {json.dumps({'error': str(e), 'is_final': True})}\n\n"
+        yield f"data: {json.dumps({'error': str(e), 'sequence_number': -1, 'is_final': True})}\n\n"
 
     finally:
         if pubsub:
@@ -139,7 +137,6 @@ def acknowledge_chunk(request, request_id: int) -> JsonResponse:
         processing_time = time.time() - start_time
         log.info("ack_processed",
             request_id=request_id,
-            sequence_number=sequence_number,
             processing_time=processing_time
         )
 
