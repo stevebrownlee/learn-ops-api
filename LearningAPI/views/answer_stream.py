@@ -21,7 +21,7 @@ valkey = Valkey(
 
 def event_stream(request_id: int) -> Generator[str, None, None]:
     """Generate stream of events from Valkey"""
-    timeout = getattr(settings, 'STREAM_TIMEOUT', 600)  # 5 minutes default
+    timeout = getattr(settings, 'STREAM_TIMEOUT', 1200)  # 10 minutes default
     start_time = time.time()
     pubsub = None
 
@@ -30,6 +30,9 @@ def event_stream(request_id: int) -> Generator[str, None, None]:
             request_id=request_id,
             timeout=timeout
         )
+
+        # Send initial connection event
+        yield 'data: {"type": "connection", "status": "established"}\n\n'
 
         pubsub = valkey.pubsub()
         channel = f'lore_response_{request_id}'
@@ -72,14 +75,14 @@ def event_stream(request_id: int) -> Generator[str, None, None]:
                 request_id=request_id,
                 timeout=timeout
             )
-            yield f"data: {json.dumps({'error': 'Stream timeout', 'sequence_number': -1, 'is_final': True})}\n\n"
+            yield f"data: {json.dumps({ 'error': 'Stream timeout', 'sequence_number': -1, 'is_final': True, 'request_id': request_id })}"
 
     except Exception as e:
         log.error("stream_error",
             request_id=request_id,
             error=str(e)
         )
-        yield f"data: {json.dumps({'error': str(e), 'sequence_number': -1, 'is_final': True})}\n\n"
+        yield f"data: {json.dumps({ 'error': str(e), 'sequence_number': -1, 'is_final': True, 'request_id': request_id })}"
 
     finally:
         if pubsub:
