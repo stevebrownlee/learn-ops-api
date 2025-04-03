@@ -66,6 +66,7 @@ CORS_ORIGIN_WHITELIST = (
     'http://localhost:5173',
     'http://127.0.0.1:5173',
     'https://learning.nss.team',
+    'https://nashville-software-school.github.io',
 )
 
 CORS_EXPOSE_HEADERS = (
