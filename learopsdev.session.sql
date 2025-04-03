@@ -11,6 +11,10 @@ SELECT * from "LearningAPI_nssusercohort" where nss_user_id = 468;
 SELECT * from "LearningAPI_studentteam";
 SELECT * FROM "LearningAPI_cohort";
 
+
+SELECT * from "LearningAPI_foundationsexercise";
+DELETE FROM "LearningAPI_foundationsexercise";
+
 DROP FUNCTION IF EXISTS get_student_details(INT);
 DROP FUNCTION IF EXISTS get_project_average_start_delay(INT);
 

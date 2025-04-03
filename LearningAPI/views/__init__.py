@@ -31,3 +31,4 @@ from .help_request import HelpRequestViewSet
 from .help_search import RequestQueryViewSet
 from .student_note_type_view import StudentNoteTypeViewSet
 from .team_maker_view import TeamMakerView
+from .foundations import FoundationsViewSet

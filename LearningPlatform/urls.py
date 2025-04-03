@@ -50,6 +50,7 @@ router.register(r'tags', views.TagViewSet, 'tag')
 router.register(r'teams', views.TeamMakerView, 'team_maker')
 router.register(r'timelines', views.TimelineView, 'timeline')
 router.register(r'weights', views.LearningWeightViewSet, 'weight')
+router.register(r'foundations', views.FoundationsViewSet, 'foundation')
 
 
 urlpatterns = [
