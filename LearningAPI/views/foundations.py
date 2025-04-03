@@ -24,7 +24,7 @@ class FoundationsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FoundationsExercise
-        fields = ('id', 'learner_github_id', 'title', 'slug', 'attempts',
+        fields = ('id', 'learner_github_id', 'title', 'slug', 'attempts', 'learner_name',
                   'complete', 'completed_on', 'first_attempt', 'last_attempt')
         # Exclude completed_code field
 
@@ -41,15 +41,15 @@ class FoundationsViewSet(ViewSet):
             Response -- JSON serialized list of foundations exercises
         """
         # Get query parameters
-        learner_github_id = request.query_params.get('learner_github_id', None)
+        learner_name = request.query_params.get('learnerName', None)
         last_attempt_param = request.query_params.get('lastAttempt', None)
 
         # Start with all exercises
         exercises = FoundationsExercise.objects.all()
 
-        # Filter by learner_github_id if provided
-        if learner_github_id is not None:
-            exercises = exercises.filter(learner_github_id=learner_github_id)
+        # Filter by learner_name if provided
+        if learner_name is not None:
+            exercises = exercises.filter(learner_name__icontains=learner_name)
 
         # Filter by last_attempt
         if last_attempt_param is not None:
@@ -79,6 +79,7 @@ class FoundationsViewSet(ViewSet):
             user_id = request.data.get('userId', None)
             exercise = FoundationsExercise.objects.get(slug=pk, learner_github_id=user_id)
             exercise.attempts = request.data.get('attempts', 0)
+            exercise.learner_name = request.data.get('username', "")
             exercise.complete = request.data.get('completed', False)
             exercise.title = request.data.get('title', "Undefined")
 
@@ -114,6 +115,7 @@ class FoundationsViewSet(ViewSet):
             exercise.slug = pk
             exercise.attempts = request.data.get('attempts', 0)
             exercise.complete = request.data.get('completed', False)
+            exercise.learner_name = request.data.get('username', "")
 
             # Parse ISO 8601 timestamp for completed_on
             completed_at = request.data.get('completedAt', None)

@@ -4,6 +4,7 @@ from django.db import models
 class FoundationsExercise(models.Model):
     """Model for tracking learner progress in Foundations Course"""
     learner_github_id = models.CharField(max_length=50)
+    learner_name = models.CharField(max_length=75)
     title = models.CharField(max_length=75)
     slug = models.SlugField(max_length=75)
     attempts = models.IntegerField(default=0)
