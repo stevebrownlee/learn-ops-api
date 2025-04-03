@@ -27,3 +27,7 @@ setup
 learning.service
 logs/
 *.env
+.roo/
+.clinerules-default
+.roomodes
+memory-bank/
