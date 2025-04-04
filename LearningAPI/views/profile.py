@@ -41,6 +41,7 @@ class Profile(ViewSet):
             Response -- JSON representation of user info
         """
         cohort = self.request.query_params.get('cohort', None)
+        role = self.request.query_params.get('role', None)
         mimic = self.request.query_params.get('mimic', None)
 
         #
@@ -62,6 +63,11 @@ class Profile(ViewSet):
                 user=request.auth.user
             )
             nss_user.save()
+
+            # If role is not None, then this user is a staff member and gets the Staff group added to them
+            if role is not None:
+                nss_user.user.groups.add(role)
+                nss_user.user.save()
 
             if cohort is not None:
                 # First time authenticating with Github, so add user to cohort
@@ -91,8 +97,6 @@ class Profile(ViewSet):
                 student_project.student = nss_user
                 student_project.project = course_first_project
                 student_project.save()
-
-
 
         if not request.auth.user.is_staff or mimic:
             # Check to see if the learner has accepted the invitation to join the cohort Github organization

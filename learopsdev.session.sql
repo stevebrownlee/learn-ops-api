@@ -15,6 +15,7 @@ SELECT * FROM "LearningAPI_cohort";
 SELECT * from "LearningAPI_foundationsexercise";
 DELETE FROM "LearningAPI_foundationsexercise";
 
+
 DROP FUNCTION IF EXISTS get_student_details(INT);
 DROP FUNCTION IF EXISTS get_project_average_start_delay(INT);
 

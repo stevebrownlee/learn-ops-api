@@ -5,4 +5,4 @@ class LearningAPIConfig(AppConfig):
 
     def ready(self):
         # Import the signals module to ensure signal handlers are connected
-        import LearningAPI.signals
+        pass

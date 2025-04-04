@@ -27,8 +27,6 @@ from .student_note_view import StudentNoteViewSet
 from .personality_view import PersonalityView
 from .book_assessment import BookAssessmentView
 from .popular_query import popular_queries
-from .help_request import HelpRequestViewSet
-from .help_search import RequestQueryViewSet
 from .student_note_type_view import StudentNoteTypeViewSet
 from .team_maker_view import TeamMakerView
 from .foundations import FoundationsViewSet
