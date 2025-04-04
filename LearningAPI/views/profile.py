@@ -131,6 +131,7 @@ class Profile(ViewSet):
             profile["person"]["github"]["login"] = person.extra_data["login"]
             profile["person"]["github"]["repos"] = person.extra_data["repos_url"]
             profile["staff"] = request.auth.user.is_staff
+            profile["instructor"] = nss_user.is_instructor
 
             instructor_active_cohort = NssUserCohort.objects.filter(nss_user__user=request.auth.user).first()
             if instructor_active_cohort is not None:

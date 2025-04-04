@@ -22,6 +22,11 @@ class NssUser(models.Model):
         return f'{self.user.first_name} {self.user.last_name}'
 
     @property
+    def is_instructor(self):
+        """Check if the user is an instructor"""
+        return self.user.groups.filter(name='Instructors').exists()
+
+    @property
     def full_name(self):
         return f'{self.user.first_name} {self.user.last_name}'
 
