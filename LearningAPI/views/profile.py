@@ -1,5 +1,6 @@
 """View module for handling requests about park areas"""
 import logging
+from django.contrib.auth.models import Group
 from rest_framework.decorators import action
 from rest_framework import serializers, status
 from rest_framework.viewsets import ViewSet
@@ -66,8 +67,13 @@ class Profile(ViewSet):
 
             # If role is not None, then this user is a staff member and gets the Staff group added to them
             if role is not None:
-                nss_user.user.groups.add(role)
+                # Toggle is_staff to True
+                nss_user.user.is_staff = True
                 nss_user.user.save()
+
+                # Add user to Staff group
+                staff = Group.objects.get(name='Staff')
+                staff.user_set.add(nss_user.user)
 
             if cohort is not None:
                 # First time authenticating with Github, so add user to cohort

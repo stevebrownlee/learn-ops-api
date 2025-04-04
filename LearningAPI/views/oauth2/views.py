@@ -85,11 +85,15 @@ class OAuth2View(object):
 
     def get_client(self, request, app):
         cohort = request.GET.get('cohort', None)
+        role = request.GET.get('role', None)
         validate = request.GET.get('v', None)
 
         callback_url = self.adapter.get_callback_url(request, app)
 
-        if cohort is not None:
+        if role is not None:
+            callback_url = f'{callback_url}?role={role}'
+
+        elif cohort is not None:
             callback_url = f'{callback_url}?cohort={cohort}'
 
             if validate is not None:
