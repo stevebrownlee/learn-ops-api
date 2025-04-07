@@ -1,4 +1,4 @@
-import json, random, string, time, os, logging, requests
+import json, time, os, logging, requests
 from requests.exceptions import ConnectionError
 
 from LearningAPI.models.people import NssUser
@@ -58,6 +58,9 @@ class SlackAPI(object):
             headers=self.headers
         )
         channel_res = res.json()
+        logging.info("Channel created: %s", channel_res)
+        if not channel_res["ok"]:
+            raise Exception(json.dumps(channel_res))
 
         # Create a set of Slack IDs for the members to be added to the channel
         member_slack_ids = set()
