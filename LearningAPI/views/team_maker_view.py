@@ -170,15 +170,16 @@ class TeamMakerView(ViewSet):
                     channel=team.slack_channel
                 )
 
+            message = json.dumps({
+                'notification_channel': cohort.slack_channel,
+                'source_repo': "/".join(project.client_template_url.split('/')[-2:]),
+                'all_target_repositories': issue_target_repos
+            })
+            valkey_client.publish('channel_migrate_issue_tickets', message)
+
         serialized_team = StudentTeamSerializer(team, many=False).data
 
         # Publish a message to the channel_migrate_issue_tickets channel on redis to start migrating tickets
-        message = json.dumps({
-            'notification_channel': cohort.slack_channel,
-            'source_repo': "/".join(project.client_template_url.split('/')[-2:]),
-            'all_target_repositories': issue_target_repos
-        })
-        valkey_client.publish('channel_migrate_issue_tickets', message)
 
         return Response(serialized_team, status=status.HTTP_201_CREATED)
 
