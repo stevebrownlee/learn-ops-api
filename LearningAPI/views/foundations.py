@@ -45,7 +45,7 @@ class FoundationsViewSet(ViewSet):
         last_attempt_param = request.query_params.get('lastAttempt', None)
 
         # Start with all exercises
-        exercises = FoundationsExercise.objects.all()
+        exercises = FoundationsExercise.objects.all().order_by('learner_github_id')
 
         # Filter by learner_name if provided
         if learner_name is not None:
