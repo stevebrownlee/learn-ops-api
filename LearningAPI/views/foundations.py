@@ -25,7 +25,7 @@ class FoundationsSerializer(serializers.ModelSerializer):
     class Meta:
         model = FoundationsExercise
         fields = ('id', 'learner_github_id', 'title', 'slug', 'attempts', 'learner_name',
-                  'complete', 'completed_on', 'first_attempt', 'last_attempt')
+                  'complete', 'completed_on', 'first_attempt', 'last_attempt', 'used_solution', )
         # Exclude completed_code field
 
 
@@ -105,6 +105,7 @@ class FoundationsViewSet(ViewSet):
                 exercise.last_attempt = None
 
             exercise.completed_code = request.data.get('completedCode', None)
+            exercise.used_solution = request.data.get('solutionShown', None)
             exercise.learner_github_id = user_id
             exercise.save()
 
@@ -139,6 +140,7 @@ class FoundationsViewSet(ViewSet):
                 exercise.last_attempt = None
 
             exercise.completed_code = request.data.get('completedCode', None)
+            exercise.used_solution = request.data.get('solutionShown', None)
             exercise.title = request.data.get('title', "Undefined")
             exercise.learner_github_id = user_id
             exercise.save()

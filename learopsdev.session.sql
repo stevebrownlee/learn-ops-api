@@ -13,7 +13,7 @@ SELECT * FROM "LearningAPI_cohort";
 
 
 SELECT * from "LearningAPI_foundationsexercise";
-DELETE FROM "LearningAPI_foundationsexercise";
+DELETE FROM "LearningAPI_foundationsexercise" where id=24;
 
 
 DROP FUNCTION IF EXISTS get_student_details(INT);

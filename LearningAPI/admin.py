@@ -20,6 +20,36 @@ from .models.skill import (
     LearningRecordEntry, LearningRecord, LearningWeight,
 )
 
+class StudentProjectForm(forms.ModelForm):
+    class Meta:
+        model = StudentProject
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super(StudentProjectForm, self).__init__(*args, **kwargs)
+        # Assuming Project model has a relation to Book and then to Course
+        # Adjust 'project__book__course__active=True' to match your model's relationships
+        projects = Project.objects.filter(book__course__active=True)
+        self.fields['project'].queryset = projects
+        project_choices = [(project.id, f"{project.book.course.name} - {project.name}") for project in projects]
+        self.fields['project'].choices = project_choices
+
+class StudentAssessmentForm(forms.ModelForm):
+    class Meta:
+        model = StudentAssessment
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super(StudentAssessmentForm, self).__init__(*args, **kwargs)
+        # Assuming Project model has a relation to Book and then to Course
+        # Adjust 'project__book__course__active=True' to match your model's relationships
+        assessments = Assessment.objects.filter(book__course__active=True)
+        self.fields['assessment'].queryset = assessments
+        assessment_choices = [(assessment.id, f"{assessment.book.course.name} - {assessment.name}") for assessment in assessments]
+        self.fields['assessment'].choices = assessment_choices
+
+
+
 @admin.register(CohortInfo)
 class CohortInfoAdmin(admin.ModelAdmin):
     """For assigning students to cohorts"""
@@ -33,6 +63,7 @@ class CohortCourseAdmin(admin.ModelAdmin):
 @admin.register(StudentAssessment)
 class StudentAssessmentAdmin(admin.ModelAdmin):
     """For assigning students to cohorts"""
+    form = StudentAssessmentForm
     list_display = ('student', 'assessment', 'status', )
     search_fields = ["student__user__last_name"]
     search_help_text = "Search by last name"
@@ -51,22 +82,6 @@ class ProjectAdmin(admin.ModelAdmin):
 class BookAdmin(admin.ModelAdmin):
     """For assigning students to cohorts"""
     list_display = ('name', 'course',)
-
-
-class StudentProjectForm(forms.ModelForm):
-    class Meta:
-        model = StudentProject
-        fields = '__all__'
-
-    def __init__(self, *args, **kwargs):
-        super(StudentProjectForm, self).__init__(*args, **kwargs)
-        # Assuming Project model has a relation to Book and then to Course
-        # Adjust 'project__book__course__active=True' to match your model's relationships
-        projects = Project.objects.filter(book__course__active=True)
-        self.fields['project'].queryset = projects
-        project_choices = [(project.id, f"{project.book.course.name} - {project.name}") for project in projects]
-        self.fields['project'].choices = project_choices
-
 
 @admin.register(StudentProject)
 class StudentProjectAdmin(admin.ModelAdmin):
