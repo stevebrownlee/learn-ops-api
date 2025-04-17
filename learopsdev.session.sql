@@ -13,6 +13,7 @@ SELECT * FROM "LearningAPI_cohort";
 
 
 SELECT * from "LearningAPI_foundationsexercise";
+-- Set the cohort column value to "Day 77" for all records in the "LearningAPI_foundationsexercise" table
 DELETE FROM "LearningAPI_foundationsexercise" where id=24;
 
 

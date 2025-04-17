@@ -81,8 +81,6 @@ def create_entry(pk, exercise, request, user_id):
     exercise.learner_github_id = user_id
     exercise.save()
 
-
-
 class FoundationsViewSet(ViewSet):
     """Foundations view set"""
 
@@ -127,7 +125,7 @@ class FoundationsViewSet(ViewSet):
         learner_name = request.query_params.get('learnerName', None)
         last_attempt_param = request.query_params.get('lastAttempt', None)
 
-        # Start with all exercises
+        # Get all exercises ordered by learner_github_id, and grouped by learner_name
         exercises = FoundationsExercise.objects.all().order_by('learner_github_id')
 
         # Filter by learner_name if provided
@@ -141,14 +139,49 @@ class FoundationsViewSet(ViewSet):
                 last_attempt_date = datetime.fromisoformat(last_attempt_param.replace('Z', '+00:00')).date()
                 exercises = exercises.filter(last_attempt__gte=last_attempt_date)
             except ValueError:
-                # If invalid date format, use default (current date - 30 days)
-                thirty_days_ago = datetime.now().date() - timedelta(days=30)
+                # If invalid date format, use default (current date - 90 days)
+                thirty_days_ago = datetime.now().date() - timedelta(days=90)
                 exercises = exercises.filter(last_attempt__gte=thirty_days_ago)
         else:
-            # Default to current date minus 30 days
-            thirty_days_ago = datetime.now().date() - timedelta(days=30)
+            # Default to current date minus 90 days
+            thirty_days_ago = datetime.now().date() - timedelta(days=90)
             exercises = exercises.filter(last_attempt__gte=thirty_days_ago)
 
-        serializer = FoundationsSerializer(exercises, many=True)
-        return Response(serializer.data)
+        # Create hashmap to store unique learners. Github ID is the key and a list of exercises is the value
+        # This will help in filtering out duplicate learners
+        unique_learners = {}
+        for exercise in exercises:
+            if exercise.learner_github_id not in unique_learners:
+                unique_learners[exercise.learner_github_id] = {
+                    'learner_name': exercise.learner_name,
+                    'exercises': [],
+                    'cohort': exercise.cohort,
+                }
+            unique_learners[exercise.learner_github_id]['exercises'].append(exercise)
 
+        # Serialize the unique learners with UniqueLearnerSerializer
+        unique_learners_list = []
+        for learner_id, learner_data in unique_learners.items():
+            unique_learners_list.append(UniqueLearnerSerializer(data=learner_data).create(learner_data))
+
+
+        # serializer = FoundationsSerializer(exercises, many=True)
+        # return Response(serializer.data)
+        return Response(unique_learners_list)
+
+
+# Create a serializer that converts the `unique_learners` structure to JSON
+class UniqueLearnerSerializer(serializers.Serializer):
+    """JSON serializer for unique learners"""
+    learner_name = serializers.CharField()
+    cohort = serializers.CharField()
+    exercises = FoundationsSerializer(many=True)
+
+    def create(self, validated_data):
+        """Create a new unique learner"""
+        exercises = FoundationsSerializer(validated_data.get('exercises', []), many=True)
+        return {
+            'learner_name': validated_data.get('learner_name'),
+            'cohort': validated_data.get('cohort'),
+            'exercises': exercises.data
+        }
