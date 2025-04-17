@@ -14,6 +14,7 @@ class FoundationsExercise(models.Model):
     last_attempt = models.DateField(null=True, blank=True)
     completed_code = models.TextField(null=True, blank=True)
     used_solution = models.BooleanField(default=False)
+    cohort = models.CharField(max_length=15, default="Unassigned")
 
     def __str__(self) -> str: # pylint: disable=E0307
         return f'{self.learner_github_id} - {self.title} - {self.attempts} - {self.complete}'
