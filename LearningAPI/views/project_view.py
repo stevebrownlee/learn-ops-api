@@ -111,7 +111,7 @@ class ProjectViewSet(ViewSet):
                 projects = projects.filter(book__id=book_id)
 
             if group_projects == "true":
-                projects = projects.filter(is_group_project=True)
+                projects = projects.filter(is_group_project=True, book__course__active=True)
 
             serializer = ProjectSerializer(projects, many=True, context={'request': request})
             return Response(serializer.data, status=status.HTTP_200_OK)
