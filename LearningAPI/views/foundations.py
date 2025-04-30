@@ -37,18 +37,7 @@ def create_entry(pk, exercise, request, user_id):
         exercise (FoundationsExercise): The FoundationsExercise instance to update or create
         request (Request): The request object containing data for the exercise
     """
-    cohort = request.data.get('cohort', "Unassigned")
-
-    if cohort != None:
-        # Possible values are a string that starts with 'd' for day cohorts or 'e' for evening cohorts
-        # followed by a number representing the cohort number
-        # Convert 'd' into 'Day ' and 'e' into 'Evening '
-        if cohort.startswith('d'):
-            cohort = 'Day ' + cohort[1:]
-        elif cohort.startswith('e'):
-            cohort = 'Evening ' + cohort[1:]
-
-    exercise.cohort = cohort
+    exercise.cohort = "Unassigned"
     exercise.slug = pk
     exercise.attempts = request.data.get('attempts', 0)
     exercise.learner_name = request.data.get('username', "")
