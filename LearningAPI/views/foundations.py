@@ -1,5 +1,6 @@
 """Foundations Course tracking view set module"""
 from datetime import datetime, timedelta
+from django.utils.dateparse import parse_datetime
 from django.db import IntegrityError
 from django.http import HttpResponseServerError
 from rest_framework import serializers, status, permissions
@@ -47,21 +48,27 @@ def create_entry(pk, exercise, request, user_id):
     # Parse ISO 8601 timestamp for completed_on
     completed_at = request.data.get('completedAt', None)
     if completed_at:
-        exercise.completed_on = datetime.fromisoformat(completed_at.replace('Z', '+00:00')).date()
+        dt_object = parse_datetime(completed_at)
+        django_date_string = dt_object.strftime('%Y-%m-%d %H:%M:%S.%f%z')
+        exercise.completed_on = django_date_string
     else:
         exercise.completed_on = None
 
     # Parse ISO 8601 timestamp for first_attempt
     first_attempt = request.data.get('firstAttempt', None)
     if first_attempt:
-        exercise.first_attempt = datetime.fromisoformat(first_attempt.replace('Z', '+00:00')).date()
+        dt_object = parse_datetime(first_attempt)
+        django_date_string = dt_object.strftime('%Y-%m-%d %H:%M:%S.%f%z')
+        exercise.first_attempt = django_date_string
     else:
         exercise.first_attempt = None
 
     # Parse ISO 8601 timestamp for last_attempt
     last_attempt = request.data.get('lastAttempt', None)
     if last_attempt:
-        exercise.last_attempt = datetime.fromisoformat(last_attempt.replace('Z', '+00:00')).date()
+        dt_object = parse_datetime(last_attempt)
+        django_date_string = dt_object.strftime('%Y-%m-%d %H:%M:%S.%f%z')
+        exercise.last_attempt = django_date_string
     else:
         exercise.last_attempt = None
 
