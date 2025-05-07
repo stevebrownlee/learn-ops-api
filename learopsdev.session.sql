@@ -13,8 +13,11 @@ SELECT * FROM "LearningAPI_cohort";
 
 
 SELECT * from "LearningAPI_foundationsexercise";
--- Set the cohort column value to "Day 77" for all records in the "LearningAPI_foundationsexercise" table
+SELECT * from "LearningAPI_foundationslearnerprofile";
+UPDATE "LearningAPI_foundationslearnerprofile" SET cohort_type = 'Unassigned', cohort_number = 0;
+UPDATE "LearningAPI_foundationsexercise" SET cohort = 'Unassigned';
 DELETE FROM "LearningAPI_foundationsexercise" where id=24;
+delete from "LearningAPI_foundationslearnerprofile";
 
 
 DROP FUNCTION IF EXISTS get_student_details(INT);
