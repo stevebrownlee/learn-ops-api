@@ -146,8 +146,13 @@ class FoundationsViewSet(ViewSet):
                     'exercises': []
                 }
             unique_learners[exercise.learner_github_id]['exercises'].append(exercise)
-            profile = FoundationsLearnerProfile.objects.get(learner_github_id=exercise.learner_github_id)
-            unique_learners[exercise.learner_github_id]['cohort'] = f'{profile.cohort_type} {profile.cohort_number}'
+            try:
+                profile = FoundationsLearnerProfile.objects.get(learner_github_id=exercise.learner_github_id)
+            except FoundationsLearnerProfile.DoesNotExist:
+                profile = None
+
+            assigned_cohort = f'{profile.cohort_type} {profile.cohort_number}' if profile else 'Unassigned'
+            unique_learners[exercise.learner_github_id]['cohort'] = assigned_cohort
 
 
         # Serialize the unique learners with UniqueLearnerSerializer
