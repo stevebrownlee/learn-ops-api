@@ -172,15 +172,18 @@ class FoundationsViewSet(ViewSet):
         cohort_number = request.data.get('cohortNumber', None)
 
         if user_id is not None and cohort_type is not None and cohort_number is not None:
+            # Update the learner profile with the new cohort type and number
             try:
-                # Update the learner profile with the new cohort type and number
                 profile = FoundationsLearnerProfile.objects.get(learner_github_id=user_id)
-                profile.cohort_type = cohort_type
-                profile.cohort_number = cohort_number
-                profile.save()
-                return Response(None, status=status.HTTP_204_NO_CONTENT)
             except FoundationsLearnerProfile.DoesNotExist:
-                return Response({'message': 'Learner profile not found'}, status=status.HTTP_404_NOT_FOUND)
+                # If the learner profile does not exist, create it
+                profile = FoundationsLearnerProfile()
+                profile.learner_github_id = user_id
+
+            profile.cohort_type = cohort_type
+            profile.cohort_number = cohort_number
+            profile.save()
+            return Response(None, status=status.HTTP_204_NO_CONTENT)
         else:
             return Response({'message': 'You must provide a \'userId\', \'cohortType\', and \'cohortNumber\' in the request body'}, status=status.HTTP_400_BAD_REQUEST)
 
