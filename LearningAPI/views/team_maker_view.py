@@ -75,6 +75,8 @@ class TeamMakerView(ViewSet):
         slack = SlackAPI()
         random_team_suffix = ''.join(random.choice(string.ascii_lowercase) for i in range(6))
         channel_name = f"{team_prefix}-{cohort.name.split(' ')[-1]}-{random_team_suffix}"
+        # Lowercase the channel name
+        channel_name = channel_name.lower()
         try:
             team.slack_channel = slack.create_channel(channel_name, student_list)
         except Exception as ex:
