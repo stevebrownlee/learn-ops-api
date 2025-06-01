@@ -69,6 +69,7 @@ CORS_ORIGIN_WHITELIST = (
     'http://localhost:5173',
     'http://127.0.0.1:5173',
     'https://learning.nss.team',
+    'https://learningapi.nss.team',  # Added API domain to fix CORS issue
     'https://nashville-software-school.github.io',
 )
 
