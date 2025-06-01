@@ -10,7 +10,9 @@ from allauth.socialaccount.models import SocialAccount
 from LearningAPI.utils import GithubRequest
 from LearningAPI.models.people import Cohort, NssUserCohort, NssUser
 from LearningAPI.models.coursework import StudentProject, Project
+from LearningAPI.utils import get_logger, bind_request_context, log_action
 
+logger = get_logger("LearningAPI.profile")
 
 class Profile(ViewSet):
     """Person can see profile information"""
@@ -45,12 +47,16 @@ class Profile(ViewSet):
         role = self.request.query_params.get('role', None)
         mimic = self.request.query_params.get('mimic', None)
 
+        req_logger = bind_request_context(logger, request)
+        req_logger.info("Profile list request received", cohort=cohort, role=role, mimic=mimic)
+
         #
         #  Discovered how to access social account info at following URL
         #     https://github.com/pennersr/django-allauth/blob/master/allauth/socialaccount/models.py
         #
         try:
             person = SocialAccount.objects.get(user=request.auth.user)
+            req_logger.info("Social account found", user=person.user.username, provider=person.provider)
         except SocialAccount.DoesNotExist as ex:
             raise ex
 
@@ -64,6 +70,7 @@ class Profile(ViewSet):
                 user=request.auth.user
             )
             nss_user.save()
+            req_logger.info("NssUser created", user=nss_user.user.username)
 
             # If role is not None, then this user is a staff member and gets the Staff group added to them
             if role is not None:
@@ -74,14 +81,18 @@ class Profile(ViewSet):
                 # Add user to Staff group
                 staff = Group.objects.get(name='Staff')
                 staff.user_set.add(nss_user.user)
+                req_logger.info("User added to Staff group", user=nss_user.user.username)
 
             if cohort is not None:
                 # First time authenticating with Github, so add user to cohort
                 cohort_assignment = Cohort.objects.get(pk=cohort)
+                req_logger.info("Cohort found", cohort=cohort_assignment.name)
+
                 usercohort = NssUserCohort()
                 usercohort.cohort = cohort_assignment
                 usercohort.nss_user = nss_user
                 usercohort.save()
+                req_logger.info("NssUserCohort created", nss_user=nss_user.user.username, cohort=cohort_assignment.name)
 
                 # Add student's github account as a member of the cohort Github organization
                 gh_request = GithubRequest()
@@ -89,24 +100,38 @@ class Profile(ViewSet):
                 request_url = f'https://api.github.com/orgs/{student_org_name}/memberships/{person.extra_data["login"]}'
                 data = {"role": "member"}
                 response = gh_request.put(request_url, data)
+
                 if response.status_code != 200:
-                    logger = logging.getLogger("LearningPlatform")
-                    logger.warning("Error adding %s to %s organization", person.extra_data['login'], student_org_name)
+                    req_logger.error("Failed to add user to cohort Github organization", user=nss_user.user.username, status=response.status_code)
+                    return Response(
+                        {"error": "Failed to add user to cohort Github organization."},
+                        status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                    )
 
                 # Assign student to first project in cohort's course
-                course_first_project = Project.objects.get(
-                    index=0,
-                    book__index=0,
-                    cohort_assignment__courses__index=0,
-                )
-                student_project = StudentProject()
-                student_project.student = nss_user
-                student_project.project = course_first_project
-                student_project.save()
+                try:
+                    cohort_first_course = cohort_assignment.courses.get(index=0)
+                    course_first_book = cohort_first_course.course.books.get(index=0)
+                    book_first_project = course_first_book.projects.get(index=0)
+                    req_logger.info("First project found for cohort's course", project=book_first_project.name)
+
+                    student_project = StudentProject()
+                    student_project.student = nss_user
+                    student_project.project = book_first_project
+                    student_project.save()
+                    req_logger.info("StudentProject created", student=nss_user.user.username, project=book_first_project.name)
+
+                except Project.DoesNotExist:
+                    req_logger.warning("No first project found for cohort's course", cohort=cohort_assignment.name)
+                    return Response(
+                        {"error": "No first project found for the cohort's course."},
+                        status=status.HTTP_404_NOT_FOUND
+                    )
 
         if not request.auth.user.is_staff or mimic:
             # Check to see if the learner has accepted the invitation to join the cohort Github organization
             student_cohort = nss_user.assigned_cohorts.first()
+            req_logger.info("Assigned cohort found", cohort=student_cohort.cohort.name if student_cohort else "None")
 
             if not student_cohort.is_github_org_member:
                 # Send a request to the Github API to check the membership status of the user for the cohort Github organization
@@ -119,6 +144,7 @@ class Profile(ViewSet):
                 if github_org_membership_status == "active":
                     student_cohort.is_github_org_member = True
                     student_cohort.save()
+                    req_logger.info("Github organization membership status updated", user=nss_user.user.username, status=github_org_membership_status)
             else:
                 github_org_membership_status = "active"
 
@@ -142,8 +168,11 @@ class Profile(ViewSet):
             profile["person"]["github"]["repos"] = person.extra_data["repos_url"]
             profile["staff"] = request.auth.user.is_staff
             profile["instructor"] = nss_user.is_instructor
+            req_logger.info("Instructor profile requested", user=request.auth.user.username)
 
             instructor_active_cohort = NssUserCohort.objects.filter(nss_user__user=request.auth.user).first()
+            req_logger.info("Instructor active cohort found", cohort=instructor_active_cohort.cohort.name if instructor_active_cohort else "None")
+
             if instructor_active_cohort is not None:
                 profile["person"]["active_cohort"] = instructor_active_cohort.cohort.id
             else:
