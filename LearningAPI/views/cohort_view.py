@@ -7,7 +7,9 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 from LearningAPI.models.people import Cohort, NssUser, NssUserCohort, CohortInfo
 from LearningAPI.models.coursework import CohortCourse, Course, Project, StudentProject
+from LearningAPI.utils import get_logger, bind_request_context, log_action
 
+logger = get_logger("LearningAPI.cohort")
 
 class CohortPermission(permissions.BasePermission):
     """Cohort permissions"""
@@ -26,6 +28,7 @@ class CohortViewSet(ViewSet):
 
     permission_classes = (CohortPermission,)
 
+    @log_action("cohort_creation")
     def create(self, request):
         """Handle POST operations
 
@@ -86,6 +89,7 @@ class CohortViewSet(ViewSet):
         serializer = CohortSerializer(cohort, context={'request': request})
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+    @log_action("cohort_retrieval")
     def retrieve(self, request, pk=None):
         """Handle GET requests for single item
 
@@ -105,6 +109,7 @@ class CohortViewSet(ViewSet):
         except Exception as ex:
             return HttpResponseServerError(ex)
 
+    @log_action("cohort_update")
     def update(self, request, pk=None):
         """Handle PUT requests
 
@@ -127,6 +132,7 @@ class CohortViewSet(ViewSet):
 
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
+    @log_action("cohort_deletion")
     def destroy(self, request, pk=None):
         """Handle DELETE requests for a single item
 
@@ -145,6 +151,7 @@ class CohortViewSet(ViewSet):
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    @log_action("cohort_list")
     def list(self, request):
         """Handle GET requests for all items
 
@@ -186,6 +193,7 @@ class CohortViewSet(ViewSet):
         except Exception as ex:
             return HttpResponseServerError(ex)
 
+    @log_action("cohort_active_toggle")
     @action(methods=['put', ], detail=True)
     def active(self, request, pk):
         if request.method == "PUT":
@@ -195,6 +203,7 @@ class CohortViewSet(ViewSet):
 
             return Response(None, status=status.HTTP_204_NO_CONTENT)
 
+    @log_action("cohort_migration")
     @action(methods=['put', ], detail=True)
     def migrate(self, request, pk):
         """Migrate all students in a cohort from client side to server side
@@ -273,34 +282,63 @@ class CohortViewSet(ViewSet):
 
             return Response(None, status=status.HTTP_204_NO_CONTENT)
 
+    @log_action("assign_nssuser_to_cohort")
     @action(methods=['post', 'delete'], detail=True)
     def assign(self, request, pk):
         """Assign student or instructor to an existing cohort"""
+
+        req_logger = bind_request_context(logger, request)
 
         if request.method == "POST":
             cohort = None
             member = None
             user_type = request.query_params.get("userType", None)
+
+
             cohort = Cohort.objects.get(pk=pk)
+            req_logger.debug("cohort_found", cohort_name=cohort.name)
+
+            req_logger.info(
+                "cohort_assignment_started",
+                cohort_id=pk,
+                user_type=user_type
+            )
 
             try:
                 if user_type is not None and user_type == "instructor":
+                    req_logger.info("instructor_assignment_attempt")
                     try:
                         member = NssUser.objects.get(user=request.auth.user)
+                        req_logger.debug("instructor_found", instructor_id=member.id)
+
                         membership = NssUserCohort.objects.get(nss_user=member)
+                        req_logger.warning(
+                            "instructor_already_assigned",
+                            current_cohort_id=membership.cohort.id,
+                            current_cohort_name=membership.cohort.name
+                        )
 
                         return Response(
                             {'message': f'Instructor cannot be in more than 1 cohort at a time. Currently assigned to cohort {membership.cohort.name}'},
                             status=status.HTTP_400_BAD_REQUEST
                         )
                     except NssUserCohort.DoesNotExist:
+                        req_logger.debug("instructor_not_assigned_to_any_cohort")
                         pass
 
                 else:
                     user_id = int(request.data["person_id"])
+                    req_logger.info("student_assignment_attempt", student_id=user_id)
+
                     member = NssUser.objects.get(pk=user_id)
+                    req_logger.debug("student_found", student_id=member.id, student_name=member.full_name)
 
                 NssUserCohort.objects.get(cohort=cohort, nss_user=member)
+                req_logger.warning(
+                    "user_already_assigned_to_cohort",
+                    user_id=member.id,
+                    cohort_id=cohort.id
+                )
 
                 return Response(
                     {'message': 'Person is already assigned to cohort'},
@@ -308,69 +346,179 @@ class CohortViewSet(ViewSet):
                 )
 
             except NssUserCohort.DoesNotExist:
+                req_logger.info(
+                    "creating_cohort_assignment",
+                    user_id=member.id,
+                    cohort_id=cohort.id
+                )
+                # Create relationship between user and cohort
                 relationship = NssUserCohort()
                 relationship.cohort = cohort
                 relationship.nss_user = member
                 relationship.save()
 
+                req_logger.info(
+                    "cohort_assignment_created",
+                    user_id=member.id,
+                    cohort_id=cohort.id,
+                    relationship_id=relationship.id
+                )
+
                 if user_type is None:
-                    # Assign student to first project in cohort's active course
-                    book_first_project = Project.objects.get(
-                        index=0,
-                        book__course=cohort.courses.get(active=True).course,
-                        book__index=0
+                    req_logger.info(
+                        "assigning_student_to_first_project",
+                        student_id=member.id,
+                        cohort_id=cohort.id
                     )
 
-                    student_project = StudentProject()
-                    student_project.student = member
-                    student_project.project = book_first_project
-                    student_project.save()
+                    try:
+                        # Assign student to first project in cohort's active course
+                        book_first_project = Project.objects.get(
+                            index=0,
+                            book__course=cohort.courses.get(active=True).course,
+                            book__index=0
+                        )
+                        req_logger.debug(
+                            "first_project_found",
+                            project_id=book_first_project.id,
+                            project_name=book_first_project.name
+                        )
+
+                        student_project = StudentProject()
+                        student_project.student = member
+                        student_project.project = book_first_project
+                        student_project.save()
+                        req_logger.info(
+                            "student_assigned_to_project",
+                            student_id=member.id,
+                            project_id=book_first_project.id,
+                            student_project_id=student_project.id
+                        )
+                    except Exception as ex:
+                        req_logger.error(
+                            "failed_to_assign_student_to_project",
+                            student_id=member.id,
+                            error=str(ex)
+                        )
 
             except Cohort.DoesNotExist as ex:
+                req_logger.error(
+                    "cohort_not_found",
+                    cohort_id=pk,
+                    error=str(ex)
+                )
                 return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
             except NssUser.DoesNotExist as ex:
+                req_logger.error(
+                    "user_not_found",
+                    user_type=user_type,
+                    user_id=request.data.get("person_id") if user_type is None else "current_user",
+                    error=str(ex)
+                )
                 return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
             except Exception as ex:
+                req_logger.exception(
+                    "unexpected_error_during_assignment",
+                    error=str(ex)
+                )
                 return HttpResponseServerError(ex)
 
+            req_logger.info(
+                "cohort_assignment_completed",
+                user_id=member.id,
+                cohort_id=cohort.id,
+                user_type=user_type if user_type else "student"
+            )
+
             return Response({'message': 'User assigned to cohort'}, status=status.HTTP_201_CREATED)
+
 
         elif request.method == "DELETE":
             user_type = request.query_params.get("userType", None)
 
             if user_type is not None and user_type == "instructor":
                 member = NssUser.objects.get(user=request.auth.user)
+                req_logger.info(
+                    "instructor_removal_attempt",
+                    instructor_id=member.id,
+                    cohort_id=pk
+                )
+                req_logger.debug("instructor_found", instructor_id=member.id)
             else:
-                user_id = int(request.data["student_id"])
-                member = NssUser.objects.get(pk=user_id)
+                req_logger.info(
+                    "student_removal_attempt",
+                    student_id=request.data.get("student_id", None),
+                    cohort_id=pk
+                )
+
+                if request.data.get("student_id", None) is not None:
+                    user_id = int(request.data["student_id"])
+                    member = NssUser.objects.get(pk=user_id)
+                    req_logger.debug("student_found", student_id=member.id, student_name=member.full_name)
+                else:
+                    return Response(
+                        {'message': 'Please provide a student ID to remove.'},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
 
             try:
                 cohort = Cohort.objects.get(pk=pk)
                 rel = NssUserCohort.objects.get(cohort=cohort, nss_user=member)
                 rel.delete()
+                req_logger.info(
+                    "cohort_assignment_deleted",
+                    user_id=member.id,
+                    cohort_id=cohort.id
+                )
 
                 return Response(None, status=status.HTTP_204_NO_CONTENT)
 
             except Cohort.DoesNotExist as ex:
+                req_logger.error(
+                    "cohort_not_found",
+                    cohort_id=pk,
+                    error=str(ex)
+                )
                 return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
             except NssUser.DoesNotExist as ex:
+                req_logger.error(
+                    "user_not_found",
+                    user_type=user_type,
+                    user_id=request.data.get("person_id") if user_type is None else "current_user",
+                    error=str(ex)
+                )
                 return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
             except NssUserCohort.DoesNotExist as ex:
+                req_logger.error(
+                    "student_not_found",
+                    student_id=request.data.get("student_id", None),
+                    cohort_id=pk,
+                    error=str(ex)
+                )
                 return Response(
                     {'message': "Student is not assigned to that cohort."},
                     status=status.HTTP_400_BAD_REQUEST
                 )
 
             except Exception as ex:
+                req_logger.exception(
+                    "unexpected_error_during_removal",
+                    error=str(ex)
+                )
                 return Response(
                     {'message': ex.args[0]},
                     status=status.HTTP_500_INTERNAL_SERVER_ERROR
                 )
 
+        req_logger.warning(
+            "unsupported_http_method",
+            method=request.method,
+            action="assign"
+        )
         return Response(
             {'message': 'Unsupported HTTP method'},
             status=status.HTTP_405_METHOD_NOT_ALLOWED

@@ -1,7 +1,81 @@
 import json, time, os, logging, requests
+import structlog
+from functools import wraps
+import time
+import uuid
 from requests.exceptions import ConnectionError
 
 from LearningAPI.models.people import NssUser
+
+# Get a logger instance
+logger = structlog.get_logger("LearningAPI")
+
+def get_logger(module_name):
+    """Get a logger for a specific module"""
+    return structlog.get_logger(f"LearningAPI.{module_name}")
+
+def bind_request_context(logger, request):
+    """Bind common request context to a logger"""
+    user_id = getattr(request.auth, 'user_id', None) if hasattr(request, 'auth') else None
+    username = getattr(request.auth.user, 'username', None) if hasattr(request, 'auth') and hasattr(request.auth, 'user') else None
+
+    return logger.bind(
+        request_id=str(uuid.uuid4()),
+        user_id=user_id,
+        username=username,
+        ip_address=request.META.get('REMOTE_ADDR'),
+        user_agent=request.META.get('HTTP_USER_AGENT'),
+        path=request.path,
+        method=request.method,
+    )
+
+def log_action(action_type):
+    """Decorator to log actions with timing"""
+    def decorator(func):
+        @wraps(func)
+        def wrapper(self, request, *args, **kwargs):
+            module_name = self.__class__.__module__.split('.')[-1]
+            action_logger = get_logger(module_name)
+            action_logger = bind_request_context(action_logger, request)
+
+            # Extract relevant IDs from kwargs or request
+            pk = kwargs.get('pk')
+
+            # Log the start of the action
+            action_logger.info(
+                f"{action_type}_started",
+                view=self.__class__.__name__,
+                action=func.__name__,
+                pk=pk,
+            )
+
+            start_time = time.time()
+            try:
+                result = func(self, request, *args, **kwargs)
+
+                # Log successful completion
+                action_logger.info(
+                    f"{action_type}_completed",
+                    view=self.__class__.__name__,
+                    action=func.__name__,
+                    pk=pk,
+                    duration_ms=int((time.time() - start_time) * 1000),
+                    status_code=getattr(result, 'status_code', None),
+                )
+                return result
+            except Exception as e:
+                # Log exception
+                action_logger.exception(
+                    f"{action_type}_failed",
+                    view=self.__class__.__name__,
+                    action=func.__name__,
+                    pk=pk,
+                    duration_ms=int((time.time() - start_time) * 1000),
+                    error=str(e),
+                )
+                raise
+        return wrapper
+    return decorator
 
 class SlackAPI(object):
     """ This class is used to create a Slack channel for a student team """
