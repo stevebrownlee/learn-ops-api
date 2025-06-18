@@ -126,24 +126,24 @@ else
     eval "$(pyenv virtualenv-init -)"
 fi
 
-# Check if Python 3.9.1 is installed
-if pyenv versions --bare | grep -q '^3.9.1$'; then
-    echo "Python 3.9.1 is already installed."
+# Check if Python 3.11.11 is installed
+if pyenv versions --bare | grep -q '^3.11.11$'; then
+    echo "Python 3.11.11 is already installed."
 else
-    echo "Python 3.9.1 is not installed. Installing now..."
-    pyenv install 3.9.1
+    echo "Python 3.11.11 is not installed. Installing now..."
+    pyenv install 3.11.11
 fi
 
 # Get the global Python version set in pyenv
 global_version=$(pyenv global)
 
-# Check that global version of python is 3.9.1
-if [[ $global_version == '3.9.1' ]]; then
-    echo "Python 3.9.1 is the global version."
+# Check that global version of python is 3.11.11
+if [[ $global_version == '3.11.11' ]]; then
+    echo "Python 3.11.11 is the global version."
 else
-    echo "Python 3.9.1 is not the global version. The global version is $global_version."
-    echo "Setting global version of python to 3.9.1"
-    pyenv global 3.9.1
+    echo "Python 3.11.11 is not the global version. The global version is $global_version."
+    echo "Setting global version of python to 3.11.11"
+    pyenv global 3.11.11
 fi
 
 # Install pipenv for managing virtual environment
@@ -213,7 +213,7 @@ EOF
 #####
 # Install project requirements and run migrations
 #####
-pipenv --python 3.9.1
+pipenv --python 3.11.11
 pipenv install
 pipenv run migrate
 

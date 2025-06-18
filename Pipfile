@@ -33,7 +33,7 @@ uuid = "==1.30"
 python-dateutil = "==2.8.2"
 
 [requires]
-python_version = "3.9.1"
+python_version = "3.11.11"
 
 [scripts]
 migrate = "python3 manage.py migrate"

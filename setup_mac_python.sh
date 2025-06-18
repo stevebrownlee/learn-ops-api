@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PYTHON_VERSION=3.9.1
+PYTHON_VERSION=3.11.11
 
 function installPyenv() {
     # If changes need to be made to user's config file, detect the correct one
@@ -68,7 +68,6 @@ function installBrew() {
         eval $(/opt/homebrew/bin/brew shellenv)
     fi
 }
-
 
 installBrew
 installPython

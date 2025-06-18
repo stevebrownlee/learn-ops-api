@@ -4,54 +4,18 @@
 
 This project is the API for the Learning Platform. It is a Django project using the Django REST Framework application. It integrates with the Github OAuth platform to create accounts and perform authorization for the companion [Learning Platform React client](https://github.com/stevebrownlee/learn-ops-client).
 
-## Prerequisites
+The Learning Platform allows instructors to track student progress, through books and projects, create new courses _(a collection of books and projects)_, keep notes about students, transfer students between cohorts, build student teams for group projects, create Github repositories for group projects, create Slack channels for student teams, and use Valkey to communicate with the [Monarch](https://github.com/stevebrownlee/service-monarch) service to migrate issue tickets to Github repositories for group projects.
 
-### Learning Platform Request Collection
+## Tech Stack
 
-1. Install Postman
-1. Open Postman app
-1. Click File > Import from the navbar
-2. Drag the `LearnOps.postman_collection.json` file into the dialog
-4. Requests will be imported and should appear on the left.
+* Django
+* Django REST Framework
+* django-cors-headers
+* dj-rest-auth
+* django-allauth
+* valkey
 
-### Windows Developer Prerequisites
-
-If you are a Windows user, you will need to install WSL and Ubuntu.
-
-Do only steps 1-4 of these instructions if you have never installed WSL before.
-
-Do not do step 5... only steps 1-4.
-
-[Ubuntu on WSL install instructions](https://ubuntu.com/tutorials/install-ubuntu-on-wsl2-on-windows-11-with-gui-support#1-overview)
-
-Once you are done, you will be working in an Ubuntu terminal during all setup and developing on the API.
-
-#### If WSL and Postgres Already Exists
-
-If you already have Postgres installed in Ubuntu, then you need to uninstall it and kill the existing cluster.
-
-```sh
-sudo apt remove postgresql
-sudo pg_ctlcluster {version} main stop
-sudo pg_dropcluster {version} main --stop
-```
-
-### All Developer Prerequisites
-
-#### Git
-
-Make sure you have `git` installed so you can clone and work on the project.
-
-#### SSH Key
-
-If you are setting this project up on a new WSL Linux installation, you need to create a new SSH key for that OS.
-
-1. Set up an SSH key pair for Linux/Mac
-2. Add the public SSH key to your Github account
-3. Make sure SSH agent is running
-4. Use `ssh-add` to add your new private key to the shell session
-
-### Github OAuth App
+## Github OAuth App
 
 This application uses Github for authorization instead of user accounts in Django. You will need to set up your own OAuth application for use during local development.
 
@@ -124,28 +88,6 @@ Django version 4.2.2, using settings 'LearningPlatform.settings'
 Starting development server at http://127.0.0.1:8000/
 Quit the server with CONTROL-C.
 ```
-
-### Testing Superuser Credentials
-
-1. Visit [http://localhost:8000/admin](http://localhost:8000/admin)
-1. Authenticate with the superuser credentials you specified in your environment variables and ensure that you gain access to the admin interface.
-
-### Make Yourself an Instructor
-
-If you successfully authenticated, follow these steps to access the instructor interface of the Learning Platform. You must have already cloned and set up the client application before you perform these steps.
-
-1. Start the React client application.
-1. Authorize the client with Github.
-2. Visit the [admin interface](http://localhost:8000/admin) and authenticate with your superuser credentials.
-3. Click on **Users** in the left navigation.
-4. Find the account that was just created for your Github authorization by searching for your Github username.
-5. Click on your user account.
-6. Toggle **Staff status** to be on.
-7. In the **Group** sections, double click **Instructor** so that it moves to the _Chosen groups_ list.
-8. Close the browser tab that is running the Learning Platform.
-9. Open a new tab and visit http://localhost:3000 again and authenticate.
-10. You should now see the instructor interface.
-
 
 ## ERD
 

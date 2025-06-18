@@ -3,17 +3,29 @@
 source .env
 
 function configureDatabase() {
-    brew install postgresql
+    brew install postgresql@16
+    brew services start postgresql@16
+
+    # Create your user database first
+    createdb
 
     echo "Database $LEARN_OPS_DB does not exist"
 
-    psql -c "DROP DATABASE IF EXISTS $LEARN_OPS_DB WITH (FORCE);"
-    psql -c "CREATE DATABASE $LEARN_OPS_DB;"
-    psql -c "CREATE USER $LEARN_OPS_USER WITH PASSWORD '$LEARN_OPS_PASSWORD';"
-    psql -c "ALTER ROLE $LEARN_OPS_USER SET client_encoding TO 'utf8';"
-    psql -c "ALTER ROLE $LEARN_OPS_USER SET default_transaction_isolation TO 'read committed';"
-    psql -c "ALTER ROLE $LEARN_OPS_USER SET timezone TO 'UTC';"
-    psql -c "GRANT ALL PRIVILEGES ON DATABASE $LEARN_OPS_USER TO $LEARN_OPS_DB;"
+    psql -d postgres -c "DROP DATABASE IF EXISTS $LEARN_OPS_DB WITH (FORCE);"
+    psql -d postgres -c "CREATE DATABASE $LEARN_OPS_DB;"
+    psql -d postgres -c "CREATE USER $LEARN_OPS_USER WITH PASSWORD '$LEARN_OPS_PASSWORD';"
+    psql -d postgres -c "ALTER ROLE $LEARN_OPS_USER SET client_encoding TO 'utf8';"
+    psql -d postgres -c "ALTER ROLE $LEARN_OPS_USER SET default_transaction_isolation TO 'read committed';"
+    psql -d postgres -c "ALTER ROLE $LEARN_OPS_USER SET timezone TO 'UTC';"
+    psql -d postgres -c "GRANT ALL PRIVILEGES ON DATABASE $LEARN_OPS_DB TO $LEARN_OPS_USER;"
+
+    # Grant schema privileges
+    psql -d postgres -c "GRANT ALL ON SCHEMA public TO $LEARN_OPS_USER;"
+    psql -d "$LEARN_OPS_DB" -c "GRANT ALL ON SCHEMA public TO $LEARN_OPS_USER;"
+    psql -d "$LEARN_OPS_DB" -c "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO $LEARN_OPS_USER;"
+    psql -d "$LEARN_OPS_DB" -c "GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO $LEARN_OPS_USER;"
+    psql -d "$LEARN_OPS_DB" -c "ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO $LEARN_OPS_USER;"
+    psql -d "$LEARN_OPS_DB" -c "ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO $LEARN_OPS_USER;"
 }
 
 function generateSocialFixture() {
@@ -73,7 +85,7 @@ function generateSuperuserFixture() {
 }
 
 function initializeProject() {
-    pipenv --python 3.9.1
+    pipenv --python 3.11.11
 
     # Install project requirements
     pipenv install
