@@ -16,7 +16,7 @@ class FoundationsPermission(permissions.BasePermission):
     def has_permission(self, request, view):
         if view.action in ['list',]:
             return request.auth.user.is_staff
-        if view.action in ['update',]:
+        if view.action in ['update', 'exercises']:
             return True
 
         return False
@@ -164,6 +164,16 @@ class FoundationsViewSet(ViewSet):
         return Response(unique_learners_list)
 
     # Custom action to update the cohort type and number for a specific learner
+    @action(detail=True, methods=['get'])
+    def exercises(self, request, pk=None):
+        # Get all exercises for a specific learner
+        if pk is not None:
+            exercises = FoundationsExercise.objects.filter(learner_github_id=pk).order_by('pk')
+            serializer = LearnerProgressSerializer(exercises, many=True)
+            return Response(serializer.data)
+        else:
+            return Response({'message': 'You must provide a \'userId\' in the query parameters'}, status=status.HTTP_400_BAD_REQUEST)
+
     @action(detail=False, methods=['put'], permission_classes=[permissions.IsAuthenticated])
     def assigncohort(self, request, pk=None):
         """Update the cohort type and number for a specific learner"""
@@ -187,6 +197,16 @@ class FoundationsViewSet(ViewSet):
         else:
             return Response({'message': 'You must provide a \'userId\', \'cohortType\', and \'cohortNumber\' in the request body'}, status=status.HTTP_400_BAD_REQUEST)
 
+
+class LearnerProgressSerializer(serializers.ModelSerializer):
+    """JSON serializer for Foundations exercises"""
+
+    class Meta:
+        model = FoundationsExercise
+        fields = ('id', 'learner_github_id', 'title',
+                  'slug', 'attempts', 'learner_name',
+                  'complete', 'completed_on', 'first_attempt',
+                  'last_attempt', 'used_solution', 'completed_code')
 
 class FoundationsSerializer(serializers.ModelSerializer):
     """JSON serializer for Foundations exercises"""
