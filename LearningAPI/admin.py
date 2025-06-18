@@ -12,7 +12,7 @@ from .models.people import (
 from .models.coursework import (
     Course, ProposalStatus, Capstone, Book,
     CapstoneTimeline, StudentProject, Project,
-    CohortCourse, FoundationsLearnerProfile
+    CohortCourse, FoundationsLearnerProfile, FoundationsExercise
 )
 
 from .models.skill import (
@@ -180,6 +180,13 @@ class NssUserAdmin(admin.ModelAdmin):
 @admin.register(FoundationsLearnerProfile)
 class FoundationsLearnerProfileAdmin(admin.ModelAdmin):
     list_display = ('cohort_type', 'cohort_number', 'learner_name')
+    ordering = ('-pk',)
+    search_fields = ["learner_name"]
+    search_help_text = "Search by learner name"
+
+@admin.register(FoundationsExercise)
+class FoundationsExerciseAdmin(admin.ModelAdmin):
+    list_display = ('learner_name', 'slug', 'attempts', 'complete', 'used_solution', 'completed_code')
     ordering = ('-pk',)
     search_fields = ["learner_name"]
     search_help_text = "Search by learner name"
