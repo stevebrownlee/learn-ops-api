@@ -19,8 +19,8 @@ class CohortEventsViewSet(ViewSet):
             Response -- JSON serialized instance
         """
         cohort_id = request.data.get('cohort', None)
-        event_name = request.data.get('event_name', None)
-        event_datetime = request.data.get('event_datetime', None)
+        event_name = request.data.get('name', None)
+        event_datetime = request.data.get('datetime', None)
         description = request.data.get('description', '')
 
         try:
