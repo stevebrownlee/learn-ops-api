@@ -3,8 +3,8 @@ from rest_framework import serializers, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
-from LearningAPI.models.people import Cohort, CohortEvent
-from LearningAPI.utils import get_logger, bind_request_context, log_action
+from LearningAPI.models.people import Cohort, CohortEvent,CohortEventType
+from LearningAPI.utils import get_logger, log_action
 
 logger = get_logger("LearningAPI.cohortevent")
 
@@ -20,6 +20,7 @@ class CohortEventsViewSet(ViewSet):
         """
         cohort_id = request.data.get('cohort', None)
         event_name = request.data.get('name', None)
+        event_type = request.data.get('type', None)
         event_datetime = request.data.get('datetime', None)
         description = request.data.get('description', '')
 
@@ -29,6 +30,7 @@ class CohortEventsViewSet(ViewSet):
                 cohort=cohort,
                 event_name=event_name,
                 event_datetime=event_datetime,
+                event_type=event_type,
                 description=description
             )
             serializer = CohortDateSerializer(cohort_event)
@@ -66,11 +68,20 @@ class CohortEventsViewSet(ViewSet):
 
 
 
+class CohortEventTypeSerializer(serializers.ModelSerializer):
+    """JSON serializer"""
+    class Meta:
+        model = CohortEventType
+        fields = (
+            'id', 'description'
+        )
+
 class CohortDateSerializer(serializers.ModelSerializer):
     """JSON serializer"""
+    event_type = CohortEventTypeSerializer(many=False, read_only=True)
 
     class Meta:
         model = CohortEvent
         fields = (
-            'id', 'event_name', 'event_datetime', 'description',
+            'id', 'event_name', 'event_type', 'event_datetime', 'description',
         )

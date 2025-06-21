@@ -2,6 +2,7 @@ from .nssuser import NssUser
 from .cohort import Cohort
 from .cohort_info import CohortInfo
 from .cohort_event import CohortEvent
+from .cohort_event_type import CohortEventType
 from .assessment import Assessment
 from .nssuser_cohort import NssUserCohort
 from .assessment_objective import AssessmentObjective

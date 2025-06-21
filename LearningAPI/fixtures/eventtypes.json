@@ -1,0 +1,9 @@
+[
+    {
+      "model": "LearningAPI.cohorteventtype",
+      "pk": 1,
+      "fields": {
+        "description": "Career Development"
+      }
+    }
+]

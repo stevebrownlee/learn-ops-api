@@ -1,0 +1,9 @@
+[
+    {
+      "model": "LearningAPI.helpcategory",
+      "pk": 1,
+      "fields": {
+        "name": "JavaScript"
+      }
+    }
+]
