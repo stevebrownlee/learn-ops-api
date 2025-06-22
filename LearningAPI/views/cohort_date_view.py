@@ -72,9 +72,7 @@ class CohortEventTypeSerializer(serializers.ModelSerializer):
     """JSON serializer"""
     class Meta:
         model = CohortEventType
-        fields = (
-            'id', 'description'
-        )
+        fields = ( 'id', 'description', 'color', )
 
 class CohortDateSerializer(serializers.ModelSerializer):
     """JSON serializer"""
@@ -82,6 +80,4 @@ class CohortDateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CohortEvent
-        fields = (
-            'id', 'event_name', 'event_type', 'event_datetime', 'description',
-        )
+        fields = ( 'id', 'event_name', 'event_type', 'event_datetime', 'description', )

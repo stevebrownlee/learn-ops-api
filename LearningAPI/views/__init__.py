@@ -1,6 +1,7 @@
 from .cohort_view import CohortViewSet
 from .cohort_info import CohortInfoViewSet
 from .cohort_date_view import CohortEventsViewSet
+from .cohort_event_type import CohortEventTypeViewSet
 from .capstone_view import CapstoneViewSet
 from .student_view import StudentViewSet
 from .auth import register_user
