@@ -189,6 +189,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     github = serializers.SerializerMethodField()
     repos = serializers.SerializerMethodField()
     staff = serializers.SerializerMethodField()
+    instructor = serializers.SerializerMethodField()
     capstones = serializers.SerializerMethodField()
     github_org_status = serializers.SerializerMethodField()
 
@@ -197,6 +198,10 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def get_staff(self, obj):
         return obj.user.is_staff
+
+    def get_instructor(self, obj):
+        user = NssUser.objects.get(user=obj.user)
+        return user.is_instructor
 
     def get_project(self, obj):
         project = StudentProject.objects.filter(student=obj).last()
@@ -242,4 +247,4 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = NssUser
         fields = ('id', 'name', 'project', 'email', 'github', 'staff', 'slack_handle',
                   'current_cohort', 'repos', 'assessment_overview', 'capstones',
-                  'github_org_status')
+                  'github_org_status', 'instructor')
