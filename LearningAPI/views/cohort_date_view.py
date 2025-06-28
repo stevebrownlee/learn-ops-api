@@ -26,15 +26,19 @@ class CohortEventsViewSet(ViewSet):
 
         try:
             cohort = Cohort.objects.get(pk=cohort_id)
+            event_type_instance = CohortEventType.objects.get(pk=event_type)
             cohort_event = CohortEvent.objects.create(
                 cohort=cohort,
                 event_name=event_name,
                 event_datetime=event_datetime,
-                event_type=event_type,
+                event_type=event_type_instance,
                 description=description
             )
             serializer = CohortDateSerializer(cohort_event)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except CohortEventType.DoesNotExist as ex:
+            logger.error(f"Cohort event type not found: {ex}")
+            return Response({'message': str(ex)}, status=status.HTTP_404_NOT_FOUND)
         except Cohort.DoesNotExist as ex:
             logger.error(f"Cohort not found: {ex}")
             return Response({'message': str(ex)}, status=status.HTTP_404_NOT_FOUND)

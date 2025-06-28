@@ -229,6 +229,11 @@ LOGGING = {
             "level": "DEBUG",
             "propagate": False,
         },
+        "LearningAPI.cohortevent": {
+            "handlers": ["console", "json_file", "logstash"],
+            "level": "DEBUG",
+            "propagate": False,
+        },
     },
     "root": {
         "handlers": ["console"],
