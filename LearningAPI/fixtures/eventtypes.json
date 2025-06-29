@@ -3,21 +3,13 @@
       "model": "LearningAPI.cohorteventtype",
       "pk": 1,
       "fields": {
-        "description": "Core Project",
-        "color": "#F0FFF0"
-      }
-    },
-    {
-      "model": "LearningAPI.cohorteventtype",
-      "pk": 2,
-      "fields": {
         "description": "Group Project",
         "color": "#98FB98"
       }
     },
     {
       "model": "LearningAPI.cohorteventtype",
-      "pk": 3,
+      "pk": 2,
       "fields": {
         "description": "Career Development",
         "color": "#DA70D6"
@@ -25,7 +17,7 @@
     },
     {
       "model": "LearningAPI.cohorteventtype",
-      "pk": 4,
+      "pk": 3,
       "fields": {
         "description": "Intersession",
         "color": "#708090"
@@ -33,7 +25,7 @@
     },
     {
       "model": "LearningAPI.cohorteventtype",
-      "pk": 5,
+      "pk": 4,
       "fields": {
         "description": "Holiday",
         "color": "#DDA0DD"
