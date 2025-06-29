@@ -46,6 +46,23 @@ class CohortEventsViewSet(ViewSet):
             logger.error(f"Error creating cohort event: {ex}")
             return Response({'message': 'An error occurred while creating the cohort event.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    def destroy(self, request, pk=None):
+        """Handle DELETE operations for a cohort event
+
+        Returns:
+            Response -- JSON serialized instance
+        """
+        try:
+            cohort_event = CohortEvent.objects.get(pk=pk)
+            cohort_event.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except CohortEvent.DoesNotExist as ex:
+            logger.error(f"Cohort event not found: {ex}")
+            return Response({'message': str(ex)}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as ex:
+            logger.error(f"Error deleting cohort event: {ex}")
+            return Response({'message': 'An error occurred while deleting the cohort event.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
     def list(self, request):
         """Handle GET operations to retrieve all cohort events
 
