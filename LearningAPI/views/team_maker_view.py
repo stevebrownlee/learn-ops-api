@@ -114,7 +114,6 @@ class TeamMakerView(ViewSet):
             if response.status_code != 201:
                 return Response({'message': 'Failed to create repository'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
             # Grant write permissions to the students
             for student in team.students.all(): # pylint: disable=E1101
                 gh_request.assign_student_permissions(
