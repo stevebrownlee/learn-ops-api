@@ -33,7 +33,7 @@ class StudentTeamSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StudentTeam
-        fields = ( 'group_name', 'cohort', 'sprint_team', 'students', 'repositories' )
+        fields = ( 'id', 'group_name', 'cohort', 'sprint_team', 'students', 'repositories' )
 
 
 class TeamMakerView(ViewSet):
@@ -171,12 +171,12 @@ class TeamMakerView(ViewSet):
                     channel=team.slack_channel
                 )
 
-            message = json.dumps({
-                'notification_channel': cohort.slack_channel,
-                'source_repo': "/".join(project.client_template_url.split('/')[-2:]),
-                'all_target_repositories': issue_target_repos
-            })
-            valkey_client.publish('channel_migrate_issue_tickets', message)
+            # Publish message to Valkey for ticket migration
+            self.publish_ticket_migration_message(
+                notification_channel=cohort.slack_channel,
+                source_repo="/".join(project.client_template_url.split('/')[-2:]),
+                target_repositories=issue_target_repos
+            )
 
         serialized_team = StudentTeamSerializer(team, many=False).data
 
@@ -213,3 +213,100 @@ class TeamMakerView(ViewSet):
             slack = SlackAPI()
             slack.delete_channel(team.slack_channel)
 
+    def publish_ticket_migration_message(self, notification_channel, source_repo, target_repositories):
+        """
+        Publish a message to Valkey for ticket migration.
+
+        Args:
+            notification_channel (str): The Slack channel to notify about the migration
+            source_repo (str): The source repository in format 'owner/repo'
+            target_repositories (list): List of target repositories in format 'owner/repo'
+
+        Returns:
+            bool: True if successful, False otherwise
+        """
+        try:
+            message = json.dumps({
+                'notification_channel': notification_channel,
+                'source_repo': source_repo,
+                'all_target_repositories': target_repositories
+            })
+            valkey_client.publish('channel_migrate_issue_tickets', message)
+            return True
+        except Exception as ex:
+            # Log the error
+            print(f"Error publishing to Valkey: {str(ex)}")
+            return False
+
+    @action(detail=True, methods=['post'])
+    def migrate(self, request, pk=None):
+        """
+        Endpoint to trigger ticket migration for an existing team.
+        This only publishes the message to Valkey and doesn't create any new resources.
+
+        Args:
+            request: The HTTP request
+            pk: The primary key of the team
+
+        Returns:
+            Response: HTTP response indicating success or failure
+        """
+        try:
+            team = StudentTeam.objects.get(pk=pk)
+
+            # Check if this is a sprint team (has repositories)
+            if not team.sprint_team or not team.repositories.exists():
+                return Response(
+                    {'message': 'This team does not have any repositories for ticket migration'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            # Get the project from the first repository
+            project = team.repositories.first().project
+
+            # Get the cohort and student organization name
+            cohort = team.cohort
+            student_org_name = cohort.info.student_organization_url.split("/")[-1]
+
+            # Get all repository names for this team
+            issue_target_repos = []
+            for repo in team.repositories.all():
+                # Extract the repo name from the full URL
+                repo_name = repo.repository.split('/')[-1]
+                issue_target_repos.append(f'{student_org_name}/{repo_name}')
+
+            # Get the source repository
+            source_repo = "/".join(project.client_template_url.split('/')[-2:])
+
+            # Publish the message to Valkey
+            success = self.publish_ticket_migration_message(
+                notification_channel=cohort.slack_channel,
+                source_repo=source_repo,
+                target_repositories=issue_target_repos
+            )
+
+            if success:
+                return Response(
+                    {'message': 'Ticket migration initiated successfully'},
+                    status=status.HTTP_200_OK
+                )
+            else:
+                return Response(
+                    {'message': 'Failed to initiate ticket migration'},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
+
+        except StudentTeam.DoesNotExist:
+            return Response(
+                {'message': 'Team not found'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        except Exception as ex:
+            return Response(
+                {'message': str(ex)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        except Exception as ex:
+            # Log the error
+            print(f"Error publishing to Valkey: {str(ex)}")
+            return False
