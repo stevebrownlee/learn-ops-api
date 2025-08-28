@@ -1,236 +1,152 @@
-# Docker Development Environment Setup
+# Learning Platform Project
 
-This Docker setup provides a containerized development environment for the Learning Platform project, designed for the Systems Thinking workshop.
+## About
 
-## Architecture
-
-The containerized environment includes:
-- **API Container**: Django REST API with Python 3.11.11
-- **Database Container**: PostgreSQL 15 
+This project is the API for the Learning Platform. It is a Django project using the Django REST Framework application. It integrates with the Github OAuth platform to create accounts and perform authorization for the companion [Learning Platform React client](https://github.com/stevebrownlee/learn-ops-client).
 
 ## Prerequisites
 
-1. **Docker & Docker Compose**: Install Docker Desktop or Docker Engine + Docker Compose
-2. **GitHub OAuth App**: Create a GitHub OAuth application for authentication
-3. **Environment Variables**: Copy and configure the environment template
+### Learning Platform Request Collection
 
-## Quick Start
+1. Install Postman
+1. Open Postman app
+1. Click File > Import from the navbar
+2. Drag the `LearnOps.postman_collection.json` file into the dialog
+4. Requests will be imported and should appear on the left.
 
-### 1. Setup Environment Variables
+### Windows Developer Prerequisites
 
-```bash
-# Copy the environment template
-cp .env.docker.template .env
+If you are a Windows user, you will need to install WSL and Ubuntu.
 
-# Edit .env with your actual values (especially GitHub OAuth credentials)
+Do only steps 1-4 of these instructions if you have never installed WSL before.
+
+Do not do step 5... only steps 1-4.
+
+[Ubuntu on WSL install instructions](https://ubuntu.com/tutorials/install-ubuntu-on-wsl2-on-windows-11-with-gui-support#1-overview)
+
+Once you are done, you will be working in an Ubuntu terminal during all setup and developing on the API.
+
+#### If WSL and Postgres Already Exists
+
+If you already have Postgres installed in Ubuntu, then you need to uninstall it and kill the existing cluster.
+
+```sh
+sudo apt remove postgresql
+sudo pg_ctlcluster {version} main stop
+sudo pg_dropcluster {version} main --stop
 ```
 
-### 2. Build and Start Services
+### All Developer Prerequisites
 
-```bash
-# Build and start all services
-docker-compose up --build
+#### Git
 
-# Or run in detached mode
-docker-compose up --build -d
+Make sure you have `git` installed so you can clone and work on the project.
+
+#### SSH Key
+
+If you are setting this project up on a new WSL Linux installation, you need to create a new SSH key for that OS.
+
+1. Set up an SSH key pair for Linux/Mac
+2. Add the public SSH key to your Github account
+3. Make sure SSH agent is running
+4. Use `ssh-add` to add your new private key to the shell session
+
+### Github OAuth App
+
+This application uses Github for authorization instead of user accounts in Django. You will need to set up your own OAuth application for use during local development.
+
+1. Go to your Github account settings
+2. Open **Developer Settings**
+3. Open **OAuth Apps**
+4. Click **Register New Application** button
+5. Application name should be **Learning Platform**
+6. Homepage URL should be `http://localhost:3000`
+7. Enter a description if you like
+8. Authorization callback should be `http://localhost:8000/auth/github/callback`
+9. Leave **Enable Device Flow** unchecked
+10. Click the **Register Application** button
+11. Click the **Generate a new client secret** button
+12. **DO NOT CLOSE TAB. CLIENT AND SECRET NEEDED BELOW.**
+
+
+## Getting Started
+
+1. Fork this repo to your own Github account. Set your fork as remote origin. Set this repository as remote upstream.
+2. Clone your fork to your directory of choice.
+3. `cd` into the project directory that gets created.
+
+### Environment Variables
+
+Several environment variables need to be set up by you to make the setup process faster and more secure.
+
+1. Open the project directory in your code editor.
+2. Make a copy of the `.env.template` file in the project directory and name it `.env`.
+3. Replace all "replace_me" values in the file and be sure to read the notes below.
+
+#### Environment Variables Notes
+
+* The `LEARN_OPS_CLIENT_ID` and `LEARN_OPS_SECRET_KEY` values will be listed in the open tab you created previously for the Github OAuth app.
+* For the Django secret key, a quick way to get a good secret key is to visit [Djecrety](https://djecrety.ir/).
+* The superuser variables will be your credentials for logging into the Django admin panel where you can view and update data in a web interface.
+* The `LEARN_OPS_PASSWORD` variable is the password for a database user that will be created your local database. Make it something simple.
+
+### Installations
+
+Once your environment variables are established, you will run a bash script to install all the software needed for the API to run, create the database tables needed, and seed the database with some data.
+
+In your terminal, be in the project directory, and run the following command.
+
+```sh
+./setup.sh
 ```
 
-### 3. Access the Application
+Once this script is complete, you will have the Postgres database, and some starter data seeded in it.
 
-- **API**: http://localhost:8000
-- **Admin Interface**: http://localhost:8000/admin
-- **Database**: localhost:5432 (accessible for external tools)
 
-### 4. Admin Access
+## Start Virtual Environment
 
-Use the credentials from your `.env` file:
-- Username: Value of `LEARN_OPS_SUPERUSER_NAME`
-- Password: Value of `LEARN_OPS_SUPERUSER_PASSWORD`
+The setup script installs Python 3.11.11, so your last step is to start the virtual environment for the project with the correct version.
 
-## Virtual Environment Workflow
-
-This Docker setup maintains the pipenv virtual environment workflow that students encounter in local development.
-
-### Key Learning Concepts:
-1. **Virtual Environment**: All Django commands run through `pipenv`
-2. **Service Dependencies**: API depends on database health
-3. **Environment Variables**: Configuration through Docker environment
-
-### Essential Commands:
-
-```bash
-# Start services
-docker-compose up -d
-
-# Access virtual environment (same as local: pipenv shell)
-docker-compose exec api pipenv shell
-
-# Run Django commands (same as local: pipenv run python manage.py ...)
-docker-compose exec api pipenv run python manage.py migrate
-docker-compose exec api pipenv run python manage.py shell
-docker-compose exec api pipenv run python manage.py loaddata complete_backup
-
-# View logs
-docker-compose logs -f
-docker-compose logs -f api
-
-# Stop services
-docker-compose down
+```sh
+pipenv --python 3.11.11 shell
 ```
 
-### Daily Development
+## Using the API
 
-```bash
-# Start services
-docker-compose up -d
+Go back to VSCode and start a Django debugger _(recommend [creating a launcher profile](https://code.visualstudio.com/docs/python/tutorial-django#_create-a-debugger-launch-profile) for yourself)_. If the setup was successful, you will see the following output in the VSCode integrated terminal.
 
-# Stop services
-docker-compose down
+```sh
+Performing system checks...
 
-# View logs
-docker-compose logs -f api
-docker-compose logs -f db
+System check identified no issues (0 silenced).
+September 09, 2023 - 19:46:38
+Django version 4.2.2, using settings 'LearningPlatform.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CONTROL-C.
 ```
 
-### Database Operations
+### Testing Superuser Credentials
 
-```bash
-# Run migrations
-docker-compose exec api pipenv run python manage.py migrate
+1. Visit [http://localhost:8000/admin](http://localhost:8000/admin)
+1. Authenticate with the superuser credentials you specified in your environment variables and ensure that you gain access to the admin interface.
 
-# Load fixtures
-docker-compose exec api pipenv run python manage.py loaddata complete_backup
+### Make Yourself an Instructor
 
-# Access database shell
-docker-compose exec db psql -U learnopsdev -d learnopsdev
+If you successfully authenticated, follow these steps to access the instructor interface of the Learning Platform. You must have already cloned and set up the client application before you perform these steps.
 
-# Access Django shell
-docker-compose exec api pipenv run python manage.py shell
-```
+1. Start the React client application.
+1. Authorize the client with Github.
+2. Visit the [admin interface](http://localhost:8000/admin) and authenticate with your superuser credentials.
+3. Click on **Users** in the left navigation.
+4. Find the account that was just created for your Github authorization by searching for your Github username.
+5. Click on your user account.
+6. Toggle **Staff status** to be on.
+7. In the **Group** sections, double click **Instructor** so that it moves to the _Chosen groups_ list.
+8. Close the browser tab that is running the Learning Platform.
+9. Open a new tab and visit http://localhost:3000 again and authenticate.
+10. You should now see the instructor interface.
 
-### Code Changes
 
-The API container uses volume mounts, so code changes are immediately reflected without rebuilding. However, if you modify:
+## ERD
 
-- `Pipfile` or `Pipfile.lock`: Rebuild with `docker-compose up --build api`
-- Django settings: Restart with `docker-compose restart api`
-
-## Container Details
-
-### API Container (learn-ops-api)
-
-- **Image**: Custom build from Python 3.11.11
-- **Port**: 8000
-- **Features**:
-  - Hot reload for development
-  - Automatic database setup and migrations
-  - Pre-loaded fixtures for development data
-  - Health checks for service dependencies
-
-### Database Container (learn-ops-db)
-
-- **Image**: PostgreSQL 15
-- **Port**: 5432
-- **Features**:
-  - Persistent data storage
-  - Health checks
-  - Ready for external connections
-
-### Message Broker Container (learn-ops-message-broker)
-
-- **Image**: Valkey 7.2 (Redis-compatible)
-- **Port**: 6379
-- **Purpose**: Future microservices communication
-
-## Future Expansion
-
-The docker-compose.yml includes commented placeholders for:
-
-### React Client Container
-```yaml
-# Uncomment and modify when ready
-client:
-  build:
-    context: ../learn-ops-client
-    dockerfile: Dockerfile
-  ports:
-    - "3000:3000"
-```
-
-### Microservice Container
-```yaml
-# Uncomment and modify when ready
-microservice:
-  build:
-    context: ../learn-ops-microservice
-    dockerfile: Dockerfile
-  ports:
-    - "8001:8001"
-```
-
-## Troubleshooting
-
-### Common Issues
-
-1. **Database Connection Errors**
-   ```bash
-   # Check database health
-   docker-compose ps
-   docker-compose logs db
-   ```
-
-2. **Port Conflicts**
-   ```bash
-   # Check if ports are in use
-   lsof -i :8000
-   lsof -i :5432
-   lsof -i :6379
-   ```
-
-3. **Permission Issues**
-   ```bash
-   # Fix entrypoint permissions
-   chmod +x entrypoint.sh
-   ```
-
-### Useful Commands
-
-```bash
-# Clean restart
-docker-compose down -v
-docker-compose up --build
-
-# Access container shell with activated virtual environment
-docker-compose exec api pipenv shell
-
-# Run Django commands within virtual environment
-docker-compose exec api pipenv run python manage.py shell
-docker-compose exec api pipenv run python manage.py dbshell
-docker-compose exec api pipenv run python manage.py collectstatic
-
-# Access container bash (without virtual environment activated)
-docker-compose exec api bash
-
-# View container resource usage
-docker stats
-```
-
-## Environment Variables Reference
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `LEARN_OPS_CLIENT_ID` | GitHub OAuth Client ID | Required |
-| `LEARN_OPS_SECRET_KEY` | GitHub OAuth Secret | Required |
-| `LEARN_OPS_DJANGO_SECRET_KEY` | Django Secret Key | Required |
-| `LEARN_OPS_DB` | Database Name | learnopsdev |
-| `LEARN_OPS_USER` | Database User | learnopsdev |
-| `LEARN_OPS_PASSWORD` | Database Password | password |
-| `LEARN_OPS_SUPERUSER_NAME` | Admin Username | admin |
-| `LEARN_OPS_SUPERUSER_PASSWORD` | Admin Password | admin123 |
-
-## Security Notes
-
-- This setup is designed for **LOCAL DEVELOPMENT ONLY**
-- Never use these configurations in production
-- Database credentials are simple for development convenience
-- GitHub OAuth should use localhost callbacks only
+[dbdiagram.io ERD](https://dbdiagram.io/d/6005cc1080d742080a36d6d8)
