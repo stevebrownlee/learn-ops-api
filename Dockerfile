@@ -19,7 +19,7 @@ RUN pip install --upgrade pip && \
 COPY Pipfile Pipfile.lock ./
 
 # Install dependencies using pipenv (creates virtual environment)
-RUN pipenv install --system --deploy --verbose
+RUN pipenv install --system --deploy 
 
 # Copy the entire application first
 COPY . .

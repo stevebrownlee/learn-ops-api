@@ -4,12 +4,6 @@ set -e
 
 echo "Waiting for PostgreSQL to be ready..."
 
-# # Wait for PostgreSQL to be ready
-# while ! pipenv run python manage.py dbshell --command="SELECT 1;" >/dev/null 2>&1; do
-#   echo "PostgreSQL is unavailable - sleeping"
-#   sleep 2
-# done
-
 # Function to wait for PostgreSQL to be ready
 wait_for_postgres() {
     echo "Waiting for PostgreSQL at $LEARN_OPS_HOST:$LEARN_OPS_PORT..."
