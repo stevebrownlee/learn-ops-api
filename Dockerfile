@@ -13,13 +13,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && rm -rf /var/lib/apt/lists/*
 
 # Install pipenv
-RUN pip install pipenv
+RUN pip install --upgrade pip && \
+  pip install pipenv
+
+COPY Pipfile Pipfile.lock ./
+
+# Install dependencies using pipenv (creates virtual environment)
+RUN pipenv install --system --deploy --verbose
 
 # Copy the entire application first
 COPY . .
-
-# Install dependencies using pipenv (creates virtual environment)
-RUN pipenv install --dev
 
 # Copy and make entrypoint script executable
 COPY entrypoint.sh /entrypoint.sh

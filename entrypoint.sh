@@ -56,7 +56,8 @@ EOF
 # Generate superuser fixture with environment variables
 echo "Creating superuser fixture..."
 export DJANGO_SETTINGS_MODULE="LearningPlatform.settings"
-DJANGO_GENERATED_PASSWORD=$(pipenv run python djangopass.py "$LEARN_OPS_SUPERUSER_PASSWORD")
+
+DJANGO_GENERATED_PASSWORD=$(python3 ./djangopass.py "$LEARN_OPS_SUPERUSER_PASSWORD")
 
 cat > ./LearningAPI/fixtures/superuser.json << EOF
 [
@@ -85,14 +86,14 @@ EOF
 
 # Run migrations
 echo "Running database migrations..."
-pipenv run python manage.py migrate
+python3 manage.py migrate
 
 # Load fixture data
 echo "Loading fixture data..."
-pipenv run python manage.py flush --no-input
-pipenv run python manage.py loaddata socialaccount
-pipenv run python manage.py loaddata complete_backup
-pipenv run python manage.py loaddata superuser
+python3 manage.py flush --no-input
+python3 manage.py loaddata socialaccount
+python3 manage.py loaddata complete_backup
+python3 manage.py loaddata superuser
 
 # Clean up temporary fixture files
 echo "Cleaning up temporary fixture files..."
@@ -103,4 +104,4 @@ echo "Database setup complete!"
 
 # Start the Django development server
 echo "Starting Django development server..."
-exec pipenv run python manage.py runserver 0.0.0.0:8000
+python3 manage.py runserver 0.0.0.0:8000
