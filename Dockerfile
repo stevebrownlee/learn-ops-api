@@ -1,5 +1,5 @@
 # Use Python 3.11.11 as specified in Pipfile
-FROM python:3.11.11
+FROM --platform=linux/amd64 python:3.11.11
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
