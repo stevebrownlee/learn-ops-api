@@ -96,6 +96,5 @@ rm -f ./LearningAPI/fixtures/superuser.json
 
 echo "Database setup complete!"
 
-# Start the Django development server
-echo "Starting Django development server..."
-python3 manage.py runserver 0.0.0.0:8000
+# Hand off to whatever was given in CMD (or docker run args)
+exec "$@"
