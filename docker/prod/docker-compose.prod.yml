@@ -1,0 +1,139 @@
+version: '3.8'
+
+services:
+  # Production Django API
+  api:
+    image: ${DOCKER_REGISTRY:-ghcr.io}/${GITHUB_REPOSITORY:-stevebrownlee/learning-platform-api}:${IMAGE_TAG:-latest}
+    container_name: learning-platform-api-prod
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../../logs:/api/logs
+      - staticfiles:/api/staticfiles
+      - media:/api/media
+    environment:
+      - DEBUG=False
+      - DEVELOPMENT_MODE=False
+    env_file:
+      - .env.prod
+    networks:
+      - learning-platform-prod
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    depends_on:
+      - postgres
+      - valkey
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15
+    container_name: learning-platform-postgres-prod
+    environment:
+      POSTGRES_DB: ${LEARN_OPS_DB}
+      POSTGRES_USER: ${LEARN_OPS_USER}
+      POSTGRES_PASSWORD: ${LEARN_OPS_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ../../backups:/backups
+    networks:
+      - learning-platform-prod
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${LEARN_OPS_USER} -d ${LEARN_OPS_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Valkey/Redis for caching
+  valkey:
+    image: valkey/valkey:7.2
+    container_name: learning-platform-valkey-prod
+    command: valkey-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - valkey_data:/data
+    networks:
+      - learning-platform-prod
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
+
+  # Nginx Reverse Proxy (optional - can use external load balancer)
+  nginx:
+    image: nginx:1.24-alpine
+    container_name: learning-platform-nginx-prod
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ../config/nginx/nginx.prod.conf:/etc/nginx/nginx.conf:ro
+      - ../../logs:/api/logs
+      - staticfiles:/api/staticfiles:ro
+      - media:/api/media:ro
+      - ../../certs:/etc/nginx/certs:ro
+    depends_on:
+      - api
+    networks:
+      - learning-platform-prod
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Automated backups
+  backup:
+    image: postgres:15
+    container_name: learning-platform-backup
+    environment:
+      PGPASSWORD: ${LEARN_OPS_PASSWORD}
+    volumes:
+      - ../../backups:/backups
+      - ../scripts/backup.sh:/backup.sh:ro
+    command: >
+      sh -c "
+        echo '0 2 * * * /backup.sh' > /etc/crontabs/root &&
+        crond -f
+      "
+    depends_on:
+      - postgres
+    networks:
+      - learning-platform-prod
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+  valkey_data:
+    driver: local
+  staticfiles:
+    driver: local
+  media:
+    driver: local
+
+networks:
+  learning-platform-prod:
+    driver: bridge

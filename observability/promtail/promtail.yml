@@ -1,0 +1,79 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  # Learning Platform JSON logs
+  - job_name: learning-platform-json
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: learning-platform-api
+          service: django
+          __path__: /var/log/learning-platform/learning_platform.json
+    pipeline_stages:
+      - json:
+          expressions:
+            level: level
+            timestamp: timestamp
+            logger: logger
+            message: message
+            request_id: request_id
+            user_id: user_id
+            cohort_id: cohort_id
+      - timestamp:
+          source: timestamp
+          format: RFC3339Nano
+      - labels:
+          level:
+          logger:
+          request_id:
+          user_id:
+          cohort_id:
+
+  # Learning Platform debug logs (plain text)
+  - job_name: learning-platform-debug
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: learning-platform-api
+          service: django
+          log_type: debug
+          __path__: /var/log/learning-platform/debug.log*
+    pipeline_stages:
+      - multiline:
+          firstline: '^\d{4}-\d{2}-\d{2}'
+          max_wait_time: 3s
+      - regex:
+          expression: '^(?P<timestamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2},\d{3}) (?P<level>\w+) (?P<message>.*)'
+      - timestamp:
+          source: timestamp
+          format: '2006-01-02 15:04:05,000'
+      - labels:
+          level:
+
+  # System logs (if available)
+  - job_name: system
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: system
+          __path__: /var/log/host/messages
+    pipeline_stages:
+      - match:
+          selector: '{job="system"}'
+          stages:
+            - regex:
+                expression: '^(?P<timestamp>\w+\s+\d+\s+\d+:\d+:\d+) (?P<hostname>\S+) (?P<service>\S+): (?P<message>.*)'
+            - labels:
+                hostname:
+                service:

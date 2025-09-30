@@ -1,0 +1,72 @@
+# Multi-stage build for production
+FROM python:3.11.11-slim as builder
+
+# Set environment variables for build
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+# Install system dependencies for building
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        build-essential \
+        libpq-dev \
+        git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create and set working directory
+WORKDIR /api
+
+# Install Python dependencies
+COPY Pipfile Pipfile.lock ./
+RUN pip install --no-cache-dir pipenv && pipenv install --system --deploy
+
+# Production stage
+FROM python:3.11.11-slim
+
+# Create app user
+RUN groupadd -r app && useradd -r -g app app
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV DEBUG=False
+ENV DEVELOPMENT_MODE=False
+
+# Install runtime dependencies only
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        libpq5 \
+        nginx \
+        supervisor \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy Python packages from builder
+COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
+
+# Set working directory
+WORKDIR /api
+
+# Copy project files
+COPY . /api/
+
+# Create necessary directories and set permissions
+RUN mkdir -p /api/logs /api/staticfiles /var/log/supervisor \
+    && chown -R app:app /api \
+    && chmod +x /api/docker/prod/entrypoint.prod.sh
+
+# Copy configuration files
+COPY docker/config/nginx/nginx.prod.conf /etc/nginx/nginx.conf
+COPY docker/config/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# Collect static files
+RUN python manage.py collectstatic --noinput
+
+# Switch to non-root user
+USER app
+
+# Expose port
+EXPOSE 8000
+
+# Use production entrypoint
+ENTRYPOINT ["/api/docker/prod/entrypoint.prod.sh"]

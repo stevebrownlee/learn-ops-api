@@ -1,0 +1,75 @@
+services:
+  # PostgreSQL Database for local development
+  db:
+    image: postgres:17
+    container_name: learning-platform-db-dev
+    environment:
+      POSTGRES_DB: ${LEARN_OPS_DB:-learnopsdev}
+      POSTGRES_USER: ${LEARN_OPS_USER:-learnopsdev}
+      POSTGRES_PASSWORD: ${LEARN_OPS_PASSWORD:-password}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data
+      - ../../fixtures:/docker-entrypoint-initdb.d/fixtures:ro
+    networks:
+      - learning-platform-dev
+    restart: unless-stopped
+
+  # Redis/Valkey for caching
+  valkey:
+    image: valkey/valkey:7.2
+    container_name: learning-platform-valkey-dev
+    ports:
+      - "6379:6379"
+    volumes:
+      - valkey_data_dev:/data
+    networks:
+      - learning-platform-dev
+    restart: unless-stopped
+
+  # Django API - Development Mode
+  api:
+    build:
+      context: ../../
+      dockerfile: docker/dev/Dockerfile.dev
+    container_name: learning-platform-api-dev
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py collectstatic --noinput &&
+             python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../../:/api
+      - ../../logs:/api/logs
+    environment:
+      - DEBUG=True
+      - DEVELOPMENT_MODE=True
+      - PYTHONUNBUFFERED=1
+    env_file:
+      - ../../.env
+    depends_on:
+      - db
+      - valkey
+    networks:
+      - learning-platform-dev
+    restart: unless-stopped
+
+  # Mailhog for email testing (optional)
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    container_name: learning-platform-mailhog-dev
+    ports:
+      - "1025:1025"  # SMTP
+      - "8025:8025"  # Web UI
+    networks:
+      - learning-platform-dev
+
+volumes:
+  postgres_data_dev:
+  valkey_data_dev:
+
+networks:
+  learning-platform-dev:
+    driver: bridge

@@ -1,0 +1,208 @@
+name: Build and Deploy Docker Image
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  # Build and push Docker image
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    outputs:
+      image-digest: ${{ steps.build.outputs.digest }}
+      image-tag: ${{ steps.meta.outputs.tags }}
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Log in to Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Extract metadata
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        tags: |
+          type=ref,event=branch
+          type=ref,event=pr
+          type=sha,prefix={{branch}}-
+          type=raw,value=latest,enable={{is_default_branch}}
+
+    - name: Build and push Docker image
+      id: build
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: ./docker/prod/Dockerfile.prod
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        platforms: linux/amd64
+
+    - name: Generate SBOM
+      uses: anchore/sbom-action@v0
+      with:
+        image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+        format: spdx-json
+        output-file: sbom.spdx.json
+
+    - name: Upload SBOM
+      uses: actions/upload-artifact@v4
+      with:
+        name: sbom
+        path: sbom.spdx.json
+
+  # Deploy to DigitalOcean droplet
+  deploy:
+    needs: build
+    runs-on: self-hosted
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Create production environment file
+      run: |
+        cat > docker/prod/.env.prod << EOF
+        # Django settings
+        LEARN_OPS_DJANGO_SECRET_KEY="${{ secrets.DJANGO_SECRET_KEY }}"
+        DEBUG=False
+        DEVELOPMENT_MODE=False
+        LEARN_OPS_ALLOWED_HOSTS="${{ secrets.ALLOWED_HOSTS }}"
+        
+        # Database settings
+        LEARN_OPS_DB="${{ secrets.DB_NAME }}"
+        LEARN_OPS_USER="${{ secrets.DB_USER }}"
+        LEARN_OPS_PASSWORD="${{ secrets.DB_PASSWORD }}"
+        LEARN_OPS_HOST="${{ secrets.DB_HOST }}"
+        LEARN_OPS_PORT="${{ secrets.DB_PORT }}"
+        
+        # GitHub OAuth
+        LEARN_OPS_CLIENT_ID="${{ secrets.GITHUB_CLIENT_ID }}"
+        LEARN_OPS_SECRET_KEY="${{ secrets.GITHUB_SECRET_KEY }}"
+        LEARNING_GITHUB_CALLBACK="${{ secrets.GITHUB_CALLBACK_URL }}"
+        
+        # Superuser
+        LEARN_OPS_SUPERUSER_NAME="${{ secrets.SUPERUSER_NAME }}"
+        LEARN_OPS_SUPERUSER_PASSWORD="${{ secrets.SUPERUSER_PASSWORD }}"
+        
+        # Redis/Valkey
+        VALKEY_HOST=valkey
+        VALKEY_PORT=6379
+        VALKEY_DB=0
+        
+        # Slack (optional)
+        SLACK_TOKEN="${{ secrets.SLACK_TOKEN }}"
+        EOF
+
+    - name: Set environment variables for deployment
+      run: |
+        echo "DOCKER_REGISTRY=${{ env.REGISTRY }}" >> $GITHUB_ENV
+        echo "GITHUB_REPOSITORY=${{ github.repository }}" >> $GITHUB_ENV
+        echo "IMAGE_TAG=${{ github.sha }}" >> $GITHUB_ENV
+
+    - name: Log in to Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Pull latest images
+      run: |
+        docker-compose -f docker/prod/docker-compose.prod.yml pull
+
+    - name: Stop existing containers
+      run: |
+        docker-compose -f docker/prod/docker-compose.prod.yml down || true
+
+    - name: Start new containers
+      run: |
+        docker-compose -f docker/prod/docker-compose.prod.yml up -d
+
+    - name: Wait for application to be ready
+      run: |
+        timeout=300
+        counter=0
+        while [ $counter -lt $timeout ]; do
+          if curl -f -s http://localhost:8000/health/ > /dev/null 2>&1; then
+            echo "Application is ready!"
+            break
+          fi
+          echo "Waiting for application... ($counter/$timeout)"
+          sleep 10
+          counter=$((counter + 10))
+        done
+        
+        if [ $counter -ge $timeout ]; then
+          echo "Application failed to start within $timeout seconds"
+          docker-compose -f docker/prod/docker-compose.prod.yml logs
+          exit 1
+        fi
+
+    - name: Clean up old images
+      run: |
+        # Keep last 3 images, remove the rest
+        docker images ${{ env.REGISTRY }}/${{ github.repository }} --format "{{.Repository}}:{{.Tag}} {{.CreatedAt}}" | \
+        sort -k2 -r | \
+        tail -n +4 | \
+        awk '{print $1}' | \
+        xargs -r docker rmi || true
+
+    - name: Clean up old containers and volumes
+      run: |
+        docker system prune -f --volumes --filter "until=24h"
+
+    - name: Verify deployment
+      run: |
+        echo "Deployment completed successfully!"
+        echo "Application status:"
+        curl -s http://localhost:8000/health/ || echo "Health check endpoint not available"
+        echo "Container status:"
+        docker-compose -f docker/prod/docker-compose.prod.yml ps
+
+  # Security scanning
+  security:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request'
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+
+    - name: Upload Trivy scan results to GitHub Security tab
+      uses: github/codeql-action/upload-sarif@v3
+      if: always()
+      with:
+        sarif_file: 'trivy-results.sarif'
