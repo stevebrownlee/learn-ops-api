@@ -85,6 +85,14 @@ class SlackAPI(object):
         }
 
     def send_message(self, channel, text):
+        """Send a message to a Slack channel"""
+        # Log the start of message sending
+        logger.info(
+            "slack_message_send_started",
+            channel=channel,
+            message_length=len(text)
+        )
+
         # Configure the config for the Slack message
         channel_payload = {
             "text": text,
@@ -92,74 +100,289 @@ class SlackAPI(object):
             "channel": channel
         }
 
-        response = requests.post(
-            url="https://slack.com/api/chat.postMessage",
-            data=channel_payload,
-            headers=self.headers,
-            timeout=10
+        # Log the request
+        logger.info(
+            "slack_api_request_sent",
+            api_endpoint="chat.postMessage",
+            channel=channel
         )
-        return response.json()
+
+        try:
+            response = requests.post(
+                url="https://slack.com/api/chat.postMessage",
+                data=channel_payload,
+                headers=self.headers,
+                timeout=10
+            )
+            response_json = response.json()
+
+            # Log the response
+            logger.info(
+                "slack_api_response_received",
+                api_endpoint="chat.postMessage",
+                status_code=response.status_code,
+                response_ok=response_json.get("ok", False),
+                response=response_json
+            )
+
+            if not response_json.get("ok", False):
+                error_msg = response_json.get("error", "unknown_error")
+                logger.error(
+                    "slack_message_send_failed",
+                    channel=channel,
+                    error=error_msg,
+                    full_response=response_json
+                )
+            else:
+                logger.info(
+                    "slack_message_sent_successfully",
+                    channel=channel,
+                    timestamp=response_json.get("ts")
+                )
+
+            return response_json
+
+        except requests.exceptions.RequestException as e:
+            logger.exception(
+                "slack_api_request_failed",
+                api_endpoint="chat.postMessage",
+                channel=channel,
+                error=str(e)
+            )
+            raise
 
 
     def delete_channel(self, channel_id):
+        """Archive/delete a Slack channel"""
+        # Log the start of channel deletion
+        logger.info(
+            "slack_channel_deletion_started",
+            channel_id=channel_id
+        )
+
         channel_payload = {
             "channel": channel_id,
             "token": os.getenv("SLACK_BOT_TOKEN")
         }
 
-        # Create a Slack channel with the given name
-        res = requests.post(
-            "https://slack.com/api/conversations.archive",
-            timeout=10,
-            data=channel_payload,
-            headers=self.headers
+        # Log the request
+        logger.info(
+            "slack_api_request_sent",
+            api_endpoint="conversations.archive",
+            channel_id=channel_id
         )
-        channel_res = res.json()
-        return channel_res['ok']
+
+        try:
+            # Archive the Slack channel
+            res = requests.post(
+                "https://slack.com/api/conversations.archive",
+                timeout=10,
+                data=channel_payload,
+                headers=self.headers
+            )
+            channel_res = res.json()
+
+            # Log the response
+            logger.info(
+                "slack_api_response_received",
+                api_endpoint="conversations.archive",
+                status_code=res.status_code,
+                response_ok=channel_res.get("ok", False),
+                response=channel_res
+            )
+
+            if not channel_res.get("ok", False):
+                error_msg = channel_res.get("error", "unknown_error")
+                logger.error(
+                    "slack_channel_deletion_failed",
+                    channel_id=channel_id,
+                    error=error_msg,
+                    full_response=channel_res
+                )
+            else:
+                logger.info(
+                    "slack_channel_deleted_successfully",
+                    channel_id=channel_id
+                )
+
+            return channel_res['ok']
+
+        except requests.exceptions.RequestException as e:
+            logger.exception(
+                "slack_api_request_failed",
+                api_endpoint="conversations.archive",
+                channel_id=channel_id,
+                error=str(e)
+            )
+            raise
 
     def create_channel(self, name, members):
         """Create a Slack channel for a student team"""
+        # Log the start of channel creation
+        logger.info(
+            "slack_channel_creation_started",
+            channel_name=name,
+            member_count=len(members),
+            member_ids=members
+        )
+
         channel_payload = {
             "name": name,
             "token": os.getenv("SLACK_BOT_TOKEN")
         }
 
-        # Create a Slack channel with the given name
-        res = requests.post(
-            "https://slack.com/api/conversations.create",
-            timeout=10,
-            data=channel_payload,
-            headers=self.headers
+        # Log the channel creation request
+        logger.info(
+            "slack_api_request_sent",
+            api_endpoint="conversations.create",
+            channel_name=name,
+            payload_keys=list(channel_payload.keys())
         )
-        channel_res = res.json()
-        logging.info("Channel created: %s", channel_res)
-        if not channel_res["ok"]:
-            raise Exception(json.dumps(channel_res))
+
+        # Create a Slack channel with the given name
+        try:
+            res = requests.post(
+                "https://slack.com/api/conversations.create",
+                timeout=10,
+                data=channel_payload,
+                headers=self.headers
+            )
+            channel_res = res.json()
+
+            # Log the full response
+            logger.info(
+                "slack_api_response_received",
+                api_endpoint="conversations.create",
+                status_code=res.status_code,
+                response_ok=channel_res.get("ok", False),
+                response=channel_res
+            )
+
+            if not channel_res["ok"]:
+                error_msg = channel_res.get("error", "unknown_error")
+                logger.error(
+                    "slack_channel_creation_failed",
+                    channel_name=name,
+                    error=error_msg,
+                    full_response=channel_res
+                )
+                raise Exception(json.dumps(channel_res))
+
+            channel_id = channel_res["channel"]["id"]
+            logger.info(
+                "slack_channel_created_successfully",
+                channel_name=name,
+                channel_id=channel_id
+            )
+
+        except requests.exceptions.RequestException as e:
+            logger.exception(
+                "slack_api_request_failed",
+                api_endpoint="conversations.create",
+                error=str(e)
+            )
+            raise
 
         # Create a set of Slack IDs for the members to be added to the channel
         member_slack_ids = set()
+        members_without_slack = []
+
         for member_id in members:
-            member = NssUser.objects.get(pk=member_id)
-            if member.slack_handle is not None:
-                member_slack_ids.add(member.slack_handle)
+            try:
+                member = NssUser.objects.get(pk=member_id)
+                if member.slack_handle is not None:
+                    member_slack_ids.add(member.slack_handle)
+                else:
+                    members_without_slack.append({
+                        "id": member_id,
+                        "name": getattr(member, 'full_name', 'unknown')
+                    })
+            except NssUser.DoesNotExist:
+                logger.warning(
+                    "member_not_found",
+                    member_id=member_id
+                )
+
+        # Log member information
+        logger.info(
+            "slack_channel_members_prepared",
+            channel_id=channel_id,
+            total_members_requested=len(members),
+            members_with_slack_handles=len(member_slack_ids),
+            members_without_slack_handles=len(members_without_slack),
+            slack_ids=list(member_slack_ids),
+            members_without_slack=members_without_slack
+        )
 
         # Create a payload to invite students and instructors to the channel
         invitation_payload = {
-            "channel": channel_res["channel"]["id"],
+            "channel": channel_id,
             "users": ",".join(list(member_slack_ids)),
             "token": os.getenv("SLACK_BOT_TOKEN")
         }
 
+        # Log the invitation request
+        logger.info(
+            "slack_api_request_sent",
+            api_endpoint="conversations.invite",
+            channel_id=channel_id,
+            user_count=len(member_slack_ids),
+            users=",".join(list(member_slack_ids))
+        )
+
         # Invite students and instructors to the channel
-        requests.post(
-            "https://slack.com/api/conversations.invite",
-            timeout=10,
-            data=invitation_payload,
-            headers=self.headers
+        try:
+            invite_res = requests.post(
+                "https://slack.com/api/conversations.invite",
+                timeout=10,
+                data=invitation_payload,
+                headers=self.headers
+            )
+            invite_res_json = invite_res.json()
+
+            # Log the full invitation response
+            logger.info(
+                "slack_api_response_received",
+                api_endpoint="conversations.invite",
+                status_code=invite_res.status_code,
+                response_ok=invite_res_json.get("ok", False),
+                response=invite_res_json
+            )
+
+            # Check if invitation was successful
+            if not invite_res_json.get("ok", False):
+                error_msg = invite_res_json.get("error", "unknown_error")
+                logger.error(
+                    "slack_invitation_failed",
+                    channel_id=channel_id,
+                    error=error_msg,
+                    full_response=invite_res_json,
+                    attempted_users=",".join(list(member_slack_ids))
+                )
+            else:
+                logger.info(
+                    "slack_invitation_successful",
+                    channel_id=channel_id,
+                    invited_user_count=len(member_slack_ids)
+                )
+
+        except requests.exceptions.RequestException as e:
+            logger.exception(
+                "slack_api_request_failed",
+                api_endpoint="conversations.invite",
+                channel_id=channel_id,
+                error=str(e)
+            )
+
+        # Log successful completion
+        logger.info(
+            "slack_channel_creation_completed",
+            channel_name=name,
+            channel_id=channel_id
         )
 
         # Return the channel ID for the team
-        return channel_res["channel"]["id"]
+        return channel_id
 
 
 class GithubRequest(object):
