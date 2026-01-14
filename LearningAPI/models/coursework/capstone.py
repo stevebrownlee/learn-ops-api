@@ -17,3 +17,7 @@ class Capstone(models.Model):
     @property
     def current_status(self):
         return self.statuses.order_by('-date').first()
+
+    class Meta:
+        verbose_name = "Capstone Submission"
+        verbose_name_plural = "Capstone Submissions"

@@ -34,3 +34,7 @@ class Assessment(models.Model):
 
     def __str__(self):                      # pylint: disable=E0307
         return self.name
+
+    class Meta:
+        verbose_name = "Book Assessment Submission"
+        verbose_name_plural = "Book Assessment Submissions"

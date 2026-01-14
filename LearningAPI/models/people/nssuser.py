@@ -109,3 +109,7 @@ class NssUser(models.Model):
                 "ic": assignment.cohort.slack_channel,
                 "courses": assignment.cohort.courses.order_by('index').values('course__name', 'course__id', 'active'),
             }
+
+    class Meta:
+        verbose_name = "User Detail"
+        verbose_name_plural = "User Details"

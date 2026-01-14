@@ -10,3 +10,5 @@ class CohortCourse(models.Model):
 
     class Meta:
         unique_together = (('cohort', 'course',),)
+        verbose_name = "Courses for Cohort"
+        verbose_name_plural = "Courses for Cohorts"

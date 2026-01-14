@@ -7,7 +7,7 @@ from .models.people import (
     Cohort, NssUserCohort,
     StudentAssessmentStatus,
     StudentAssessment, CohortInfo,
-    StudentTag
+    StudentTag, CohortEventType
 )
 from .models.coursework import (
     Course, ProposalStatus, Capstone, Book,
@@ -183,6 +183,11 @@ class FoundationsLearnerProfileAdmin(admin.ModelAdmin):
     ordering = ('-pk',)
     search_fields = ["learner_name"]
     search_help_text = "Search by learner name"
+
+@admin.register(CohortEventType)
+class CohortEventTypeAdmin(admin.ModelAdmin):
+    list_display = ('description', 'color',)
+    ordering = ('-pk',)
 
 @admin.register(FoundationsExercise)
 class FoundationsExerciseAdmin(admin.ModelAdmin):

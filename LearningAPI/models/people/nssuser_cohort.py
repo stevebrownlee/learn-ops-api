@@ -15,3 +15,5 @@ class NssUserCohort(models.Model):
 
     class Meta:
         unique_together = ("nss_user", "cohort")
+        verbose_name = "Students in Cohort"
+        verbose_name_plural = "Students in Cohorts"

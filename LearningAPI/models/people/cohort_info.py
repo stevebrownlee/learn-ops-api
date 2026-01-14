@@ -9,3 +9,7 @@ class CohortInfo(models.Model):
     client_course_url = models.CharField(max_length=255, null=True, blank=True)
     server_course_url = models.CharField(max_length=255, null=True, blank=True)
     zoom_url = models.CharField(max_length=255, null=True, blank=True)
+
+    class Meta:
+        verbose_name = "Cohort Detail"
+        verbose_name_plural = "Cohort Details"
